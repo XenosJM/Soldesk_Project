@@ -3,3 +3,4 @@ target/
 pom.properties
 pom.xml
 
+.classpath
