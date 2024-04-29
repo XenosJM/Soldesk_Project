@@ -1,4 +1,12 @@
 .metadata/
+<<<<<<< HEAD
 target/
 pom.properties
 pom.xml
+=======
+pom.properties
+/target
+target/m2e-wtp/web-resources/META-INF/maven/com.soldesk/ex01/pom.properties
+/target
+target/m2e-wtp/web-resources/META-INF/maven/com.soldesk/ex01/pom.properties
+>>>>>>> 4a67477c5ac884cfb94401d4551acc7adb1e3bd1
