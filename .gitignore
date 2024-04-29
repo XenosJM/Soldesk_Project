@@ -1,3 +1,4 @@
 .metadata/
 pom.properties
 /target
+target/m2e-wtp/web-resources/META-INF/maven/com.soldesk/ex01/pom.properties
