@@ -2,6 +2,7 @@ package com.soldesk.ex01.persistence;
 
 import java.util.Date;
 
+import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
@@ -21,8 +22,9 @@ public class BoardMapperTest {
 	@Autowired
 	private BoardMapper boardMapper;
 	
-	public BoardMapperTest() {
-		
+	@Test
+	public void test() {
+		testBoardInsert();
 	}
 	
 	private void testBoardInsert() {
