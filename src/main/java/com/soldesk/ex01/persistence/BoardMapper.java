@@ -8,10 +8,10 @@ import com.soldesk.ex01.domain.BoardVO;
 
 @Mapper
 public interface BoardMapper {
-	int insert(BoardVO vo);
+	int insertBoard(BoardVO vo);
 	List<BoardVO> selectList();
 	List<BoardVO> selectByTitle(BoardVO vo);
 	List<BoardVO> selectByMember(BoardVO vo);
 	int updateBoard(BoardVO vo);
-	int delete(int boardId);	
+	int deleteBoard(int boardId);	
 }

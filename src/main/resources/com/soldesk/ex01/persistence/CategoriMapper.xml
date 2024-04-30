@@ -8,23 +8,23 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		<id property="categoriId" column="CATEGORI_ID" />
 		<result property="categoriTitle" column="CATEGORI_TITLE" />
 	</resultMap>
-	<insert id="insert"> 
+	<insert id="insertCategori"> 
 	INSERT INTO CATEGORI 
 	VALUES (CATEGORI_SEQ.NEXTVAL,#{categoriTitle})
 	</insert>
-	<select id="selectCategoriList" resultMap="categoriResultMap"> 
+	<select id="selectCategoriList" resultMap="CategoriResultMap"> 
 		SELECT * FROM CATEGORI
 	</select>
-	<select id="selectCategoriTitle" resultType="categoriResultMap"> 
+	<select id="selectCategoriTitle" resultMap="CategoriResultMap"> 
 		SELECT * FROM CATEGORI
 		WHERE CATEGORI_TITLE = #{categoriTitle} 
 	</select>
 	<update id="updateCategoriTitle"> 
 		UPDATE CATEGORI SET CATEGORI_
-		TITLE =	#{memberPassword} 
+		TITLE =	#{categoriTitle} 
 		WHERE CATEGORI_ID = #{categoriId}
 	</update>
-	<delete id="delete"> 
+	<delete id="deleteCategori"> 
 		DELETE FROM CATEGORI WHERE CATEGORI_ID = #{categoriId}
 	</delete>
 </mapper>

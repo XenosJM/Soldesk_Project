@@ -13,7 +13,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		<result property="boardReplyCount" column="BOARD_REPLY_COUNT"/>
 	</resultMap>
 
-	<insert id="insert">
+	<insert id="insertBoard">
 		<!-- 게시글 등록 -->
 		INSERT INTO BOARD VALUES 
 		(BOARD_SEQ.NEXTVAL, #{categoryId}, #{memberId}, #{boardTitle}, #{boardContent}, SYSDATE, 0)

@@ -8,9 +8,9 @@ import com.soldesk.ex01.domain.CategoriVO;
 
 @Mapper
 public interface CategoriMapper {
-	int insert(CategoriVO vo);
+	int insertCategori(CategoriVO vo);
 	List<CategoriVO> selectCategoriList();
 	List<CategoriVO> selectCategoriTitle(CategoriVO vo);
 	int updateCategoriTitle(CategoriVO vo);
-	int delete(CategoriVO vo);
+	int deleteCategori(CategoriVO vo);
 }
