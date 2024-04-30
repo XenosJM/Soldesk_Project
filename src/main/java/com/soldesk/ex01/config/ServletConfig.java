@@ -13,7 +13,7 @@ import org.springframework.web.servlet.view.InternalResourceViewResolver;
 // servlet-context.xml과 동일 
 @Configuration // Spring Container에서 관리하는 설정 클래스
 @EnableWebMvc // Spring MVC 기능 사용
-@ComponentScan(basePackages = { "com.soldesk.ex01" }) // component scan 설정
+@ComponentScan(basePackages = { " com.soldesk.ex01 " }) // component scan 설정
 public class ServletConfig implements WebMvcConfigurer {
 
    // ViewResolver 설정 메서드
