@@ -2,10 +2,15 @@ package com.soldesk.ex01.service;
 
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
+
 import com.soldesk.ex01.domain.MemberVO;
 
 public class MemberServiceImple implements MemberService{
-
+	
+	@Autowired
+	public MemberVO memberVO;
+	
 	@Override
 	public int createMember(MemberVO memberVO) {
 		// TODO Auto-generated method stub
