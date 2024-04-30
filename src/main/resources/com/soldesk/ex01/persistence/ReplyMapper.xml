@@ -15,10 +15,10 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	<insert id="insertReply"> INSERT INTO REPLY VALUES (REPLY_SEQ.NEXTVAL,#{boardId},#{categoriId},#{memberId},
 		#{replyContent},SYSDATE)
 	</insert>
-	<select id="selectReplyMemberList" resultMap="categoriResultMap"> 
+	<select id="selectReplyMemberList" resultMap="ReplyResultMap"> 
 		SELECT * FROM REPLY WHERE MEMBER_ID = #{memberId}
 	</select>
-	<select id="selectReplyContentList" resultType="categoriResultMap"> 
+	<select id="selectReplyContentList" resultMap="ReplyResultMap"> 
 		SELECT * FROM REPLY	WHERE REPLY_CONTENT LIKE CONCAT('%',#{replyContent},'%')
 	</select>
 	<update id="updateReply"> 

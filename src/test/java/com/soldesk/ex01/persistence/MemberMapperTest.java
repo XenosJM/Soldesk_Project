@@ -1,5 +1,7 @@
 package com.soldesk.ex01.persistence;
 
+import java.util.Date;
+
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,7 +31,7 @@ public class MemberMapperTest {
 	}
 
 	private void testMemberInsert() {
-		MemberVO vo = new MemberVO(0, "wjdals", "1q2w3e4r", 1, "wjdalsqaaz123@gmail.com", null, null);
+		MemberVO vo = new MemberVO(0, "wjdals", "1q2w3e4r", 1, "wjdalsqaaz123@gmail.com", " ", new Date());
 		int result = memberMapper.insert(vo);
 		log.info(result + "Çà »ðÀÔ");
 	}
