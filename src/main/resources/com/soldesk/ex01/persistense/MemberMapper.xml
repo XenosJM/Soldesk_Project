@@ -1,18 +1,29 @@
 <mapper namespace="com.soldesk.ex01.persistence.MemberMapper">
-<resultMap type="com.soldesk.ex01.domain.MemberVO" id="MemberResultMap">
-<id property="memberId" column="MEMBER_ID"/>
-<result property="memberName" column="MEMBER_NAME"/>
-<result property="memberPassword" column="MEMBER_PASSWORD"/>
-<result property="managerId" column="MANAGER_ID"/>
-<result property="memberEmail" column="MEMBER_EMAIL"/>
-<result property="memberProperty" column="MEMBER_PROPERTY"/>
-<result property="memberRegistDate" column="MEMBER_REGISTDATE"/>
-</resultMap>
-<insert id="insert"> INSERT INTO MEMBER (MEMBER_ID, MEMBER_PASSWORD, MANAGER_ID, MEMBER_EMAIL, MEMBER_PROPERTY) VALUES (MEMBER_SEQ.NEXTVAL, #{memberName}, #{memberPassword}, #{managerId}, #{memberProperty}) </insert>
-<select id="selectByMemberId" resultMap="memberResultMap"> SELECT * FROM MEMBER WHERE MEMBER_ID = #{memberId} </select>
-<select id="selectIdList" resultType="Integer"> SELECT MEMBER_ID FROM MEMBER </select>
-<update id="update"> UPDATE MEMBER SET MEMBER_PASSWORD = #{memberPassword}, MEMBER_EMAIL = #{memberEmail} WHERE MEMBER_ID = #{memberId} </update>
-<update id="updateProperty"> UPDATE MEMBER SET MEMBER_PROPERTY = #{memberProperty} WHERE MEMBER_ID = #{memberId} </update>
-<update id="updateManager"> UPDATE MEMBER SET MANAGER_ID = #{managerId} WHERE MEMBER_ID = #{memberId} </update>
-<delete id="delete"> DELETE FROM MEMBER WHERE MEMBER_ID = #{memberId} </delete>
+	<resultMap type="com.soldesk.ex01.domain.MemberVO"
+		id="MemberResultMap">
+		<id property="memberId" column="MEMBER_ID" />
+		<result property="memberName" column="MEMBER_NAME" />
+		<result property="memberPassword" column="MEMBER_PASSWORD" />
+		<result property="managerId" column="MANAGER_ID" />
+		<result property="memberEmail" column="MEMBER_EMAIL" />
+		<result property="memberProperty" column="MEMBER_PROPERTY" />
+		<result property="memberRegistDate" column="MEMBER_REGISTDATE" />
+	</resultMap>
+	<insert id="insert"> INSERT INTO MEMBER (MEMBER_ID, MEMBER_PASSWORD,
+		MANAGER_ID, MEMBER_EMAIL, MEMBER_PROPERTY) VALUES (MEMBER_SEQ.NEXTVAL,
+		#{memberName}, #{memberPassword}, #{managerId}, #{memberProperty})
+	</insert>
+	<select id="selectByMemberId" resultMap="memberResultMap"> SELECT * FROM MEMBER
+		WHERE MEMBER_ID = #{memberId} </select>
+	<select id="selectIdList" resultType="Integer"> SELECT MEMBER_ID FROM
+		MEMBER </select>
+	<update id="update"> UPDATE MEMBER SET MEMBER_PASSWORD =
+		#{memberPassword}, MEMBER_EMAIL = #{memberEmail} WHERE MEMBER_ID =
+		#{memberId} </update>
+	<update id="updateProperty"> UPDATE MEMBER SET MEMBER_PROPERTY =
+		#{memberProperty} WHERE MEMBER_ID = #{memberId} </update>
+	<update id="updateManager"> UPDATE MEMBER SET MANAGER_ID = #{managerId} WHERE
+		MEMBER_ID = #{memberId} </update>
+	<delete id="delete"> DELETE FROM MEMBER WHERE MEMBER_ID = #{memberId}
+	</delete>
 </mapper>

@@ -15,5 +15,4 @@ public interface MemberMapper {
 	int updateProperty(MemberVO memberVO);
 	int updateManager(MemberVO memberVO);
 	int delete(int memberId);
-
 }

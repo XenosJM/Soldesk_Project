@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.soldesk.ex01.persistence.ReplyMapper">
+	<resultMap type="com.soldesk.ex01.domain.ReplyVO"
+		id="ReplyResultMap">
+		<id property="replyId" column="REPLY_ID" />
+		<result property="boardId" column="BOARD_ID"/>
+		<result property="categoriId" column="CATEGORI_ID"/>
+		<result property="memberId" column="MEMBER_ID"/>
+		<result property="replyContent" column="REPLY_CONTENT"/>
+		<result property="replyRegistDate" column="REPLY_REGISTDATE" />
+	</resultMap>
+	<insert id="insert"> INSERT INTO REPLY VALUES (REPLY_SEQ.NEXTVAL,#{boardId},#{categoriId},#{memberId},
+		#{replyContent},SYSDATE)
+	</insert>
+	<select id="selectReplyMemberList" resultMap="categoriResultMap"> 
+		SELECT * FROM REPLY WHERE MEMBER_ID = #{memberId}
+	</select>
+	<select id="selectReplyContentList" resultType="categoriResultMap"> 
+		SELECT * FROM REPLY	WHERE REPLY_CONTENT LIKE CONCAT('%',#{replyContent},'%')
+	</select>
+	<update id="updateReply"> 
+		UPDATE REPLY SET 
+		REPLY_CONTENT = #{replyContent}
+		WHERE REPLY_ID = #{replyId}
+	</update>
+	<delete id="delete"> 
+		DELETE FROM CATEGORI WHERE CATEGORI_ID = #{categoriId}
+	</delete>
+</mapper>
