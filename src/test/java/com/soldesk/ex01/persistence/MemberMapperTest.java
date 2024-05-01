@@ -1,9 +1,12 @@
 package com.soldesk.ex01.persistence;
 
 import java.util.Date;
+import java.util.List;
 
 import org.junit.Test;
+import org.junit.runner.Request;
 import org.junit.runner.RunWith;
+import org.junit.runner.Runner;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -23,11 +26,41 @@ public class MemberMapperTest {
 	
 	@Test
 	public void test() {
-		testMemberInsert();
-//		testMemberList();
+//		testMemberInsert();
+		testMemberList();
 //		testMemberByMemberId();
 //		testMemberUpdate();
 //		testMemberDelete();
+	}
+
+	private void testMemberDelete() {
+		log.info("testMemberDelete()");
+		int result = memberMapper.delete(1);
+		log.info(result + "행 삭제");
+	}
+
+	private void testMemberUpdate() {
+		log.info("testMemberUpdate()");
+		MemberVO vo = new MemberVO(); 
+		vo.setMemberId(1);
+		vo.setMemberPassword("123123");
+		vo.setMemberEmail("test@test.com");
+		int result = memberMapper.update(vo);
+		log.info(result + "행 수정");
+	}
+
+	private void testMemberByMemberId() {
+		log.info("testMemberByMemberId()");
+		MemberVO vo = memberMapper.selectByMemberId(1);
+		log.info(vo);
+		
+	}
+
+	private void testMemberList() {
+		log.info("testMemberList()");
+		for(MemberVO memberVO : memberMapper.selectIdList()) {
+			log.info(memberVO);
+		}
 	}
 
 	private void testMemberInsert() {
