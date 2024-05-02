@@ -27,10 +27,12 @@ public class BoardMapperTest {
 	public void test() {
 		//testBoardInsert();
 		//testBoardSelect();
-		testBoardSelectByTitle();
+		//testBoardSelectByTitle();
 		//testBoardSelectByContent();
 		//testUpdateBoard();
 		//testDeleteBoard();
+		
+		testSelectDetail();
 	}
 	
 	private void testBoardInsert() {
@@ -78,5 +80,10 @@ public class BoardMapperTest {
 	private void testDeleteBoard() {
 		int result = boardMapper.deleteBoard(10);
 		System.out.println(result+"행 삭제완료");
+	}
+	
+	private void testSelectDetail() {
+		BoardVO vo = boardMapper.selectDetail(2);
+		System.out.println(vo);
 	}
 }

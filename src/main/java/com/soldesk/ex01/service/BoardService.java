@@ -1,18 +1,15 @@
-package com.soldesk.ex01.persistence;
+package com.soldesk.ex01.service;
 
 import java.util.List;
 
-import org.apache.ibatis.annotations.Mapper;
-
 import com.soldesk.ex01.domain.BoardVO;
 
-@Mapper
-public interface BoardMapper {
+public interface BoardService {
 	int insertBoard(BoardVO vo);
 	List<BoardVO> selectList();
 	List<BoardVO> selectByTitle(String title);
 	List<BoardVO> selectByContent(String content);
-	List<BoardVO> selectByMember(int memberId);
+	List<BoardVO> selectByMember(int member_id);
 	BoardVO selectDetail(int boardId);
 	int updateBoard(BoardVO vo);
 	int deleteBoard(int boardId);	

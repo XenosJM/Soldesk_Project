@@ -27,17 +27,22 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	
 	 <select id="selectByTitle" resultMap="boardResultMap">
 	 	<!-- 게시글 제목으로 검색 -->
-	 	SELECT * FROM BOARD WHERE BOARD_TITLE LIKE '%${BOARD_TITLE}%'
+	 	SELECT * FROM BOARD WHERE BOARD_TITLE LIKE '%${boardTitle}%'
 	 </select>
 	 
 	 <select id="selectByContent" resultMap="boardResultMap">
 	 	<!-- 게시글 제목으로 검색 -->
-	 	SELECT * FROM BOARD WHERE BOARD_CONTENT LIKE '%${BOARD_CONTENT}%'
+	 	SELECT * FROM BOARD WHERE BOARD_CONTENT LIKE '%${boardContent}%'
 	 </select>
 	 
 	 <select id="selectByMember" resultMap="boardResultMap">
 	 	<!--  게시글 작성자로 검색 -->
 	 	SELECT * FROM BOARD WHERE MEMBER_ID	 = #{memberId}
+	 </select>
+	 
+	 <select id="selectDetail" resultMap="boardResultMap">
+	 	<!--  게시글 상세보기 -->
+	 	SELECT * FROM BOARD WHERE BOARD_ID = #{boardId}
 	 </select>
 	 
 	 <update id="updateBoard">
@@ -67,6 +72,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	 <select id="selectTotalCount" resultType="Integer">
 	 	SELECT COUNT(*) TOTAL_COUNT FROM BOARD
 	 </select>
+	 
 	 
 </mapper>
 
