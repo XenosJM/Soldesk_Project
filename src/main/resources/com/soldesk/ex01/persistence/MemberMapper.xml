@@ -16,14 +16,12 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	</resultMap>
 	<!-- 회원 가입 -->
 	<insert id="insert"> INSERT INTO MEMBER (MEMBER_ID, MEMBER_NAME, MEMBER_PASSWORD, MANAGER_ID, MEMBER_EMAIL, MEMBER_PROPERTY, MEMBER_REGISTDATE)
-	 VALUES (MEMBER_SEQ.NEXTVAL, #{memberName}, #{memberPassword}, #{managerId}, #{memberEmail}, #{memberProperty}, SYSDATE)
+	 VALUES (MEMBER_SEQ.NEXTVAL, #{memberName}, #{memberPassword}, 0, #{memberEmail}, null, SYSDATE)
 	</insert>
 	<!-- 회원 자기정보 보기 -->
-	<select id="selectByMemberId" resultMap="memberResultMap"> SELECT * FROM MEMBER
-		WHERE MEMBER_ID = #{memberId} </select>
+	<select id="selectByMemberId" resultMap="memberResultMap"> SELECT * FROM MEMBER	WHERE MEMBER_ID = #{memberId} </select>
 	<!-- 회원 리스트 -->
-	<select id="selectIdList" resultType="Integer"> SELECT MEMBER_ID FROM
-		MEMBER </select>
+	<select id="selectIdList" resultMap="memberResultMap"> SELECT MEMBER_NAME FROM MEMBER </select>
 		<!-- 회원 정보 수정 -->
 	<update id="update"> UPDATE MEMBER SET MEMBER_PASSWORD =
 		#{memberPassword}, MEMBER_EMAIL = #{memberEmail} WHERE MEMBER_ID =
@@ -32,8 +30,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	<update id="updateProperty"> UPDATE MEMBER SET MEMBER_PROPERTY =
 		#{memberProperty} WHERE MEMBER_ID = #{memberId} </update>
 		<!-- 회원 관리자 자격 수정 -->
-	<update id="updateManager"> UPDATE MEMBER SET MANAGER_ID = #{managerId} WHERE
-		MEMBER_ID = #{memberId} </update>
+	<update id="updateManager"> UPDATE MEMBER SET MANAGER_ID = #{managerId} WHERE MEMBER_ID = #{memberId} </update>
 		<!-- 회원 삭제(탈퇴) -->
 	<delete id="delete"> DELETE FROM MEMBER WHERE MEMBER_ID = #{memberId}
 	</delete>

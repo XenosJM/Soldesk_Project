@@ -21,17 +21,17 @@ public class ManagerMapperTest {
 	
 	@Test
 	public void test() {
-		testManagerInsert();
-		testGetDetail();
-		testGetAll();
-		testManagerUpdate();
+//		testManagerInsert();
+//		testGetDetail();
+//		testGetAll();
+//		testManagerUpdate();
 		testDelete();
 	}
 
 
 	private void testDelete() {
 		log.info("testDelete()");
-		int result = managerMapper.delete(1);
+		int result = managerMapper.delete(2);
 		log.info(result + "Çà »èÁ¦");
 		
 	}

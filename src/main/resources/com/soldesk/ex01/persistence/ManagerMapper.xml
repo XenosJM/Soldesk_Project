@@ -6,19 +6,19 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	<resultMap type="com.soldesk.ex01.domain.ManagerVO" id="managerResultMap">
 		<id property="managerId" column="MANAGER_ID"/>
 		<result property="memberId" column="MEMBER_ID"/>
-		<result property="categoriId" column="CATEGORI_ID"/>	
+		<result property="categoriId" column="CATEGORY_ID"/>	
 	</resultMap>
 	<!-- 관리자 등록 -->
 	<insert id="insert">
-		INSERT INTO MANAGER (MANGER_ID, MEMBER_ID, CATEGOTI_ID)
-		VALUES (MANAGER_SEQ.NEXTVAL, #{memberId}, #{categoriId)) 
+		INSERT INTO MANAGER (MANAGER_ID, MEMBER_ID, CATEGORY_ID)
+		VALUES (MANAGER_SEQ.NEXTVAL, #{memberId}, #{categoryId}) 
 	</insert>
 	<!-- 관리자 상세 검색 -->
 	<select id="selectByManagerId" resultMap="managerResultMap">
 		SELECT * FROM MANAGER WHERE MANAGER_ID = #{managerId}
 	</select>
 	<!-- 관리자 전체 검색 -->
-	<select id="selectAllManager" resultType="Integer">
+	<select id="selectAllManager" resultMap="managerResultMap">
 		SELECT MANAGER_ID FROM MANAGER
 	</select>
 	<!-- 관리자 변경 -->

@@ -15,5 +15,5 @@ public class ManagerVO {
 	
 	private int managerId;
 	private int memberId;
-	private int categoriId;
+	private int categoryId;
 }

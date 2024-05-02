@@ -27,16 +27,31 @@ public class MemberMapperTest {
 	@Test
 	public void test() {
 //		testMemberInsert();
-		testMemberList();
+//		testMemberList();
 //		testMemberByMemberId();
 //		testMemberUpdate();
+		testMemberPropertyUpdate();
+//		testMemberManagerUpdate();
 //		testMemberDelete();
 	}
-
+	
 	private void testMemberDelete() {
 		log.info("testMemberDelete()");
 		int result = memberMapper.delete(1);
 		log.info(result + "행 삭제");
+	}
+
+	private void testMemberManagerUpdate() {
+		MemberVO vo = new MemberVO(1, null, null, 2, null, null, null);
+		int result = memberMapper.updateManager(vo);
+		log.info(result + "행 수정");
+		
+	}
+
+	private void testMemberPropertyUpdate() {
+		MemberVO vo = new MemberVO(1, null, null, 0, null, "{1, 2}", null);
+		int result = memberMapper.updateProperty(vo);
+		log.info(result + "행 수정");
 	}
 
 	private void testMemberUpdate() {
