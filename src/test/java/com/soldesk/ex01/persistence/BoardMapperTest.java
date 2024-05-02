@@ -1,6 +1,7 @@
 package com.soldesk.ex01.persistence;
 
 import java.util.Date;
+import java.util.List;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -24,12 +25,58 @@ public class BoardMapperTest {
 	
 	@Test
 	public void test() {
-		testBoardInsert();
+		//testBoardInsert();
+		//testBoardSelect();
+		testBoardSelectByTitle();
+		//testBoardSelectByContent();
+		//testUpdateBoard();
+		//testDeleteBoard();
 	}
 	
 	private void testBoardInsert() {
-		BoardVO vo = new BoardVO(0, 1234, 1234, "test", "test", new Date(), 0);
+		BoardVO vo = new BoardVO(0, 1234, 1239, "test1", "test", new Date(), 0);
 		int result = boardMapper.insertBoard(vo);
 		log.info(result + "행 삽입");
+		vo = new BoardVO(0, 1234, 1240, "test2", "test", new Date(), 0);
+		result = boardMapper.insertBoard(vo);
+		log.info(result + "행 삽입");
+		vo = new BoardVO(0, 1234, 1241, "test3", "test", new Date(), 0);
+		result = boardMapper.insertBoard(vo);
+		log.info(result + "행 삽입");
+		vo = new BoardVO(0, 1234, 1242, "test4", "test", new Date(), 0);
+		result = boardMapper.insertBoard(vo);
+		log.info(result + "행 삽입");
+	}
+	
+	private void testBoardSelect() {
+		List<BoardVO> vo = boardMapper.selectList();
+		for(int i =0;i<vo.size();i++) {
+			System.out.println(vo.get(i));
+		}
+	}
+	
+	private void testBoardSelectByTitle() {
+		List<BoardVO> vo = boardMapper.selectByTitle("3");
+		for(int i =0;i<vo.size();i++) {
+			System.out.println(vo.get(i));
+		}
+	}
+	
+	private void testBoardSelectByContent() {
+		List<BoardVO> vo = boardMapper.selectByContent("테스트");
+		for(int i =0;i<vo.size();i++) {
+			System.out.println(vo.get(i));
+		}
+	}
+	
+	private void testUpdateBoard() {
+		BoardVO vo = new BoardVO(1,1234,1235,"테스트임","테스트",new Date(),0);
+		int result = boardMapper.updateBoard(vo);
+		System.out.println(result+"행 변경완료");
+	}
+	
+	private void testDeleteBoard() {
+		int result = boardMapper.deleteBoard(10);
+		System.out.println(result+"행 삭제완료");
 	}
 }

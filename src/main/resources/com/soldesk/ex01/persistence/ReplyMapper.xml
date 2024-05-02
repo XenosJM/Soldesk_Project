@@ -7,26 +7,30 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		id="ReplyResultMap">
 		<id property="replyId" column="REPLY_ID" />
 		<result property="boardId" column="BOARD_ID"/>
-		<result property="categoriId" column="CATEGORI_ID"/>
+		<result property="categoryId" column="CATEGORY_ID"/>
 		<result property="memberId" column="MEMBER_ID"/>
 		<result property="replyContent" column="REPLY_CONTENT"/>
 		<result property="replyRegistDate" column="REPLY_REGISTDATE" />
 	</resultMap>
-	<insert id="insertReply"> INSERT INTO REPLY VALUES (REPLY_SEQ.NEXTVAL,#{boardId},#{categoriId},#{memberId},
+	<insert id="insertReply"> INSERT INTO REPLY VALUES (REPLY_SEQ.NEXTVAL,#{boardId},#{categoryId},#{memberId},
 		#{replyContent},SYSDATE)
 	</insert>
 	<select id="selectReplyMemberList" resultMap="ReplyResultMap"> 
 		SELECT * FROM REPLY WHERE MEMBER_ID = #{memberId}
 	</select>
 	<select id="selectReplyContentList" resultMap="ReplyResultMap"> 
-		SELECT * FROM REPLY	WHERE REPLY_CONTENT LIKE CONCAT('%',#{replyContent},'%')
+		SELECT * FROM REPLY	WHERE REPLY_CONTENT LIKE '%${replyContent}%'
 	</select>
+	<select id="selectReplyBoard" resultMap="ReplyResultMap"> 
+		SELECT * FROM REPLY WHERE BOARD_ID = #{boardId}
+	</select>	
+	
 	<update id="updateReply"> 
 		UPDATE REPLY SET 
 		REPLY_CONTENT = #{replyContent}
 		WHERE REPLY_ID = #{replyId}
 	</update>
 	<delete id="deleteReply"> 
-		DELETE FROM CATEGORI WHERE CATEGORI_ID = #{categoriId}
+		DELETE FROM	REPLY WHERE Reply_ID = #{replyId}
 	</delete>
 </mapper>

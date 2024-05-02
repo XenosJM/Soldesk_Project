@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.soldesk.ex01.persistence.CategoryMapper">
+	<resultMap type="com.soldesk.ex01.domain.CategoryVO"
+		id="CategoryResultMap">
+		<id property="categoryId" column="CATEGORY_ID" />
+		<result property="categoryTitle" column="CATEGORY_TITLE" />
+	</resultMap>
+	<insert id="insertCategory"> 
+	INSERT INTO CATEGORY 
+	VALUES (CATEGORY_SEQ.NEXTVAL,#{categoryTitle})
+	</insert>
+	<select id="selectCategoryList" resultMap="CategoryResultMap"> 
+		SELECT * FROM CATEGORY
+	</select>
+	<select id="selectCategoryTitle" resultMap="CategoryResultMap"> 
+		SELECT * FROM CATEGORY
+		WHERE CATEGORY_TITLE LIKE '%${categoryTitle}%'
+	</select>
+	<update id="updateCategoryTitle"> 
+		UPDATE CATEGORY SET CATEGORY_TITLE = #{categoryTitle} 
+		WHERE CATEGORY_ID = #{categoryId}
+	</update>
+	<delete id="deleteCategory"> 
+		DELETE FROM CATEGORY WHERE CATEGORY_ID = #{categoryId}
+	</delete>
+</mapper>

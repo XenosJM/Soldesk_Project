@@ -10,8 +10,9 @@ import com.soldesk.ex01.domain.BoardVO;
 public interface BoardMapper {
 	int insertBoard(BoardVO vo);
 	List<BoardVO> selectList();
-	List<BoardVO> selectByTitle(BoardVO vo);
-	List<BoardVO> selectByMember(BoardVO vo);
+	List<BoardVO> selectByTitle(String title);
+	List<BoardVO> selectByContent(String content);
+	List<BoardVO> selectByMember(int member_id);
 	int updateBoard(BoardVO vo);
 	int deleteBoard(int boardId);	
 }
