@@ -2,6 +2,7 @@ package com.soldesk.ex01.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -22,7 +23,7 @@ public class MemberController {
 	
 	@GetMapping("/regist")
 	public void registerGet() {
-		log.info("registerGer()");
+		log.info("registerGet()");
 	}
 	
 	@PostMapping("/regist")
@@ -35,8 +36,11 @@ public class MemberController {
 	}
 	
 	@GetMapping("/detail")
-	public void detailGet() {
+	public void detailGet(Model model, Integer memberId) {
 		log.info("detailGet()");
+		MemberVO memberVO = new MemberVO(); 
+		memberVO = memberService.getMemberById(memberId);
+		model.addAttribute("memberVO", memberVO);
 	}
 	
 	@GetMapping("/update")
@@ -44,7 +48,7 @@ public class MemberController {
 		log.info("updateGet()");
 	}
 	
-	@PostMapping("/update")
+	@PostMapping("/modify")
 	public String updatePost(MemberVO memberVO, RedirectAttributes reAttr) {
 		log.info("updatePost()");
 		log.info("memberVO = " + memberVO.toString());
@@ -54,12 +58,13 @@ public class MemberController {
 	}
 	
 	@PostMapping("/delete")
-	public String deletePost(Integer memberId, RedirectAttributes reAttr) {
+	public String deletePost(Integer memberId) {
 		log.info("delete()");
 		int result = memberService.deleteMember(memberId);
 		log.info(result + "«‡ ªË¡¶");
 		return "redirect:/";
 	}
+	
 }
 
 

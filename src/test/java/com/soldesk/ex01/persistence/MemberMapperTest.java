@@ -1,5 +1,6 @@
 package com.soldesk.ex01.persistence;
 
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
@@ -28,9 +29,9 @@ public class MemberMapperTest {
 	public void test() {
 //		testMemberInsert();
 //		testMemberList();
-//		testMemberByMemberId();
+		testMemberByMemberId();
 //		testMemberUpdate();
-		testMemberPropertyUpdate();
+//		testMemberPropertyUpdate();
 //		testMemberManagerUpdate();
 //		testMemberDelete();
 	}
@@ -42,14 +43,16 @@ public class MemberMapperTest {
 	}
 
 	private void testMemberManagerUpdate() {
-		MemberVO vo = new MemberVO(1, null, null, 2, null, null, null);
+		MemberVO vo = new MemberVO(1, null, null, 2, null, null, null, null);
 		int result = memberMapper.updateManager(vo);
 		log.info(result + "행 수정");
 		
 	}
 
 	private void testMemberPropertyUpdate() {
-		MemberVO vo = new MemberVO(1, null, null, 0, null, "{1, 2}", null);
+		MemberVO vo = new MemberVO();
+		vo.setMemberId(1);
+		vo.setMemberProperty(new int[] {34, 25, 22});
 		int result = memberMapper.updateProperty(vo);
 		log.info(result + "행 수정");
 	}
@@ -58,7 +61,7 @@ public class MemberMapperTest {
 		log.info("testMemberUpdate()");
 		MemberVO vo = new MemberVO(); 
 		vo.setMemberId(1);
-		vo.setMemberPassword("123123");
+		vo.setMemberPassword("456456");
 		vo.setMemberEmail("test@test.com");
 		int result = memberMapper.update(vo);
 		log.info(result + "행 수정");
@@ -79,7 +82,8 @@ public class MemberMapperTest {
 	}
 
 	private void testMemberInsert() {
-		MemberVO vo = new MemberVO(0, "wjdals", "1q2w3e4r", 1, "wjdalsqaaz123@gmail.com", " ", new Date());
+		MemberVO vo = new MemberVO(0, "wjddk", "1q2w3e4r", 2, "wjdalsqaaz123@gmail.com", new int[] {1, 2}, new Date(), null) ;
+		 vo.setMemberPropertyAsString(Arrays.toString(vo.getMemberProperty()));
 		int result = memberMapper.insert(vo);
 		log.info(result + "행 삽입");
 	}

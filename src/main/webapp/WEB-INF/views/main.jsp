@@ -480,6 +480,7 @@ body {
           <a href="../regist.jsp"><img src="images/banner1.png" alt="회원가입 유도 배너"></a>
         </div>
 
+
         <div class="banner2">
          <div class="title">
             <a><img src="images/title.jpg" alt="타이틀"></a>
@@ -556,6 +557,7 @@ body {
         }
     </script>
     
+>>>>>>> 4d605e5fa1ebb31e5e2e9d38b55d46f1c4ef5ad9
 </body>
 
 
