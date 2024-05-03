@@ -25,9 +25,12 @@ li {
 <title>게시판 메인 페이지</title>
 </head>
 <body>
+		<div class="logo">
+          <a href="/ex01/"><img src="images/logo.png" alt="랩탑로고"> <!-- 로고 이미지 --></a>
+        </div>
 	<h1>게시판</h1>
 	<!-- 글 작성 페이지 이동 버튼 -->
-	<a href="register"><input type="button" value="글 작성"></a>
+	<a href="regist"><input type="button" value="글 작성"></a>
 	<hr>
 	<table>
 		<thead>

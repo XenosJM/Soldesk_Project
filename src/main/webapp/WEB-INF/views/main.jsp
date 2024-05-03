@@ -450,7 +450,7 @@ body {
     </nav>
       
         <div class="logo">
-          <a href="#"><img src="images/logo.png" alt="랩탑로고"> <!-- 로고 이미지 --></a>
+          <a href="/ex01/"><img src="images/logo.png" alt="랩탑로고"> <!-- 로고 이미지 --></a>
         </div>
       
         <div class="login-container">

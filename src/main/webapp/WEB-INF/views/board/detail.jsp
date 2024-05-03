@@ -32,7 +32,7 @@
 	</div>
 	
 	<button onclick="location.href='list'">글 목록</button>
-	<button onclick="location.href='modify?boardId=${boardVO.boardId}'">글 수정</button>
+	<button onclick="location.href='update?boardId=${boardVO.boardId}'">글 수정</button>
 	<button id="deleteBoard">글 삭제</button>
 	<form id="deleteForm" action="delete" method="POST">
 		<input type="hidden" name="boardId" value="${boardVO.boardId }">
