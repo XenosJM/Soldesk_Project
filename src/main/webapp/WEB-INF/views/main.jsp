@@ -465,9 +465,9 @@ body {
       
         <nav>
           <ul>
-            <li><a href="#"><img src="" alt=""> 자유게시판</a></li>
-            <li><a href="#"><img src="" alt=""> 리버스1999</a></li>
-            <li><a href="#"><img src="" alt=""> 붕괴스타레일</a></li>
+            <li><a href="/ex01/board/list"><img src="" alt=""> 자유게시판</a></li>
+            <li><a href="/ex01/board/reverse1999"><img src="" alt=""> 리버스1999</a></li>
+            <li><a href="/ex01/board/starrail"><img src="" alt=""> 붕괴스타레일</a></li>
             <li><a href="#"><img src="" alt=""> 니케</a></li>
             <li><a href="#"><img src="" alt=""> 마작일번가</a></li>
           </ul>
@@ -477,7 +477,7 @@ body {
       
       <div id ="Wrap">
         <div class="banner">
-          <a href="../regist.jsp"><img src="images/banner1.png" alt="회원가입 유도 배너"></a>
+          <a href="/ex01/member/regist"><img src="images/banner1.png" alt="회원가입 유도 배너"></a>
         </div>
 
 
