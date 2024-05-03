@@ -1,6 +1,9 @@
 package com.soldesk.ex01.persistence;
 
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -37,9 +40,28 @@ public class MemberControllerTest {
 	
 	@Test
 	public void test() {
-		testRegistMemberPost();
+//		testRegistMemberPost();
 //		testRegistMemberGet();
+//		testdetailMember();
+		testUpdateMember();
+	}
+
+	private void testUpdateMember() {
 		
+		
+	}
+
+	private void testdetailMember() {
+		 // given
+        Integer memberId = 1; // 테스트를 위한 Member ID
+        // when & then
+        try {
+            mock.perform(get("/member/detail").param("memberId", memberId.toString())) // "/detail" 엔드포인트에 GET 요청을 보냄
+                .andExpect(status().isOk()) // 응답 상태코드가 OK(200)인지 확인
+                .andExpect(view().name("member/detail")); // 반환되는 뷰의 이름이 "detail"인지 확인
+        } catch (Exception e) {
+            log.error("Exception occurred during testDetailMember(): " + e.getMessage());
+        }
 	}
 
 	private void testRegistMemberGet() {

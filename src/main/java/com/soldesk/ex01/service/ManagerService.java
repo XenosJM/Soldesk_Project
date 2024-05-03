@@ -9,6 +9,6 @@ public interface ManagerService {
 	int createManager(ManagerVO managerVO);
 	ManagerVO getManagerById(int managerId);
 	List<ManagerVO> getAllManager();
-	int changeManager(int managerId);
+	int changeManager(ManagerVO managerVO);
 	int deleteManager(int managerId);
 }

@@ -20,7 +20,7 @@
 	<button id="modify">수정하기</button><br>
 	<button id="delete">회원탈퇴</button>
 	
-	<form id="modifyForm">	
+	<form id="modifyForm" action="modify" Method="post">	
 		<input type="password" placeholder="비밀번호 입력"><br>
 		<c:choose>
 		<c:when test="${memberProperty eq null }"><label for="buy">현재 보유중인 상품이 없습니다. 구매하러 가시겠습니까?
@@ -28,6 +28,7 @@
 		<c:when test="${memberProperty ne null }"><p>현재 보유중인 상품 목록 : ${memberProperty }</p><br></c:when>
 		</c:choose>
 		<input type="email" placeholder="이메일을 입력">
+		<input type="submit" value="수정하기">
 	</form>
 	
  	<script type="text/javascript">
