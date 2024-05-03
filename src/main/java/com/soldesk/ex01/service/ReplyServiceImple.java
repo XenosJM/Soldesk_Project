@@ -45,9 +45,12 @@ public class ReplyServiceImple implements ReplyService {
 	}
 
 	@Override
-	public int updateReply(ReplyVO vo) {
+	public int updateReply(int replyId, String replyContent) {
 		log.info("service : updateReply()");
-		int result = replyMapper.updateReply(vo);
+		ReplyVO replyVO = new ReplyVO();
+		replyVO.setReplyId(replyId);
+		replyVO.setReplyContent(replyContent);
+		int result = replyMapper.updateReply(replyVO);
 		return result;
 	}
 

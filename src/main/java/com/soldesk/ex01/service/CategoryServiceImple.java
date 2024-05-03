@@ -51,4 +51,13 @@ public class CategoryServiceImple implements CategoryService {
 		return result;
 	}
 
+	@Override
+	public CategoryVO selectCategory(int categoryId) {
+		log.info("service : selectCategory()");
+		CategoryVO vo = categoryMapper.selectCategory(categoryId);
+		return vo;
+	}
+
+	
+
 }

@@ -13,4 +13,5 @@ public interface CategoryMapper {
 	List<CategoryVO> selectCategoryTitle(String categoryTitle);
 	int updateCategoryTitle(CategoryVO vo);
 	int deleteCategory(int categoryId);
+	CategoryVO selectCategory(int categoryId);
 }
