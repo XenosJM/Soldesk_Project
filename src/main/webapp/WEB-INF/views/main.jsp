@@ -460,7 +460,7 @@ body {
             <input type="password" name="password" placeholder="비밀번호">
             <input type="submit" value="로그인">
           </form>
-          <p><a href="../regist.jsp">회원가입</a> | <a href="../memberFind.jsp">ID/PW찾기</a></p>
+          <p><a href="#" onclick="window.location.href='/ex01/member/regist'">회원가입</a> | <a href="../memberFind">ID/PW찾기</a></p>
         </div>
       
         <nav>
