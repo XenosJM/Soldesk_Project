@@ -19,6 +19,12 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		SELECT * FROM CATEGORY
 		WHERE CATEGORY_TITLE LIKE '%${categoryTitle}%'
 	</select>
+	
+	<select id="selectCategory" resultMap="CategoryResultMap"> 
+		SELECT * FROM CATEGORY
+		WHERE CATEGORY_ID = #{categoryId}
+	</select>
+	
 	<update id="updateCategoryTitle"> 
 		UPDATE CATEGORY SET CATEGORY_TITLE = #{categoryTitle} 
 		WHERE CATEGORY_ID = #{categoryId}

@@ -9,6 +9,6 @@ public interface ReplyService {
 	List<ReplyVO> selectReplyMemberList(String memberId);
 	List<ReplyVO> selectReplyContentList(String Content);
 	List<ReplyVO> selectReplyBoard(int boardId);
-	int updateReply(ReplyVO vo);
+	int updateReply(int replyId, String replyContent);
 	int deleteReply(int replyId);
 }
