@@ -47,7 +47,7 @@
 			});
 		}); // end document
 	</script>
-	   <input type="hidden" id="boardId" value="1">
+	   <input type="hidden" id="boardId" value="${boardVO.boardId}">
 
    <div style="text-align: center;">
       <input type="text" id="memberId" >
@@ -99,7 +99,7 @@
          function getAllReply() {
             let boardId = $('#boardId').val();
             
-            let url = '../reply/all/' + boardId;
+            let url = '../reply/' + boardId;
             $.getJSON(
                url,       
                function(data) {
@@ -116,7 +116,7 @@
                      console.log(this);
                     
                      // 전송된 replyDateCreated는 문자열 형태이므로 날짜 형태로 변환이 필요
-                     let replyDateCreated = new Date(this.replyDateCreated);
+                     let replyRegistDate = new Date(this.replyRegistDate);
 
                      list += '<div class="reply_item">'
                         + '<pre>'
@@ -125,7 +125,7 @@
                         + '&nbsp;&nbsp;' // 공백
                         + '<input type="text" id="replyContent" value="'+ this.replyContent +'">'
                         + '&nbsp;&nbsp;'
-                        + replyDateCreated
+                        + replyRegistDate
                         + '&nbsp;&nbsp;'
                         + '<button class="btn_update" >수정</button>'
                         + '<button class="btn_delete" >삭제</button>'
