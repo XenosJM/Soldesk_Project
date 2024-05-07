@@ -35,7 +35,7 @@ public class ReplyRESTController {
 		return new ResponseEntity<Integer>(result, HttpStatus.OK);
 	}
 	
-	@GetMapping("/all/{boardId}")
+	@GetMapping("/{boardId}")
 	public ResponseEntity<List<ReplyVO>> readAllReply(@PathVariable("boardId") int boardId){
 		log.info("reply controller : readAllReply()");
 		log.info("boardId = "+boardId );
