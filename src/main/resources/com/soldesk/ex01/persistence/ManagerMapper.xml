@@ -6,12 +6,13 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	<resultMap type="com.soldesk.ex01.domain.ManagerVO" id="managerResultMap">
 		<id property="managerId" column="MANAGER_ID"/>
 		<result property="memberId" column="MEMBER_ID"/>
-		<result property="categoriId" column="CATEGORY_ID"/>	
+		<result property="categoryId" column="CATEGORY_ID"/>	
+		<result property="managerRole" column="MANAGER_ROLE"/>
 	</resultMap>
 	<!-- 관리자 등록 -->
 	<insert id="insert">
 		INSERT INTO MANAGER (MANAGER_ID, MEMBER_ID, CATEGORY_ID)
-		VALUES (MANAGER_SEQ.NEXTVAL, #{memberId}, #{categoryId}) 
+		VALUES (MANAGER_SEQ.NEXTVAL, #{memberId}, #{categoryId}, #{managerRole}) 
 	</insert>
 	<!-- 관리자 상세 검색 -->
 	<select id="selectByManagerId" resultMap="managerResultMap">

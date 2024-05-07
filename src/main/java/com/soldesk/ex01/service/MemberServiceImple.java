@@ -61,4 +61,10 @@ public class MemberServiceImple implements MemberService{
 		log.info("deleteMember()");
 		return memberMapper.delete(memberId);
 	}
+
+	@Override
+	public MemberVO memberCheck(String memberName) {
+		log.info("memberCheck()");
+		return memberMapper.memberCheck(memberName);
+	}
 }

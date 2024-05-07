@@ -130,6 +130,7 @@
     
 </head>
 <body>
+	
 <div class="vertical-header">
     <div class="logo">
         <a href="/ex01/"><img src="images/logo.png" alt="메인로고"></a> <!-- 로고 이미지 -->
@@ -137,9 +138,9 @@
 
     <div class="login-container">
         <h2>로그인</h2>
-        <form action="#" method="post">
-            <input type="text" name="username" placeholder="아이디">
-            <input type="password" name="password" placeholder="비밀번호">
+        <form action="member/check" method="post">
+            <input type="text" name="memberName" placeholder="아이디">
+            <input type="password" name="memberPassword" placeholder="비밀번호">
             <input type="submit" value="로그인">
         </form>
         <p><a href="#" onclick="window.location.href='/ex01/member/regist'">회원가입</a> | <a href="../memberFind">ID/PW찾기</a></p>
@@ -177,6 +178,8 @@
     </div>
 
 </div> <!-- 메인 화면 배너들 -->
+<script type="text/javascript">
 
+</script>
 </body>
 </html>

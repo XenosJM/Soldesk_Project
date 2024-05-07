@@ -16,4 +16,5 @@ public class ManagerVO {
 	private int managerId;
 	private int memberId;
 	private int categoryId;
+	private String managerRole;
 }
