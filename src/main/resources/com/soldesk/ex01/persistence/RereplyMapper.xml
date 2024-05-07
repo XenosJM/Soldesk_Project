@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.soldesk.ex01.persistence.RereplyMapper">
+	<resultMap type="com.soldesk.ex01.domain.RereplyVO"
+		id="RereplyResultMap">
+		<id property="rereplyId" column="REREPLY_ID" />
+		<result property="replyId" column="REPLY_ID"/>
+		<result property="memberId" column="MEMBER_ID"/>
+		<result property="rereplyContent" column="REREPLY_CONTENT"/>
+		<result property="rereplyRegistDate" column="REREPLY_REGISTDATE" />
+	</resultMap>
+	<insert id="insertRereply"> INSERT INTO REREPLY VALUES (REREPLY_SEQ.NEXTVAL,#{replyId}, #{memberId},
+		#{rereplyContent},SYSDATE)
+	</insert>
+
+	<select id="selectRereply" resultMap="RereplyResultMap"> 
+		SELECT * FROM REREPLY WHERE REPLY_ID = #{replyId}
+	</select>	
+	
+	<update id="updateRereply"> 
+		UPDATE REREPLY SET 
+		REREPLY_CONTENT = #{rereplyContent}
+		WHERE REREPLY_ID = #{rereplyId}
+	</update>
+	<delete id="deleteRereply"> 
+		DELETE FROM	REREPLY WHERE REREPLY_ID = #{rereplyId}
+	</delete>
+</mapper>

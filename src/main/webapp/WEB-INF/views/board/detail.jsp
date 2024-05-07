@@ -31,12 +31,17 @@
 		<textarea rows="20" cols="120" readonly>${boardVO.boardContent }</textarea>
 	</div>
 	
+	<p><a href="download?attachId=${attachVO.attachId }">
+	${attachVO.attachRealName }.${attachVO.attachExtension }</a></p>
+	
+	
 	<button onclick="location.href='list'">글 목록</button>
 	<button onclick="location.href='update?boardId=${boardVO.boardId}'">글 수정</button>
 	<button id="deleteBoard">글 삭제</button>
 	<form id="deleteForm" action="delete" method="POST">
 		<input type="hidden" name="boardId" value="${boardVO.boardId }">
 	</form>
+	
 	
 	<script type="text/javascript">
 		$(document).ready(function(){
@@ -59,10 +64,15 @@
    <div style="text-align: center;">
       <div id="replies"></div>
    </div>
+   
+   <div style="text-align: center;">
+      <div id="rereplies"></div>
+   </div>
 
    <script type="text/javascript">
       $(document).ready(function(){
          getAllReply(); // 함수 호출      
+         getAllRereply();
          
          // 댓글 작성 기능
          $('#btnAdd').click(function(){
@@ -134,9 +144,46 @@
                   }); // end each()
                      
                   $('#replies').html(list); // 저장된 데이터를 replies div 표현
+                  
+                 
                } // end function()
             ); // end getJSON()
+            
          } // end getAllReply()
+         
+         
+         function getAllRereply(){
+       	  let replyId = $('#replyId').val();
+       	  let url='../rereply/'+replyId;
+       	  $.getJSON(
+       		  url,
+       		  function(data){
+       			  console.log(data);
+       			  let list='';
+       			  $(data).each(function(){
+       				  console.log(this);
+       				  let rereplyRegistDate = new Date(this.rereplyResgistDate);
+           			  
+           			  list += '<div class = "rereply_item">'
+           			  +'<pre>'
+           			  + '<input type="hidden" id="rereplyId" value="'+ this.rereplyId +'">'
+           			  + this.memberId
+           			  + '&nbsp;&nbsp;' // 공백
+                         + '<input type="text" id="replyContent" value="'+ this.replyContent +'">'
+                         + '&nbsp;&nbsp;'
+                         + replyRegistDate
+                         + '&nbsp;&nbsp;'
+                         + '<button class="btn_update" >수정</button>'
+                         + '<button class="btn_delete" >삭제</button>'
+                         + '</pre>'
+                         + '</div>';
+       			  })// end each()
+       			  
+       			  $('#rereplies').html(list);
+       			  
+       		  }// end function()
+       	  )// end getJSON()
+         }// end getAllRereply()
          
          // 수정 버튼을 클릭하면 선택된 댓글 수정
          $('#replies').on('click', '.reply_item .btn_update', function(){
@@ -192,7 +239,7 @@
 
       }); // end document()
    </script>
-
+	
 </body>
 </html>
 
