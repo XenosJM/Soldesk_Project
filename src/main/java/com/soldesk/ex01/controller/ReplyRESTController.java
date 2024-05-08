@@ -47,6 +47,7 @@ public class ReplyRESTController {
 	public ResponseEntity<Integer> updateReply(@PathVariable("replyId")int replyId, @RequestBody String replyContent){
 		log.info("reply controller : updateReply()");
 		log.info("replyId = " +replyId);
+		log.info("replyContent : "+replyContent);
 		int result = replyService.updateReply(replyId,replyContent);
 		return new ResponseEntity<Integer>(result,HttpStatus.OK);
 	}

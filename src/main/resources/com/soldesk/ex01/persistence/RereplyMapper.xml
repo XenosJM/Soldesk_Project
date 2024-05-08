@@ -27,4 +27,4 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	<delete id="deleteRereply"> 
 		DELETE FROM	REREPLY WHERE REREPLY_ID = #{rereplyId}
 	</delete>
-</mapper>
+</mapper>	

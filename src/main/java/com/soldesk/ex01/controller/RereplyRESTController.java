@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.soldesk.ex01.domain.RereplyVO;
@@ -43,14 +44,15 @@ public class RereplyRESTController {
 	}
 	
 	@PutMapping("/{rereplyId}")
-	public ResponseEntity<Integer> updateRereply(@PathVariable("rereply")int rereplyId,@RequestBody String rereplyContent){
+	public ResponseEntity<Integer> updateRereply(@PathVariable("rereplyId")int rereplyId,@RequestBody String rereplyContent){
 		log.info("rereply controller : updateRereply()");
 		log.info("rereplyId = "+rereplyId);
+		log.info("rereplyContent = "+rereplyContent);
 		int result = rereplyService.updateRereply(rereplyId, rereplyContent);
 		return new ResponseEntity<Integer>(result,HttpStatus.OK);
 	}
 	
-	@DeleteMapping("/{rereplyId}/{replyId}")
+	@RequestMapping(method = RequestMethod.DELETE)//("/{rereplyId}/{replyId}")
 	public ResponseEntity<Integer> deleteRereply(@PathVariable("rereplyId")int rereplyId){
 		log.info("rereply contorller: deleteRereply()");
 		log.info("rereplyId = "+rereplyId);

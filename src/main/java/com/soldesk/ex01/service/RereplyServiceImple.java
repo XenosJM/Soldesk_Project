@@ -32,12 +32,16 @@ public class RereplyServiceImple implements RereplyService {
 	}
 
 	@Override
-	public int updateRereply(int rereplyID, String rereplyContent) {
+	public int updateRereply(int rereplyId, String rereplyContent) {
 		log.info("rereply service : updateRereply()");
 		RereplyVO rereplyvo = new RereplyVO();
-		rereplyvo.setReplyId(rereplyID);
+		
+		rereplyvo.setReplyId(rereplyId);
+		
 		rereplyvo.setRereplyContent(rereplyContent);
+		
 		int result = rereplymapper.updateRereply(rereplyvo);
+		
 		return result;
 	}
 
