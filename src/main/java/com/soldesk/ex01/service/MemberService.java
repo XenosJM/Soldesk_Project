@@ -24,6 +24,9 @@ public interface MemberService {
 	MemberVO memberCheck(String memberName);
 	// TODO 회원 친구 보기 -> 친구 서비스에서
 	
+	// 친구 신청(등록)
+	
+	// 친구 
 	// TODO 회원 쪽지 보내기 -> 쪽지용 서비스에서 
 	
 }

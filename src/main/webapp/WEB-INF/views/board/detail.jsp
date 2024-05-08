@@ -71,8 +71,10 @@
 
    <script type="text/javascript">
       $(document).ready(function(){
-         getAllReply(); // 함수 호출      
-         getAllRereply();
+         
+         getAllReply(); // 함수 호출    
+      	 
+         
          
          // 댓글 작성 기능
          $('#btnAdd').click(function(){
@@ -108,10 +110,9 @@
          // 게시판 댓글 전체 가져오기
          function getAllReply() {
             let boardId = $('#boardId').val();
-            
-            let url = '../reply/' + boardId;
+            let url = '../reply/'+ boardId;
             $.getJSON(
-               url,       
+            	url ,       
                function(data) {
                   // data : 서버에서 전송받은 list 데이터가 저장되어 있음.
                   // getJSON()에서 json 데이터는 
@@ -141,6 +142,7 @@
                         + '<button class="btn_delete" >삭제</button>'
                         + '</pre>'
                         + '</div>';
+                     getAllRereply(this.replyId);
                   }); // end each()
                      
                   $('#replies').html(list); // 저장된 데이터를 replies div 표현
@@ -148,13 +150,14 @@
                  
                } // end function()
             ); // end getJSON()
-            
          } // end getAllReply()
          
          
-         function getAllRereply(){
-       	  let replyId = $('#replyId').val();
-       	  let url='../rereply/'+replyId;
+         function getAllRereply(replyId){
+        	/* replyId = $('#replyId').val(); */
+       	  console.log(replyId);
+       	  /* let url='../rereply/'+replyId; */
+       	  let url= "../rereply/" + replyId;
        	  $.getJSON(
        		  url,
        		  function(data){
@@ -169,9 +172,9 @@
            			  + '<input type="hidden" id="rereplyId" value="'+ this.rereplyId +'">'
            			  + this.memberId
            			  + '&nbsp;&nbsp;' // 공백
-                         + '<input type="text" id="replyContent" value="'+ this.replyContent +'">'
+                         + '<input type="text" id="replyContent" value="'+ this.rereplyContent +'">'
                          + '&nbsp;&nbsp;'
-                         + replyRegistDate
+                         + rereplyRegistDate
                          + '&nbsp;&nbsp;'
                          + '<button class="btn_update" >수정</button>'
                          + '<button class="btn_delete" >삭제</button>'
@@ -182,7 +185,7 @@
        			  $('#rereplies').html(list);
        			  
        		  }// end function()
-       	  )// end getJSON()
+       	  );// end getJSON()
          }// end getAllRereply()
          
          // 수정 버튼을 클릭하면 선택된 댓글 수정

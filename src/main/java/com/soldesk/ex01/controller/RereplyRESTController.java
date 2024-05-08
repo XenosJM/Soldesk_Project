@@ -35,7 +35,7 @@ public class RereplyRESTController {
 	}
 	
 	@GetMapping("/{replyId}")
-	public ResponseEntity<List<RereplyVO>> readAllRereply(@PathVariable("replyId") int replyId){
+	public ResponseEntity<List<RereplyVO>> readAllRereply(@PathVariable("replyId") Integer replyId){
 		log.info("rereply controller : readAllRereply()");
 		log.info("replyId = "+replyId);
 		List<RereplyVO> list = rereplyService.selectRereply(replyId);
