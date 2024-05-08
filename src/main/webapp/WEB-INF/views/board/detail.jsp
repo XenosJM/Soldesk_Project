@@ -9,6 +9,7 @@
 <script src="https://code.jquery.com/jquery-3.7.1.js">
 	
 </script>
+<!-- trash -->
 <meta charset="UTF-8">
 <title>${boardVO.boardTitle }</title>
 </head>
