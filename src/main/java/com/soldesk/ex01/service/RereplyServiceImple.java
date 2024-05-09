@@ -34,14 +34,15 @@ public class RereplyServiceImple implements RereplyService {
 	@Override
 	public int updateRereply(int rereplyId, String rereplyContent) {
 		log.info("rereply service : updateRereply()");
-		RereplyVO rereplyvo = new RereplyVO();
-		
-		rereplyvo.setReplyId(rereplyId);
-		
-		rereplyvo.setRereplyContent(rereplyContent);
-		
-		int result = rereplymapper.updateRereply(rereplyvo);
-		
+		RereplyVO vo = new RereplyVO();
+		log.info("1");
+		vo.setRereplyId(rereplyId);
+		log.info("1");
+		vo.setRereplyContent(rereplyContent);
+		log.info("1");
+		System.out.println(vo);
+		int result = rereplymapper.updateRereply(vo);
+		log.info("service result : "+result);
 		return result;
 	}
 
@@ -49,6 +50,13 @@ public class RereplyServiceImple implements RereplyService {
 	public int deleteRereply(int rereplyId) {
 		log.info("rereply service : deleteRereply()");
 		int result = rereplymapper.deleteRereply(rereplyId);
+		return result;
+	}
+
+	@Override
+	public int deleteRereplyToReply(int replyId) {
+		log.info("rereply service : deleteRereplyToReply()");
+		int result = rereplymapper.deleteRereplyToReply(replyId);
 		return result;
 	}
 

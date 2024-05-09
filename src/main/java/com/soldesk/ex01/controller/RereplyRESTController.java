@@ -52,12 +52,20 @@ public class RereplyRESTController {
 		return new ResponseEntity<Integer>(result,HttpStatus.OK);
 	}
 	
-	@RequestMapping(method = RequestMethod.DELETE)//("/{rereplyId}/{replyId}")
+	@DeleteMapping("/{rereplyId}")
 	public ResponseEntity<Integer> deleteRereply(@PathVariable("rereplyId")int rereplyId){
 		log.info("rereply contorller: deleteRereply()");
 		log.info("rereplyId = "+rereplyId);
 		int result = rereplyService.deleteRereply(rereplyId);
 		return new ResponseEntity<Integer>(result,HttpStatus.OK);
 		
+	}
+	
+	@DeleteMapping("/{replyId}")
+	public ResponseEntity<Integer> deleteRereplyToReply(@PathVariable("replyId")int replyId){
+		log.info("rereply contorller: deleteRereplyToReply()");
+		log.info("replyId = "+replyId);
+		int result = rereplyService.deleteRereplyToReply(replyId);
+		return new ResponseEntity<Integer>(result,HttpStatus.OK);
 	}
 }

@@ -9,4 +9,5 @@ public interface RereplyService {
 	List<RereplyVO>selectRereply(int replyId);
 	int updateRereply(int rereplyID, String rereplyContent);
 	int deleteRereply(int rereplyId);
+	int deleteRereplyToReply(int replyId);
 }

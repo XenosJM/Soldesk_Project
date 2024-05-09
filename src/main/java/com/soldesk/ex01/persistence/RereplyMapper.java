@@ -12,4 +12,5 @@ public interface RereplyMapper {
 	List<RereplyVO>selectRereply(int replyId);
 	int updateRereply(RereplyVO vo);
 	int deleteRereply(int rereplyId);
+	int deleteRereplyToReply(int replyId);
 }

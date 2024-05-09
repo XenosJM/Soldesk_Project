@@ -22,7 +22,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		SELECT * FROM REPLY	WHERE REPLY_CONTENT LIKE '%${replyContent}%'
 	</select>
 	<select id="selectReplyBoard" resultMap="ReplyResultMap"> 
-		SELECT * FROM REPLY WHERE BOARD_ID = #{boardId}
+		SELECT * FROM REPLY WHERE BOARD_ID = #{boardId} ORDER BY REPLY_ID ASC
 	</select>	
 	
 	<update id="updateReply"> 

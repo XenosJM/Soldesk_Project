@@ -16,7 +16,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	</insert>
 
 	<select id="selectRereply" resultMap="RereplyResultMap"> 
-		SELECT * FROM REREPLY WHERE REPLY_ID = #{replyId}
+		SELECT * FROM REREPLY WHERE REPLY_ID = #{replyId} ORDER BY REREPLY_ID ASC
 	</select>	
 	
 	<update id="updateRereply"> 
@@ -27,4 +27,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	<delete id="deleteRereply"> 
 		DELETE FROM	REREPLY WHERE REREPLY_ID = #{rereplyId}
 	</delete>
+	
+	 <delete id = "deleteRereplyToReply">
+		DELETE FROM REREPLY WHERE REPLY_ID = #{replyId}
+	</delete> 
 </mapper>	
