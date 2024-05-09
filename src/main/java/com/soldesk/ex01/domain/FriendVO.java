@@ -1,5 +1,7 @@
 package com.soldesk.ex01.domain;
 
+import java.util.Date;
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -11,11 +13,11 @@ import lombok.ToString;
 @Setter
 @Getter
 @ToString
-public class SendFriendVO {
-	private int sendFriendId;
+public class FriendVO {
+	
+	private int friendshipId;
 	private int memberId;
-	private int receiveMemberId;
-	
-	
-
+	private int friendMemberId;
+	private String friendState;
+	private Date friendshipDate;
 }

@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.soldesk.ex01.persistence.FriendMapper">
+
+	<resultMap type="com.soldesk.ex01.domain.RequestVO"
+		id="requestResultMap">
+		<id property="requestId" column="REQUEST_ID" />
+		<result property="memberId" column="MEMBER_ID" />
+		<result property="receiverId" column="RECEIVER_ID" />
+		<result property="requestState" column="REQUEST_STATE" />
+		<result property="requestSendDate" column="REQUEST_SENDDATE" />
+	</resultMap>
+	
+	 <!-- 친구 요청 삽입 -->
+    <insert id="insertRequest" parameterType="com.soldesk.ex01.domain.RequestVO">
+        INSERT INTO request_table (MEMBER_ID, RECEIVER_ID, REQUEST_STATE, REQUEST_SENDDATE)
+        VALUES (#{memberId}, #{receiverId}, #{requestState}, #{requestSendDate})
+    </insert>
+
+    <!-- 특정 회원이 보낸 친구 요청 목록 조회 -->
+    <select id="sendListRequest" resultType="com.soldesk.ex01.domain.RequestVO">
+        SELECT * FROM request_table WHERE MEMBER_ID = #{memberId}
+    </select>
+
+    <!-- 친구 요청 상태 변경 -->
+    <update id="requestStateChange">
+        UPDATE request_table SET REQUEST_STATE = #{requestState} WHERE REQUEST_ID = #{requestId}
+    </update>
+
+    <!-- 친구 요청 취소 -->
+    <delete id="cancelRequest">
+        DELETE FROM request_table WHERE REQUEST_ID = #{requestId}
+    </delete>
+	
+	<resultMap type="com.soldesk.ex01.domain.ReceiveVO"
+		id="receiveResultMap">
+		<id property="receiveId" column="RECEIVE_ID" />
+		<result property="memberId" column="MEMBER_ID" />
+		<result property="requesterId" column="REQUESTER_ID" />
+		<result property="requestState" column="RECEIVE_STATE" />
+		<result property="requestSendDate" column="RECEIVE_DATE" />
+	</resultMap>
+	
+	    <!-- 친구 요청 수신 삽입 -->
+    <insert id="insertReceive" parameterType="com.soldesk.ex01.domain.ReceiveVO">
+        INSERT INTO receive_table (MEMBER_ID, REQUESTER_ID, RECEIVE_STATE, RECEIVE_DATE)
+        VALUES (#{memberId}, #{requesterId}, #{requestState}, #{requestSendDate})
+    </insert>
+
+    <!-- 특정 회원이 받은 친구 요청 목록 조회 -->
+    <select id="receiveListRequest" resultType="com.soldesk.ex01.domain.ReceiveVO">
+        SELECT * FROM receive_table WHERE MEMBER_ID = #{memberId}
+    </select>
+
+    <!-- 친구 요청 수신 상태 변경 -->
+    <update id="receiveStateChange">
+        UPDATE receive_table SET RECEIVE_STATE = #{requestState} WHERE RECEIVE_ID = #{receiveId}
+    </update>
+
+    <!-- 친구 요청 거절 -->
+    <delete id="rejectRequest">
+        DELETE FROM receive_table WHERE RECEIVE_ID = #{receiveId}
+    </delete>
+	
+	<resultMap type="com.soldesk.ex01.domain.FriendVO"
+		id="friendResultMap">
+		<id property="friendId" column="FRIEND_ID" />
+		<result property="memberId" column="MEMBER_ID" />
+		<result property="friendMemberId" column="FRIEND_MEMBER_ID" />
+		<result property="friendState" column="FRIEND_STATE" />
+		<result property="friendshipDate" column="FRIENDSHIP_DATE" />
+	</resultMap>
+	
+    <!-- 친구 추가 -->
+    <insert id="insertFriend" parameterType="com.soldesk.ex01.domain.FriendVO">
+        INSERT INTO friend_table (MEMBER_ID, FRIEND_MEMBER_ID, FRIEND_STATE, FRIENDSHIP_DATE)
+        VALUES (#{memberId}, #{friendMemberId}, #{friendState}, #{friendshipDate})
+    </insert>
+
+    <!-- 특정 회원의 친구 목록 조회 -->
+    <select id="friendList" resultType="com.soldesk.ex01.domain.FriendVO">
+        SELECT * FROM friend_table WHERE MEMBER_ID = #{memberId}
+    </select>
+
+    <!-- 친구 상태 변경 -->
+    <update id="friendStatechange">
+        UPDATE friend_table SET FRIEND_STATE = #{friendState} WHERE FRIEND_ID = #{friendshipId}
+    </update>
+
+    <!-- 친구 삭제 -->
+    <delete id="deleteFriend">
+        DELETE FROM friend_table WHERE FRIEND_ID = #{friendshipId}
+    </delete>
+	
+	
+</mapper>
+	
