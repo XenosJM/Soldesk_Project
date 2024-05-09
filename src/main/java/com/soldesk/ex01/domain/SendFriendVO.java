@@ -17,4 +17,5 @@ public class SendFriendVO {
 	private int receiveMemberId;
 	
 	
+
 }
