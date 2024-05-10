@@ -1,7 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
-<%@ page session="false"%>
+<%@ page session="true"%>
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -131,6 +131,7 @@ body {
 </style>
 
 </head>
+<script src="https://code.jquery.com/jquery-3.7.1.js"></script>
 <body>
 
 	<div class="vertical-header">
@@ -139,18 +140,28 @@ body {
 			<!-- 로고 이미지 -->
 		</div>
 
-		<div class="login-container">
-			<h2>로그인</h2>
-			<form action="member/check" method="post">
-				<input type="text" name="memberName" placeholder="아이디"> <input
-					type="password" name="memberPassword" placeholder="비밀번호"> <input
-					type="submit" value="로그인">
-			</form>
-			<p>
-				<a href="#" onclick="window.location.href='/ex01/member/regist'">회원가입</a>
-				| <a href="../memberFind">ID/PW찾기</a>
-			</p>
-		</div>
+		<c:choose>
+			<c:when test="${empty sessionScope.memberId }">
+				<div class="login-container" style= "display:">
+					<h2>로그인</h2>
+					<form action="login/check" method="post">
+					<input type="text" name="memberId" placeholder="아이디"> <input
+						type="password" name="memberPassword" placeholder="비밀번호"> <input
+						type="submit" value="로그인">
+					</form>
+					<p>
+					<a href="#" onclick="window.location.href='/ex01/member/regist'">회원가입</a>
+					<a href="../memberFind">ID/PW찾기</a>
+					</p>
+				</div>
+			</c:when>
+			<c:when test="${not empty sessionScope.memberId }">
+				<div class="login-container" style= "display:">
+					<button onclick='location.href="member/detail"'>내 정보 보기</button>
+					<button onclick='location.href="member/checkout"'>로그아웃</button>
+				</div>
+			</c:when>
+		</c:choose>
 
 		<nav>
 			<ul>

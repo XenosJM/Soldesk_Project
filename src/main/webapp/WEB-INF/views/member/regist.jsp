@@ -436,17 +436,163 @@ body {
     
   }
     </style>
-</style>
 </head>
+<script src="https://code.jquery.com/jquery-3.7.1.js"></script>
 <body>
 	<h2>회원 가입 페이지</h2>
 	
-	<form action="regist" Method="post">
-		<input name="memberName" type="text" placeholder="아이디를 입력해주세요" required="required">
-		<input name="memberPassword" type="password" placeholder="비밀번호를 입력하세요." required="required">
-		<input name="memberEmail" type="email" required="required" placeholder="이메일을 입력해주세요">
-		<input type="submit" value="등록하기">
-	</form>
-	
+	  <form id="joinForm" action="member/regist" method="POST">
+	    <div class="join-content">
+	      <div class="row-group">
+	        <div class="join-row">
+	          <h3 class="join-title">
+	            <label for="memberId">아이디</label>
+	          </h3>
+	          <span>
+	            <input id="memberId" class ="memberInfo" type="text" name="memberName" title="아이디" maxlength="15">
+	            <br>
+	          </span>
+	          <span id="idMsg"></span>
+	        </div>
+	        
+	        <div class="join-row">
+	          <h3 class="join-title">
+	            <label for="memberPw">비밀번호</label>
+	          </h3>
+	          <span>
+	            <input id="memberPassword" class ="memberInfo" type="password" name="memberPw" title="비밀번호" maxlength="20">
+	            <br>
+	          </span>
+	          <span id="pwMsg"></span>
+	          
+	          <h3 class="join-title">
+	            <label for="passwordConfirm">비밀번호 재확인</label>
+	          </h3>
+	          <span>
+	            <input id="passwordConfirm" type="password" title="비밀번호 확인" maxlength="20">
+	            <br>
+	          </span>
+	          <span id="pwConfirmMsg"></span>
+	          <h3 class="join-title">
+	          	<label for="memberEmail">이메일</label>
+	          </h3>
+	          <span>
+	            <input id="memberEmail" class ="memberInfo" type="email" name="memberEmail" title="이메일" maxlength="10">
+	            <br>
+	          </span>
+	          <span id="emailMsg"></span>
+	        </div>
+	      </div>
+	      <!-- 스프링 시큐리티를 사용하면 모든 post 전송에 csrf 토큰을 추가해야 함 -->
+	      <!-- <input type="hidden" name="_csrf" value="7d745488-7ec9-4937-9c2d-b58285bc9676"> -->
+	      <hr>
+	    </div>  
+	  </form>
+  
+ 	 <button id="btnJoin">제출</button>
+<script type="text/javascript">
+  	$(document).ready(function(){
+
+  		let idFlag = false; // memberName 유효성 변수 
+  		let pwFlag = false; // memberPassword 유효성 변수 
+  		let pwConfirmFlag = false; // pwConfirm 유효성 변수 
+  		let emailFlag = false; // memberEmail 유효성 변수 
+
+		// memberInfo 클래스를 가진 요소 찾기	  		
+	  	$('.memberInfo').each(function(){
+	  		// 각 요소 id값 가져옴
+	  		let elementId = $(this).attr('id');
+	  		
+	  		// blur() : input 태그에서 탭 키나 마우스로 다른 곳을 클릭할 때 이벤트 발생
+	  		// 아이디 유효성 검사	 
+	  		$('#' + elementId).blur(function(){
+	  			
+	  			if(elementId == 'memberId') {
+	  				let memberId = $('#' + elementId).val();
+	  			  	// 5 ~ 20자 사이의 소문자나 숫자로 시작하고, 소문자, 숫자을 포함하는 정규표현식
+	  				let idRegExp = /^[a-z0-9][a-zA-Z0-9]{4,19}$/;
+	  				if(memberId === ""){
+	  					$('#idMsg').html("아이디는 비어둘 수 없습니다.");
+	  					$('#idMsg').css("color", "red");
+	  					idFlag = false;
+	  					return;
+	  				}
+	  				
+	  				if(!idRegExp.test(memberId)){
+	  					$('#idMsg').html("아이디는 5-20자 사이로 영어, 숫자만 입력이 가능 합니다.");
+	  					$('#idMsg').css("color", "red");
+	  					idFlag = false;
+	  				} else {
+	  					checkId(memberId);
+	  				}
+	  				
+	  			} // end 아이디 요소 유효성 검사
+	  			else if (elementId == 'memberPassword') {
+	  				let memberPw = $('#' + elementId).val();
+	  				let pwRegExp = /^(?=.*?[A-Z])(?=.?[a-z])(?=.*?[0-9])(?=.*?[!@#$%^&*]).{8,16}$/;
+	  				if(memberPw === ""){
+	  					$('#pwMsg').html("비밀번호는 필수에오. 필수!");
+	  					$('#pwMsg').css("color", "red");
+	  					pwFlag = false;
+	  					return;
+	  				}
+	  				
+	  				if(!pwRegExp.test(memberPw)){
+	  					$('#pwMsg').html("비밀번호는 소문자, 대문자, 숫자, 특수문자(!@#$%^&*)중 최소 하나씩을 포함한 8 에서 16 자리만 가능합니다.");
+	  					$('#pwMsg').css("color", "red");
+	  					pwFlag = false;
+	  				} else {
+	  					$('#pwMsg').html("사용가능한 비밀번호 임미다.");
+	  					$('#pwMsg').css("color", "green");
+	  					pwFlag = true;
+	  				}
+	  			} // end 비밀번호 유효성 검사
+	  			else if(elementId == 'passwordConfirm') {
+	  				let memberPassword = $('#memberPassword').val();
+	  				let passwordConfirm = $('#' + elementId).val();
+	  				
+	  				if(passwordConfirm === ""){
+	  					$('#pwConfirm').html("비밀번호 확인을 하셔야해오.");
+	  					$('#pwConfirm').css("color", "red");
+	  					pwConfirmFlag = false;
+	  					return;
+	  				}
+	  				
+	  				if(memberPassword === passwordConfirm){
+	  					$('#pwConfirm').html("비밀번호 확인을 통과했습니다.");
+	  					$('#pwConfirm').css("color", "green");
+	  					pwConfirmFlag = true;
+	  				} else {
+	  					$('#pwConfirm').html("저런! 비밀번호를 다시 한번확인해 주세요");
+	  					$('#pwConfirm').css("color", "red");
+	  					pwConfirmFlag = false;
+	  				}
+	  			}
+	  		}); // end blur(function);
+	  		
+	  	}); // end each()
+	  	
+	  	
+	  	function checkId(memberId){
+	  		$.ajax({
+	  			type : "GET",
+	  			url : "/checkId/" + memberId,
+	  			success : function(result){
+	  				if(result == null){
+	  					$('#idMsg').html('사용가능한 아이디입니다.');
+	  					$('#idMsg').css('color', 'green');
+	  					idFlag = true;
+	  				} else {
+	  					$('#idMsg').html('이미 누군가가 사용중인 아이디입니다.');
+	  					$('#idMsg').css('color', 'red');
+	  					idFlag = false;
+	  				}
+	  			}
+	  		}) // end ajax
+	  			  		
+	  	} // end checkName
+  });
+
+  </script>
 </body>
 </html>

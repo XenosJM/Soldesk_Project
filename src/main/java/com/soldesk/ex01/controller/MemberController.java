@@ -33,21 +33,20 @@ public class MemberController {
 	public String registerPost(MemberVO memberVO, RedirectAttributes reAttr) {
 		log.info("registerPOST()");
 		log.info("memberVO = " + memberVO.toString());
-		if(memberService.memberCheck(memberVO.getMemberName()) == null) {
-			reAttr.addAttribute("alert", "입력하신 아이디 " + memberVO.getMemberName() + "는(은) 이미 사용중인 아이디 입니다.");
-			return "redirect:/regist";
-		}
-		reAttr.addAttribute("alert", memberVO.getMemberName() + "님 회원가입을 환엽합니다.");
+		reAttr.addAttribute("alert", memberVO.getMemberId() + "님 회원가입을 환엽합니다.");
 		int result = memberService.createMember(memberVO);
 		log.info(result + "행 등록");
 		return "redirect:/";
 	}
 	
 	@GetMapping("/detail")
-	public void detailGet(Model model, Integer memberId) {
+	public void detailGet(Model model, HttpServletRequest req) {
 		log.info("detailGet()");
-		MemberVO memberVO = new MemberVO(); 
-		memberVO = memberService.getMemberById(memberId);
+		MemberVO memberVO = new MemberVO();
+		HttpSession session = req.getSession();
+		int memberNum = (int) session.getAttribute("memberNum");
+		memberVO = memberService.getMemberById(memberNum);
+		log.info(memberVO);
 		model.addAttribute("memberVO", memberVO);
 	}
 	
@@ -66,27 +65,32 @@ public class MemberController {
 	}
 	
 	@PostMapping("/delete")
-	public String deletePost(Integer memberId) {
+	public String deletePost(Integer memberNum) {
 		log.info("delete()");
-		int result = memberService.deleteMember(memberId);
+		int result = memberService.deleteMember(memberNum);
 		log.info(result + "행 삭제");
 		return "redirect:/";
 	}
 	
 	@PostMapping("/check")
-	public String memberCheck(String memberName, String memberPassword, HttpServletRequest req) {
+	public String memberCheck(String memberId, String memberPassword, HttpServletRequest req) {
 		log.info("memberCheck()");
 		MemberVO memberVO = new MemberVO();
-		memberVO = memberService.memberCheck(memberName);
+		memberVO = memberService.memberCheck(memberId);
 		if(memberVO != null && memberPassword.equals(memberVO.getMemberPassword())) {
-			if(memberVO.getManagerId() != 0) {
+			if(memberVO.getManagerNum() != 0) {
+				log.info(memberVO.getMemberNum());
 				HttpSession session = req.getSession();
-				session.setAttribute("memberId", memberVO.getMemberId());
-				session.setAttribute("managerId", memberVO.getManagerId());
+				session.setAttribute("memberNum", memberVO.getMemberNum());
+				session.setAttribute("managerNum", memberVO.getManagerNum());
+//				session.setAttribute("memberName", memberVO.getMemberName());
 				return "redirect:/";
 			} else {
 				HttpSession session = req.getSession();
-				session.setAttribute("memberId", memberVO.getMemberId());
+				log.info(memberVO.getMemberNum());
+				session.setAttribute("memberNum", memberVO.getMemberNum());
+				log.info(session.getAttribute("memberNum"));
+//				session.setAttribute("memberName", memberVO.getMemberName());
 				return "redirect:/";
 			}
 		}
@@ -97,10 +101,17 @@ public class MemberController {
 	public String memberCheckout(HttpServletRequest req) {
 		log.info("memberCheckout()");
 		HttpSession session = req.getSession();
-		session.removeAttribute("memberId");
+		session.removeAttribute("memberNum");
 
 		return "redirect:/";
 	}
+	
+	@GetMapping("/checkId")
+	public String checkId(String memberId) {
+		log.info("checkId()");
+		return memberService.checkId(memberId);
+	}
+	
 }
 
 

@@ -39,9 +39,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		id="receiveResultMap">
 		<id property="receiveId" column="RECEIVE_ID" />
 		<result property="memberId" column="MEMBER_ID" />
-		<result property="requesterId" column="REQUESTER_ID" />
-		<result property="requestState" column="RECEIVE_STATE" />
-		<result property="requestSendDate" column="RECEIVE_DATE" />
+		<result property="receiverId" column="RECEIVER_ID" />
+		<result property="receiveState" column="RECEIVE_STATE" />
+		<result property="receiveDate" column="RECEIVE_DATE" />
 	</resultMap>
 	
 	    <!-- 친구 요청 수신 삽입 -->

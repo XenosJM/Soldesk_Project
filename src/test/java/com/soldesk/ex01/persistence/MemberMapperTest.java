@@ -51,7 +51,7 @@ public class MemberMapperTest {
 
 	private void testMemberPropertyUpdate() {
 		MemberVO vo = new MemberVO();
-		vo.setMemberId(1);
+		vo.setMemberNum(1);
 		vo.setMemberProperty(new int[] {34, 25, 22});
 		int result = memberMapper.updateProperty(vo);
 		log.info(result + "Çà ¼öÁ¤");
@@ -60,7 +60,7 @@ public class MemberMapperTest {
 	private void testMemberUpdate() {
 		log.info("testMemberUpdate()");
 		MemberVO vo = new MemberVO(); 
-		vo.setMemberId(1);
+		vo.setMemberNum(1);
 		vo.setMemberPassword("456456");
 		vo.setMemberEmail("test@test.com");
 		int result = memberMapper.update(vo);

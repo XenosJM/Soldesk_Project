@@ -21,32 +21,32 @@ public class HomeAspect {
 	// - 동일한 Pointcut이 반복되는 것을 피할 수 있음
 	// - 한 번 지정한 Pointcut을 여러 advice 메소드에서 참조
 	
-	@Pointcut("execution(* com.soldesk.ex01.HomeController.home(..))")
-	// HomeController의 home() 메서드에 포인트컷 지정
-	public void pcHome() {} // 포인트컷 위치 지정
-	
-	@Around("pcHome()") // 포인트컷 메서드를 적용
-	public Object homeAdvice(ProceedingJoinPoint jp) {
-		// ProceedingJoinPoint :
-		// Advice가 적용된 메서드를 호출하고 호출된 메서드의 실행을
-		// 계속 진행하는 기능을 제공
-		
-		Object result = null;
-		
-		log.info("===== homeAdvice");
-		
-		try {
-			log.info("===== home() 호출 전"); // @before
-			result = jp.proceed(); // HomeController.home() 실행
-			log.info("===== home() 리턴 후"); // @afterReturning
-		} catch (Throwable e) {
-			// @afterThrowing
-			log.info("===== 예외 발생 : " + e.getMessage());
-		} finally {
-			// @after
-			log.info("===== finally");
-		}
-		
-		return result;
-	}
+//	@Pointcut("execution(* com.soldesk.ex01.HomeController.home(..))")
+//	// HomeController의 home() 메서드에 포인트컷 지정
+//	public void pcHome() {} // 포인트컷 위치 지정
+//	
+//	@Around("pcHome()") // 포인트컷 메서드를 적용
+//	public Object homeAdvice(ProceedingJoinPoint jp) {
+//		// ProceedingJoinPoint :
+//		// Advice가 적용된 메서드를 호출하고 호출된 메서드의 실행을
+//		// 계속 진행하는 기능을 제공
+//		
+//		Object result = null;
+//		
+//		log.info("===== homeAdvice");
+//		
+//		try {
+//			log.info("===== home() 호출 전"); // @before
+//			result = jp.proceed(); // HomeController.home() 실행
+//			log.info("===== home() 리턴 후"); // @afterReturning
+//		} catch (Throwable e) {
+//			// @afterThrowing
+//			log.info("===== 예외 발생 : " + e.getMessage());
+//		} finally {
+//			// @after
+//			log.info("===== finally");
+//		}
+//		
+//		return result;
+//	}
 }

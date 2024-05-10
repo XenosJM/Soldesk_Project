@@ -26,7 +26,7 @@ public class LoggingAspect {
         log.info("before : " + className + "." + methodName + "()");
     } // beforeAdvice()
 
-    @After("execution(* com.soldesk.ex01.*.*(..))")
+    @After("execution(* com.soldesk.ex01.controller.*.*(..))")
     public void afterAdvice(JoinPoint joinPoint) {
         String methodName = joinPoint.getSignature().getName();
         String className = joinPoint.getTarget().getClass().getSimpleName();
