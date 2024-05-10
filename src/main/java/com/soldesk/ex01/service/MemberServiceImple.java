@@ -69,7 +69,7 @@ public class MemberServiceImple implements MemberService{
 	}
 
 	@Override
-	public String checkId(String memberId) {
+	public MemberVO checkId(String memberId) {
 		log.info("checkName()");
 		return memberMapper.checkId(memberId);
 	}

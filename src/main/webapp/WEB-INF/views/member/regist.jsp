@@ -457,10 +457,10 @@ body {
 	        
 	        <div class="join-row">
 	          <h3 class="join-title">
-	            <label for="memberPw">비밀번호</label>
+	            <label for="memberPassword">비밀번호</label>
 	          </h3>
 	          <span>
-	            <input id="memberPassword" class ="memberInfo" type="password" name="memberPw" title="비밀번호" maxlength="20">
+	            <input id="memberPassword" class ="memberInfo" type="password" name="memberPassword" title="비밀번호" maxlength="20">
 	            <br>
 	          </span>
 	          <span id="pwMsg"></span>
@@ -469,15 +469,16 @@ body {
 	            <label for="passwordConfirm">비밀번호 재확인</label>
 	          </h3>
 	          <span>
-	            <input id="passwordConfirm" type="password" title="비밀번호 확인" maxlength="20">
+	            <input id="passwordConfirm" class ="memberInfo" type="password" name="passwordConfirm" title="비밀번호 확인" maxlength="20">
 	            <br>
 	          </span>
 	          <span id="pwConfirmMsg"></span>
+	          
 	          <h3 class="join-title">
 	          	<label for="memberEmail">이메일</label>
 	          </h3>
 	          <span>
-	            <input id="memberEmail" class ="memberInfo" type="email" name="memberEmail" title="이메일" maxlength="10">
+	            <input id="memberEmail" class ="memberInfo" type="email" name="memberEmail" title="이메일" maxlength="30">
 	            <br>
 	          </span>
 	          <span id="emailMsg"></span>
@@ -530,15 +531,15 @@ body {
 	  			else if (elementId == 'memberPassword') {
 	  				let memberPw = $('#' + elementId).val();
 	  				let pwRegExp = /^(?=.*?[A-Z])(?=.?[a-z])(?=.*?[0-9])(?=.*?[!@#$%^&*]).{8,16}$/;
+	  				
 	  				if(memberPw === ""){
 	  					$('#pwMsg').html("비밀번호는 필수에오. 필수!");
 	  					$('#pwMsg').css("color", "red");
 	  					pwFlag = false;
 	  					return;
 	  				}
-	  				
 	  				if(!pwRegExp.test(memberPw)){
-	  					$('#pwMsg').html("비밀번호는 소문자, 대문자, 숫자, 특수문자(!@#$%^&*)중 최소 하나씩을 포함한 8 에서 16 자리만 가능합니다.");
+	  					$('#pwMsg').html("비밀번호는 소문자로 시작해서 대문자, 숫자, 특수문자(!@#$%^&*)중 최소 하나씩을 포함한 8 에서 16 자리만 가능합니다.");
 	  					$('#pwMsg').css("color", "red");
 	  					pwFlag = false;
 	  				} else {
@@ -547,25 +548,44 @@ body {
 	  					pwFlag = true;
 	  				}
 	  			} // end 비밀번호 유효성 검사
-	  			else if(elementId == 'passwordConfirm') {
-	  				let memberPassword = $('#memberPassword').val();
-	  				let passwordConfirm = $('#' + elementId).val();
+	  			else if (elementId == 'passwordConfirm') {
+	  				let pwConfirm = $('#' + elementId).val();
+	  				let memberPw = $('#memberPassword').val();
 	  				
-	  				if(passwordConfirm === ""){
-	  					$('#pwConfirm').html("비밀번호 확인을 하셔야해오.");
-	  					$('#pwConfirm').css("color", "red");
+	  				if(pwConfirm === ""){
+	  					$('#pwConfirmMsg').html("비밀번호 확인은 필수에오.");
+	  					$('#pwConfirmMsg').css("color", "red");
 	  					pwConfirmFlag = false;
 	  					return;
-	  				}
-	  				
-	  				if(memberPassword === passwordConfirm){
-	  					$('#pwConfirm').html("비밀번호 확인을 통과했습니다.");
-	  					$('#pwConfirm').css("color", "green");
+	  				}	  				
+	  				if(memberPw === pwConfirm){
+	  					$('#pwConfirmMsg').html("비밀번호 확인을 통과했습니다.");
+	  					$('#pwConfirmMsg').css("color", "green");
 	  					pwConfirmFlag = true;
 	  				} else {
-	  					$('#pwConfirm').html("저런! 비밀번호를 다시 한번확인해 주세요");
-	  					$('#pwConfirm').css("color", "red");
+	  					$('#pwConfirmMsg').html("저런! 비밀번호를 다시 한번확인해 주세요");
+	  					$('#pwConfirmMsg').css("color", "red");
 	  					pwConfirmFlag = false;
+	  				}
+	  			}
+	  			else if (elementId == "memberEmail"){
+	  				let memberEmail = $('#' + elementId).val();
+	  				let emailRegExp = /^[a-zA-Z0-9_-]+@[a-zA-Z0-9]+\.[a-zA-Z]{2,}$/;
+					
+	  				if(memberEmail === ""){
+	  					$('#emailMsg').html("이메일도 필수에오. 필수!");
+	  					$('#emailMsg').css("color", "red");
+	  					pwFlag = false;
+	  					return;
+	  				}
+	  				if(!emailRegExp.test(memberEmail)){
+	  					$('#emailMsg').html("유효한 형식의 이메일이 아니에오");
+	  					$('#emailMsg').css("color", "red");
+	  					pwFlag = false;
+	  				} else {
+	  					$('#emailMsg').html("사용가능한 이메일 임미다.");
+	  					$('#emailMsg').css("color", "green");
+	  					pwFlag = true;
 	  				}
 	  			}
 	  		}); // end blur(function);
@@ -576,9 +596,9 @@ body {
 	  	function checkId(memberId){
 	  		$.ajax({
 	  			type : "GET",
-	  			url : "/checkId/" + memberId,
+	  			url : "checkin/" + memberId,
 	  			success : function(result){
-	  				if(result == null){
+	  				if(result == 1){
 	  					$('#idMsg').html('사용가능한 아이디입니다.');
 	  					$('#idMsg').css('color', 'green');
 	  					idFlag = true;

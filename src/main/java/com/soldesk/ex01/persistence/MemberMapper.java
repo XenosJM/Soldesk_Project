@@ -16,5 +16,5 @@ public interface MemberMapper {
 	int updateManager(MemberVO memberVO);
 	int delete(int memberNum);
 	MemberVO memberCheck(String memberId);
-	String checkId(String memberId);
+	MemberVO checkId(String memberId);
 }

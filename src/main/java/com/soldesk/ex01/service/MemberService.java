@@ -23,7 +23,7 @@ public interface MemberService {
 	// 로그인
 	MemberVO memberCheck(String memberId);
 	// 회원가입시 아이디 중복 체크
-	String checkId(String memberId);
+	MemberVO checkId(String memberId);
 	// TODO 회원 친구 보기 -> 친구 서비스에서
 	
 	// 친구 신청(등록)

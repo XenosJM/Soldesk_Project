@@ -107,8 +107,10 @@ public class MemberController {
 	}
 	
 	@GetMapping("/checkId")
-	public String checkId(String memberId) {
+	public MemberVO checkId(String memberId) {
 		log.info("checkId()");
+		int result;
+		MemberVO memberVO = new MemberVO();
 		return memberService.checkId(memberId);
 	}
 	
