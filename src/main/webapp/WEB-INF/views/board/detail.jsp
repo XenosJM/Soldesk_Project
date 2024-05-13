@@ -276,7 +276,7 @@
 							console.log("boardId : "+boardId+" replyId : "+replyId);
 							$.ajax({
 						        type: 'DELETE',
-						        url: '../rereply/' + replyId,
+						        url: '../rereply/' + replyId+'/'+boardId,
 						        headers: {
 						            'Content-Type': 'application/json'
 						        },

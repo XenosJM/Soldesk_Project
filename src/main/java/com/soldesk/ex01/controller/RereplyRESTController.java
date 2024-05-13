@@ -61,8 +61,8 @@ public class RereplyRESTController {
 		
 	}
 	
-	@DeleteMapping("/{replyId}")
-	public ResponseEntity<Integer> deleteRereplyToReply(@PathVariable("replyId")int replyId){
+	@DeleteMapping("/{replyId}/{boardId}")
+	public ResponseEntity<Integer> deleteRereplyToReply(@PathVariable("replyId")int replyId, @PathVariable("boardId")int boardId){
 		log.info("rereply contorller: deleteRereplyToReply()");
 		log.info("replyId = "+replyId);
 		int result = rereplyService.deleteRereplyToReply(replyId);
