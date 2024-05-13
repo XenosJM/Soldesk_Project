@@ -37,7 +37,7 @@ public class ServletConfig implements WebMvcConfigurer {
    @Bean
    public String uploadPath() {
       return "C:\\upload\\ex01";
-   }
+   }	
    
    // MultipartResolver bean »ý¼º
    @Bean
