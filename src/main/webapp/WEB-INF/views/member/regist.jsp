@@ -557,7 +557,7 @@ body {
 	  					$('#pwConfirmMsg').css("color", "red");
 	  					pwConfirmFlag = false;
 	  					return;
-	  				}	  				
+	  				} // TODO 비밀번호 체크 else if로 바꿔서 다음주 테스트 해볼것		
 	  				if(memberPw === pwConfirm){
 	  					$('#pwConfirmMsg').html("비밀번호 확인을 통과했습니다.");
 	  					$('#pwConfirmMsg').css("color", "green");
@@ -594,11 +594,12 @@ body {
 	  	
 	  	
 	  	function checkId(memberId){
+	  		let memberId = $('#memberId').val();
 	  		$.ajax({
 	  			type : "GET",
-	  			url : "checkin/" + memberId,
-	  			success : function(result){
-	  				if(result == 1){
+	  			url : "check/" + memberId,
+	  			success : function(memberVO){
+	  				if(memberVO == null){
 	  					$('#idMsg').html('사용가능한 아이디입니다.');
 	  					$('#idMsg').css('color', 'green');
 	  					idFlag = true;
@@ -609,10 +610,26 @@ body {
 	  				}
 	  			}
 	  		}) // end ajax
-	  			  		
-	  	} // end checkName
+	  	} // end checkId
+	  	
+	  	$('#btnJoin').click(function(){
+	  		console.log('idFlag : ' + idFlag);
+	  		console.log('pwFlag : ' + pwFlag);
+	  		console.log('pwConfirmFlag : ' + pwConfirmFlag);
+	  		console.log('emailFlag : ' + emailFlag);
+	  		setTimeout(function(){
+	  			if(idFlag && pwFlag && pwConfirmFlag && emailFlag){
+	  				$('#joinForm').submit();
+	  			}
+	  		}, 500); // 500초 후에 실행
+	  	}); // end btnJoin
+	  	
   });
 
   </script>
 </body>
 </html>
+
+
+
+

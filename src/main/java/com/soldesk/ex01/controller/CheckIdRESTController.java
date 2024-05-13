@@ -14,7 +14,7 @@ import com.soldesk.ex01.service.MemberService;
 import lombok.extern.log4j.Log4j;
 
 @RestController
-@RequestMapping(value="/checkin")
+@RequestMapping(value="/check")
 @Log4j
 public class CheckIdRESTController {
 	
@@ -22,18 +22,11 @@ public class CheckIdRESTController {
 	MemberService memberService;
 	
 	@GetMapping("/{memberId}")
-	public ResponseEntity<Integer> checkId(@PathVariable("memberId")String memberId){
+	public ResponseEntity<MemberVO> checkId(@PathVariable("memberId")String memberId){
 		log.info("checkId()");
 		MemberVO memberVO = new MemberVO();
-		memberVO = memberService.checkId(memberId);
-		int result;
-		if(memberVO.getMemberId() == null) {
-			result = 1;
-		} else {
-			result = 0;
-		}
-				
-		return new ResponseEntity<Integer>(result,HttpStatus.OK);
+		memberVO = memberService.checkId(memberId);				
+		return new ResponseEntity<MemberVO>(memberVO,HttpStatus.OK);
 		
 	}
 }

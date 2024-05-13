@@ -106,14 +106,6 @@ public class MemberController {
 		return "redirect:/";
 	}
 	
-	@GetMapping("/checkId")
-	public MemberVO checkId(String memberId) {
-		log.info("checkId()");
-		int result;
-		MemberVO memberVO = new MemberVO();
-		return memberService.checkId(memberId);
-	}
-	
 }
 
 

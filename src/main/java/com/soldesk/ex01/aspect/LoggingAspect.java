@@ -32,5 +32,8 @@ public class LoggingAspect {
         String className = joinPoint.getTarget().getClass().getSimpleName();
         log.info("after : " + className + "." + methodName + "()");
     } // afterAdvice()
+    
+    
+    
 
 } // end LoggingAspect
