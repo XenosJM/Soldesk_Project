@@ -16,8 +16,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	</resultMap>
 	<!-- 회원 가입 -->
 	<insert id="insert">
-    INSERT INTO MEMBER (MEMBER_NUM, MEMBER_ID, MEMBER_PASSWORD, MANAGER_ID, MEMBER_EMAIL, MEMBER_PROPERTY, MEMBER_REGISTDATE)
-    VALUES (MEMBER_SEQ.NEXTVAL, #{memberId}, #{memberPassword}, 0, #{memberEmail}, [0], SYSDATE)
+    INSERT INTO MEMBER (MEMBER_NUM, MEMBER_ID, MEMBER_PASSWORD, MANAGER_NUM, MEMBER_EMAIL, MEMBER_PROPERTY, MEMBER_REGISTDATE)
+    VALUES (MEMBER_SEQ.NEXTVAL, #{memberId}, #{memberPassword}, 0, #{memberEmail}, null, SYSDATE)
 	</insert>
 	<!-- 회원 자기정보 보기 -->
 	<select id="selectByMemberNum" resultMap="memberResultMap"> SELECT * FROM MEMBER WHERE MEMBER_NUM = #{memberNum} </select>
@@ -27,6 +27,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	<select id="memberCheck" resultMap="memberResultMap"> SELECT MEMBER_ID, MEMBER_PASSWORD, MEMBER_NUM, MANAGER_ID FROM MEMBER WHERE MEMBER_ID = #{memberId}</select>
 	<!-- 체크 아이디 -->
 	<select id="checkId" resultMap="memberResultMap"> SELECT MEMBER_NUM FROM MEMBER WHERE MEMBER_ID = #{memberId}  </select>
+	<!-- 체크 이메일 -->
+	<select id="checkEmail" resultMap="memberResultMap"> SELECT MEMBER_NUM FROM MEMBER WHERE MEMBER_EMAIL = #{memberEmail} </select>
 	<!-- 회원 정보 수정 -->
 	<update id="update">
 	    UPDATE MEMBER SET

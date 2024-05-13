@@ -24,6 +24,8 @@ public interface MemberService {
 	MemberVO memberCheck(String memberId);
 	// 회원가입시 아이디 중복 체크
 	MemberVO checkId(String memberId);
+	// 메일 체크
+	MemberVO checkEmail(String memberEmail);
 	// TODO 회원 친구 보기 -> 친구 서비스에서
 	
 	// 친구 신청(등록)

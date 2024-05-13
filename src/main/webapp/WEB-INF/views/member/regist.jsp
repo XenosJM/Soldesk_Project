@@ -436,12 +436,13 @@ body {
     
   }
     </style>
+
 </head>
 <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
 <body>
 	<h2>회원 가입 페이지</h2>
 	
-	  <form id="joinForm" action="member/regist" method="POST">
+	  <form id="joinForm" action="regist" method="POST">
 	    <div class="join-content">
 	      <div class="row-group">
 	        <div class="join-row">
@@ -449,7 +450,7 @@ body {
 	            <label for="memberId">아이디</label>
 	          </h3>
 	          <span>
-	            <input id="memberId" class ="memberInfo" type="text" name="memberName" title="아이디" maxlength="15">
+	            <input id="memberId" class ="memberInfo" type="text" name="memberId" title="아이디" maxlength="15">
 	            <br>
 	          </span>
 	          <span id="idMsg"></span>
@@ -482,6 +483,12 @@ body {
 	            <br>
 	          </span>
 	          <span id="emailMsg"></span>
+	          
+	          <span>
+	            <button id="btnEmailAuth" style="display : none">이메일 인증하기</button>
+	            <br>
+	          </span>
+	          <span id="emailAuthMsg"></span>
 	        </div>
 	      </div>
 	      <!-- 스프링 시큐리티를 사용하면 모든 post 전송에 csrf 토큰을 추가해야 함 -->
@@ -497,19 +504,20 @@ body {
   		let idFlag = false; // memberName 유효성 변수 
   		let pwFlag = false; // memberPassword 유효성 변수 
   		let pwConfirmFlag = false; // pwConfirm 유효성 변수 
-  		let emailFlag = false; // memberEmail 유효성 변수 
+  		let emailFlag = false; // memberEmail 유효성 변수
+  		let emailAuthFlag = false; // 실제 있는 이메일인지 확인하는 변수
 
 		// memberInfo 클래스를 가진 요소 찾기	  		
 	  	$('.memberInfo').each(function(){
 	  		// 각 요소 id값 가져옴
 	  		let elementId = $(this).attr('id');
-	  		
 	  		// blur() : input 태그에서 탭 키나 마우스로 다른 곳을 클릭할 때 이벤트 발생
 	  		// 아이디 유효성 검사	 
 	  		$('#' + elementId).blur(function(){
 	  			
 	  			if(elementId == 'memberId') {
 	  				let memberId = $('#' + elementId).val();
+	  				
 	  			  	// 5 ~ 20자 사이의 소문자나 숫자로 시작하고, 소문자, 숫자을 포함하는 정규표현식
 	  				let idRegExp = /^[a-z0-9][a-zA-Z0-9]{4,19}$/;
 	  				if(memberId === ""){
@@ -557,7 +565,7 @@ body {
 	  					$('#pwConfirmMsg').css("color", "red");
 	  					pwConfirmFlag = false;
 	  					return;
-	  				} // TODO 비밀번호 체크 else if로 바꿔서 다음주 테스트 해볼것		
+	  				}		
 	  				if(memberPw === pwConfirm){
 	  					$('#pwConfirmMsg').html("비밀번호 확인을 통과했습니다.");
 	  					$('#pwConfirmMsg').css("color", "green");
@@ -570,56 +578,86 @@ body {
 	  			}
 	  			else if (elementId == "memberEmail"){
 	  				let memberEmail = $('#' + elementId).val();
+	  				
 	  				let emailRegExp = /^[a-zA-Z0-9_-]+@[a-zA-Z0-9]+\.[a-zA-Z]{2,}$/;
-					
+	  				console.log(memberEmail);
 	  				if(memberEmail === ""){
 	  					$('#emailMsg').html("이메일도 필수에오. 필수!");
 	  					$('#emailMsg').css("color", "red");
-	  					pwFlag = false;
+	  					$('#btnEmailAuth').css("display", "none")
+	  					emailFlag = false;
 	  					return;
 	  				}
 	  				if(!emailRegExp.test(memberEmail)){
 	  					$('#emailMsg').html("유효한 형식의 이메일이 아니에오");
 	  					$('#emailMsg').css("color", "red");
-	  					pwFlag = false;
+	  					$('#btnEmailAuth').css("display", "none")
+	  					emailFlag = false;
 	  				} else {
-	  					$('#emailMsg').html("사용가능한 이메일 임미다.");
-	  					$('#emailMsg').css("color", "green");
-	  					pwFlag = true;
-	  				}
-	  			}
+			  			checkMail(memberEmail);
+		  		  		}
+	  				} // end email 체크
+	  			
 	  		}); // end blur(function);
 	  		
 	  	}); // end each()
 	  	
 	  	
 	  	function checkId(memberId){
-	  		let memberId = $('#memberId').val();
+	  		
 	  		$.ajax({
 	  			type : "GET",
-	  			url : "check/" + memberId,
-	  			success : function(memberVO){
-	  				if(memberVO == null){
-	  					$('#idMsg').html('사용가능한 아이디입니다.');
-	  					$('#idMsg').css('color', 'green');
-	  					idFlag = true;
-	  				} else {
+	  			url : "../util/checkId/" + memberId,
+	  			success : function(result){
+	  				if(result == 1){
 	  					$('#idMsg').html('이미 누군가가 사용중인 아이디입니다.');
 	  					$('#idMsg').css('color', 'red');
 	  					idFlag = false;
+	  				} else {
+	  					$('#idMsg').html('사용가능한 아이디입니다.');
+	  					$('#idMsg').css('color', 'green');
+	  					idFlag = true;
 	  				}
 	  			}
-	  		}) // end ajax
+	  		}); // end ajax
 	  	} // end checkId
+	  	
+	  	function checkMail(memberEmail){
+	  		console.log(memberEmail);
+	  		var encodedEmail = encodeURIComponent(memberEmail);
+	  		$.ajax({
+	  			type : "GET",
+	  			url : "../util/checkEmail/" +encodedEmail,
+	  			success : function(result){
+	  				if(result == 1){
+	  					$('#emailMsg').html("누군가 벌써 사용중인 이메일입니다.");
+	  					$('#emailMsg').css("color", "red");
+	  					$('#btnEmailAuth').css("display", "none")
+	  					emailFlag = false;
+	  				} else {
+	  					$('#emailMsg').html("사용가능한 이메일입니당.");
+	  					$('#emailMsg').css("color", "green");
+	  					$('#btnEmailAuth').css("display", "block")
+	  					emailFlag = true;
+	  					emailAuthFlag = true;
+	  				}
+	  			}
+	  		});
+	  	}
+	  	
+		
 	  	
 	  	$('#btnJoin').click(function(){
 	  		console.log('idFlag : ' + idFlag);
 	  		console.log('pwFlag : ' + pwFlag);
 	  		console.log('pwConfirmFlag : ' + pwConfirmFlag);
 	  		console.log('emailFlag : ' + emailFlag);
+	  		console.log('emailAuthFlag : ' + emailAuthFlag);
 	  		setTimeout(function(){
 	  			if(idFlag && pwFlag && pwConfirmFlag && emailFlag){
 	  				$('#joinForm').submit();
+	  			} else {
+	  				alert("뭔갈 안하셧어요");
 	  			}
 	  		}, 500); // 500초 후에 실행
 	  	}); // end btnJoin
