@@ -441,7 +441,7 @@ body {
 <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
 <body>
 	<h2>회원 가입 페이지</h2>
-	
+	<div class="form-Wrapper">
 	  <form id="joinForm" action="regist" method="POST">
 	    <div class="join-content">
 	      <div class="row-group">
@@ -484,18 +484,20 @@ body {
 	          </span>
 	          <span id="emailMsg"></span>
 	          
-	          <span>
-	            <button id="btnEmailAuth" style="display : none">이메일 인증하기</button>
+	          <!-- <span>
+	            <button id="btnEmailAuth">이메일 인증하기</button>
 	            <br>
 	          </span>
-	          <span id="emailAuthMsg"></span>
+	          <span id="emailAuthMsg"></span> -->
 	        </div>
 	      </div>
 	      <!-- 스프링 시큐리티를 사용하면 모든 post 전송에 csrf 토큰을 추가해야 함 -->
 	      <!-- <input type="hidden" name="_csrf" value="7d745488-7ec9-4937-9c2d-b58285bc9676"> -->
-	      <hr>
 	    </div>  
 	  </form>
+	  <span id="authSpan"></span>
+  </div>
+	      <hr>
   
  	 <button id="btnJoin">제출</button>
 <script type="text/javascript">
@@ -575,11 +577,11 @@ body {
 	  					$('#pwConfirmMsg').css("color", "red");
 	  					pwConfirmFlag = false;
 	  				}
-	  			}
+	  			} // end 비밀번호 확인 유효성 검사
 	  			else if (elementId == "memberEmail"){
 	  				let memberEmail = $('#' + elementId).val();
-	  				
 	  				let emailRegExp = /^[a-zA-Z0-9_-]+@[a-zA-Z0-9]+\.[a-zA-Z]{2,}$/;
+	  				// let emailRegExp = /(?:[a-zA-Z0-9._%+-]+@(?:naver\.com|daum\.net|kakao\.com|gmail\.com))/i;
 	  				console.log(memberEmail);
 	  				if(memberEmail === ""){
 	  					$('#emailMsg').html("이메일도 필수에오. 필수!");
@@ -590,16 +592,19 @@ body {
 	  				}
 	  				if(!emailRegExp.test(memberEmail)){
 	  					$('#emailMsg').html("유효한 형식의 이메일이 아니에오");
+	  					/* $('#emailMsg').html("유효한 형식의 이메일이 아니에오, naver.com, daum.net, kakao.com, gmail.com <br> 이 4개의 이메일만 사용 가능합니다 "); */
 	  					$('#emailMsg').css("color", "red");
 	  					$('#btnEmailAuth').css("display", "none")
 	  					emailFlag = false;
 	  				} else {
 			  			checkMail(memberEmail);
-		  		  		}
-	  				} // end email 체크
-	  			
-	  		}); // end blur(function);
-	  		
+		  		  	}
+	  			} // end email 체크
+	  			else if(elementId == "authCode"){
+	  				let authCode = $('#' + elementId).val();
+	  				let codeRegExp = /^\d{0,6}$/;
+	  			}
+	  		}); // end blur(function);	  		
 	  	}); // end each()
 	  	
 	  	
@@ -623,13 +628,30 @@ body {
 	  	} // end checkId
 	  	
 	  	function checkMail(memberEmail){
-	  		console.log(memberEmail);
-	  		var encodedEmail = encodeURIComponent(memberEmail);
+	  		/* let emailId = memberEmail.replace(/\./g, "\\.");
+	  		console.log(emailId);
+	  		let encodedEmailId = encodeURIComponent(emailId);
+	  		console.log(encodedEmailId);
+	  		let atIndex = memberEmail.indexOf("@"); // "." 기호의 위치를 찾습니다.
+	  		let memberEmailId = memberEmail.slice(0, atIndex);
+	  		console.log(memberEmailId);
+	  		let domain = memberEmail.slice(atIndex + 1);
+	  		 console.log(sliceDomain);
+	  		let domain = sliceDomain.replace(/\./g, "\\.");
+	  		console.log(domain);
+	  		// let encodedEmail = encodeURIComponent(memberEmail);
+	  		/* memberEmail = $('#memberEmail').val();
+	  		let encodedEmail = memberEmail.replace('.com', '%2Ecom')
+            						.replace('.net', '%2Enet')
+           							.replace('.co.kr', '%2Eco.kr');
+           	let atIndex = memberEmail.indexOf("@");
+	  		let emailId = memberEmail.slice(0, atIndex); */
 	  		$.ajax({
 	  			type : "GET",
-	  			url : "../util/checkEmail/" +encodedEmail,
+	  			url : "../util/checkEmail/",
+	  			data: { memberEmail : memberEmail },
 	  			success : function(result){
-	  				if(result == 1){
+	  				if(result != 0){
 	  					$('#emailMsg').html("누군가 벌써 사용중인 이메일입니다.");
 	  					$('#emailMsg').css("color", "red");
 	  					$('#btnEmailAuth').css("display", "none")
@@ -637,15 +659,37 @@ body {
 	  				} else {
 	  					$('#emailMsg').html("사용가능한 이메일입니당.");
 	  					$('#emailMsg').css("color", "green");
-	  					$('#btnEmailAuth').css("display", "block")
+	  					$('#authSpan').html("<span><button id='btnEmailAuthSend'>이메일 인증하기</button><br></span><span id='emailAuthMsg'></span>");
+	  					// $('#btnEmailAuth').css("display", "block")
 	  					emailFlag = true;
-	  					emailAuthFlag = true;
 	  				}
 	  			}
-	  		});
-	  	}
+	  		});	// end ajax
+	  	} // end checkMail
 	  	
+		$(document).on('click', '#btnEmailAuthSend', function(){
+			emailAuth($('#memberEmail').val());
+		}); // end btnEmailAuth
 		
+		function emailAuth(memberEmail){
+			
+			$.ajax({
+				type : "GET",
+				url : "../util/emailAuth",
+				data : {memberEmail : memberEmail},
+				success : function(result){
+					if(result == 1){
+						alert("작성하신 이메일로 확인 코드가 발송되었습니다.");
+						$('#emailAuthMsg').html("<input id='authCode' type='number' placeholder='받으신 코드를 입력해 주세요.'>")
+						emailAuthFlag = false;
+					} else{
+						alert("잠시후 다시 눌러주세요.");
+						$('#emailAuthMsg').html("<input id='authCode' type='number' placeholder='받으신 코드를 입력해 주세요.'>")
+						emailAuthFlag = false;
+					}
+				}
+			}); // end ajax
+		}
 	  	
 	  	$('#btnJoin').click(function(){
 	  		console.log('idFlag : ' + idFlag);
@@ -654,7 +698,7 @@ body {
 	  		console.log('emailFlag : ' + emailFlag);
 	  		console.log('emailAuthFlag : ' + emailAuthFlag);
 	  		setTimeout(function(){
-	  			if(idFlag && pwFlag && pwConfirmFlag && emailFlag){
+	  			if(idFlag && pwFlag && pwConfirmFlag && emailFlag && emailAuthFlag){
 	  				$('#joinForm').submit();
 	  			} else {
 	  				alert("뭔갈 안하셧어요");
@@ -662,7 +706,7 @@ body {
 	  		}, 500); // 500초 후에 실행
 	  	}); // end btnJoin
 	  	
-  });
+  }); // end document
 
   </script>
 </body>
