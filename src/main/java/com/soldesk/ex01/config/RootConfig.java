@@ -17,6 +17,7 @@ import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
+import com.soldesk.ex01.util.AuthCodeGenerator;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 
@@ -43,6 +44,12 @@ public class RootConfig {
       config.setConnectionTimeout(30000); // Connection 타임 아웃 설정(30초)
       HikariDataSource ds = new HikariDataSource(config); // config 객체를 참조하여 DataSource 객체 생성
       return ds; // ds 객체 리턴
+   }
+   
+   // 이메일 인증, 아이디 및 비밀번호 변경용 인증 번호 생성기
+   @Bean
+   public AuthCodeGenerator authCodeGenerator() {
+       return new AuthCodeGenerator();
    }
    
    @Bean

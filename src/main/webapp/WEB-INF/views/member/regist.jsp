@@ -508,6 +508,7 @@ body {
   		let pwConfirmFlag = false; // pwConfirm 유효성 변수 
   		let emailFlag = false; // memberEmail 유효성 변수
   		let emailAuthFlag = false; // 실제 있는 이메일인지 확인하는 변수
+  		let checkAuthCode; // 전역변수로 선언
 
 		// memberInfo 클래스를 가진 요소 찾기	  		
 	  	$('.memberInfo').each(function(){
@@ -586,7 +587,7 @@ body {
 	  				if(memberEmail === ""){
 	  					$('#emailMsg').html("이메일도 필수에오. 필수!");
 	  					$('#emailMsg').css("color", "red");
-	  					$('#btnEmailAuth').css("display", "none")
+	  					$('#btnEmailAuth').css("display", "none");
 	  					emailFlag = false;
 	  					return;
 	  				}
@@ -594,16 +595,13 @@ body {
 	  					$('#emailMsg').html("유효한 형식의 이메일이 아니에오");
 	  					/* $('#emailMsg').html("유효한 형식의 이메일이 아니에오, naver.com, daum.net, kakao.com, gmail.com <br> 이 4개의 이메일만 사용 가능합니다 "); */
 	  					$('#emailMsg').css("color", "red");
-	  					$('#btnEmailAuth').css("display", "none")
+	  					$('#btnEmailAuth').css("display", "none");
 	  					emailFlag = false;
 	  				} else {
 			  			checkMail(memberEmail);
 		  		  	}
 	  			} // end email 체크
-	  			else if(elementId == "authCode"){
-	  				let authCode = $('#' + elementId).val();
-	  				let codeRegExp = /^\d{0,6}$/;
-	  			}
+	  			
 	  		}); // end blur(function);	  		
 	  	}); // end each()
 	  	
@@ -654,7 +652,7 @@ body {
 	  				if(result != 0){
 	  					$('#emailMsg').html("누군가 벌써 사용중인 이메일입니다.");
 	  					$('#emailMsg').css("color", "red");
-	  					$('#btnEmailAuth').css("display", "none")
+	  					$('#btnEmailAuth').css("display", "none");
 	  					emailFlag = false;
 	  				} else {
 	  					$('#emailMsg').html("사용가능한 이메일입니당.");
@@ -668,28 +666,61 @@ body {
 	  	} // end checkMail
 	  	
 		$(document).on('click', '#btnEmailAuthSend', function(){
-			emailAuth($('#memberEmail').val());
+			authCodeSend($('#memberEmail').val());
 		}); // end btnEmailAuth
 		
-		function emailAuth(memberEmail){
+		function authCodeSend(memberEmail){
 			
 			$.ajax({
 				type : "GET",
-				url : "../util/emailAuth",
+				url : "../util/authCodeSend/",
 				data : {memberEmail : memberEmail},
 				success : function(result){
-					if(result == 1){
+					if(result >= 1){
 						alert("작성하신 이메일로 확인 코드가 발송되었습니다.");
-						$('#emailAuthMsg').html("<input id='authCode' type='number' placeholder='받으신 코드를 입력해 주세요.'>")
-						emailAuthFlag = false;
+						$('#emailAuthMsg').html("<input id='authCode' type='number' placeholder='코드를 입력해 주세요.'><button id='btnCodeCheck'>인증확인</button><br><span id='checkAuthMsg'></span>");
+						checkAuthCode = result;
 					} else{
 						alert("잠시후 다시 눌러주세요.");
-						$('#emailAuthMsg').html("<input id='authCode' type='number' placeholder='받으신 코드를 입력해 주세요.'>")
-						emailAuthFlag = false;
 					}
 				}
 			}); // end ajax
 		}
+		
+		$(document).on('click', '#btnCodeCheck', function(){
+			codeCheck($('#authCode').val());
+		});
+		
+		$(document).on('blur', '#authCode', function(){
+  				let authCode = $('#authCode').val();
+  				if(authCode == ""){
+  					$('#checkAuthMsg').html('인증코드는 비어있을 수 없어용.');
+  					$('#checkAuthMsg').css('color', 'red');
+  					emailAuthFlag = false;
+  				} else {
+  					$('#checkAuthMsg').html('인증코드 확인 버튼을 눌러주세요');
+  					$('#checkAuthMsg').css('color', 'green');
+  					emailAuthFlag = false;
+  				}
+		});
+		
+		// TODO: 나중에 무조건 비동기로 처리를 하던 하는방식으로 바꿔야함 이대로면 사용자가 많아질경우 값이 계속 바뀔 가능성이 있음.
+		// 정확히는 테스트를 해봐야 알거같음.
+		function codeCheck(authCode){
+			if(authCode == checkAuthCode){
+				alert("인증에 성공하셨습니다.");
+				$('#checkAuthMsg').html('인증코드 확인 버튼을 눌러주세요');
+				$('#checkAuthMsg').css('color', 'green');
+				emailAuthFlag = true;
+			} else{
+				alert("인증코드를 다시 확인해 주세요.");
+				$('#checkAuthMsg').html('인증코드를 확인해 주세요.');
+				$('#checkAuthMsg').css('color', 'red');
+				emailAuthFlag = false;
+			}
+		};
+		
+		
 	  	
 	  	$('#btnJoin').click(function(){
 	  		console.log('idFlag : ' + idFlag);

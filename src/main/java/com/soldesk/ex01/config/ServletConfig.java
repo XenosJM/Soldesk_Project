@@ -10,6 +10,7 @@ import org.springframework.web.servlet.config.annotation.ViewResolverRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.springframework.web.servlet.view.InternalResourceViewResolver;
 
+
 // servlet-context.xml과 동일 
 @Configuration // Spring Container에서 관리하는 설정 클래스
 @EnableWebMvc // Spring MVC 기능 사용
@@ -38,6 +39,7 @@ public class ServletConfig implements WebMvcConfigurer {
    public String uploadPath() {
       return "C:\\upload\\ex01";
    }	
+   
    
    // MultipartResolver bean 생성
    @Bean
