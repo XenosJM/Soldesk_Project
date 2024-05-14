@@ -54,7 +54,7 @@ public class BoardController {
 		log.info("board controller : registerPost()");
 		log.info("board controller : BoardVO =" + vo);
 		int result = boardService.insertBoard(vo);
-		log.info(result + "행 수정");
+		log.info(result + "행 삽입");
 		return "redirect:/";
 	}
 
@@ -106,26 +106,23 @@ public class BoardController {
 		log.info("attachPost()");
 		log.info("attachVO = " + attachVO);
 		MultipartFile file = attachVO.getFile();
-		log.info("file : "+ file);
-		// UUID 생성
+
 		String chgName = UUID.randomUUID().toString();
-		log.info("chgName : "+chgName);
-		// 파일 저장
+
 		FileUploadUtil.saveFile(uploadPath, file, chgName);
 
-		// 파일 경로 설정
 		attachVO.setAttachPath(FileUploadUtil.makeDatePath());
-		
-		// 파일 실제 이름 설정
-		attachVO.setAttachRealName(FileUploadUtil.subStrName(file.getOriginalFilename()));
-		// 파일 변경 이름(UUID) 설정
-		attachVO.setAttachChgName(chgName);
-		// 파일 확장자 설정
-		attachVO.setAttachExtension(FileUploadUtil.subStrExtension(file.getOriginalFilename()));
-		// DB에 첨부 파일 정보 저장
-		log.info(attachService.createAttach(attachVO) + "행 등록");
 
-		return "redirect:/list";
+		attachVO.setAttachRealName(FileUploadUtil.subStrName(file.getOriginalFilename()));
+
+		attachVO.setAttachChgName(chgName);
+
+		attachVO.setAttachExtension(FileUploadUtil.subStrExtension(file.getOriginalFilename()));
+
+		log.info(attachService.createAttach(attachVO) + "행 등록");
+		
+
+		return "redirect:/board/regist";
 	} // end attachPOST()
 
 	// 첨부 파일 목록 조회(GET)
