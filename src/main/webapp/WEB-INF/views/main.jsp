@@ -141,7 +141,7 @@ body {
 		</div>
 
 		<c:choose>
-			<c:when test="${empty sessionScope.memberId }">
+			<c:when test="${empty sessionScope.memberNum }">
 				<div class="login-container" style= "display:">
 					<h2>로그인</h2>
 					<form action="login/check" method="post">
@@ -151,11 +151,11 @@ body {
 					</form>
 					<p>
 					<a href="#" onclick="window.location.href='/ex01/member/regist'">회원가입</a>
-					<a href="../memberFind">ID/PW찾기</a>
+					<a href="#" onclick='window.location.href="/ex01/member/findIdPw"'>ID/PW찾기</a>
 					</p>
 				</div>
 			</c:when>
-			<c:when test="${not empty sessionScope.memberId }">
+			<c:when test="${not empty sessionScope.memberNum }">
 				<div class="login-container" style= "display:">
 					<button onclick='location.href="member/detail"'>내 정보 보기</button>
 					<button onclick='location.href="member/checkout"'>로그아웃</button>

@@ -106,13 +106,10 @@ public class MemberController {
 		return "redirect:/";
 	}
 	
-	@PostMapping("/mailSend")
-	public int mailSend(String memberEmail) {
-		log.info("mailSend()");
-		// TODO
-		return 0;
+	@GetMapping("/findIdPw")
+	public void findIdPw () {
+		log.info("findIdPw()");
 	}
-	
 }
 
 

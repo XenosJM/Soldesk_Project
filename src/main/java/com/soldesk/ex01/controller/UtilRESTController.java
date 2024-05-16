@@ -66,28 +66,31 @@ public class UtilRESTController {
 	@GetMapping("/authCodeSend")
 	public ResponseEntity<Integer> AuthCodeSend(@RequestParam("memberEmail")String memberEmail){
 		int result = 0;
-		
-		String authCode = authCodeGenerator.generateAuthCode();
-		String setFrom = "wjdalsqaa123@gmail.com"; // email-config에 설정한 자신의 이메일 주소를 입력
+		String authCode = null;
+		authCode = authCodeGenerator.generateAuthCode();
+		String setFrom = "wjdalsqaa123@gmail.com"; // config에 입력한 자신의 이메일 주소를 입력
         String toMail = memberEmail;
-        String title = "회원 가입 인증 이메일 입니다."; // 이메일 제목
+        String title = "안녕하세요. Gain 입니다."; // 이메일 제목
         String content =
-                "저희 사이트에 회원가입을 환영합니다." + 	//html 형식으로 작성 !
-                        "<br><br>" +
-                        "인증 번호는 " + authCode + "입니다." +
-                        "<br>" +
-                        "인증번호를 제대로 입력해주세요"; //이메일 내용 삽입
+				"이메일 인증번호를 발송하였습니다." + 	
+		        "<br><br>" +
+		        "인증 번호는 " + authCode + " 입니다." +
+		        "<br>" +
+		        "인증번호를 제대로 입력해주세요"; //이메일 내용 삽입
+        // mailSender 객체에 세팅된 값을 이용한 메일 객체 생성 
 		MimeMessage mail = mailSender.createMimeMessage();
 		try {
+			// 이메일 관련된 설정(메일 보내기)를 수행할 helper 객체 생성.
+            // true를 전달하여 multipart 형식의 메시지를 지원하고, "utf-8"을 전달하여 문자 인코딩을 설정
 			MimeMessageHelper helper = new MimeMessageHelper(mail, true, "UTF-8");
-			helper.setFrom(setFrom);
-			helper.setTo(toMail);
-			helper.setSubject(title);
-			helper.setText(content, true);
-			// TODO 파일 업로드 추가도 가능 예정
+			helper.setFrom(setFrom); // 발신자 설정
+			helper.setTo(toMail); // 수신자 설정
+			helper.setSubject(title); // 제목 설정
+			helper.setText(content, true); // 내용 설정, html 설정
+			// TODO 파일 업로드 추가도 가능 
 			
-			mailSender.send(mail);
-			result = Integer.parseInt(authCode);
+			mailSender.send(mail); 
+			result = Integer.parseInt(authCode); // 문자열로 만들어진 인증코드를 숫자로 파싱해서 전달 
 		} catch (MessagingException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

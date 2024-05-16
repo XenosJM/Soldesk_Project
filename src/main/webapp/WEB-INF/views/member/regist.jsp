@@ -550,7 +550,7 @@ body {
 	  					return;
 	  				}
 	  				if(!pwRegExp.test(memberPw)){
-	  					$('#pwMsg').html("비밀번호는 소문자로 시작해서 대문자, 숫자, 특수문자(!@#$%^&*)중 최소 하나씩을 포함한 8 에서 16 자리만 가능합니다.");
+	  					$('#pwMsg').html("소문자, 대문자, 숫자, 특수문자(!@#$%^&*)중 최소 하나씩을 포함한 8 에서 16 자리만 가능합니다.");
 	  					$('#pwMsg').css("color", "red");
 	  					pwFlag = false;
 	  				} else {
@@ -657,7 +657,7 @@ body {
 	  				} else {
 	  					$('#emailMsg').html("사용가능한 이메일입니당.");
 	  					$('#emailMsg').css("color", "green");
-	  					$('#authSpan').html("<span><button id='btnEmailAuthSend'>이메일 인증하기</button><br></span><span id='emailAuthMsg'></span>");
+	  					$('#authSpan').html("<span><button id='btnSendCode'>이메일 인증하기</button><br></span><span id='emailAuthMsg'></span>");
 	  					// $('#btnEmailAuth').css("display", "block")
 	  					emailFlag = true;
 	  				}
@@ -665,9 +665,9 @@ body {
 	  		});	// end ajax
 	  	} // end checkMail
 	  	
-		$(document).on('click', '#btnEmailAuthSend', function(){
+		$(document).on('click', '#btnSendCode', function(){
 			authCodeSend($('#memberEmail').val());
-		}); // end btnEmailAuth
+		}); // end btnSendCode
 		
 		function authCodeSend(memberEmail){
 			
@@ -685,7 +685,7 @@ body {
 					}
 				}
 			}); // end ajax
-		}
+		} // end authCodeSend()
 		
 		$(document).on('click', '#btnCodeCheck', function(){
 			codeCheck($('#authCode').val());
@@ -699,17 +699,17 @@ body {
   					emailAuthFlag = false;
   				} else {
   					$('#checkAuthMsg').html('인증코드 확인 버튼을 눌러주세요');
-  					$('#checkAuthMsg').css('color', 'green');
+  					$('#checkAuthMsg').css('color', 'blue');
   					emailAuthFlag = false;
   				}
 		});
 		
-		// TODO: 나중에 무조건 비동기로 처리를 하던 하는방식으로 바꿔야함 이대로면 사용자가 많아질경우 값이 계속 바뀔 가능성이 있음.
+		// TODO: 나중에 비동기로 처리를 하던, 하는방식으로 바꿔야함 이대로면 사용자가 많아질경우 값이 계속 바뀔 가능성이 있음.
 		// 정확히는 테스트를 해봐야 알거같음.
 		function codeCheck(authCode){
 			if(authCode == checkAuthCode){
 				alert("인증에 성공하셨습니다.");
-				$('#checkAuthMsg').html('인증코드 확인 버튼을 눌러주세요');
+				$('#checkAuthMsg').html('인증코드가 확인되었습니다.');
 				$('#checkAuthMsg').css('color', 'green');
 				emailAuthFlag = true;
 			} else{
@@ -731,6 +731,7 @@ body {
 	  		setTimeout(function(){
 	  			if(idFlag && pwFlag && pwConfirmFlag && emailFlag && emailAuthFlag){
 	  				$('#joinForm').submit();
+	  				alert($('#memberId').val() + "님의 회원가입을 환영합니다.");
 	  			} else {
 	  				alert("뭔갈 안하셧어요");
 	  			}
