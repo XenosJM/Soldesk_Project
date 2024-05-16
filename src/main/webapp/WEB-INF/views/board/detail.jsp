@@ -48,13 +48,18 @@
 	
 	
 		<script type="text/javascript">
-			$(document).ready(function() {
-				$('#deleteBoard').click(function() {
-					if (confirm('삭제하시겠습니까?')) {
-						$('#deleteForm').submit(); // form 데이터 전송
-					}
-				});
-			}); // end document
+		$(document).ready(function() {
+		    $(document).on('click', '#deleteBoard', function() {
+		        if (confirm('삭제하시겠습니까?')) {
+		            
+		            deleteRereply();
+		            deleteReply();
+		            //$('#deleteForm').submit(); // form 데이터 전송
+		            // 글 삭제 후 페이지 이동 등 필요한 작업 수행
+		            // 예: window.location.href = 'list';
+		        }
+		    });
+		});
 		</script>
 		<input type="hidden" id="boardId" value="${boardVO.boardId}">
 	
@@ -168,17 +173,22 @@
 					}			
 	
 					 // 대댓글 작성 버튼 클릭 이벤트 핸들러
-				    $('#replies').on('click', '.reply_item .btn_add', function() {
-				        // 대댓글 작성을 위한 입력 필드와 작성 버튼을 추가
-				        let rereplyInputFields = 
-				            '<div style="text-align: center;">' +
-				                '<input type="text" class="rereply_memberId" placeholder="작성자">' +
-				                '<input type="text" class="rereply_content" placeholder="대댓글 내용">' +
-				                '<button class="btnAddRereply">작성</button>' +
-				            '</div>';
-	
-				        $(this).closest('.reply_item').append(rereplyInputFields);
-				    });
+				  $('#replies').on('click', '.reply_item .btn_add', function() {
+					  let replyItem = $(this).closest('.reply_item');
+					    // 해당 댓글 아래에 대댓글 입력 필드와 작성 버튼이 있는지 확인
+					    if (replyItem.find('.rereplyInputFields').length === 0) {
+					        // 대댓글 입력 필드와 작성 버튼을 추가
+					        let rereplyInputFields = 
+					            '<div class="rereplyInputFields" style="text-align: center;">' +
+					                '<input type="text" class="rereply_memberId" placeholder="작성자">' +
+					                '<input type="text" class="rereply_content" placeholder="대댓글 내용">' +
+					                '<button class="btnAddRereply">작성</button>' +
+					            '</div>';
+
+					        replyItem.append(rereplyInputFields);
+					    }
+				  });
+
 	
 				    // 대댓글 작성 버튼 클릭 이벤트 핸들러
 				    $('#replies').on('click', '.reply_item .btnAddRereply', function() {
@@ -284,7 +294,11 @@
 						            console.log(result);
 						            if (result == 1) {
 						               console.log('대댓글 삭제 성공!');
-						               $.ajax({
+						              
+						            }
+						        },
+						        complete: function(){
+						        	 $.ajax({
 											type : 'DELETE',
 											url : '../reply/'+ replyId + '/' + boardId,
 											headers : {
@@ -299,7 +313,6 @@
 												}
 											}
 										});
-						            }
 						        }
 						    });
 							
@@ -328,7 +341,63 @@
 					        }
 					    });
 					});
+				
+
 					
+					function deleteReply() {
+						let boardId = $('#boardId').val(); // 게시판 번호 데이터
+						
+						
+						$('#replies').find('.reply_item').each(function(index, element) {
+						    let replyId = $(element).find('.replyId').val();
+						    console.log("boardId : "+boardId+" replyId : "+replyId);
+						    $.ajax({
+						        type: 'DELETE',
+						        url : '../reply/'+ replyId + '/' + boardId,
+						        headers: {
+						            'Content-Type': 'application/json'
+						        },
+						        success: function(result) {
+						            console.log(result);
+						            if (result == 1) {
+						                alert('댓글 삭제 성공');
+						                getAllReply();
+						            }
+						        }
+						    });
+						    
+						});
+					    
+					}
+					
+					
+					function deleteRereply() {
+						let boardId = $('#boardId').val(); // 게시판 번호 데이터
+						$('#replies').find('.reply_item').each(function(index, element) {
+						    let replyId = $(element).find('.replyId').val();
+						    console.log("boardId : "+boardId+" replyId : "+replyId);
+						    $.ajax({
+						        type: 'DELETE',
+						        url: '../rereply/' + replyId+'/'+boardId,
+						        headers: {
+						            'Content-Type': 'application/json'
+						        },
+						        success: function(result) {
+						            console.log(result);
+						            if (result == 1) {
+						                alert('대댓글 삭제 성공!');
+						                location.reload(); // 혹은 필요에 따라 적절한 처리를 추가하세요.
+						            }
+						        }
+						    });
+						    
+						
+						});
+						
+						
+					   
+					}
+				
 		</script>
 	
 	</body>
