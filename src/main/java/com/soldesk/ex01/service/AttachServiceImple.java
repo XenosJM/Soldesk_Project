@@ -48,4 +48,12 @@ public class AttachServiceImple implements AttachService {
        log.info("deleteAttach()");	
         return attachMapper.delete(attachId);
     }
+
+	@Override
+	public AttachVO getAttachByBoardId(int boardId) {
+		log.info("getAttachByBoardId()");
+		return attachMapper.selectByBoardId(boardId);
+	}
+    
+    
 }

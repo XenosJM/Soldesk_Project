@@ -123,7 +123,7 @@ public class BoardController {
 		log.info(attachService.createAttach(attachVO) + "행 등록");
 		
 
-		return "redirect:/board/regist";
+		return "redirect:/board/list";
 	} // end attachPOST()
 
 	// 첨부 파일 목록 조회(GET)
@@ -132,6 +132,16 @@ public class BoardController {
 		// 첨부 파일 attachId 리스트를 Model에 추가하여 전달
 		model.addAttribute("idList", attachService.getAllId());
 		log.info("list()");
+	}
+	
+	@GetMapping("/detailBoard")
+	public void detailBoard(int boardId,Model model) {
+		//model.addAttribute(model)
+		log.info("detailBoard()");
+		log.info("boardId : " + boardId);
+		AttachVO attachVO = attachService.getAttachById(boardId);
+		model.addAttribute("attachVO",attachVO);
+		
 	}
 
 	// 첨부 파일 상세 정보 조회(GET)
