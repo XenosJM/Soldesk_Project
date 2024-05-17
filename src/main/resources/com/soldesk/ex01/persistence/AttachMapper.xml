@@ -19,10 +19,13 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	<insert id="insert"> 
 		INSERT INTO ATTACH (ATTACH_ID, BOARD_ID,
 		ATTACH_PATH, ATTACH_REAL_NAME, ATTACH_CHG_NAME, ATTACH_EXTENSION)
-		VALUES (ATTACH_SEQ.NEXTVAL, #{boardId}, #{attachPath},
+		VALUES (ATTACH_SEQ.NEXTVAL, board_seq.currval, #{attachPath},
 		#{attachRealName}, #{attachChgName}, #{attachExtension}) 
 	</insert>
-		
+	
+	<select id = "selectByBoardId" resultMap = "attachResultMap">
+		SELECT * FROM ATTACH WHERE BOARD_ID = #{boardId}	
+	</select>
 		
 	<select id="selectByAttachId" resultMap="attachResultMap"> SELECT * FROM ATTACH
 		WHERE ATTACH_ID = #{attachId} </select>
