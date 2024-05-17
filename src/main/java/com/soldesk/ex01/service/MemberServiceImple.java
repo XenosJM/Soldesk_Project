@@ -68,4 +68,9 @@ public class MemberServiceImple implements MemberService{
 		return memberMapper.memberCheck(memberId);
 	}
 
+	@Override
+	public MemberVO findId(String memberEmail) {
+		return memberMapper.findId(memberEmail);
+	}
+
 }

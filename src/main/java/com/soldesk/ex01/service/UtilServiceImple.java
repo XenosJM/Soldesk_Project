@@ -3,7 +3,6 @@ package com.soldesk.ex01.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.soldesk.ex01.domain.MemberVO;
 import com.soldesk.ex01.persistence.MemberMapper;
 
 import lombok.extern.log4j.Log4j;
@@ -16,13 +15,13 @@ public class UtilServiceImple implements UtilService {
 	private MemberMapper memberMapper;
 	
 	@Override
-	public MemberVO checkId(String memberId) {
+	public Integer checkId(String memberId) {
 		log.info("checkId()");
 		return memberMapper.checkId(memberId);
 	}
 
 	@Override
-	public MemberVO checkEmail(String memberEmail) {
+	public Integer checkEmail(String memberEmail) {
 		log.info("checkEmail()");
 		return memberMapper.checkEmail(memberEmail);
 	}  // end checkEmail

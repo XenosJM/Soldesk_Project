@@ -62,6 +62,17 @@ body {
 	color: white;
 	border-radius: 4px;
 	cursor: pointer;
+	display : none;
+}
+
+.backward button {
+	width: 100%;
+	padding: 10px;
+	border: none;
+	background-color: #007bff;
+	color: white;
+	border-radius: 4px;
+	cursor: pointer;
 }
 
 .form-group button:hover {
@@ -82,32 +93,35 @@ body {
 		let emailAuthFlag = false;
 		let checkAuthCode;
 		
-		// 이메잃 보내기 버튼 클릭시 이메일 안가는데 html에 memberEmail이 없어서 값을 못받아서 그럼 id값을 조정하면 쉽게 끝남
+		// TODO 이메일 보내기 버튼 클릭시 이메일 안가는데 html에 memberEmail이 없어서 값을 못받아서 그럼 id값을 조정하면 쉽게 끝남
 		// 아이디를 찾는 버튼은 또 다른 버튼을 만들어야하고, 컨트롤러에서 새로 만들어야함.
 		
-		// 나중에 그냥 비동기로 클릭 할떄마다 새로 쓰도록 변경 예정
+		// 나중에 그냥 클릭 할떄마다 새로 쓰도록 변경 예정
 		$('#optionSelect').change(function() {
 			let selectedOption = $(this).val();
 			if (selectedOption === 'findId') {
-				$('#emailGroupId').show().val("");
-				$('#emailGroupPw').val("").hide();
-				$('#btnFormSubmit').hide();
-				$('#btnSendCode').show();
-			} else if (selectedOption === 'changePassword') {
-				$('#emailGroupPw').show().val("");
-				$('#emailGroupId').val("").hide();
+				$('#emailGroupId').show();
+				$('#emailGroupPw').hide();
+				$('#btnSendId').show();
 				$('#btnSendCode').hide();
+				$('#btnFormSubmit').hide();
+			} else if (selectedOption === 'changePassword') {
+				$('#emailGroupPw').show();
+				$('#emailGroupId').hide();
+				$('#btnSendId').hide();
+				$('#btnSendCode').show();
 				$('#btnFormSubmit').show();
 			} else {
-				$('.email-group').hide();
 				$('#btnSendCode').hide();
 				$('#btnFormSubmit').hide();
-				$('#emailGroupId, #emailGroupPw').val("");
+				$('#btnSendId').hide();
+				$('#emailGroupPw').hide();
+				$('#emailGroupId').hide();
 			}
 		});
 		
 		$('.memberEmail').each(function() {
-
+			
 			let elementId = $(this).attr('id');
 			$(document).on('blur', '#' + elementId, function() {
 				if (elementId == 'memberId') {
@@ -115,27 +129,48 @@ body {
 					if (memberId === "") {
 						$('#idMsg').html('비밀번호 변경을 위해 반드시 입력해 주세요.');
 						$('#idMsg').css('color', 'red');
+						idFlag = false;
 					} else {
-						$('#idMsg').html('');
+						let memberId = $('#memberId').val();
+						checkId(memberId);
 					}
 				} // end 아이디 체크
 				else if(elementId == 'memberEmailForId'){
 					let memberEmail = $('#' + elementId).val();
+					let emailExp = /^[a-zA-Z0-9_-]+@[a-zA-Z0-9]+\.[a-zA-Z]{2,}$/;
 					if (memberEmail === "") {
 						$('#emailAuthMsgForId').html('이메일은 반드시 적어야합니다.');
 						$('#emailAuthMsgForId').css('color', 'red');
-					} else{
-						$('#emailAuthMsgForId').html('');
+						emailFlag = false;
+						return;
+					}
+					if(!emailExp.test(memberEmail)){
+						$('#emailAuthMsgForId').html('비 정상적인 이메일입니다.');
+						$('#emailAuthMsgForId').css('color', 'red');
+						emailFlag = false;
+					} else {
+						$('#emailAuthMsgForId').html('정상적인 이메일 입니다. 메일 보내기를 눌러 코드를 받아주세요.');
+						$('#emailAuthMsgForId').css('color', 'green');
+						emailFlag = true;
 					}
 				} // end ForIdEmail 체크
 				else if(elementId == 'memberEmailForPw'){
 					let memberEmail = $('#' + elementId).val();
-					
+					let emailExp = /^[a-zA-Z0-9_-]+@[a-zA-Z0-9]+\.[a-zA-Z]{2,}$/;
 					if (memberEmail === "") {
 						$('#emailAuthMsgForPw').html('이메일은 반드시 적어야합니다.');
 						$('#emailAuthMsgForPw').css('color', 'red');
+						emailFlag = false;
+						return;
+					} 
+					if(!emailExp.test(memberEmail)){
+						$('#emailAuthMsgForPw').html('이메일은 정상적이어야 합니다.');
+						$('#emailAuthMsgForPw').css('color', 'red');
+						emailFlag = false;
 					} else{
-						$('#emailAuthMsgForPw').html('');
+						$('#emailAuthMsgForPw').html('이메일 입니다. 메일 보내기를 눌러 코드를 받아주세요.');
+						$('#emailAuthMsgForPw').css('color', 'green');
+						emailFlag = true;
 					}
 				} // end ForPwEmail 체크
 				else if(elementId == 'memberPw'){
@@ -170,69 +205,124 @@ body {
 						pwConfirmFlag = false;
 						return;
 					}
-					if (memberPw === pwConfirm) {
-						$('#pwConfirmMsg').html('비밀번호 확인을 통과했습니다.');
-						$('#pwConfirmMsg').css('color',	'green');
-						pwConfirmFlag = true;
-					} else {
+					if (!memberPw === pwConfirm) {
 						$('#pwConfirmMsg').html('저런! 비밀번호를 다시 한번확인해 주세요');
 						$('#pwConfirmMsg').css('color',	'red');
 						pwConfirmFlag = false;
+					} else {
+						$('#pwConfirmMsg').html('비밀번호 확인을 통과했습니다.');
+						$('#pwConfirmMsg').css('color',	'green');
+						pwConfirmFlag = true;
 					}
 				} // end pwConfirm 체크
-				else if(elementId == 'authCode'){
-					let authCode = $('#' + elementId).val();
-					if(authCode === ""){
-						$('#checkAuthMsg').html('인증코드는 반드시 입력 하셔야합니다!!');
-						$('#checkAuthMsg').css('color', 'red');
-						emailAuthFlag = false;
-					} else{
-						$('#checkAuthMsg').html('인증버튼을 눌러주세요.');
-						$('#checkAuthMsg').css('color', 'blue');
-						emailAuthFlag = false;
-					}
-				} // end authCode 체크
-				
 			}); // end document.blur
 		}); // end document.each
 		
+		$(document).on('blur', '#authCode', function(){
+			
+			let authCode = $('#authCode').val();
+			if(authCode === ""){
+				$('#checkAuthMsg').html('인증코드는 반드시 입력 하셔야합니다!!');
+				$('#checkAuthMsg').css('color', 'red');
+				emailAuthFlag = false;
+			} else{
+				$('#checkAuthMsg').html('인증버튼을 눌러주세요.');
+				$('#checkAuthMsg').css('color', 'blue');
+				emailAuthFlag = false;
+			}
+			
+		}); // end authCode 체크
+		
+		$(document).on('click', '#btnSendId', function(event) {
+			event.preventDefault(); // 기본 동작 막기.
+			if(!emailFlag){
+				alert('이메일 주소를 확인해 주세요.');
+			} else {
+				authCodeId($('#memberEmailForId').val()); // 메일 발송
+			}
+		}); // end 생성될 버튼 정의
 
 		// 생성되는 버튼에 대한 이벤트 처리
 		$(document).on('click', '#btnSendCode', function(event) {
-					event.preventDefault(); // 기본 동작 막기.
-					// TODO 이메일 플래그를 체크할지 안할지 고민좀 할것.
-					authCodeSend($('#memberEmailForId').val()); // 메일 발송
-				}); // end 생성될 버튼 정의
-
-		function authCodeSend(memberEmail) {
-			let memberId = $('#memberId').val();
-			memberEmail = $('#memberEmailForId').val();
+			event.preventDefault(); // 기본 동작 막기
+			if(!emailFlag){
+				alert('이메일 주소를 확인해 주세요.');
+			} else {
+				let memberEmail = $('#memberEmailForPw').val();
+				authCodeSend(memberEmail);
+				// alert('이메일 발송이 완료되었습니다.');
+			}
+		}); // end 생성될 버튼 정의
+		
+		function authCodeId(memberEmail) {
+			//memberEmail = $('#memberEmailForId').val();
 			$.ajax({
 				type : "GET",
-				url : "../util/authCodeSend/",
+				url : "../util/authCodeId/",
 				data : {
-					memberEmail : memberEmail,
-					memberId : memberId
+					memberEmail : memberEmail
 				},
 				success : function(result) {
-					if (result >= 1) {
+					if (result == 1) {
 						alert("작성하신 이메일로 확인 코드가 발송되었습니다.");
-						$('#emailAuthMsg').html(
-												"<input id='authCode' type='number' class='memberEmail' placeholder='코드를 입력해 주세요.'>"
-												+ "<button id='btnCodeCheck'>인증확인</button><br><span id='checkAuthMsg'></span>");
-						checkAuthCode = result;
 					} else {
-						alert("잠시후 다시 눌러주세요.");
+						alert("이메일을 다시 한번 확인해 주세요.");
 					}
 				}
 			}); // end ajax
+		} // end authCodeSend()
+		
+		function checkId(memberId){
+			  		$.ajax({
+			  			type : "GET",
+			  			url : "../util/checkId/" + memberId,
+			  			success : function(result){
+			  				if(result == 1){
+			  					$('#idMsg').html('회원님의 아이디가 맞습니다.');
+			  					$('#idMsg').css('color', 'green');
+			  					idFlag = true;
+			  				} else {
+			  					$('#idMsg').html('회원이 아닌 아이디입니다.');
+			  					$('#idMsg').css('color', 'red');
+			  					idFlag = false;
+			  				}
+			  			}
+			  		}); // end ajax
+			  	} // end checkId
+		
+		function authCodeSend(memberEmail) {
+			  		
+			if(idFlag && emailFlag){
+				$.ajax({
+					type : "GET",
+					url : "../util/authCodeSend/",
+					data : {
+						memberEmail : memberEmail
+					},
+					success : function(response) {
+						if (response.result == 1) {
+							
+							checkAuthCode = response.authCode;
+							alert('성공적으로 메일이 보내졌습니다. 확인해 주세요.');
+							$('#emailAuthMsgForPw').html(
+									"<input id='authCode' type='number' class='memberEmail' placeholder='코드를 입력해 주세요.'>" +
+									"<br><button id='btnCodeCheck' style='display : 'block''>인증확인</button><br><span id='checkAuthMsg'></span>");
+							$('#btnCodeCheck').show();
+						} else {
+							alert("잠시후 다시 눌러주세요.");
+						}
+					}
+				}); // end ajax
+			} else{
+				alert('뭔갈 안하셧습니다.');
+			}
 		} // end authCodeSend()
 		
 
 		$(document).on('click', '#btnCodeCheck', function(event) {
 			event.preventDefault(); // 기본 동작 막기.
 			let authCode = $('#authCode').val();
-			if (checkAuthCode === authCode) {
+			if (checkAuthCode == authCode) {
 				alert('인증에 성공하셨습니다.');
 				$('#checkAuthMsg').html(
 									'<h3 class="join-title">'
@@ -255,7 +345,7 @@ body {
 			}
 		});
 		
-
+// TODO 비밀번호 블러처리도 위에서 따로 빼서 진행하고 제출을 누르면 업데이트로 가도록 할것.
 		$('#btnFormSubmit').click(function() {
 
 			setTimeout(function() {
@@ -296,7 +386,7 @@ body {
 			<div id="emailGroupId" class="form-group email-group">
 				<label for="memberEmailForId">이메일 주소:</label>
 				<input type="email" id="memberEmailForId" name="memberEmail" class="memberEmail" value="" required>
-				<span id="emailAuthMsgForId" class="emailAuthMsg"></span>
+				<span id="emailAuthMsgForId" class="memberEmail"></span>
 			</div>
 			<div id="emailGroupPw" class="form-group email-group">
 				<label for="memberId">사용자 아이디:</label>
@@ -304,15 +394,18 @@ body {
 				<span id="idMsg"></span>
 				<label for="memberEmailForPw">이메일 주소:</label>
 				<input type="email" id="memberEmailForPw" name="memberEmail" class="memberEmail" value="" required>
-				<span id="emailAuthMsgForPw" class="emailAuthMsg"></span>
+				<span id="emailAuthMsgForPw" class="memberEmail"></span>
 			</div>
-			<div class="form-group">
-				<button id="btnSendCode" style='display: none;'> 메일 보내기</button>
+			<div id="btnZone" class="form-group">
+				<span id="btnSpan"></span>
+				<button id="btnSendId"> 메일 보내기</button>
 				<br>
-				<button id="btnFormSubmit" style='display: none;'>제출</button>
+				<button id="btnSendCode"> 메일 보내기</button>
+				<br>
+				<button id="btnFormSubmit" >제출</button>
 			</div>
 		</form>
-		<div class="form-group">
+		<div class="backward">
 			<button id="btnBackward">뒤로가기</button>
 		</div>
 	</div>

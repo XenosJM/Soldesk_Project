@@ -22,7 +22,8 @@ public interface MemberService {
 	int deleteMember(int memberNum);
 	// 로그인
 	MemberVO memberCheck(String memberId);
-
+	// 아이디 찾기
+	MemberVO findId(String memberEmail);
 	// TODO 회원 친구 보기 -> 친구 서비스에서
 	
 	// 친구 신청(등록)

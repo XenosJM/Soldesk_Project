@@ -521,8 +521,8 @@ body {
 	  			if(elementId == 'memberId') {
 	  				let memberId = $('#' + elementId).val();
 	  				
-	  			  	// 5 ~ 20자 사이의 소문자나 숫자로 시작하고, 소문자, 숫자을 포함하는 정규표현식
-	  				let idRegExp = /^[a-z0-9][a-zA-Z0-9]{4,19}$/;
+	  			  	// 7 ~ 20자 사이의 소문자나 숫자로 시작하고, 소문자, 숫자을 포함하는 정규표현식
+	  				let idRegExp = /^[a-z0-9][a-zA-Z0-9]{6,19}$/;
 	  				if(memberId === ""){
 	  					$('#idMsg').html("아이디는 비어둘 수 없습니다.");
 	  					$('#idMsg').css("color", "red");
@@ -531,7 +531,7 @@ body {
 	  				}
 	  				
 	  				if(!idRegExp.test(memberId)){
-	  					$('#idMsg').html("아이디는 5-20자 사이로 영어, 숫자만 입력이 가능 합니다.");
+	  					$('#idMsg').html("아이디는 7-20자 사이로 영어, 숫자만 입력이 가능 합니다.");
 	  					$('#idMsg').css("color", "red");
 	  					idFlag = false;
 	  				} else {
@@ -587,12 +587,14 @@ body {
 	  				if(memberEmail === ""){
 	  					$('#emailMsg').html("이메일도 필수에오. 필수!");
 	  					$('#emailMsg').css("color", "red");
+	  					$('#authSpan').html('');
 	  					$('#btnEmailAuth').css("display", "none");
 	  					emailFlag = false;
 	  					return;
 	  				}
 	  				if(!emailRegExp.test(memberEmail)){
 	  					$('#emailMsg').html("유효한 형식의 이메일이 아니에오");
+	  					$('#authSpan').html('');
 	  					/* $('#emailMsg').html("유효한 형식의 이메일이 아니에오, naver.com, daum.net, kakao.com, gmail.com <br> 이 4개의 이메일만 사용 가능합니다 "); */
 	  					$('#emailMsg').css("color", "red");
 	  					$('#btnEmailAuth').css("display", "none");
@@ -649,17 +651,22 @@ body {
 	  			url : "../util/checkEmail/",
 	  			data: { memberEmail : memberEmail },
 	  			success : function(result){
-	  				if(result != 0){
+	  				if(result == 1){
 	  					$('#emailMsg').html("누군가 벌써 사용중인 이메일입니다.");
 	  					$('#emailMsg').css("color", "red");
+	  					$('#authSpan').html("");
 	  					$('#btnEmailAuth').css("display", "none");
 	  					emailFlag = false;
 	  				} else {
+	  					if($('#authSpan').length && emailFlag){
+	  						
+	  					} else{
 	  					$('#emailMsg').html("사용가능한 이메일입니당.");
 	  					$('#emailMsg').css("color", "green");
 	  					$('#authSpan').html("<span><button id='btnSendCode'>이메일 인증하기</button><br></span><span id='emailAuthMsg'></span>");
 	  					// $('#btnEmailAuth').css("display", "block")
 	  					emailFlag = true;
+	  					}
 	  				}
 	  			}
 	  		});	// end ajax
@@ -675,11 +682,12 @@ body {
 				type : "GET",
 				url : "../util/authCodeSend/",
 				data : {memberEmail : memberEmail},
-				success : function(result){
-					if(result >= 1){
+				success : function(response){
+					if(response.result === 1){
 						alert("작성하신 이메일로 확인 코드가 발송되었습니다.");
 						$('#emailAuthMsg').html("<input id='authCode' type='number' placeholder='코드를 입력해 주세요.'><button id='btnCodeCheck'>인증확인</button><br><span id='checkAuthMsg'></span>");
-						checkAuthCode = result;
+						checkAuthCode = response.authCode;
+						console.log(checkAuthCode);
 					} else{
 						alert("잠시후 다시 눌러주세요.");
 					}
