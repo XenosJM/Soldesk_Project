@@ -549,7 +549,7 @@ body {
 	  					return;
 	  				}
 	  				if(!pwRegExp.test(memberPw)){
-	  					$('#pwMsg').html("비밀번호는 소문자로 시작해서 대문자, 숫자, 특수문자(!@#$%^&*)중 최소 하나씩을 포함한 8 에서 16 자리만 가능합니다.");
+	  					$('#pwMsg').html("소문자, 대문자, 숫자, 특수문자(!@#$%^&*)중 최소 하나씩을 포함한 8 에서 16 자리만 가능합니다.");
 	  					$('#pwMsg').css("color", "red");
 	  					pwFlag = false;
 	  				} else {
