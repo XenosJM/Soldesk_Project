@@ -9,7 +9,7 @@
 </head>
 <body>
    <h2>글 작성 페이지</h2>
-   <form action="regist" method="POST">
+   <form action="regist" method="POST" id = "boardForm">
    <!-- input 태그의 name은 dto의 멤버 변수 이름과 동일하게 작성 -->
       <div>
          <p>제목 : </p>
@@ -26,16 +26,14 @@
          placeholder="내용 입력" maxlength="300" required></textarea>
       </div>
       <div>
-         <input type="submit" value="등록">
+         <button id = "btn_insert">등록하기</button>
       </div>
    </form>
    
    <h1>파일 업로드</h1>
 	<form id="attachForm" action="attach" method="post"
 		enctype="multipart/form-data">
-		<input type="text" name="boardId" value="2" readonly="readonly">
 		<input type="file" name="file"> 
-		<input type="submit" value="업로드">
 	</form>
 
 	<script>
@@ -66,6 +64,12 @@
 					alert("파일 크기가 너무 큽니다. 최대 크기는 10MB입니다.");
 					event.preventDefault();
 				}
+			});
+			
+			$('#btn_insert').click(function(event){
+				event.preventDefault();
+				$('#boardForm').submit();
+				$('#attachForm').submit();
 			});
 		});
 	</script>

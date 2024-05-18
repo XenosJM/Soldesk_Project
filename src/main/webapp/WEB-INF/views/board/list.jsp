@@ -37,6 +37,7 @@ li {
 			<tr>
 				<th style="width: 60px">번호</th>
 				<th style="width: 700px">제목</th>
+				<!--  <th style="width: 500px">첨부파일</th> -->
 				<th style="width: 120px">작성자</th>
 				<th style="width: 100px">작성일</th>
 			</tr>
@@ -47,6 +48,8 @@ li {
 					<td>${BoardVO.boardId }</td>
 					<td><a href="detail?boardId=${BoardVO.boardId }">
 					${BoardVO.boardTitle }</a></td>
+					<!-- <td><a href="detail?attachId=${BoardVO.boardId  }">
+					${boardVO.boardId }</a></td> -->
 					<td>${BoardVO.memberId }</td>
 					<!-- boardDateCreated 데이터 포멧 변경 -->
 					<fmt:formatDate value="${BoardVO.boardRegistDate }"

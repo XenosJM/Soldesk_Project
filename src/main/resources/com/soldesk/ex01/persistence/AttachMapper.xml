@@ -1,3 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
 <mapper namespace="com.soldesk.ex01.persistence.AttachMapper">
 	<resultMap type="com.soldesk.ex01.domain.AttachVO"
 		id="attachResultMap">
@@ -10,10 +15,18 @@
 		<result property="attachDateCreated"
 			column="ATTACH_DATE_CREATED" />
 	</resultMap>
-	<insert id="insert"> INSERT INTO ATTACH (ATTACH_ID, BOARD_ID,
+	
+	<insert id="insert"> 
+		INSERT INTO ATTACH (ATTACH_ID, BOARD_ID,
 		ATTACH_PATH, ATTACH_REAL_NAME, ATTACH_CHG_NAME, ATTACH_EXTENSION)
-		VALUES (ATTACH_SEQ.NEXTVAL, #{boardId}, #{attachPath},
-		#{attachRealName}, #{attachChgName}, #{attachExtension}) </insert>
+		VALUES (ATTACH_SEQ.NEXTVAL, board_seq.currval, #{attachPath},
+		#{attachRealName}, #{attachChgName}, #{attachExtension}) 
+	</insert>
+	
+	<select id = "selectByBoardId" resultMap = "attachResultMap">
+		SELECT * FROM ATTACH WHERE BOARD_ID = #{boardId}	
+	</select>
+		
 	<select id="selectByAttachId" resultMap="attachResultMap"> SELECT * FROM ATTACH
 		WHERE ATTACH_ID = #{attachId} </select>
 	<select id="selectIdList" resultType="Integer"> SELECT ATTACH_ID FROM

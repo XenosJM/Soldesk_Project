@@ -26,9 +26,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	<!-- 로그인 체크 -->
 	<select id="memberCheck" resultMap="memberResultMap"> SELECT MEMBER_ID, MEMBER_PASSWORD, MEMBER_NUM, MANAGER_ID FROM MEMBER WHERE MEMBER_ID = #{memberId}</select>
 	<!-- 체크 아이디 -->
-	<select id="checkId" resultMap="memberResultMap"> SELECT MEMBER_NUM FROM MEMBER WHERE MEMBER_ID = #{memberId}  </select>
+	<select id="checkId" resultType="Integer"> SELECT MEMBER_NUM FROM MEMBER WHERE MEMBER_ID = #{memberId}  </select>
 	<!-- 체크 이메일 -->
-	<select id="checkEmail" resultMap="memberResultMap"> SELECT MEMBER_NUM FROM MEMBER WHERE MEMBER_EMAIL = #{memberEmail} </select>
+	<select id="checkEmail" resultType="Integer"> SELECT MEMBER_NUM FROM MEMBER WHERE MEMBER_EMAIL = #{memberEmail} </select>
+	<!-- 이메일을 이용해 아이디 찾기 -->
+	<select id="findId" resultMap="memberResultMap"> SELECT MEMBER_ID FROM MEMBER WHERE MEMBER_EMAIL = #{memberEmail} </select>
 	<!-- 회원 정보 수정 -->
 	<update id="update">
 	    UPDATE MEMBER SET
