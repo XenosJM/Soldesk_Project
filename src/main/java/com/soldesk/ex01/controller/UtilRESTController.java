@@ -14,6 +14,7 @@ import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -150,4 +151,17 @@ public class UtilRESTController {
 			}
 		return new ResponseEntity<Integer>(result, HttpStatus.OK);
 	}
+	
+	@PutMapping("/putPw")
+	public ResponseEntity<Integer> updatePw(@PathVariable("memberPassword") String memberPassword){
+		MemberVO memberVO = new MemberVO();
+		memberVO.setMemberPassword(memberPassword);
+		int result = memberService.updateMember(memberVO);
+		return new ResponseEntity<Integer>(result, HttpStatus.OK);
+	}
 }
+
+
+
+
+
