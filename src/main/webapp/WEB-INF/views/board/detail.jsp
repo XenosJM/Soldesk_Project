@@ -34,7 +34,7 @@
 	</div>
 
 	<p>
-		첨부 파일 : <a href="detailBoard?boardId=${boardVO.boardId }">${boardVO.boardId }</a>
+		첨부 파일 : <a href="detailBoard?boardId=${boardVO.boardId }">${boardVO.attachChgName }</a>
 	</p>
 
 
@@ -54,7 +54,7 @@
 
 					deleteRereply();
 					deleteReply();
-					//$('#deleteForm').submit(); // form 데이터 전송
+					$('#deleteForm').submit(); // form 데이터 전송
 				}
 			});
 		});

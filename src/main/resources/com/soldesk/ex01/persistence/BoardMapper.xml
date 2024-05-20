@@ -12,12 +12,16 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		<result property="boardContent" column="BOARD_CONTENT"/>
 		<result property="boardRegistDate" column="BOARD_REGISTDATE"/>
 		<result property="boardReplyCount" column="BOARD_REPLY_COUNT"/>
+		<result property="attachPath" column="ATTACH_PATH"/>
+		<result property="attachRealName" column = "ATTACH_REAL_NAME"/>
+		<result property="attachChgName" column="ATTACH_CHG_NAME"/>
+		<result property="attachExtension" column="ATTACH_EXTENSION"/>
 	</resultMap>
 
 	<insert id="insertBoard">
 		<!-- 게시글 등록 -->
 		INSERT INTO BOARD VALUES 
-		(BOARD_SEQ.NEXTVAL, #{categoryId}, #{memberId}, #{boardTitle}, #{boardContent}, SYSDATE, 0)
+		(BOARD_SEQ.NEXTVAL, #{categoryId}, #{memberId}, #{boardTitle}, #{boardContent}, SYSDATE, 0, #{attachPath}, #{attachRealName}, #{attachChgName},#{attachExtension})
 	</insert>
 	 
 	 <select id="selectList" resultMap="boardResultMap">

@@ -69,7 +69,6 @@
 			$('#btn_insert').click(function(event){
 				event.preventDefault();
 				$('#boardForm').submit();
-				$('#attachForm').submit();
 			});
 		});
 	</script>

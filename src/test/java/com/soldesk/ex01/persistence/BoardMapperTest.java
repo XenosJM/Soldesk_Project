@@ -36,18 +36,18 @@ public class BoardMapperTest {
 	}
 	
 	private void testBoardInsert() {
-		BoardVO vo = new BoardVO(0, 1234, 1239, "test1", "test", new Date(), 0);
-		int result = boardMapper.insertBoard(vo);
-		log.info(result + "행 삽입");
-		vo = new BoardVO(0, 1234, 1240, "test2", "test", new Date(), 0);
-		result = boardMapper.insertBoard(vo);
-		log.info(result + "행 삽입");
-		vo = new BoardVO(0, 1234, 1241, "test3", "test", new Date(), 0);
-		result = boardMapper.insertBoard(vo);
-		log.info(result + "행 삽입");
-		vo = new BoardVO(0, 1234, 1242, "test4", "test", new Date(), 0);
-		result = boardMapper.insertBoard(vo);
-		log.info(result + "행 삽입");
+//		BoardVO vo = new BoardVO(0, 1234, 1239, "test1", "test", new Date(), 0);
+//		int result = boardMapper.insertBoard(vo);
+//		log.info(result + "행 삽입");
+//		vo = new BoardVO(0, 1234, 1240, "test2", "test", new Date(), 0);
+//		result = boardMapper.insertBoard(vo);
+//		log.info(result + "행 삽입");
+//		vo = new BoardVO(0, 1234, 1241, "test3", "test", new Date(), 0);
+//		result = boardMapper.insertBoard(vo);
+//		log.info(result + "행 삽입");
+//		vo = new BoardVO(0, 1234, 1242, "test4", "test", new Date(), 0);
+//		result = boardMapper.insertBoard(vo);
+//		log.info(result + "행 삽입");
 	}
 	
 	private void testBoardSelect() {
@@ -72,9 +72,9 @@ public class BoardMapperTest {
 	}
 	
 	private void testUpdateBoard() {
-		BoardVO vo = new BoardVO(1,1234,1235,"테스트임","테스트",new Date(),0);
-		int result = boardMapper.updateBoard(vo);
-		System.out.println(result+"행 변경완료");
+//		BoardVO vo = new BoardVO(1,1234,1235,"테스트임","테스트",new Date(),0);
+//		int result = boardMapper.updateBoard(vo);
+//		System.out.println(result+"행 변경완료");
 	}
 	
 	private void testDeleteBoard() {
