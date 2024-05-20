@@ -15,10 +15,9 @@ import lombok.ToString;
 @Setter
 @ToString
 public class MemberVO {
-	private int memberNum;
 	private String memberId;
 	private String memberPassword;
-	private int managerNum;
+	private int managerId;
 	private String memberEmail;
 	private int[] memberProperty;
 	private Date memberRegistDate;

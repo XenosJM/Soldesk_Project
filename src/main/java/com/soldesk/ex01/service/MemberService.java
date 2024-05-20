@@ -9,7 +9,7 @@ public interface MemberService {
 	// 회원 가입
 	int createMember(MemberVO memberVO);
 	// 회원 자기 정보 보기
-	MemberVO getMemberById(int memberNum);
+	MemberVO getMemberById(String memberId);
 	// 회원 검색
 	List<MemberVO> getAllMember();
 	// 회원 정보 수정
@@ -19,7 +19,7 @@ public interface MemberService {
 	// 회원 보유 아이템 변경
 	int updateMemberProperty(MemberVO memberVO);
 	// 회원 정보 삭제(탈퇴)
-	int deleteMember(int memberNum);
+	int deleteMember(String memberId);
 	// 로그인
 	MemberVO memberCheck(String memberId);
 	// 아이디 찾기

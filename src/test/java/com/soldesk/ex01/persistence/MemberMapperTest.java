@@ -38,12 +38,12 @@ public class MemberMapperTest {
 	
 	private void testMemberDelete() {
 		log.info("testMemberDelete()");
-		int result = memberMapper.delete(1);
+		int result = memberMapper.delete("wjdals99");
 		log.info(result + "행 삭제");
 	}
 
 	private void testMemberManagerUpdate() {
-		MemberVO vo = new MemberVO(1, null, null, 2, null, null, null, null);
+		MemberVO vo = new MemberVO("wjdals99", null, 2, null, null, null, null);
 		int result = memberMapper.updateManager(vo);
 		log.info(result + "행 수정");
 		
@@ -51,7 +51,7 @@ public class MemberMapperTest {
 
 	private void testMemberPropertyUpdate() {
 		MemberVO vo = new MemberVO();
-		vo.setMemberNum(1);
+		vo.setMemberId("wjdals99");
 		vo.setMemberProperty(new int[] {34, 25, 22});
 		int result = memberMapper.updateProperty(vo);
 		log.info(result + "행 수정");
@@ -60,7 +60,7 @@ public class MemberMapperTest {
 	private void testMemberUpdate() {
 		log.info("testMemberUpdate()");
 		MemberVO vo = new MemberVO(); 
-		vo.setMemberNum(1);
+		vo.setMemberId("wjdals99");
 		vo.setMemberPassword("456456");
 		vo.setMemberEmail("test@test.com");
 		int result = memberMapper.update(vo);
@@ -69,7 +69,7 @@ public class MemberMapperTest {
 
 	private void testMemberByMemberId() {
 		log.info("testMemberByMemberId()");
-		MemberVO vo = memberMapper.selectByMemberId(1);
+		MemberVO vo = memberMapper.selectByMemberId("wjdals99");
 		log.info(vo);
 		
 	}
@@ -82,7 +82,7 @@ public class MemberMapperTest {
 	}
 
 	private void testMemberInsert() {
-		MemberVO vo = new MemberVO(0, "wjddk", "1q2w3e4r", 2, "wjdalsqaaz123@gmail.com", new int[] {1, 2}, new Date(), null) ;
+		MemberVO vo = new MemberVO("wjddk", "1q2w3e4r", 2, "wjdalsqaaz123@gmail.com", new int[] {1, 2}, new Date(), null) ;
 		 vo.setMemberPropertyAsString(Arrays.toString(vo.getMemberProperty()));
 		int result = memberMapper.insert(vo);
 		log.info(result + "행 삽입");

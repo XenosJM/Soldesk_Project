@@ -44,8 +44,9 @@ public class MemberController {
 		log.info("detailGet()");
 		MemberVO memberVO = new MemberVO();
 		HttpSession session = req.getSession();
-		int memberNum = (int) session.getAttribute("memberNum");
-		memberVO = memberService.getMemberById(memberNum);
+		String memberId = (String)session.getAttribute("memberId");
+		memberVO = memberService.getMemberById(memberId);
+		memberVO.setMemberPropertyAsString(memberService.getMemberById(memberId).getMemberPropertyAsString());
 		log.info(memberVO);
 		model.addAttribute("memberVO", memberVO);
 	}
@@ -65,9 +66,9 @@ public class MemberController {
 	}
 	
 	@PostMapping("/delete")
-	public String deletePost(Integer memberNum) {
+	public String deletePost(String memberId) {
 		log.info("delete()");
-		int result = memberService.deleteMember(memberNum);
+		int result = memberService.deleteMember(memberId);
 		log.info(result + "«‡ ªË¡¶");
 		return "redirect:/";
 	}
@@ -78,18 +79,18 @@ public class MemberController {
 		MemberVO memberVO = new MemberVO();
 		memberVO = memberService.memberCheck(memberId);
 		if(memberVO != null && memberPassword.equals(memberVO.getMemberPassword())) {
-			if(memberVO.getManagerNum() != 0) {
-				log.info(memberVO.getMemberNum());
+			if(memberVO.getManagerId() != 0) {
+				log.info(memberVO.getMemberId());
 				HttpSession session = req.getSession();
-				session.setAttribute("memberNum", memberVO.getMemberNum());
-				session.setAttribute("managerNum", memberVO.getManagerNum());
+				session.setAttribute("memberId", memberVO.getMemberId());
+				session.setAttribute("managerId", memberVO.getManagerId());
 //				session.setAttribute("memberName", memberVO.getMemberName());
 				return "redirect:/";
 			} else {
 				HttpSession session = req.getSession();
-				log.info(memberVO.getMemberNum());
-				session.setAttribute("memberNum", memberVO.getMemberNum());
-				log.info(session.getAttribute("memberNum"));
+				log.info(memberVO.getMemberId());
+				session.setAttribute("memberId", memberVO.getMemberId());
+				log.info(session.getAttribute("memberId"));
 //				session.setAttribute("memberName", memberVO.getMemberName());
 				return "redirect:/";
 			}
@@ -101,7 +102,7 @@ public class MemberController {
 	public String memberCheckout(HttpServletRequest req) {
 		log.info("memberCheckout()");
 		HttpSession session = req.getSession();
-		session.removeAttribute("memberNum");
+		session.removeAttribute("memberId");
 
 		return "redirect:/";
 	}

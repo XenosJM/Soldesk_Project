@@ -92,7 +92,7 @@ body {
 		let pwConfirmFlag = false;
 		let emailAuthFlag = false;
 		let checkAuthCode;
-		
+		let checkEmail; // 체크용 이메일ㅅ
 		// TODO 이메일 보내기 버튼 클릭시 이메일 안가는데 html에 memberEmail이 없어서 값을 못받아서 그럼 id값을 조정하면 쉽게 끝남
 		// 아이디를 찾는 버튼은 또 다른 버튼을 만들어야하고, 컨트롤러에서 새로 만들어야함.
 		
@@ -104,13 +104,11 @@ body {
 				$('#emailGroupPw').hide();
 				$('#btnSendId').show();
 				$('#btnSendCode').hide();
-				$('#btnFormSubmit').hide();
 			} else if (selectedOption === 'changePassword') {
 				$('#emailGroupPw').show();
 				$('#emailGroupId').hide();
 				$('#btnSendId').hide();
 				$('#btnSendCode').show();
-				$('#btnFormSubmit').show();
 			} else {
 				$('#btnSendCode').hide();
 				$('#btnFormSubmit').hide();
@@ -123,15 +121,15 @@ body {
 		$('.memberEmail').each(function() {
 			
 			let elementId = $(this).attr('id');
-			$(document).on('blur', '#' + elementId, function() {
-				if (elementId == 'memberId') {
+			
+			$('#' + elementId).blur(function() {
+				if (elementId == 'memberIdForPw') {
 					let memberId = $('#'+elementId).val();
 					if (memberId === "") {
 						$('#idMsg').html('비밀번호 변경을 위해 반드시 입력해 주세요.');
 						$('#idMsg').css('color', 'red');
 						idFlag = false;
 					} else {
-						let memberId = $('#memberId').val();
 						checkId(memberId);
 					}
 				} // end 아이디 체크
@@ -162,76 +160,21 @@ body {
 						$('#emailAuthMsgForPw').css('color', 'red');
 						emailFlag = false;
 						return;
-					} 
-					if(!emailExp.test(memberEmail)){
-						$('#emailAuthMsgForPw').html('이메일은 정상적이어야 합니다.');
-						$('#emailAuthMsgForPw').css('color', 'red');
-						emailFlag = false;
-					} else{
-						$('#emailAuthMsgForPw').html('이메일 입니다. 메일 보내기를 눌러 코드를 받아주세요.');
-						$('#emailAuthMsgForPw').css('color', 'green');
-						emailFlag = true;
-					}
+					} else if($('#authCode').length > 0){
+						
+					} else {
+						if(!emailExp.test(memberEmail)){
+							$('#emailAuthMsgForPw').html('이메일은 정상적이어야 합니다.');
+							$('#emailAuthMsgForPw').css('color', 'red');
+							emailFlag = false;
+						} else{
+							checkMail(memberEmail);
+						}
+					} // end 코드입력칸 존재 여부
 				} // end ForPwEmail 체크
-				else if(elementId == 'memberPw'){
-					let memberPw = $('#' + elementId).val();
-					let pwRegExp = /^(?=.*?[A-Z])(?=.?[a-z])(?=.*?[0-9])(?=.*?[!@#$%^&*]).{8,16}$/;
-
-					if (memberPw === "") {
-						$('#pwMsg').html('비밀번호는 필수에오. 필수!');
-						$('#pwMsg').css('color', 'red');
-						pwFlag = false;
-						return;
-					}
-					/* TODO 아이디를 가져올때 비밀번호도 가져와서 기존비밀번호는 사용 못하도록 할지 고민해 볼 것. 
-					else if (memberPw === ){												
-					} */
-					if (!pwRegExp.test(memberPw)) {
-						$('#pwMsg').html('소문자, 대문자, 숫자, 특수문자(!@#$%^&*)중 최소 하나씩을 포함한 8 에서 16 자리만 가능합니다.');
-						$('#pwMsg').css('color', 'red');
-						pwFlag = false;
-					} else {
-						$('#pwMsg').html('사용가능한 비밀번호 임미다.');
-						$('#pwMsg').css('color', 'green');
-						pwFlag = true;
-					}
-				} // end memberPw 체크
-				else if(elementId == 'pwConfirm'){
-					let pwConfirm = $('#' + elementId).val();
-					
-					if (pwConfirm === "") {
-						$('#pwConfirmMsg').html('비밀번호 확인은 필수에오.');
-						$('#pwConfirmMsg').css('color', 'red');
-						pwConfirmFlag = false;
-						return;
-					}
-					if (!memberPw === pwConfirm) {
-						$('#pwConfirmMsg').html('저런! 비밀번호를 다시 한번확인해 주세요');
-						$('#pwConfirmMsg').css('color',	'red');
-						pwConfirmFlag = false;
-					} else {
-						$('#pwConfirmMsg').html('비밀번호 확인을 통과했습니다.');
-						$('#pwConfirmMsg').css('color',	'green');
-						pwConfirmFlag = true;
-					}
-				} // end pwConfirm 체크
+				
 			}); // end document.blur
 		}); // end document.each
-		
-		$(document).on('blur', '#authCode', function(){
-			
-			let authCode = $('#authCode').val();
-			if(authCode === ""){
-				$('#checkAuthMsg').html('인증코드는 반드시 입력 하셔야합니다!!');
-				$('#checkAuthMsg').css('color', 'red');
-				emailAuthFlag = false;
-			} else{
-				$('#checkAuthMsg').html('인증버튼을 눌러주세요.');
-				$('#checkAuthMsg').css('color', 'blue');
-				emailAuthFlag = false;
-			}
-			
-		}); // end authCode 체크
 		
 		$(document).on('click', '#btnSendId', function(event) {
 			event.preventDefault(); // 기본 동작 막기.
@@ -289,6 +232,29 @@ body {
 			  			}
 			  		}); // end ajax
 			  	} // end checkId
+			  	
+		function checkMail(memberEmail){
+		  	let memberId = $('#memberIdForPw').val();
+		  	console.log(memberId);
+	  		$.ajax({
+	  			type : "GET",
+	  			url : "../util/findId/",
+	  			data: { memberEmail : memberEmail },
+	  			success : function(result){
+	  				if(result === memberId){
+  						console.log(result);
+	  					$('#emailAuthMsgForPw').html("입력하신 아이디와 일치하는 이메일 입니다.");
+	  					$('#emailAuthMsgForPw').css("color", "green");
+	  					emailFlag = true;
+	  				} else{
+	  					$('#emailAuthMsgForPw').html("입력하신 아이디와 일치하지 않는 이메일 입니다.");
+		  				$('#emailAuthMsgForPw').css("color", "red");
+		  				emailFlag = false;
+		  				
+	  				}
+	  			}
+	  		});	// end ajax
+	  	} // end checkMail
 		
 		function authCodeSend(memberEmail) {
 			  		
@@ -301,12 +267,12 @@ body {
 					},
 					success : function(response) {
 						if (response.result == 1) {
-							
 							checkAuthCode = response.authCode;
+							console.log(checkAuthCode);
 							alert('성공적으로 메일이 보내졌습니다. 확인해 주세요.');
 							$('#emailAuthMsgForPw').html(
-									"<input id='authCode' type='number' class='memberEmail' placeholder='코드를 입력해 주세요.'>" +
-									"<br><button id='btnCodeCheck' style='display : 'block''>인증확인</button><br><span id='checkAuthMsg'></span>");
+									'<input id="authCode" type="number" class="memberEmail" placeholder="코드를 입력해 주세요.">' +
+									'<br><button id="btnCodeCheck">인증확인</button><br><span id="checkAuthMsg"></span>');
 							$('#btnCodeCheck').show();
 						} else {
 							alert("잠시후 다시 눌러주세요.");
@@ -318,10 +284,31 @@ body {
 			}
 		} // end authCodeSend()
 		
+		$(document).on('blur', '#authCode', function(){
+			
+			let authCode = $('#authCode').val();
+			if($('#memberPw').length > 0){
+				
+			} else{				
+				if(authCode === ""){
+					$('#checkAuthMsg').html('인증코드는 반드시 입력 하셔야합니다!!');
+					$('#checkAuthMsg').css('color', 'red');
+					emailAuthFlag = false;
+				} else{
+					$('#checkAuthMsg').html('인증버튼을 눌러주세요.');
+					$('#checkAuthMsg').css('color', 'blue');
+					emailAuthFlag = false;
+				}
+			}
+			
+		}); // end authCode 체크
 
 		$(document).on('click', '#btnCodeCheck', function(event) {
 			event.preventDefault(); // 기본 동작 막기.
 			let authCode = $('#authCode').val();
+			let memberId = $('#memberId').val();
+			let memberEmail = $('#memberEmailForPw').val();
+			
 			if (checkAuthCode == authCode) {
 				alert('인증에 성공하셨습니다.');
 				$('#checkAuthMsg').html(
@@ -330,13 +317,9 @@ body {
 									+ '</h3>'
 									+ '<input id="memberPw" class ="memberEmail" type="password" name="memberPw" title="비밀번호" maxlength="20">'
 									+ '<br>'
-									+ '<span id="pwMsg"></span>'
-									+ '<h3 class="join-title">'
-									+ '<label for="pwConfirm">비밀번호 재확인</label>'
-									+ '</h3>'
-									+ '<input id="pwConfirm" class ="memberEmail" type="password" name="pwConfirm" title="비밀번호 확인" maxlength="20">'
-									+ '<br>'
-									+ '<span id="pwConfirmMsg"></span>');
+									+ '<span id="pwMsg"></span>');
+				emailAuthFlag = true;
+				
 			} else {
 				alert('인증에 실패하였습니다. 다시 한번 확인해 주세요.');
 				$('#checkAuthMsg').html('인증코드를 확인해 주세요.');
@@ -345,19 +328,103 @@ body {
 			}
 		});
 		
-// TODO 비밀번호 블러처리도 위에서 따로 빼서 진행하고 제출을 누르면 업데이트로 가도록 할것.
-		$('#btnFormSubmit').click(function() {
+		$(document).on('blur', '#memberPw', function(){
+				
+				let memberPw = $('#memberPw').val();
+				let pwRegExp = /^(?=.*?[A-Z])(?=.?[a-z])(?=.*?[0-9])(?=.*?[!@#$%^&*]).{8,16}$/;
 
-			setTimeout(function() {
-				if (emailFlag) {
-					$('#btnFormSubmit').submit();
-					alert("");
-				} else if (idFlag && codeFlag) {
-					$('#btnFormSubmit').submit();
-					alert("뭔갈 안하셧어요");
+				if (memberPw === "") {
+					$('#pwMsg').html('비밀번호는 필수에오. 필수!');
+					$('#pwMsg').css('color', 'red');
+					pwFlag = false;
+					return;
+				} else if($('#pwConfirm').length > 0){
+					
+				} else {
+					
+					/* TODO 아이디를 가져올때 비밀번호도 가져와서 기존비밀번호는 사용 못하도록 할지 고민해 볼 것. 
+					else if (memberPw === ){												
+					} */
+					if (!pwRegExp.test(memberPw)) {
+						$('#pwMsg').html('소문자, 대문자, 숫자, 특수문자(!@#$%^&*)중 최소 하나씩을 포함한 8 에서 16 자리만 가능합니다.');
+						$('#pwMsg').css('color', 'red');
+						pwFlag = false;
+					} else {
+						$('#pwMsg').html(
+								'사용가능한 비밀번호 임미다.'
+								+ '<h3 class="join-title">'
+								+ '<label for="pwConfirm">비밀번호 재확인</label>'
+								+ '</h3>'
+								+ '<input id="pwConfirm" class ="memberEmail" type="password" name="pwConfirm" title="비밀번호 확인" maxlength="20">'
+								+ '<br>'
+								+ '<span id="pwConfirmMsg"></span>');
+						$('#pwMsg').css('color', 'green');
+						pwFlag = true;
+					}
 				}
-			}, 100); // 1초 후에 실행
+			
 		});
+		
+		$(document).on('blur', '#pwConfirm', function(){
+			
+				let pwConfirm = $('#pwConfirm').val();
+				
+				if (pwConfirm === "") {
+					$('#pwConfirmMsg').html('비밀번호 확인은 필수에오.');
+					$('#pwConfirmMsg').css('color', 'red');
+					pwConfirmFlag = false;
+					return;
+				} else if($('#btnFormSubmit').length > 0) {
+					
+				} else {
+					if (!memberPw === pwConfirm) {
+						$('#pwConfirmMsg').html('저런! 비밀번호를 다시 한번확인해 주세요');
+						$('#pwConfirmMsg').css('color',	'red');
+						pwConfirmFlag = false;
+					} else {
+						$('#pwConfirmMsg').html('비밀번호 확인을 통과했습니다. 변경 버튼을 눌러주세용'
+								+ '<button id="btnFormSubmit" >변경</button>');
+						$('#pwConfirmMsg').css('color',	'green');
+						$('#btnFormSubmit').show();
+						pwConfirmFlag = true;
+					}
+				} // end 제출 버튼 존재 여부 확인
+		}); // end 비밀번호 확인 블러
+		
+// TODO 비밀번호 블러처리도 위에서 따로 빼서 진행하고 제출을 누르면 업데이트로 가도록 할것.
+		$(document).on('click', '#btnFormSubmit', function(){
+			
+			console.log('idFlag : ' + idFlag);
+	  		console.log('pwFlag : ' + pwFlag);
+	  		console.log('pwConfirmFlag : ' + pwConfirmFlag);
+	  		console.log('emailFlag : ' + emailFlag);
+	  		console.log('emailAuthFlag : ' + emailAuthFlag);
+	  		
+	  		let memberId = $('#memberIdForPw').val();
+	  		console.log(memberId);
+	  		let memberEmail = $('#memberEmailForPw').val();
+	  		console.log(memberEmail);
+	  		let memberPassword = $('#memberPw').val();
+	  		let data = {
+				memberId :memberId,
+				memberEmail : memberEmail,
+				memberPassword : memberPassword
+			};
+			$.ajax({
+				type : 'POST',
+				url : '../util/modifyPw/',
+				data : JSON.stringify(data),
+				contentType: 'application/json; charset=UTF-8',
+				success : function(result){
+					if(result === 1) {
+						alert('비밀번호가 성공적으로 변경되었습니다. 변경된 비밀번호로 로그인하여 주세요.');
+						window.location.href = '/ex01/';
+					} else {
+						alert('죄송합니다 현재 서버에 문제가 생긴것 같아요.');
+					}
+				}
+			}); // end ajax
+		}); // end btnSubmit()
 
 		$('#btnBackward').click(function(event) {
 			event.preventDefault();
@@ -374,7 +441,6 @@ body {
 <body>
 	<div class="container">
 		<h2>아이디 찾기/비밀번호 변경</h2>
-		<form action="" method="post">
 			<div class="form-group">
 				<label for="optionSelect">선택지 목록:</label>
 				<select id="optionSelect" name="optionSelect" required>
@@ -389,8 +455,8 @@ body {
 				<span id="emailAuthMsgForId" class="memberEmail"></span>
 			</div>
 			<div id="emailGroupPw" class="form-group email-group">
-				<label for="memberId">사용자 아이디:</label>
-				<input type="text" id="memberId" name="memberId" class="memberEmail" value="" required>
+				<label for="memberIdForPw">사용자 아이디:</label>
+				<input type="text" id="memberIdForPw" name="memberIdForPw" class="memberEmail" value="" required>
 				<span id="idMsg"></span>
 				<label for="memberEmailForPw">이메일 주소:</label>
 				<input type="email" id="memberEmailForPw" name="memberEmail" class="memberEmail" value="" required>
@@ -399,12 +465,8 @@ body {
 			<div id="btnZone" class="form-group">
 				<span id="btnSpan"></span>
 				<button id="btnSendId"> 메일 보내기</button>
-				<br>
 				<button id="btnSendCode"> 메일 보내기</button>
-				<br>
-				<button id="btnFormSubmit" >제출</button>
 			</div>
-		</form>
 		<div class="backward">
 			<button id="btnBackward">뒤로가기</button>
 		</div>

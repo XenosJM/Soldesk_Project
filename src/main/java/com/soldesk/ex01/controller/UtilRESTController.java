@@ -45,13 +45,13 @@ public class UtilRESTController {
 	private MemberService memberService;
 	
 	@GetMapping("/checkId/{memberId}")
-	public ResponseEntity<Integer> checkId(@PathVariable("memberId")String memberId){
+	public ResponseEntity<String> checkId(@PathVariable("memberId")String memberId){
 		log.info("checkId()");
 		log.info(memberId);
 //		MemberVO memberVO = utilService.checkId(memberId);
 //		log.info(memberVO);
-		Integer result = (utilService.checkId(memberId) != null) ? 1 : 0;
-		return new ResponseEntity<Integer>(result,HttpStatus.OK);
+		String result = (utilService.checkId(memberId) != null) ? "1" : "0";
+		return new ResponseEntity<String>(result,HttpStatus.OK);
 		
 	}
 	
@@ -152,12 +152,26 @@ public class UtilRESTController {
 		return new ResponseEntity<Integer>(result, HttpStatus.OK);
 	}
 	
-	@PutMapping("/putPw")
-	public ResponseEntity<Integer> updatePw(@PathVariable("memberPassword") String memberPassword){
+	@PostMapping("/modifyPw")
+	public ResponseEntity<Integer> updatePw(@RequestBody Map<String, String> res ){
 		MemberVO memberVO = new MemberVO();
-		memberVO.setMemberPassword(memberPassword);
+		memberVO.setMemberId(res.get("memberId"));
+//		log.info(memberVO.getManagerId());
+		memberVO.setMemberEmail(res.get("memberEmail"));
+//		log.info(memberVO.getMemberEmail());
+		memberVO.setMemberPassword(res.get("memberPassword"));
+//		log.info(memberVO.getMemberPassword());
 		int result = memberService.updateMember(memberVO);
 		return new ResponseEntity<Integer>(result, HttpStatus.OK);
+	}
+	
+	@GetMapping("/findId")
+	public ResponseEntity<String> checkIdEmail(@RequestParam("memberEmail") String memberEmail){
+		MemberVO memberVO = memberService.findId(memberEmail);
+		log.info(memberVO);
+		String result = (memberVO != null) ? memberVO.getMemberId() : null;
+		log.info(result);
+		return new ResponseEntity<String>(result, HttpStatus.OK);
 	}
 }
 

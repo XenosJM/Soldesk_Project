@@ -628,24 +628,7 @@ body {
 	  	} // end checkId
 	  	
 	  	function checkMail(memberEmail){
-	  		/* let emailId = memberEmail.replace(/\./g, "\\.");
-	  		console.log(emailId);
-	  		let encodedEmailId = encodeURIComponent(emailId);
-	  		console.log(encodedEmailId);
-	  		let atIndex = memberEmail.indexOf("@"); // "." 기호의 위치를 찾습니다.
-	  		let memberEmailId = memberEmail.slice(0, atIndex);
-	  		console.log(memberEmailId);
-	  		let domain = memberEmail.slice(atIndex + 1);
-	  		 console.log(sliceDomain);
-	  		let domain = sliceDomain.replace(/\./g, "\\.");
-	  		console.log(domain);
-	  		// let encodedEmail = encodeURIComponent(memberEmail);
-	  		/* memberEmail = $('#memberEmail').val();
-	  		let encodedEmail = memberEmail.replace('.com', '%2Ecom')
-            						.replace('.net', '%2Enet')
-           							.replace('.co.kr', '%2Eco.kr');
-           	let atIndex = memberEmail.indexOf("@");
-	  		let emailId = memberEmail.slice(0, atIndex); */
+	  	
 	  		$.ajax({
 	  			type : "GET",
 	  			url : "../util/checkEmail/",

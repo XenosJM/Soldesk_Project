@@ -25,9 +25,9 @@ public class MemberServiceImple implements MemberService{
 	}
 
 	@Override
-	public MemberVO getMemberById(int memberNum) {
+	public MemberVO getMemberById(String memberId) {
 		log.info("getMemberById()");
-		return memberMapper.selectByMemberId(memberNum);
+		return memberMapper.selectByMemberId(memberId);
 	}
 
 	@Override
@@ -57,9 +57,9 @@ public class MemberServiceImple implements MemberService{
 	}
 
 	@Override
-	public int deleteMember(int memberNum) {
+	public int deleteMember(String memberId) {
 		log.info("deleteMember()");
-		return memberMapper.delete(memberNum);
+		return memberMapper.delete(memberId);
 	}
 
 	@Override

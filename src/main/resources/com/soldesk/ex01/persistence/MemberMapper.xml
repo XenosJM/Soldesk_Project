@@ -3,50 +3,53 @@
 PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.soldesk.ex01.persistence.MemberMapper">
-	
-	<resultMap type="com.soldesk.ex01.domain.MemberVO"
-		id="memberResultMap">
-		<id property="memberNum" column="MEMBER_NUM" />
-		<result property="memberId" column="MEMBER_ID" />
+
+	<resultMap type="com.soldesk.ex01.domain.MemberVO" id="memberResultMap">
+		<id property="memberId" column="MEMBER_ID" />
 		<result property="memberPassword" column="MEMBER_PASSWORD" />
-		<result property="managerNum" column="MANAGER_NUM" />
+		<result property="managerId" column="MANAGER_ID" />
 		<result property="memberEmail" column="MEMBER_EMAIL" />
 		<result property="memberRegistDate" column="MEMBER_REGISTDATE" />
 		<result property="memberPropertyAsString" column="MEMBER_PROPERTY" />
 	</resultMap>
+
 	<!-- 회원 가입 -->
 	<insert id="insert">
-    INSERT INTO MEMBER (MEMBER_NUM, MEMBER_ID, MEMBER_PASSWORD, MANAGER_NUM, MEMBER_EMAIL, MEMBER_PROPERTY, MEMBER_REGISTDATE)
-    VALUES (MEMBER_SEQ.NEXTVAL, #{memberId}, #{memberPassword}, 0, #{memberEmail}, null, SYSDATE)
+		INSERT INTO MEMBER (MEMBER_ID, MEMBER_PASSWORD, MANAGER_ID, MEMBER_EMAIL, MEMBER_PROPERTY, MEMBER_REGISTDATE)
+		VALUES (#{memberId}, #{memberPassword}, 0, #{memberEmail}, null, SYSDATE)
 	</insert>
 	<!-- 회원 자기정보 보기 -->
-	<select id="selectByMemberNum" resultMap="memberResultMap"> SELECT * FROM MEMBER WHERE MEMBER_NUM = #{memberNum} </select>
+	<select id="selectByMemberId" resultMap="memberResultMap"> SELECT * FROM MEMBER	WHERE MEMBER_ID = #{memberId} </select>
 	<!-- 회원 리스트 -->
 	<select id="selectIdList" resultMap="memberResultMap"> SELECT MEMBER_ID FROM MEMBER </select>
 	<!-- 로그인 체크 -->
-	<select id="memberCheck" resultMap="memberResultMap"> SELECT MEMBER_ID, MEMBER_PASSWORD, MEMBER_NUM, MANAGER_ID FROM MEMBER WHERE MEMBER_ID = #{memberId}</select>
+	<select id="memberCheck" resultMap="memberResultMap"> SELECT MEMBER_PASSWORD, MEMBER_ID, MANAGER_ID FROM MEMBER WHERE MEMBER_ID = #{memberId} </select>
 	<!-- 체크 아이디 -->
-	<select id="checkId" resultType="Integer"> SELECT MEMBER_NUM FROM MEMBER WHERE MEMBER_ID = #{memberId}  </select>
+	<select id="checkId" resultType="String"> SELECT MEMBER_ID FROM MEMBER WHERE MEMBER_ID = #{memberId} </select>
 	<!-- 체크 이메일 -->
-	<select id="checkEmail" resultType="Integer"> SELECT MEMBER_NUM FROM MEMBER WHERE MEMBER_EMAIL = #{memberEmail} </select>
+	<select id="checkEmail" resultType="Integer"> SELECT MEMBER_ID FROM MEMBER WHERE MEMBER_EMAIL = #{memberEmail} </select>
 	<!-- 이메일을 이용해 아이디 찾기 -->
 	<select id="findId" resultMap="memberResultMap"> SELECT MEMBER_ID FROM MEMBER WHERE MEMBER_EMAIL = #{memberEmail} </select>
 	<!-- 회원 정보 수정 -->
 	<update id="update">
-	    UPDATE MEMBER SET
-	    MEMBER_PASSWORD = #{memberPassword},
-	    MEMBER_EMAIL = #{memberEmail}
-	    WHERE MEMBER_NUM = #{memberNum}
+		UPDATE MEMBER SET
+		MEMBER_EMAIL = #{memberEmail},
+		MEMBER_PASSWORD = #{memberPassword}
+		WHERE MEMBER_ID = #{memberId}
 	</update>
 	<!-- 회원 자산 수정 -->
 	<update id="updateProperty">
-	    UPDATE MEMBER SET
-	    MEMBER_PROPERTY = #{memberPropertyAsString}
-	    WHERE MEMBER_NUM = #{memberNum}
+		UPDATE MEMBER SET
+		MEMBER_PROPERTY = #{memberPropertyAsString}
+		WHERE MEMBER_ID = #{memberId}
 	</update>
-		<!-- 회원 관리자 자격 수정 -->
-	<update id="updateManager"> UPDATE MEMBER SET MANAGER_NUM = #{managerNum} WHERE MEMBER_NUM = #{memberNum} </update>
-		<!-- 회원 삭제(탈퇴) -->
-	<delete id="delete"> DELETE FROM MEMBER WHERE MEMBER_NUM = #{memberNum}
+	<!-- 회원 관리자 자격 수정 -->
+	<update id="updateManager">
+		UPDATE MEMBER SET
+		MANAGER_ID = #{managerId}
+		WHERE MEMBER_ID = #{memberId}
+	</update>
+	<!-- 회원 삭제(탈퇴) -->
+	<delete id="delete"> DELETE FROM MEMBER WHERE MEMBER_ID = #{memberId}
 	</delete>
 </mapper>

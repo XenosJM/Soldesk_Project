@@ -9,14 +9,14 @@ import com.soldesk.ex01.domain.MemberVO;
 @Mapper
 public interface MemberMapper {
 	int insert(MemberVO memberVO);
-	MemberVO selectByMemberId(int memberNum);
+	MemberVO selectByMemberId(String memberId);
 	List<MemberVO> selectIdList();
 	int update(MemberVO memberVO);
 	int updateProperty(MemberVO memberVO);
 	int updateManager(MemberVO memberVO);
-	int delete(int memberNum);
+	int delete(String memberId);
 	MemberVO memberCheck(String memberId);
-	Integer checkId(String memberId);
+	String checkId(String memberId);
 	Integer checkEmail(String memberEmail);
 	MemberVO findId(String memberEmail);
 	

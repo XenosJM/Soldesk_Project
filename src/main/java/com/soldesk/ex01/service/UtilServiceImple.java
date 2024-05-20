@@ -15,7 +15,7 @@ public class UtilServiceImple implements UtilService {
 	private MemberMapper memberMapper;
 	
 	@Override
-	public Integer checkId(String memberId) {
+	public String checkId(String memberId) {
 		log.info("checkId()");
 		return memberMapper.checkId(memberId);
 	}

@@ -141,10 +141,10 @@ body {
 		</div>
 
 		<c:choose>
-			<c:when test="${empty sessionScope.memberNum }">
+			<c:when test="${empty sessionScope.memberId }">
 				<div class="login-container" style= "display:">
 					<h2>로그인</h2>
-					<form action="login/check" method="post">
+					<form action="member/check" method="post">
 					<input type="text" name="memberId" placeholder="아이디"> <input
 						type="password" name="memberPassword" placeholder="비밀번호"> <input
 						type="submit" value="로그인">
@@ -155,7 +155,7 @@ body {
 					</p>
 				</div>
 			</c:when>
-			<c:when test="${not empty sessionScope.memberNum }">
+			<c:when test="${not empty sessionScope.memberId }">
 				<div class="login-container" style= "display:">
 					<button onclick='location.href="member/detail"'>내 정보 보기</button>
 					<button onclick='location.href="member/checkout"'>로그아웃</button>
