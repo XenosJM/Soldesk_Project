@@ -9,7 +9,7 @@
 </head>
 <body>
    <h2>글 작성 페이지</h2>
-   <form action="regist" method="POST" id = "boardForm">
+   <form action="regist" method="POST" id = "boardForm" enctype="multipart/form-data">
    <!-- input 태그의 name은 dto의 멤버 변수 이름과 동일하게 작성 -->
       <div>
          <p>제목 : </p>
@@ -28,49 +28,44 @@
       <div>
          <button id = "btn_insert">등록하기</button>
       </div>
+      <div>
+      	<p>파일 업로드 : </p>
+      	<input type="file" name="file"> 
+      </div>
    </form>
-   
-   <h1>파일 업로드</h1>
-	<form id="attachForm" action="attach" method="post"
-		enctype="multipart/form-data">
-		<input type="file" name="file"> 
-	</form>
 
 	<script>
-		$(document).ready(function() {
-			// 차단할 확장자 정규식 (exe, sh, php, jsp, aspx, zip, alz)
-			var blockedExtensions = /\.(exe|sh|php|jsp|aspx|zip|alz)$/i; 
-				
-			// 파일 전송 form validation
-			$("#attachForm").submit(function(event) {
-				var fileInput = $("input[name='file']"); // File input 요소 참조
-				var file = fileInput.prop('files')[0]; // file 객체 참조
-				var fileName = fileInput.val();	
-				
-				if (!file) { // file이 없는 경우
-					alert("파일을 선택하세요.");
-					event.preventDefault();
-					return;
-				}
-				
-				if (blockedExtensions.test(fileName)) { // 차단된 확장자인 경우
-					alert("이 확장자의 파일은 첨부할 수 없습니다.");
-					event.preventDefault();
-					return;
-				}
+    $(document).ready(function() {
+        // 차단할 확장자 정규식 (exe, sh, php, jsp, aspx, zip, alz)
+        var blockedExtensions = /\.(exe|sh|php|jsp|aspx|zip|alz)$/i; 
 
-				var maxSize = 10 * 1024 * 1024; // 10 MB 
-				if (file.size > maxSize) {
-					alert("파일 크기가 너무 큽니다. 최대 크기는 10MB입니다.");
-					event.preventDefault();
-				}
-			});
-			
-			$('#btn_insert').click(function(event){
-				event.preventDefault();
-				$('#boardForm').submit();
-			});
-		});
-	</script>
+        // 파일 전송 form validation
+        $("#boardForm").submit(function(event) {
+            var fileInput = $("input[name='file']"); // File input 요소 참조
+            var file = fileInput.prop('files')[0]; // file 객체 참조
+            var fileName = fileInput.val();
+            
+            if (file) { // 파일이 선택된 경우에만 체크
+                if (blockedExtensions.test(fileName)) { // 차단된 확장자인 경우
+                    alert("이 확장자의 파일은 첨부할 수 없습니다.");
+                    event.preventDefault();
+                    return;
+                }
+
+                var maxSize = 10 * 1024 * 1024; // 10 MB 
+                if (file.size > maxSize) {
+                    alert("파일 크기가 너무 큽니다. 최대 크기는 10MB입니다.");
+                    event.preventDefault();
+                    return;
+                }
+            }
+        });
+        
+        $('#btn_insert').click(function(event){
+            event.preventDefault();
+            $('#boardForm').submit();
+        });
+    });
+</script>
 </body>
 </html>
