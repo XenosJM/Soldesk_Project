@@ -56,7 +56,7 @@ public class UtilRESTController {
 	}
 	
 	@GetMapping("/checkEmail")
-	public ResponseEntity<Integer> checkEmail(@RequestParam("memberEmail")String memberEmail) {
+	public ResponseEntity<String> checkEmail(@RequestParam("memberEmail")String memberEmail) {
 		log.info("checkEmail()");
 //		log.info("memberEmailId : " + memberEmailId);
 //		log.info("domain : " + domain);
@@ -67,8 +67,8 @@ public class UtilRESTController {
 //		log.info("decodeDomain : " + decodeDomain);
 //		MemberVO memberVO = utilService.checkEmail(memberEmail);
 //		log.info(memberVO);
-		Integer result = (utilService.checkEmail(memberEmail) != null) ? 1 : 0;
-		return new ResponseEntity<Integer>(result, HttpStatus.OK);
+		String result = (utilService.checkEmail(memberEmail) != null) ? "1" : "0";
+		return new ResponseEntity<String>(result, HttpStatus.OK);
 	}
 	
 	@GetMapping("/authCodeSend")

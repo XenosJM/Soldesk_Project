@@ -46,7 +46,6 @@ public class MemberController {
 		HttpSession session = req.getSession();
 		String memberId = (String)session.getAttribute("memberId");
 		memberVO = memberService.getMemberById(memberId);
-		memberVO.setMemberPropertyAsString(memberService.getMemberById(memberId).getMemberPropertyAsString());
 		log.info(memberVO);
 		model.addAttribute("memberVO", memberVO);
 	}

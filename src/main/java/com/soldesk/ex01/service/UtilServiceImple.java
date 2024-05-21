@@ -21,7 +21,7 @@ public class UtilServiceImple implements UtilService {
 	}
 
 	@Override
-	public Integer checkEmail(String memberEmail) {
+	public String checkEmail(String memberEmail) {
 		log.info("checkEmail()");
 		return memberMapper.checkEmail(memberEmail);
 	}  // end checkEmail

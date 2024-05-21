@@ -37,7 +37,7 @@
 	
 	<button id="modify" class="btn btn-primary">회원정보 수정</button>
 	<button id="delete" class="btn btn-primary">회원탈퇴</button>
-	<button id="btnBackward">뒤로가기</button>
+	<button id="btnBackward" class="btn btn-primary">뒤로가기</button>
 	
 	<div class="modal" id="modifyModal">
     	<div class="modal-dialog">
@@ -48,11 +48,12 @@
 	            </div>
 	            <div class="modal-body">
 	                <form id="modifyForm">
-	                    <div class="form-group">
-	                        <span id="modalPw"></span>
-	                        <button type="button" class="btn btn-primary" id="btnPw">비밀번호</button>
+	                    <div class="form-group" id="divPw">
 	                    </div>
-	                    <div class="form-group">
+	                    <div class="form-group" id="divProperty">
+	                    	<!-- 스팬에 if로 값을 뿌려줄것. -->
+	                    	<span id="modalProperty">
+	                    	<button type="button" class="btn btn-primary" id="btnPropertyModify">이모지 수정하기</button>
 	                        <c:choose>
 							    <c:when test="${empty memberVO.memberProperty}">
 							        <label for="buyProperty">
@@ -68,10 +69,12 @@
 							        <br>
 							    </c:when>
 							</c:choose>
+	                    	</span>
 	                    </div>	
 	                    <div class="form-group">
-	                        <label for="memberEmail">이메일을 입력:</label>
-	                        <input type="email" class="form-control" id="memberEmail" placeholder="이메일을 입력">
+	                    	<span id="modalEmail"></span>
+	                        <button type="button" class="btn btn-primary" id="btnEmail">이메일</button>
+	                        <input type="email" class="form-control" id="memberEmail" placeholder="이메일을 입력하세요.">
 	                    </div>
 	                    <button type="button" class="btn btn-primary" id="btnFormSubmit">수정하기</button>
 	                </form>
@@ -83,17 +86,75 @@
  	<script>
 $(document).ready(function(){
 	
-    $('#modify').click(function(){
+	let memberId = '${memberVO.memberId}';
+	
+	$(document).on('click', '#modify', function(){
         $('#modifyModal').modal('show');
+        $('#divPw').html('<span id="modalPw"></span>'
+				+ '<button type="button" class="btn btn-primary" id="btnPw">비밀번호 수정하기</button>');
     }); // end modify
     
-    $('#btnModalPw')
+    $(document).on('click', '#btnPw', function(event){
+    	event.preventDefault();
+    	
+    	if($('#memberPw').length > 0){
+    		console.log('나 여기있다.');
+    	} else {
+    		$('#modalPw').html(
+    				'<input type="password" class="form-control" id="memberPw" placeholder="비밀번호를 입력하세요.">'
+    				+ '<button type="button" class="close" id="btnPwCancel">&times;</button>'		
+    		);
+    	}
+    }); // end 비밀번호 변경 btnPw
+    
+	$(document).on('click', '#btnPwCancel', function(event){
+		event.preventDefault();
+		$('#modalPw').html('');
+    }); // end 요소 취소
+   
+    $(document).on('click', '#btnPropertyModify', function(event){
+    	event.preventDefault();
+    	
+    	if($('#propertyList').length > 0){
+    		
+    	} else{
+    		
+    		
+    		
+    	}
+    });  // end 이모지 수정 btnPropertyModify
+    
     
     $('#btnBackward').click(function(event) {
 		event.preventDefault();
 		window.location.href = '/ex01/';
 	});
-
+	
+    $(document).on('click', '#btnDeleteProperty', function(event){
+    	event.preventDefault();
+    	let isConfirmed = confirm('정말 삭제하시겠습니까?');
+    	// 몇번째 항목이 클릭되었는지 알 수 있도록 코드를 짜야함.
+    	if(isConfirmed){
+    	let propertyIndex = $(this).closest('li').index();
+    		
+	    	$.ajax({
+	    		type : 'POST',
+	    		url : '../util/deleteProperty',
+	    		data : {
+	    			memberId : memberId,
+	    			propertyIndex : propertyIndex,
+	    		},
+	    		success : function(result){
+	    			if(result == 1){
+	    				alert('삭제되었습니다.');
+	    			} else{
+	    				alert('이모지 삭제에 문제가 생겻습니다.');
+	    			}
+	    		}
+	    	}); // end ajax
+    	}
+    }); // end btnDeleteProperty()
+    
     $('#btnFormSubmit').click(function(){
         let memberPassword = $('#memberPassword').val();
         let memberEmail = $('#memberEmail').val();

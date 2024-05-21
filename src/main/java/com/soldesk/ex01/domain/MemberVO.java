@@ -34,14 +34,21 @@ public class MemberVO {
 	    if (memberPropertyAsString != null && !memberPropertyAsString.isEmpty()) {
 	        // 대괄호 제거,  "\\[|\\]" = [ 또는 ]를 찾아서 공백으로 전환(제거)
 	        memberPropertyAsString = memberPropertyAsString.replaceAll("\\[|\\]", "");
+	        
+	        if(memberPropertyAsString.isEmpty()) {
+	        	this.memberProperty = new int[0];
+	        	return;
+	        }
 	        // , 로 분리하여 문자열 배열로 변환하여 문자열 배열 변수에 저장
 	        String[] propertyString = memberPropertyAsString.split(",");
 	        // 문자열 배열인 propertyString을 int로 파싱
 	        this.memberProperty = new int[propertyString.length];
 	        for (int i = 0; i < propertyString.length; i++) {
-	            // trim()으로 공백 제거 후 변환
-	            this.memberProperty[i] = Integer.parseInt(propertyString[i].trim());
+	        	// trim()으로 공백 제거 후 변환
+	        	this.memberProperty[i] = Integer.parseInt(propertyString[i].trim());
 	        }
+	    } else {
+	    	this.memberProperty = new int[0];
 	    }
-	}
-}
+	} // end setMemberPropertyAsString()
+} // end MemberVO

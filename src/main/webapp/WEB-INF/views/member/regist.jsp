@@ -641,7 +641,7 @@ body {
 	  					$('#btnEmailAuth').css("display", "none");
 	  					emailFlag = false;
 	  				} else {
-	  					if($('#authSpan').length && emailFlag){
+	  					if($('#authSpan').length > 0){
 	  						
 	  					} else{
 	  					$('#emailMsg').html("사용가능한 이메일입니당.");
