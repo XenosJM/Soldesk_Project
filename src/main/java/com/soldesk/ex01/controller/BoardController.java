@@ -4,7 +4,6 @@ import java.io.File;
 import java.io.IOException;
 import java.util.List;
 import java.util.UUID;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
@@ -21,7 +20,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-
 import com.soldesk.ex01.domain.AttachVO;
 import com.soldesk.ex01.domain.BoardVO;
 import com.soldesk.ex01.service.AttachService;
@@ -55,30 +53,24 @@ public class BoardController {
 		log.info("board controller : registerPost()");
 		log.info("board controller : BoardVO =" + vo);
 		
+		MultipartFile file = vo.getFile();
 		
-		
-		if(vo.getFile()!=null) {			
-			MultipartFile file = vo.getFile();
-			
-			String chgName = UUID.randomUUID().toString();
-			
-			FileUploadUtil.saveFile(uploadPath, file, chgName);
-			
-			vo.setAttachPath(FileUploadUtil.makeDatePath());
-			
-			vo.setAttachRealName(FileUploadUtil.subStrName(file.getOriginalFilename()));
-			
-			vo.setAttachChgName(chgName);
-			
-			vo.setAttachExtension(FileUploadUtil.subStrExtension(file.getOriginalFilename()));
-		}else {
+		if(file.isEmpty()) {
 			vo.setAttachPath("");
 			vo.setAttachRealName("");
 			vo.setAttachChgName("");
-			vo.setAttachExtension("");			
+			vo.setAttachExtension("");
+		}else {
+			String chgName = UUID.randomUUID().toString();
+			FileUploadUtil.saveFile(uploadPath, file, chgName);
+			vo.setAttachPath(FileUploadUtil.makeDatePath());
+			vo.setAttachRealName(FileUploadUtil.subStrName(file.getOriginalFilename()));
+			vo.setAttachChgName(chgName);
+			vo.setAttachExtension(FileUploadUtil.subStrExtension(file.getOriginalFilename()));		
 		}
 		int result = boardService.insertBoard(vo);
 		log.info(result + "행 삽입");
+		
 		
 		return "redirect:/";
 	}
@@ -126,29 +118,29 @@ public class BoardController {
 	} // end registerGET()
 
 	// 첨부 파일 업로드 처리(POST)
-//	@PostMapping("/attach")
-//	public String attachPOST(AttachVO attachVO) {
-//		log.info("attachPost()");
-//		log.info("attachVO = " + attachVO);
-//		MultipartFile file = attachVO.getFile();
-//
-//		String chgName = UUID.randomUUID().toString();
-//
-//		FileUploadUtil.saveFile(uploadPath, file, chgName);
-//
-//		attachVO.setAttachPath(FileUploadUtil.makeDatePath());
-//
-//		attachVO.setAttachRealName(FileUploadUtil.subStrName(file.getOriginalFilename()));
-//
-//		attachVO.setAttachChgName(chgName);
-//
-//		attachVO.setAttachExtension(FileUploadUtil.subStrExtension(file.getOriginalFilename()));
-//
-//		log.info(attachService.createAttach(attachVO) + "행 등록");
-//		
-//
-//		return "redirect:/board/list";
-//	} // end attachPOST()
+	@PostMapping("/attach")
+	public String attachPOST(AttachVO attachVO) {
+		log.info("attachPost()");
+		log.info("attachVO = " + attachVO);
+		MultipartFile file = attachVO.getFile();
+
+		String chgName = UUID.randomUUID().toString();
+
+		FileUploadUtil.saveFile(uploadPath, file, chgName);
+
+		attachVO.setAttachPath(FileUploadUtil.makeDatePath());
+
+		attachVO.setAttachRealName(FileUploadUtil.subStrName(file.getOriginalFilename()));
+
+		attachVO.setAttachChgName(chgName);
+
+		attachVO.setAttachExtension(FileUploadUtil.subStrExtension(file.getOriginalFilename()));
+
+		log.info(attachService.createAttach(attachVO) + "행 등록");
+		
+
+		return "redirect:/board/list";
+	} // end attachPOST()
 
 	// 첨부 파일 목록 조회(GET)
 	@GetMapping("/listAttach")

@@ -114,14 +114,10 @@ $(document).ready(function(){
    
     $(document).on('click', '#btnPropertyModify', function(event){
     	event.preventDefault();
-    	
-    	if($('#propertyList').length > 0){
-    		
-    	} else{
-    		
-    		
-    		
-    	}
+    	$('#propertyList').html(
+    			
+    			
+    	);
     });  // end 이모지 수정 btnPropertyModify
     
     
