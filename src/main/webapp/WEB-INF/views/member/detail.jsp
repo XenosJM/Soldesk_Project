@@ -54,6 +54,9 @@
 	                    	<!-- 스팬에 if로 값을 뿌려줄것. -->
 	                    	<span id="modalProperty">
 	                    	<button type="button" class="btn btn-primary" id="btnPropertyModify">이모지 수정하기</button>
+	                    		<span id="emptyProperty"></span>
+	                    		<span id="notEmptyProperty"></span>
+	                    	</span>
 	                        <c:choose>
 							    <c:when test="${empty memberVO.memberProperty}">
 							        <label for="buyProperty">
@@ -69,8 +72,7 @@
 							        <br>
 							    </c:when>
 							</c:choose>
-	                    	</span>
-	                    </div>	
+	                    </div>
 	                    <div class="form-group">
 	                    	<span id="modalEmail"></span>
 	                        <button type="button" class="btn btn-primary" id="btnEmail">이메일</button>
@@ -102,23 +104,47 @@ $(document).ready(function(){
     	} else {
     		$('#modalPw').html(
     				'<input type="password" class="form-control" id="memberPw" placeholder="비밀번호를 입력하세요.">'
-    				+ '<button type="button" class="close" id="btnPwCancel">&times;</button>'		
+    				+ '<button type="button" class="close" id="btnPwCancel">&times;</button>'
     		);
+    		$('#btnPw').hide();
     	}
     }); // end 비밀번호 변경 btnPw
     
 	$(document).on('click', '#btnPwCancel', function(event){
 		event.preventDefault();
 		$('#modalPw').html('');
+		$('#btnPw').show();
     }); // end 요소 취소
    
+    let memberProperties = ${memberVO.memberProperty != null ? 'memberVO.memberProperty' : '[]'};
+    let propertiesArray = memberProperties.split(',');
     $(document).on('click', '#btnPropertyModify', function(event){
     	event.preventDefault();
-    	$('#propertyList').html(
+    	
+    	if(${empty memberVO.memberProperty}){
+    		$('#modalProperty').html(
+    				
+    				
+    		);
+    	} else if (${not empty memberVO.memberProperty}) {
+    		
+    		let htmlContent = '<span id="propertyList">';
+    		
+            for (let i = 0; i < propertiesArray.length; i++) {
+                htmlContent += '<div>' + propertiesArray[i] + '</div>';
+            }
+            htmlContent += '</span>';
+            $('#modalProperty').html(htmlContent);
+    	}
     			
-    			
-    	);
+    	$('#btnPropertyModify').hide();
     });  // end 이모지 수정 btnPropertyModify
+    
+    $(document).on('click', '#btnPropertyModifyCancel', function(event){
+		event.preventDefault();
+		$('#modalPw').html('');
+		$('#btnPropertyModify').show();
+    }); // end 요소 취소
     
     
     $('#btnBackward').click(function(event) {
