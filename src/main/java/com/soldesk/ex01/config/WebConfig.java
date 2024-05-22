@@ -5,33 +5,33 @@ import javax.servlet.Filter;
 import org.springframework.web.filter.CharacterEncodingFilter;
 import org.springframework.web.servlet.support.AbstractAnnotationConfigDispatcherServletInitializer;
 
-// web.xml°ú µ¿ÀÏ
+// web.xmlê³¼ ë™ì¼
 public class WebConfig extends AbstractAnnotationConfigDispatcherServletInitializer{
 
-   // root application context(Root WebApplicationContext)¿¡ Àû¿ëÇÏ´Â ¼³Á¤ Å¬·¡½º ÁöÁ¤ ¸Ş¼­µå 
+   // root application context(Root WebApplicationContext)ì— ì ìš©í•˜ëŠ” ì„¤ì • í´ë˜ìŠ¤ ì§€ì • ë©”ì„œë“œ 
    @Override
    protected Class<?>[] getRootConfigClasses() {
       
-	   // RootConfig Å¬·¡½º, Security Å¬·¡½º ¸®ÅÏ
-      return new Class[] {RootConfig.class}; // TODO , SecurityConfig.class ³ªÁß¿¡ ½ÃÅ¥¸®Æ¼ Àû¿ë½Ã „‰ ³ÖÀ»°Í  
+	   // RootConfig í´ë˜ìŠ¤, Security í´ë˜ìŠ¤ ë¦¬í„´
+      return new Class[] {RootConfig.class}; // TODO , SecurityConfig.class ë‚˜ì¤‘ì— ì‹œíë¦¬í‹° ì ìš©ì‹œ ê¼® ë„£ì„ê²ƒ  
    }
 
-   // servlet application context(Servlet WebApplicationContext)¿¡ Àû¿ëÇÏ´Â ¼³Á¤ Å¬·¡½º ÁöÁ¤ ¸Ş¼­µå
+   // servlet application context(Servlet WebApplicationContext)ì— ì ìš©í•˜ëŠ” ì„¤ì • í´ë˜ìŠ¤ ì§€ì • ë©”ì„œë“œ
    @Override
    protected Class<?>[] getServletConfigClasses() {
       
-      return new Class[] {ServletConfig.class}; // ServletConfig Å¬·¡½º ¸®ÅÏ
+      return new Class[] {ServletConfig.class}; // ServletConfig í´ë˜ìŠ¤ ë¦¬í„´
    }
 
    
-   // Servlet Mapping ¸Ş¼­µå
+   // Servlet Mapping ë©”ì„œë“œ
    @Override
    protected String[] getServletMappings() {
       
-      return new String[] {"/"}; // ±âº» °æ·Î ¸®ÅÏ
+      return new String[] {"/"}; // ê¸°ë³¸ ê²½ë¡œ ë¦¬í„´
    }
    
-   // Filter ¼³Á¤ ¸Ş¼­µå
+   // Filter ì„¤ì • ë©”ì„œë“œ
    @Override
    protected Filter[] getServletFilters() {
       CharacterEncodingFilter encodingFilter = new CharacterEncodingFilter();

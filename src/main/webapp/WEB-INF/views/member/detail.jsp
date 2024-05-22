@@ -54,18 +54,9 @@
 	                    	<!-- 스팬에 if로 값을 뿌려줄것. -->
 	                    	<span id="modalProperty">
 	                    	<button type="button" class="btn btn-primary" id="btnPropertyModify">이모지 수정하기</button>
-	                    		
 	                    		<span id="notEmptyProperty"></span>
 	                    	</span>
-	                        <c:choose>
-							    
-							    <c:when test="${not empty memberVO.memberProperty}">
-							        <p>현재 보유중인 상품 목록:</p>
-							        <ul id="propertyList">
-							        </ul>
-							        <br>
-							    </c:when>
-							</c:choose>
+	                        
 	                    </div>
 	                    <div class="form-group">
 	                    	<span id="modalEmail"></span>
@@ -81,10 +72,11 @@
 	
  	<script>
 $(document).ready(function(){
-	let 
+	
 	let memberId = '${memberVO.memberId}';
 	
-	$(document).on('click', '#modify', function(){
+	$(document).on('click', '#modify', function(event){
+		console.log(this);
         $('#modifyModal').modal('show');
         $('#divPw').html('<span id="modalPw"></span>'
 				+ '<button type="button" class="btn btn-primary" id="btnPw">비밀번호 수정하기</button>');
@@ -110,12 +102,11 @@ $(document).ready(function(){
 		$('#btnPw').show();
     }); // end 요소 취소
    
-    let memberProperties = ${memberVO.memberPropertyAsString};
+    let memberProperties = '${memberVO.memberPropertyAsString}';
     // let memberProperties = '${memberVO.memberProperty}' != null ? 'memberVO.memberProperty' : '[]';
     $(document).on('click', '#btnPropertyModify', function(event){
     	event.preventDefault();
-    	
-    	if(memberProperties == null){
+    	if(memberProperties == null ||  memberProperties.length === 0){
     		$('#divProperty').html(
     				'<span id="emptyProperty">' 
     				+ '<label for="btnBuyProperty">현재 보유중인 상품이 없습니다. 구매하러 가시겠습니까?<br>'
@@ -123,8 +114,18 @@ $(document).ready(function(){
     				);
     		$('#btnBuyProperty').show();
     		
-    	} else if (memberProperties != null) {
-		    //let propertiesArray = memberProperties.split(",");
+    	} else {
+	    	let propertiesArray = memberProperties.replace(/^\[|\]$/g, '').split(', ');
+	    	console.log(propertiesArray);
+	    	$('#divProperty').html('<span id="notEmptyProperty"><ul id="propertyList"></ul></span>');
+		    for(let i = 0; i < propertiesArray.length; i++){
+		    	$('#propertyList').append(
+		                '<li data-value="'+i+'">' + propertiesArray[i] + '</li><button type="button" id="btnDeleteProperty">&times;</button><br>'
+		            );
+		                let itemValue = $('#propertyList').eq(i).text();
+		                console.log(itemValue);
+		    	
+		    }
     		
     	}
     			
@@ -148,11 +149,18 @@ $(document).ready(function(){
 	
     $(document).on('click', '#btnDeleteProperty', function(event){
     	event.preventDefault();
-    	let isConfirmed = confirm('정말 삭제하시겠습니까?');
+    	
+    	let propertyIndex = $(this).closest('li').index();
+    	let itemText = $(this).closest('li').text().trim();
+    	let itemValue = $('#propertyList').eq(i).text();
+        console.log(this);
+    	console.log('itemText : ' + itemText);
+    	console.log('itemValue : ' + itemValue);
+    	//let itemText = $(this).closest('li').attr('value');
+    	let isConfirmed = confirm(', 이 이모지를 정말 삭제하시겠습니까?');
     	// 몇번째 항목이 클릭되었는지 알 수 있도록 코드를 짜야함.
     	if(isConfirmed){
-    	let propertyIndex = $(this).closest('li').index();
-    		
+    		console.log('propertyIndex : ' + propertyIndex);
 	    	$.ajax({
 	    		type : 'POST',
 	    		url : '../util/deleteProperty',
@@ -163,6 +171,8 @@ $(document).ready(function(){
 	    		success : function(result){
 	    			if(result == 1){
 	    				alert('삭제되었습니다.');
+	    				$(event.target).closest('li').remove();
+	    				
 	    			} else{
 	    				alert('이모지 삭제에 문제가 생겻습니다.');
 	    			}
