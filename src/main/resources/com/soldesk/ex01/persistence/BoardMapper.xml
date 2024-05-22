@@ -50,6 +50,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	 	SELECT * FROM BOARD WHERE BOARD_ID = #{boardId}
 	 </select>
 	 
+	 
+	 
 	 <update id="updateBoard">
 	 	<!-- 특정 게시글 수정 -->
 	 	UPDATE BOARD SET

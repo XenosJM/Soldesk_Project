@@ -34,7 +34,7 @@
 	</div>
 
 	<p>
-		첨부 파일 : <a href="detailBoard?boardId=${boardVO.boardId }">${boardVO.attachChgName }</a>
+		첨부 파일 : <a href="download?boardId=${boardVO.boardId }">${boardVO.attachRealName }.${boardVO.attachExtension }</a>
 	</p>
 
 

@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import com.soldesk.ex01.domain.AttachVO;
@@ -176,15 +177,16 @@ public class BoardController {
 	// 파일 리소스를 비동기로 전송하여 파일 다운로드
 	@GetMapping(value = "/download", produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
 	@ResponseBody
-	public ResponseEntity<Resource> download(int attachId) throws IOException {
+	public ResponseEntity<Resource> download(int boardId) throws IOException {
 		log.info("download()");
 
 		// attachId로 상세 정보 조회
-		AttachVO attachVO = attachService.getAttachById(attachId);
-		String attachPath = attachVO.getAttachPath();
-		String attachChgName = attachVO.getAttachChgName();
-		String attachExtension = attachVO.getAttachExtension();
-		String attachRealName = attachVO.getAttachRealName();
+//		AttachVO attachVO = attachService.getAttachById(attachId);
+		BoardVO boardVO = boardService.selectDetail(boardId);
+		String attachPath = boardVO.getAttachPath();
+		String attachChgName = boardVO.getAttachChgName();
+		String attachExtension = boardVO.getAttachExtension();
+		String attachRealName = boardVO.getAttachRealName();
 
 		// 서버에 저장된 파일 정보 생성
 		String resourcePath = uploadPath + File.separator + attachPath + File.separator + attachChgName;

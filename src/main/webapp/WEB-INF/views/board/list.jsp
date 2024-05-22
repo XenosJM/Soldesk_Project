@@ -48,8 +48,6 @@ li {
 					<td>${BoardVO.boardId }</td>
 					<td><a href="detail?boardId=${BoardVO.boardId }">
 					${BoardVO.boardTitle }</a></td>
-					<!-- <td><a href="detail?attachId=${BoardVO.boardId  }">
-					${boardVO.boardId }</a></td> -->
 					<td>${BoardVO.memberId }</td>
 					<!-- boardDateCreated 데이터 포멧 변경 -->
 					<fmt:formatDate value="${BoardVO.boardRegistDate }"
