@@ -54,17 +54,11 @@
 	                    	<!-- 스팬에 if로 값을 뿌려줄것. -->
 	                    	<span id="modalProperty">
 	                    	<button type="button" class="btn btn-primary" id="btnPropertyModify">이모지 수정하기</button>
-	                    		<span id="emptyProperty"></span>
+	                    		
 	                    		<span id="notEmptyProperty"></span>
 	                    	</span>
 	                        <c:choose>
-							    <c:when test="${empty memberVO.memberProperty}">
-							        <label for="buyProperty">
-							            현재 보유중인 상품이 없습니다. 구매하러 가시겠습니까?<!-- //TODO 변경할 예정 -->
-							            <input type="submit" id="buyProperty" class="btn btn-primary" onclick="location.href='http://localhost:8080/ex01/shop/imoji'" value="상점">
-							        </label>
-							        <br>
-							    </c:when>
+							    
 							    <c:when test="${not empty memberVO.memberProperty}">
 							        <p>현재 보유중인 상품 목록:</p>
 							        <ul id="propertyList">
@@ -87,7 +81,7 @@
 	
  	<script>
 $(document).ready(function(){
-	
+	let 
 	let memberId = '${memberVO.memberId}';
 	
 	$(document).on('click', '#modify', function(){
@@ -116,25 +110,22 @@ $(document).ready(function(){
 		$('#btnPw').show();
     }); // end 요소 취소
    
-    let memberProperties = ${memberVO.memberProperty != null ? 'memberVO.memberProperty' : '[]'};
-    let propertiesArray = memberProperties.split(',');
+    let memberProperties = ${memberVO.memberPropertyAsString};
+    // let memberProperties = '${memberVO.memberProperty}' != null ? 'memberVO.memberProperty' : '[]';
     $(document).on('click', '#btnPropertyModify', function(event){
     	event.preventDefault();
     	
-    	if(${empty memberVO.memberProperty}){
-    		$('#modalProperty').html(
-    				
-    				
-    		);
-    	} else if (${not empty memberVO.memberProperty}) {
+    	if(memberProperties == null){
+    		$('#divProperty').html(
+    				'<span id="emptyProperty">' 
+    				+ '<label for="btnBuyProperty">현재 보유중인 상품이 없습니다. 구매하러 가시겠습니까?<br>'
+    		        + '<button type="button" id="btnBuyProperty" class="btn btn-primary">상점</button></label></span>'
+    				);
+    		$('#btnBuyProperty').show();
     		
-    		let htmlContent = '<span id="propertyList">';
+    	} else if (memberProperties != null) {
+		    //let propertiesArray = memberProperties.split(",");
     		
-            for (let i = 0; i < propertiesArray.length; i++) {
-                htmlContent += '<div>' + propertiesArray[i] + '</div>';
-            }
-            htmlContent += '</span>';
-            $('#modalProperty').html(htmlContent);
     	}
     			
     	$('#btnPropertyModify').hide();
@@ -146,6 +137,9 @@ $(document).ready(function(){
 		$('#btnPropertyModify').show();
     }); // end 요소 취소
     
+    $(document).on('click', '#btnBuyProperty', function(){
+	    window.location.href = 'http://localhost:8080/ex01/shop/imoji';
+    });
     
     $('#btnBackward').click(function(event) {
 		event.preventDefault();
