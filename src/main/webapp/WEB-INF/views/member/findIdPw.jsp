@@ -200,7 +200,7 @@ body {
 		function authCodeId(memberEmail) {
 			//memberEmail = $('#memberEmailForId').val();
 			$.ajax({
-				type : "GET",
+				type : "POST",
 				url : "../util/authCodeId/",
 				data : {
 					memberEmail : memberEmail
@@ -260,7 +260,7 @@ body {
 			  		
 			if(idFlag && emailFlag){
 				$.ajax({
-					type : "GET",
+					type : "POST",
 					url : "../util/authCodeSend/",
 					data : {
 						memberEmail : memberEmail

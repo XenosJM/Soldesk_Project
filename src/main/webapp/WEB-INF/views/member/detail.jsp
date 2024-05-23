@@ -48,21 +48,9 @@
 	            </div>
 	            <div class="modal-body">
 	                <form id="modifyForm">
-	                    <div class="form-group" id="divPw">
-	                    </div>
-	                    <div class="form-group" id="divProperty">
-	                    	<!-- 스팬에 if로 값을 뿌려줄것. -->
-	                    	<span id="modalProperty">
-	                    	<button type="button" class="btn btn-primary" id="btnPropertyModify">이모지 수정하기</button>
-	                    		<span id="notEmptyProperty"></span>
-	                    	</span>
-	                        
-	                    </div>
-	                    <div class="form-group">
-	                    	<span id="modalEmail"></span>
-	                        <button type="button" class="btn btn-primary" id="btnEmail">이메일</button>
-	                        <input type="email" class="form-control" id="memberEmail" placeholder="이메일을 입력하세요.">
-	                    </div>
+	                    <div class="form-group" id="divPw"></div>
+	                    <div class="form-group" id="divProperty"></div>
+	                    <div class="form-group" id="divEmail"></div>
 	                    <button type="button" class="btn btn-primary" id="btnFormSubmit">수정하기</button>
 	                </form>
 	            </div>
@@ -72,14 +60,26 @@
 	
  	<script>
 $(document).ready(function(){
-	
+	console.log('${sessionScope.memberId }');
 	let memberId = '${memberVO.memberId}';
 	
 	$(document).on('click', '#modify', function(event){
 		console.log(this);
         $('#modifyModal').modal('show');
         $('#divPw').html('<span id="modalPw"></span>'
-				+ '<button type="button" class="btn btn-primary" id="btnPw">비밀번호 수정하기</button>');
+				+ '<button type="button" class="btn btn-primary" id="btnPw">비밀번호 수정하기</button>'
+        ); // end divPw.html
+        $('#divProperty').html(
+        		'<div id="emptyProperty">'
+        		+ '<div id="notEmptyProperty"><ul id="propertyList"></ul></div>'
+        		+ '<button type="button" class="btn btn-primary" id="btnPropertyModify"> 이모지 수정하기</button>'
+        		+ '<button type="button" class="btn btn-primary" id="btnPropertyModifyCancel"> 이모지 수정 취소</button>'
+        ); // end divProperty.html
+        $('#divEmail').html(
+        		'<div id="emailModify"></div>'
+        		+ '<button type="button" class="btn btn-primary" id="btnEmailModify">이메일 수정</button>'
+        ); // end divEmail
+        $('#btnPropertyModifyCancel').hide();	
     }); // end modify
     
     $(document).on('click', '#btnPw', function(event){
@@ -102,40 +102,48 @@ $(document).ready(function(){
 		$('#btnPw').show();
     }); // end 요소 취소
    
-    let memberProperties = '${memberVO.memberPropertyAsString}';
-    // let memberProperties = '${memberVO.memberProperty}' != null ? 'memberVO.memberProperty' : '[]';
     $(document).on('click', '#btnPropertyModify', function(event){
+	    let memberProperties = '${memberVO.memberPropertyAsString}';
     	event.preventDefault();
-    	if(memberProperties == null ||  memberProperties.length === 0){
-    		$('#divProperty').html(
-    				'<span id="emptyProperty">' 
-    				+ '<label for="btnBuyProperty">현재 보유중인 상품이 없습니다. 구매하러 가시겠습니까?<br>'
-    		        + '<button type="button" id="btnBuyProperty" class="btn btn-primary">상점</button></label></span>'
+    	$('#btnPropertyModify').hide();
+    	$('#btnPropertyModifyCancel').show();
+    	if(memberProperties == 'null' ||  memberProperties.length === 0){
+    		$('#emptyProperty').html(
+    				'<label for="btnBuyProperty">현재 보유중인 상품이 없습니다. 구매하러 가시겠습니까?<br>'
+    		        + '<button type="button" id="btnBuyProperty" class="btn btn-primary">상점</button></label></div>'
     				);
-    		$('#btnBuyProperty').show();
     		
     	} else {
 	    	let propertiesArray = memberProperties.replace(/^\[|\]$/g, '').split(', ');
 	    	console.log(propertiesArray);
-	    	$('#divProperty').html('<span id="notEmptyProperty"><ul id="propertyList"></ul></span>');
 		    for(let i = 0; i < propertiesArray.length; i++){
 		    	$('#propertyList').append(
-		                '<li data-value="'+i+'">' + propertiesArray[i] + '</li><button type="button" id="btnDeleteProperty">&times;</button><br>'
+		                '<li>' + propertiesArray[i] + '<div id="btnZone"><button type="button" id="btnDeleteProperty">&times;</button></div></li>'
 		            );
-		                let itemValue = $('#propertyList').eq(i).text();
-		                console.log(itemValue);
-		    	
-		    }
-    		
-    	}
-    			
-    	$('#btnPropertyModify').hide();
+		    } // end for
+    	} // end if - else
     });  // end 이모지 수정 btnPropertyModify
+    
+    $(document).on('click', '#btnEmailModify', function(event){
+    	$('#emailModify').html(
+    			'<input type="email" class="form-control" id="memberEmail" placeholder="이메일을 입력하세요.">'
+    			+ '<button type="button" class="btn btn-primary" id="btnEmailModifyCancel">이메일 수정 취소</button>'
+    	);
+    	$('#btnEmailModify').hide();
+    }); // end btnEmailModofy
+    
+    $(document).on('click', '#btnEmailModifyCancel', function(event){
+    	event.preventDefault();
+    	$('#emailModify').html('');
+    	$('#btnEmailModify').show();
+    	
+    });
     
     $(document).on('click', '#btnPropertyModifyCancel', function(event){
 		event.preventDefault();
-		$('#modalPw').html('');
+		$('#propertyList').html('');
 		$('#btnPropertyModify').show();
+		$('#btnPropertyModifyCancel').hide();
     }); // end 요소 취소
     
     $(document).on('click', '#btnBuyProperty', function(){
@@ -151,16 +159,15 @@ $(document).ready(function(){
     	event.preventDefault();
     	
     	let propertyIndex = $(this).closest('li').index();
-    	let itemText = $(this).closest('li').text().trim();
-    	let itemValue = $('#propertyList').eq(i).text();
+    	let itemText = $(this).closest('li').text().replace('×', '');
         console.log(this);
+   		console.log('propertyIndex : ' + propertyIndex);
     	console.log('itemText : ' + itemText);
-    	console.log('itemValue : ' + itemValue);
+    	$(this).closest('li').remove();
     	//let itemText = $(this).closest('li').attr('value');
     	let isConfirmed = confirm(', 이 이모지를 정말 삭제하시겠습니까?');
     	// 몇번째 항목이 클릭되었는지 알 수 있도록 코드를 짜야함.
     	if(isConfirmed){
-    		console.log('propertyIndex : ' + propertyIndex);
 	    	$.ajax({
 	    		type : 'POST',
 	    		url : '../util/deleteProperty',
@@ -171,7 +178,7 @@ $(document).ready(function(){
 	    		success : function(result){
 	    			if(result == 1){
 	    				alert('삭제되었습니다.');
-	    				$(event.target).closest('li').remove();
+	    				$(this).closest('li').remove();
 	    				
 	    			} else{
 	    				alert('이모지 삭제에 문제가 생겻습니다.');

@@ -34,8 +34,7 @@ public class ManagerController {
 	@ResponseBody
 	public void getAllManager(Model model, ManagerVO managerVO) {
 		log.info("getAllManager()");
-		
-		
+
 	}	
 	
 	// TODO 비동기로 select를 누르면 div를 추가해 모든 멤버 리스트를 가져오고 input 검색 창을 추가하여

@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.soldesk.ex01.domain.MemberVO;
 import com.soldesk.ex01.persistence.MemberMapper;
@@ -17,6 +18,7 @@ public class MemberServiceImple implements MemberService{
 	@Autowired
 	public MemberMapper memberMapper;
 	
+	@Transactional
 	@Override
 	public int createMember(MemberVO memberVO) {
 		log.info("createMember()");
@@ -36,12 +38,14 @@ public class MemberServiceImple implements MemberService{
 		return memberMapper.selectIdList();
 	}
 
+	@Transactional
 	@Override
 	public int updateMember(MemberVO memberVO) {
 		log.info("updateMember()");
 		return memberMapper.update(memberVO);
 	}
 
+	@Transactional
 	@Override
 	public int updateMemberPermission(MemberVO memberVO) {
 		log.info("updateMemberPermission()");
@@ -49,6 +53,7 @@ public class MemberServiceImple implements MemberService{
 		return result;
 	}
 
+	@Transactional
 	@Override
 	public int updateMemberProperty(MemberVO memberVO) {
 		log.info("updateMemberProperty()");
@@ -56,6 +61,7 @@ public class MemberServiceImple implements MemberService{
 		return result;
 	}
 
+	@Transactional
 	@Override
 	public int deleteMember(String memberId) {
 		log.info("deleteMember()");

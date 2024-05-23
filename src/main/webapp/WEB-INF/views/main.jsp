@@ -139,29 +139,8 @@ body {
 			<a href="/ex01/"><img src="images/logo.png" alt="메인로고"></a>
 			<!-- 로고 이미지 -->
 		</div>
+		<div class="login-container" id="loginContainer"></div>
 
-		<c:choose>
-			<c:when test="${empty sessionScope.memberId }">
-				<div class="login-container" style= "display:">
-					<h2>로그인</h2>
-					<form action="member/check" method="post">
-					<input type="text" name="memberId" placeholder="아이디"> <input
-						type="password" name="memberPassword" placeholder="비밀번호"> <input
-						type="submit" value="로그인">
-					</form>
-					<p>
-					<a href="#" onclick="window.location.href='/ex01/member/regist'">회원가입</a>
-					<a href="#" onclick='window.location.href="/ex01/member/findIdPw"'>ID/PW찾기</a>
-					</p>
-				</div>
-			</c:when>
-			<c:when test="${not empty sessionScope.memberId }">
-				<div class="login-container" style= "display:">
-					<button onclick='location.href="member/detail"'>내 정보 보기</button>
-					<button onclick='location.href="member/checkout"'>로그아웃</button>
-				</div>
-			</c:when>
-		</c:choose>
 
 		<nav>
 			<ul>
@@ -202,6 +181,69 @@ body {
 	</div>
 	<!-- 메인 화면 배너들 -->
 	<script type="text/javascript">
+	/* 
+		
+		<c:choose>
+			<c:when test="${empty sessionScope.memberId }">
+					<h2>로그인</h2>
+					<form action="member/check" method="post">
+					<input type="text" name="memberId" placeholder="아이디">
+					<input type="password" name="memberPassword" placeholder="비밀번호">
+					<input type="submit" value="로그인">
+					</form>
+					<p>
+					<a href="#" onclick="window.location.href='/ex01/member/regist'">회원가입</a>
+					<a href="#" onclick='window.location.href="/ex01/member/findIdPw"'>ID/PW찾기</a>
+					</p>
+			</c:when>
+			<c:when test="${not empty sessionScope.memberId }">
+				<div class="login-container" style= "display:">
+					<button onclick='location.href="member/detail"'>내 정보 보기</button>
+					<button onclick='location.href="member/checkout"'>로그아웃</button>
+				</div>
+			</c:when>
+		</c:choose>
+	*/
+	
+		$(function(){
+			
+			if(${empty sessionScope.memberId }){
+				$('#loginContainer').html(
+						'<h2>로그인</h2>'
+						+ '<input type="text" name="memberId" placeholder="아이디">'
+						+ '<input type="password" name="memberPassword" placeholder="비밀번호"><br>'
+						+ '<button id="check">로그인</button>'
+						+ '<button id="joinMember">회원가입</button>'
+						+ '<button id="findIdPw">ID/PW찾기</button>'
+				);
+			} else{
+				
+			}
+			
+			$(document).on('click', '#check', function(){
+				
+				
+				let data = {
+						
+						
+				};
+				
+				$.ajax({
+					type : 'post',
+					uri : 'member/check',
+					
+				}); // end ajax
+			});
+			
+			$(document).on('click', '#joinMember', function(){
+				window.location.href="member/regist";
+			});
+			
+			$(document).on('click', '#findIdPw', function(){
+				window.location.href="member/findIdPw";
+			});
+			
+		}); // end $(document).ready(function(){
 		
 	</script>
 </body>

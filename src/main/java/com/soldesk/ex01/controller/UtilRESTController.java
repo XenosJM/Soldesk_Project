@@ -71,7 +71,7 @@ public class UtilRESTController {
 		return new ResponseEntity<String>(result, HttpStatus.OK);
 	}
 	
-	@GetMapping("/authCodeSend")
+	@PostMapping("/authCodeSend")
 	public ResponseEntity<Map<String, Integer>> AuthCodeSend(@RequestParam("memberEmail")String memberEmail){
 		int result = 0;
 		String authCode = null;
@@ -111,7 +111,7 @@ public class UtilRESTController {
 		return new ResponseEntity<>(res, HttpStatus.OK);
 	}
 	
-	@GetMapping("/authCodeId")
+	@PostMapping("/authCodeId")
 	public ResponseEntity<Integer> AuthIdSend(@RequestParam("memberEmail")String memberEmail){
 		int result = 0;
 		MemberVO memberVO = memberService.findId(memberEmail);
