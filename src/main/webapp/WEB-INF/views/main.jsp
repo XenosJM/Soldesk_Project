@@ -222,16 +222,24 @@ body {
 			
 			$(document).on('click', '#check', function(){
 				
-				
-				let data = {
-						
-						
-				};
+				let memberId = $('#memberId').val();
+				let memberEmail = $('#memberEmail').val();
 				
 				$.ajax({
 					type : 'post',
 					uri : 'member/check',
-					
+					data : {
+						memberId : memberId;
+						memberEmail : memberEmail
+					},
+					success : function(result){
+						if(result == 1){
+							alert(memberId + '님 어서오세요.');
+							
+						} else{
+							alert('입력하신 정보를 다시한번 확인해주세요.');
+						}
+					}
 				}); // end ajax
 			});
 			

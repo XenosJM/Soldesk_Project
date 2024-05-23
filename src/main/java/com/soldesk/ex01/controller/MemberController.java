@@ -51,20 +51,35 @@ public class MemberController {
 	}
 	
 	@PostMapping("/modify")
-	public ResponseEntity<Integer> updatePost(MemberVO memberVO, RedirectAttributes reAttr) {
-		log.info("updatePost()");
-		log.info("memberVO = " + memberVO.toString());
-		int result = memberService.updateMember(memberVO);
-		log.info(result + "행 수정");
+	public ResponseEntity<Integer> memberUpdate(@RequestBody Map<String, String> res) {
+		log.info("memberUpdate()");
+		int result = 0;
+		MemberVO compareVO = memberService.getMemberById(res.get("memberId"));
+		if(compareVO != null) {
+			MemberVO memberVO = new MemberVO();
+			memberVO.setMemberId(res.get("memberId"));
+			// TODO 업데이트용 데이터를 클라이언트에서 처리해서 보낼지 아니면 서버에서 처리할지 고민해보기
+			if(compareVO.getMemberPassword().equals(memberVO.getMemberPassword())) {
+				
+			}
+			memberVO.setMemberPassword(res.get("memberPassword"));
+			memberVO.setMemberEmail(res.get("memberEmail"));
+			log.info("memberVO = " + memberVO.toString());
+			result = memberService.updateMember(memberVO);
+			log.info(result + "행 수정");
+		} else {
+			result = 0;
+		}
 		return new ResponseEntity<Integer>(result, HttpStatus.OK);
 	}
 	
 	@PostMapping("/delete")
-	public String deletePost(String memberId) {
+	public ResponseEntity<Integer> deletePost(String memberId) {
 		log.info("delete()");
+		// 회원 탈퇴도 삭제를 바로 할지 아니면 컬럼을 만들어서 탈퇴했다고 업데이트후에 스케쥴러로 비교해서 이 컬럼에 값이 있으면 지우게 할지 고민해볼것.
 		int result = memberService.deleteMember(memberId);
 		log.info(result + "행 삭제");
-		return "redirect:/";
+		return new ResponseEntity<Integer>(result, HttpStatus.OK);
 	}
 	
 	@PostMapping("/check")
@@ -88,7 +103,7 @@ public class MemberController {
 //				session.setAttribute("memberName", memberVO.getMemberName());
 			}
 			result = 1;
-		} else {
+		} else { // 아이디 또는 비밀번호가 틀렸을경우
 			result = 0;
 		}
 		return new ResponseEntity<Integer>(result, HttpStatus.OK);
