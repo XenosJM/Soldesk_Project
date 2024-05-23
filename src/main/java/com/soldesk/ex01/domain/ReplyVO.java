@@ -17,7 +17,7 @@ public class ReplyVO {
 	private int replyId;
 	private int boardId;
 	private int categoryId;
-	private int memberId;
+	private String memberId;
 	private String replyContent;
 	private Date replyRegistDate;
 	

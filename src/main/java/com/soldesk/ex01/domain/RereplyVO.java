@@ -16,7 +16,7 @@ import lombok.ToString;
 public class RereplyVO {
 	private int rereplyId;
 	private int replyId;
-	private int memberId;
+	private String memberId;
 	private String rereplyContent;
 	private Date rereplyRegistDate;
 }

@@ -36,19 +36,6 @@ public class BoardController {
 	@Autowired
 	private BoardService boardService;
 
-	@GetMapping("/list")
-	public void list(Model model) {
-		log.info("board controller : list()");
-		List<BoardVO> boardList = boardService.selectList();
-
-		model.addAttribute("boardList", boardList);
-	}
-
-	@GetMapping("/regist")
-	public void registerGet() {
-		log.info("board controller : registerGet()");
-	}
-
 	@PostMapping("/regist")
 	public String registerPost(BoardVO vo, RedirectAttributes reAttr) {
 		log.info("board controller : registerPost()");
@@ -76,23 +63,12 @@ public class BoardController {
 		return "redirect:/";
 	}
 
-	@GetMapping("/detail")
-	public void detail(Model model, Integer boardId) {
-		log.info("board controller : detail()");
-		BoardVO boardVO = boardService.selectDetail(boardId);
-		model.addAttribute("boardVO", boardVO);
-	}
 
-	@GetMapping("/update")
-	public void updateGet(Model model, Integer boardId) {
-		log.info("board controller : updateGet()");
-		BoardVO boardVO = boardService.selectDetail(boardId);
-		model.addAttribute("boardVO", boardVO);
-	}
 
 	@PostMapping("/update")
 	public String updatePost(BoardVO vo, RedirectAttributes reAttr) {
 		log.info("board controller : updatePost()");
+		
 		int result = boardService.updateBoard(vo);
 		log.info(result + "행 수정");
 		return "redirect:/board/list";
@@ -101,6 +77,10 @@ public class BoardController {
 	@PostMapping("/delete")
 	public String delete(Integer boardId, RedirectAttributes reAttr) {
 		log.info("board controller : deletePost()");
+		BoardVO vo = boardService.selectDetail(boardId);
+		log.info(vo.getAttachPath()+vo.getAttachChgName()+vo.getAttachExtension());
+		//File file = new File(vo.getAttachPath()+vo.getAttachChgName()+vo.getAttachExtension());
+		 
 		int result = boardService.deleteBoard(boardId);
 		log.info(result + "행 삭제");
 		return "redirect:/board/list";

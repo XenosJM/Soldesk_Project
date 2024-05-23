@@ -64,7 +64,7 @@
 	<hr>
 	<p3>댓글작성</p3>
 	<div style="text-align: left;">
-		<input type="text" id="memberId"> <input type="text"
+		<input type="text" id="memberId" value = "${sessionScope.memberId }" readonly> <input type="text"
 			id="replyContent">
 		<button id="btnAdd">작성</button>
 	</div>
@@ -163,7 +163,7 @@
 							let replyItem = $(this).closest('.reply_item');
 							if (replyItem.find('.rereplyInputFields').length === 0) {
 								let rereplyInputFields = '<div class="rereplyInputFields" style="text-align: center;">'
-								+ '<input type="text" class="rereply_memberId" placeholder="작성자">'
+								+ '<input type="text" class="rereply_memberId" value = "${sessionScope.memberId }" readonly placeholder="작성자">'
 								+ '<input type="text" class="rereply_content" placeholder="대댓글 내용">'
 								+ '<button class="btnAddRereply">작성</button>'
 								+ '</div>';

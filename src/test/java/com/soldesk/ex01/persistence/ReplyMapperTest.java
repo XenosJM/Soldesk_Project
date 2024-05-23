@@ -37,24 +37,24 @@ public class ReplyMapperTest {
 
 
 	public void testReplyInsert() {
-		ReplyVO vo = new ReplyVO(0,1,1234,1234,"댓글테스트2",new Date());
-		int result = replyMapper.insertReply(vo);
-		System.out.println(result+"행 삽입완료");
-		vo = new ReplyVO(0,1,1234,1234,"댓글테스트3",new Date());
-		result = replyMapper.insertReply(vo);
-		System.out.println(result+"행 삽입완료");
-		vo = new ReplyVO(0,1,1234,1234,"댓글테스트4",new Date());
-		result = replyMapper.insertReply(vo);
-		System.out.println(result+"행 삽입완료");
-		vo = new ReplyVO(0,1,1234,1234,"test1",new Date());
-		result = replyMapper.insertReply(vo);
-		System.out.println(result+"행 삽입완료");
-		vo = new ReplyVO(0,1,1234,1234,"test2",new Date());
-		result = replyMapper.insertReply(vo);
-		System.out.println(result+"행 삽입완료");
-		vo = new ReplyVO(0,1,1234,1234,"test3",new Date());
-		result = replyMapper.insertReply(vo);
-		System.out.println(result+"행 삽입완료");
+//		ReplyVO vo = new ReplyVO(0,1,1234,1234,"댓글테스트2",new Date());
+//		int result = replyMapper.insertReply(vo);
+//		System.out.println(result+"행 삽입완료");
+//		vo = new ReplyVO(0,1,1234,1234,"댓글테스트3",new Date());
+//		result = replyMapper.insertReply(vo);
+//		System.out.println(result+"행 삽입완료");
+//		vo = new ReplyVO(0,1,1234,1234,"댓글테스트4",new Date());
+//		result = replyMapper.insertReply(vo);
+//		System.out.println(result+"행 삽입완료");
+//		vo = new ReplyVO(0,1,1234,1234,"test1",new Date());
+//		result = replyMapper.insertReply(vo);
+//		System.out.println(result+"행 삽입완료");
+//		vo = new ReplyVO(0,1,1234,1234,"test2",new Date());
+//		result = replyMapper.insertReply(vo);
+//		System.out.println(result+"행 삽입완료");
+//		vo = new ReplyVO(0,1,1234,1234,"test3",new Date());
+//		result = replyMapper.insertReply(vo);
+//		System.out.println(result+"행 삽입완료");
 		
 	}
 	
@@ -81,9 +81,9 @@ public class ReplyMapperTest {
 	}
 	
 	private void testReplyUpdate() {
-		ReplyVO vo = new ReplyVO(1,1,1234,1234,"수정된댓글",new Date());
-		int result = replyMapper.updateReply(vo);
-		System.out.println(result + "행 수정");
+//		ReplyVO vo = new ReplyVO(1,1,1234,1234,"수정된댓글",new Date());
+//		int result = replyMapper.updateReply(vo);
+//		System.out.println(result + "행 수정");
 		
 	}
 	

@@ -2,6 +2,7 @@ package com.soldesk.ex01;
 
 import java.text.DateFormat;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 
 import javax.servlet.http.HttpServletRequest;
@@ -16,7 +17,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
+import com.soldesk.ex01.domain.BoardVO;
 import com.soldesk.ex01.domain.MemberVO;
+import com.soldesk.ex01.service.BoardService;
 import com.soldesk.ex01.service.MemberService;
 
 import lombok.extern.log4j.Log4j;
@@ -33,6 +36,8 @@ public class HomeController {
 	@Autowired
 	private MemberService memberService;
 	
+	@Autowired
+	private BoardService boardService;
 	/**
 	 * Simply selects the home view to render by returning its name.
 	 */
@@ -49,6 +54,34 @@ public class HomeController {
 		
 		return "main";
 	}
+	
+	@GetMapping("board/detail")
+	public void boardDetail(Model model, Integer boardId) {
+		log.info("board controller : detail()");
+		BoardVO boardVO = boardService.selectDetail(boardId);
+		model.addAttribute("boardVO", boardVO);
+	}
+	
+	@GetMapping("board/regist")
+	public void boardRegister() {
+		log.info("board controller : registerGet()");
+	}
+	
+	@GetMapping("board/list")
+	public void boardList(Model model) {
+		log.info("board controller : list()");
+		List<BoardVO> boardList = boardService.selectList();
+
+		model.addAttribute("boardList", boardList);
+	}
+	
+	@GetMapping("board/update")
+	public void boardUpdate(Model model, Integer boardId) {
+		log.info("board controller : updateGet()");
+		BoardVO boardVO = boardService.selectDetail(boardId);
+		model.addAttribute("boardVO", boardVO);
+	}
+
 	
 	@GetMapping("member/regist")
 	public void joinMember() {

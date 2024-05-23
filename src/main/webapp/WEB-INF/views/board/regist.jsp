@@ -18,7 +18,7 @@
       </div>
       <div>
          <p>작성자 : </p>
-         <input type="text" name="memberId" maxlength="10" required>
+         <input type="text" name="memberId" maxlength="10" value = '${sessionScope.memberId }' readonly required>
       </div>
       <div>
          <p>내용 : </p>
