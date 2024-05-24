@@ -38,7 +38,6 @@
 	<button id="btnBackward" class="btn btn-primary">뒤로가기</button>
 	
 	<div class="modal" id="modifyModal">
-    	
 	</div>
 	
  	<script>

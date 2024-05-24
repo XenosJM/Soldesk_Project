@@ -33,4 +33,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	<delete id="deleteReply"> 
 		DELETE FROM	REPLY WHERE Reply_ID = #{replyId}
 	</delete>
+	
+	<delete id="deleteReplyByBoard">
+		DELETE FROM REPLY WHERE BOARD_ID = #{boardId}
+	</delete>
 </mapper>

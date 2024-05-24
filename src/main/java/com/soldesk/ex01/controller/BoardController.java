@@ -23,8 +23,11 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import com.soldesk.ex01.domain.AttachVO;
 import com.soldesk.ex01.domain.BoardVO;
+import com.soldesk.ex01.domain.ReplyVO;
 import com.soldesk.ex01.service.AttachService;
 import com.soldesk.ex01.service.BoardService;
+import com.soldesk.ex01.service.ReplyService;
+import com.soldesk.ex01.service.RereplyService;
 import com.soldesk.ex01.util.FileUploadUtil;
 
 import lombok.extern.log4j.Log4j;
@@ -33,8 +36,22 @@ import lombok.extern.log4j.Log4j;
 @RequestMapping(value = "/board")
 @Log4j
 public class BoardController {
+	
 	@Autowired
 	private BoardService boardService;
+	
+	@Autowired
+	private String uploadPath;
+
+	@Autowired
+	private AttachService attachService;
+	
+	@Autowired
+	private ReplyService replyService;
+	
+	@Autowired
+	private RereplyService rereplyService;
+
 
 	@PostMapping("/regist")
 	public String registerPost(BoardVO vo, RedirectAttributes reAttr) {
@@ -60,6 +77,7 @@ public class BoardController {
 		log.info(result + "행 삽입");
 		
 		
+		
 		return "redirect:/";
 	}
 
@@ -76,22 +94,29 @@ public class BoardController {
 
 	@PostMapping("/delete")
 	public String delete(Integer boardId, RedirectAttributes reAttr) {
+		int result;
 		log.info("board controller : deletePost()");
 		BoardVO vo = boardService.selectDetail(boardId);
-		log.info(vo.getAttachPath()+vo.getAttachChgName()+vo.getAttachExtension());
-		//File file = new File(vo.getAttachPath()+vo.getAttachChgName()+vo.getAttachExtension());
-		 
-		int result = boardService.deleteBoard(boardId);
-		log.info(result + "행 삭제");
+		
+		List<ReplyVO> list = replyService.selectReplyBoard(boardId);
+		for(int i = 0;i<list.size();i++) {
+			result = rereplyService.deleteRereplyToReply(list.get(i).getReplyId());
+			log.info("대댓글"+result + "행 삭제");
+			result = replyService.deleteReply(list.get(i).getReplyId());
+			log.info("댓글"+result + "행 삭제");
+		}
+		
+		File file = new File("C:\\upload\\ex01\\2024\\05\\24\\"+ vo.getAttachChgName());
+		if(file.exists()) {
+			log.info("파일 삭제 결과 : "+file.delete());
+		}
+		result = boardService.deleteBoard(boardId);
+		log.info("게시글" +result + "행 삭제");
 		return "redirect:/board/list";
 	}
 
-	@Autowired
-	private String uploadPath;
-
-	@Autowired
-	private AttachService attachService;
-
+	
+	
 	// 첨부 파일 업로드 페이지 이동(GET)
 	@GetMapping("/registAttach")
 	public void registerGET() {
@@ -122,35 +147,6 @@ public class BoardController {
 
 		return "redirect:/board/list";
 	} // end attachPOST()
-
-	// 첨부 파일 목록 조회(GET)
-	@GetMapping("/listAttach")
-	public void listAttach(Model model) {
-		// 첨부 파일 attachId 리스트를 Model에 추가하여 전달
-		model.addAttribute("idList", attachService.getAllId());
-		log.info("list()");
-	}
-	
-	@GetMapping("/detailBoard")
-	public void detailBoard(int boardId,Model model) {
-		//model.addAttribute(model)
-		log.info("detailBoard()");
-		log.info("boardId : " + boardId);
-		AttachVO attachVO = attachService.getAttachById(boardId);
-		model.addAttribute("attachVO",attachVO);
-		
-	}
-
-	// 첨부 파일 상세 정보 조회(GET)
-	@GetMapping("/detailAttach")
-	public void detail(int attachId, Model model) {
-		log.info("detail()");
-		log.info("attachId : " + attachId);
-		// attachId로 상세 정보 조회
-		AttachVO attachVO = attachService.getAttachById(attachId);
-		// 조회된 상세 정보를 Model에 추가하여 전달
-		model.addAttribute("attachVO", attachVO);
-	} // end detail()
 
 	// 첨부 파일 다운로드(GET)
 	// 파일을 클릭하면 사용자가 다운로드하는 방식

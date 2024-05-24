@@ -16,6 +16,7 @@ public class ReplyServiceImple implements ReplyService {
 
 	@Autowired
 	ReplyMapper replyMapper;
+	
 	@Override
 	public int insertReply(ReplyVO vo) {
 		log.info("service : insertReply()");
@@ -58,6 +59,13 @@ public class ReplyServiceImple implements ReplyService {
 	public int deleteReply(int replyId) {
 		log.info("service : deleteReply()");
 		int result = replyMapper.deleteReply(replyId);
+		return result;
+	}
+
+	@Override
+	public int deleteReplyByBoard(int boardId) {
+		log.info("service : deleteReplyByBoard");
+		int result = replyMapper.deleteReplyByBoard(boardId);
 		return result;
 	}
 

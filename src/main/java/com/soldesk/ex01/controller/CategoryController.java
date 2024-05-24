@@ -23,19 +23,6 @@ public class CategoryController {
 	@Autowired
 	private CategoryService categoryService;
 	
-	@GetMapping
-	public void list(Model model) {
-		log.info("category contoroller : list()");
-		List<CategoryVO> categoryList = categoryService.selectCategoryList();
-		
-		model.addAttribute("categoryList", categoryList);
-	}
-	
-	@GetMapping("/regist")
-	public void registerGet() {
-		log.info("category controller : registerGet()");
-	}
-	
 	@PostMapping("/regist")
 	public String registerPost(CategoryVO vo, RedirectAttributes reAttr) {
 		log.info("category controller : registerPost()");
@@ -45,12 +32,7 @@ public class CategoryController {
 		return "redirect:/";
 	}
 	
-	@GetMapping("/update")
-	public void updateGet(Model model, Integer categoryId) {
-		log.info("category controller : updateGet()");
-		CategoryVO categoryVO = categoryService.selectCategory(categoryId);
-		model.addAttribute("categoryVO", categoryVO);
-	}
+	
 	
 	@PostMapping("/update")
 	public String updatePost(CategoryVO vo, RedirectAttributes reAttr) {

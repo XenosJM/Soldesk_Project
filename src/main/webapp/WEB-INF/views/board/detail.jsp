@@ -52,8 +52,7 @@
 			$(document).on('click', '#deleteBoard', function() {
 				if (confirm('삭제하시겠습니까?')) {
 
-					deleteRereply();
-					deleteReply();
+					
 					$('#deleteForm').submit(); // form 데이터 전송
 				}
 			});
@@ -252,7 +251,7 @@
 							headers : {
 								'Content-Type' : 'application/json'
 								},
-								success : function(result) {
+								success : function(result) {	
 									console.log(result);
 									if (result == 1) {
 										console.log('대댓글 삭제 성공!');
@@ -267,7 +266,7 @@
 												},
 												success : function(result) {
 													console.log(result);
-													if (result == 1) {
+														if (result == 1) {
 														alert('댓글 삭제 성공');
 														getAllReply();
 														}

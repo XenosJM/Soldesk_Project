@@ -17,18 +17,6 @@ public class FileUploadController {
    @Autowired
    private String uploadPath; // Bean으로 설정된 uploadPath() 객체 주입 
    
-   // upload.jsp 페이지 호출 
-   @GetMapping("/upload")
-   public void uploadGET() {
-      log.info("uploadGET()");
-   } // end uploadGET()
-   
-// uploads.jsp 페이지 호출 
-   @GetMapping("/uploads")
-   public void uploadsGET() {
-      log.info("uploadGET()");
-   } // end uploadGET()
-   
    // 단일 파일 업로드 수신 및 파일 저장
    @PostMapping("/upload")
    public void uploadPOST(MultipartFile file) { // 전송된 파일 객체 저장
