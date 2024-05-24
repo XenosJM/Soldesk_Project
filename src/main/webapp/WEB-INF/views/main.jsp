@@ -210,32 +210,41 @@ body {
 			if(${empty sessionScope.memberId }){
 				$('#loginContainer').html(
 						'<h2>로그인</h2>'
-						+ '<input type="text" name="memberId" placeholder="아이디">'
-						+ '<input type="password" name="memberPassword" placeholder="비밀번호"><br>'
+						+ '<input type="text" id="memberId" name="memberId" placeholder="아이디">'
+						+ '<input type="password" id="memberPassword" name="memberPassword" placeholder="비밀번호"><br>'
 						+ '<button id="check">로그인</button>'
 						+ '<button id="joinMember">회원가입</button>'
 						+ '<button id="findIdPw">ID/PW찾기</button>'
 				);
 			} else{
-				
+				$('#loginContainer').html(
+						'<h3>${sessionScope.memberId}</h3>'
+						+ '<button id="detail">내 정보 보기</button>'
+						+ '<button id="checkout">로그아웃</button>'
+				);
 			}
 			
 			$(document).on('click', '#check', function(){
 				
 				let memberId = $('#memberId').val();
-				let memberEmail = $('#memberEmail').val();
-				
+				let memberPassword = $('#memberPassword').val();
+				let data = 
 				$.ajax({
-					type : 'post',
-					uri : 'member/check',
-					data : {
-						memberId : memberId;
-						memberEmail : memberEmail
-					},
+					type : 'POST',
+					url : 'member/check',
+					contentType: 'application/json; charset=UTF-8',
+					data : JSON.stringify({
+						memberId : memberId,
+						memberPassword : memberPassword					
+				}),					
 					success : function(result){
 						if(result == 1){
 							alert(memberId + '님 어서오세요.');
-							
+							$('#loginContainer').html(
+									'<h3>${sessionScope.memberId}</h3>'
+									+ '<button id="detail">내 정보 보기</button>'
+									+ '<button id="checkout">로그아웃</button>'
+							);
 						} else{
 							alert('입력하신 정보를 다시한번 확인해주세요.');
 						}
@@ -249,6 +258,14 @@ body {
 			
 			$(document).on('click', '#findIdPw', function(){
 				window.location.href="member/findIdPw";
+			});
+			
+			$(document).on('click', '#detail', function(){
+				window.location.href="member/detail";
+			});
+			
+			$(document).on('click', '#checkout', function(){
+				window.location.href="member/checkout";
 			});
 			
 		}); // end $(document).ready(function(){

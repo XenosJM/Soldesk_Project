@@ -108,4 +108,13 @@ public class HomeController {
 	public void findIdPw () {
 		log.info("findIdPw()");
 	}
+	
+	@GetMapping("member/checkout")
+	public String memberCheckout(HttpServletRequest req) {
+		log.info("memberCheckout()");
+		HttpSession session = req.getSession();
+		session.removeAttribute("memberId");
+
+		return "redirect:/";
+	}
 }

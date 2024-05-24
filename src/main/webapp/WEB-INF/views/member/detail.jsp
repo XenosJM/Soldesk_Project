@@ -34,38 +34,42 @@
 </c:choose>
 	<p>회원가입 날짜 : ${memberVO.memberRegistDate }</p><br>
 	
-	
 	<button id="modify" class="btn btn-primary">회원정보 수정</button>
-	<button id="delete" class="btn btn-primary">회원탈퇴</button>
 	<button id="btnBackward" class="btn btn-primary">뒤로가기</button>
 	
 	<div class="modal" id="modifyModal">
-    	<div class="modal-dialog">
-	        <div class="modal-content">
-	            <div class="modal-header">
-	                <h4 class="modal-title">회원정보 수정</h4>
-	                <button type="button" class="close" data-dismiss="modal">&times;</button>
-	            </div>
-	            <div class="modal-body">
-	                <form id="modifyForm">
-	                    <div class="form-group" id="divPw"></div>
-	                    <div class="form-group" id="divProperty"></div>
-	                    <div class="form-group" id="divEmail"></div>
-	                    <button type="button" class="btn btn-primary" id="btnFormSubmit">수정하기</button>
-	                </form>
-	            </div>
-	        </div>
-	    </div>
+    	
 	</div>
 	
  	<script>
 $(document).ready(function(){
-	console.log('${sessionScope.memberId }');
+	
+	let deleteFlag = false;
 	let memberId = '${memberVO.memberId}';
 	
 	$(document).on('click', '#modify', function(event){
 		console.log(this);
         $('#modifyModal').modal('show');
+        $('#modifyModal').html(
+        		'<div class="modal-dialog">'
+    	        + '<div class="modal-content">'
+    	        + '<div class="modal-header">'
+    	        + '<h4 class="modal-title">회원정보 수정</h4>'
+    	        + '<button type="button" id="closeModal" class="close" data-dismiss="modal">&times;</button>'
+    	        + '</div>'
+    	        + '<div class="modal-body">'
+    	        + '<form id="modifyForm">'
+    	        + '<div class="form-group" id="divPw"></div>'
+    	        + '<div class="form-group" id="divProperty"></div>'
+    	        + '<div class="form-group" id="divEmail"></div>'
+    	        + '<button type="button" class="btn btn-primary" id="btnFormSubmit">수정하기</button>'	                    
+    	        + '<button type="button" id="delete" class="btn btn-primary">회원탈퇴</button>'
+    	        + '<div id="deleteMsg"></div>'
+    	        + '</form>'
+    	        + '</div>'
+    	        + '</div>'
+    	    	+ '</div>'	
+        );
         $('#divPw').html('<span id="modalPw"></span>'
 				+ '<button type="button" class="btn btn-primary" id="btnPw">비밀번호 수정하기</button>'
         ); // end divPw.html
@@ -188,7 +192,7 @@ $(document).ready(function(){
     	}
     }); // end btnDeleteProperty()
     
-    $('#btnFormSubmit').click(function(){
+    $(document).on('click', '#btnFormSubmit', function(){
         let memberPassword = $('#memberPassword').val();
         let memberEmail = $('#memberEmail').val();
         
@@ -215,13 +219,58 @@ $(document).ready(function(){
         }
     }); // end btnFormSubmit
     
-    // 인덱스 길이 즉, 회원 자산(이모지 등)은 foreach구문으로 생성된 요소 갯수만큼이다.
-    // 그렇다는건 인덱스의 길이를 알아냈다는 소리이고, 이를 이용해 부모요소의 몇번째 자식요소 즉,
-    // 선택된 요소가 무엇인지를 통해 선택된 인덱스의 번호를 알수가있다.
-    // 이를 이용해 인덱스를 이용해 삭제 및 업데이트가 가능하다.
+    $(document).on('click', '#delete', function(){
+    	let isConfirmed = confirm('탈퇴하시겠습니까?');
+    	if(isConfirmed){
+    		$('#deleteMsg').html(
+    				'정말 탈퇴하시려면 <strong>회원님의 아이디<strong>를 입력한 후 확인 버튼을 눌러주세요.'
+    				+ '<input type="text" id="delMemberId" placeholder="회원님의 아이디">'
+    				+ '<span id=delCheckMsg></span>'
+    				+ '<button id="btnDeleteCheck">확인</button>'
+    		);
+    	}
+    });  
     
-    // 부모요소(span div 등)의 자식요소(li태그)의 갯수가 몇개인지 알수있다.
-    // 몇번째 자식 요소가 선택(클릭)된지를 알수가 있다.
+    $(document).on('blur', '#delMemberId', function(){
+    	let delMemberId = $('#delMemberId').val();
+    	if(delMemberId != '${memberVO.memberId}'){
+    		$('#delCheckMsg').html('정확한 회원님의아이디를 입력해주세요.');
+    		$('#delCheckMsg').css('color', 'red');
+    		deleteFlag = false;
+    	} else {
+    		$('#delCheckMsg').html('');
+    		deleteFlag = true;
+    	}
+    });
+    
+    $(document).on('click', '#btnDeleteCheck', function(event){
+    	event.preventDefault();
+    	if(!deleteFlag){
+    		
+    	} else{
+    		
+	    	let isConfirmed = confirm('계속 진행하시겠습니까?');
+	    	if(isConfirmed && deleteFlag){
+	    		$.ajax({
+	    			type : 'POST',
+	    			url : 'member/delete',
+	    			contentType: 'application/json; charset=UTF-8',
+	    			data : JSON.stringify({
+	    				memberId : memberId
+	    			}),
+	    			success : function(result){
+	    				if(result == 1){
+	    					alert('탈퇴가 성공적으로 이루어졌슨니다.');
+	    				} else{
+	    					alert('죄송합니다. 잠시후 새로고침후 다시 해주세요.');
+	    				}
+	    			}
+	    		});
+	    	} else {
+	    		alert('잘 생각하셨어요!');
+	    	}
+    	}
+    });
     
 }); // end document ready
 </script>

@@ -58,12 +58,16 @@ public class MemberController {
 		if(compareVO != null) {
 			MemberVO memberVO = new MemberVO();
 			memberVO.setMemberId(res.get("memberId"));
-			// TODO 업데이트용 데이터를 클라이언트에서 처리해서 보낼지 아니면 서버에서 처리할지 고민해보기
-			if(compareVO.getMemberPassword().equals(memberVO.getMemberPassword())) {
-				
-			}
 			memberVO.setMemberPassword(res.get("memberPassword"));
 			memberVO.setMemberEmail(res.get("memberEmail"));
+			if(memberVO.getMemberPassword() == null) {
+				// 비밀번호를 변경안했다면
+				memberVO.setMemberPassword(compareVO.getMemberPassword());
+			}
+			if(memberVO.getMemberEmail() == null) {
+				// 이메일을 변경안했다면
+				memberVO.setMemberEmail(compareVO.getMemberEmail());
+			}
 			log.info("memberVO = " + memberVO.toString());
 			result = memberService.updateMember(memberVO);
 			log.info(result + "행 수정");
@@ -73,8 +77,8 @@ public class MemberController {
 		return new ResponseEntity<Integer>(result, HttpStatus.OK);
 	}
 	
-	@PostMapping("/delete")
-	public ResponseEntity<Integer> deletePost(String memberId) {
+	@GetMapping("/delete")
+	public ResponseEntity<Integer> deletePost(@RequestParam("memberId") String memberId) {
 		log.info("delete()");
 		// 회원 탈퇴도 삭제를 바로 할지 아니면 컬럼을 만들어서 탈퇴했다고 업데이트후에 스케쥴러로 비교해서 이 컬럼에 값이 있으면 지우게 할지 고민해볼것.
 		int result = memberService.deleteMember(memberId);
@@ -108,16 +112,6 @@ public class MemberController {
 		}
 		return new ResponseEntity<Integer>(result, HttpStatus.OK);
 	}
-	
-	@GetMapping("/checkout")
-	public String memberCheckout(HttpServletRequest req) {
-		log.info("memberCheckout()");
-		HttpSession session = req.getSession();
-		session.removeAttribute("memberId");
-
-		return "redirect:/";
-	}
-	
 	
 }
 
