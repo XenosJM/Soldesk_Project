@@ -1,5 +1,8 @@
 package com.soldesk.ex01.controller;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -8,18 +11,15 @@ import javax.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.soldesk.ex01.domain.MemberVO;
 import com.soldesk.ex01.service.MemberService;
@@ -77,11 +77,12 @@ public class MemberController {
 		return new ResponseEntity<Integer>(result, HttpStatus.OK);
 	}
 	
-	@GetMapping("/delete")
-	public ResponseEntity<Integer> deletePost(@RequestParam("memberId") String memberId) {
+	@PostMapping("/delete")
+	public ResponseEntity<Integer> deletePost(@RequestBody Map<String, String> res) {
 		log.info("delete()");
 		// 회원 탈퇴도 삭제를 바로 할지 아니면 컬럼을 만들어서 탈퇴했다고 업데이트후에 스케쥴러로 비교해서 이 컬럼에 값이 있으면 지우게 할지 고민해볼것.
-		int result = memberService.deleteMember(memberId);
+		int result = memberService.deleteMember(res.get("memberId"));	
+		log.info(res.get("memberId"));
 		log.info(result + "행 삭제");
 		return new ResponseEntity<Integer>(result, HttpStatus.OK);
 	}
@@ -110,6 +111,35 @@ public class MemberController {
 		} else { // 아이디 또는 비밀번호가 틀렸을경우
 			result = 0;
 		}
+		return new ResponseEntity<Integer>(result, HttpStatus.OK);
+	}
+	
+	@PostMapping("/deleteProperty")
+	public ResponseEntity<Integer> removeProperty(
+			@RequestParam("memberId") String memberId,
+			@RequestParam("propertyIndex") int propertyIndex
+			) {
+		int result = 0;
+		MemberVO memberVO = memberService.getMemberById(memberId);
+		Integer[] propertyArray = memberVO.getMemberProperty();
+		
+		// 정수배열을 리스트로 변환
+		List<Integer> list = new ArrayList<>(Arrays.asList(propertyArray));
+		list.remove(propertyIndex);
+		// 리스트를 배열로 변환
+		propertyArray = list.toArray(new Integer[0]);
+		
+		if(propertyArray.length == 0 || propertyArray == null) {
+			// 배열이 비어있거나 없으면
+			memberVO.setMemberProperty(new Integer[0]);
+		} else {
+			// 배열에 값이 있다면.
+			memberVO.setMemberProperty(propertyArray);
+		}
+		
+		memberService.updateMemberProperty(memberVO);
+		result = 1;
+		
 		return new ResponseEntity<Integer>(result, HttpStatus.OK);
 	}
 	

@@ -19,7 +19,7 @@ public class MemberVO {
 	private String memberPassword;
 	private int managerId;
 	private String memberEmail;
-	private int[] memberProperty;
+	private Integer[] memberProperty;
 	private Date memberRegistDate;
 	private String memberPropertyAsString;
 	
@@ -36,19 +36,19 @@ public class MemberVO {
 	        memberPropertyAsString = memberPropertyAsString.replaceAll("\\[|\\]", "");
 	        
 	        if(memberPropertyAsString.isEmpty()) {
-	        	this.memberProperty = new int[0];
+	        	this.memberProperty = new Integer[0];
 	        	return;
 	        }
 	        // , 로 분리하여 문자열 배열로 변환하여 문자열 배열 변수에 저장
 	        String[] propertyString = memberPropertyAsString.split(",");
 	        // 문자열 배열인 propertyString을 int로 파싱
-	        this.memberProperty = new int[propertyString.length];
+	        this.memberProperty = new Integer[propertyString.length];
 	        for (int i = 0; i < propertyString.length; i++) {
 	        	// trim()으로 공백 제거 후 변환
 	        	this.memberProperty[i] = Integer.parseInt(propertyString[i].trim());
 	        }
 	    } else {
-	    	this.memberProperty = new int[0];
+	    	this.memberProperty = new Integer[0];
 	    }
 	} // end setMemberPropertyAsString()
 } // end MemberVO

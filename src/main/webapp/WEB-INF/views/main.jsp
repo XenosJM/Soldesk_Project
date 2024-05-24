@@ -181,30 +181,6 @@ body {
 	</div>
 	<!-- 메인 화면 배너들 -->
 	<script type="text/javascript">
-	/* 
-		
-		<c:choose>
-			<c:when test="${empty sessionScope.memberId }">
-					<h2>로그인</h2>
-					<form action="member/check" method="post">
-					<input type="text" name="memberId" placeholder="아이디">
-					<input type="password" name="memberPassword" placeholder="비밀번호">
-					<input type="submit" value="로그인">
-					</form>
-					<p>
-					<a href="#" onclick="window.location.href='/ex01/member/regist'">회원가입</a>
-					<a href="#" onclick='window.location.href="/ex01/member/findIdPw"'>ID/PW찾기</a>
-					</p>
-			</c:when>
-			<c:when test="${not empty sessionScope.memberId }">
-				<div class="login-container" style= "display:">
-					<button onclick='location.href="member/detail"'>내 정보 보기</button>
-					<button onclick='location.href="member/checkout"'>로그아웃</button>
-				</div>
-			</c:when>
-		</c:choose>
-	*/
-	
 		$(function(){
 			
 			if(${empty sessionScope.memberId }){
@@ -241,7 +217,7 @@ body {
 						if(result == 1){
 							alert(memberId + '님 어서오세요.');
 							$('#loginContainer').html(
-									'<h3>${sessionScope.memberId}</h3>'
+									'<h3>'+memberId+'</h3>'
 									+ '<button id="detail">내 정보 보기</button>'
 									+ '<button id="checkout">로그아웃</button>'
 							);

@@ -52,7 +52,7 @@ public class MemberMapperTest {
 	private void testMemberPropertyUpdate() {
 		MemberVO vo = new MemberVO();
 		vo.setMemberId("wjdals99");
-		vo.setMemberProperty(new int[] {34, 25, 22});
+		vo.setMemberProperty(new Integer[] {34, 25, 22});
 		int result = memberMapper.updateProperty(vo);
 		log.info(result + "행 수정");
 	}
@@ -82,7 +82,7 @@ public class MemberMapperTest {
 	}
 
 	private void testMemberInsert() {
-		MemberVO vo = new MemberVO("wjddk", "1q2w3e4r", 2, "wjdalsqaaz123@gmail.com", new int[] {1, 2}, new Date(), null) ;
+		MemberVO vo = new MemberVO("wjddk", "1q2w3e4r", 2, "wjdalsqaaz123@gmail.com", new Integer[] {1, 2}, new Date(), null) ;
 		 vo.setMemberPropertyAsString(Arrays.toString(vo.getMemberProperty()));
 		int result = memberMapper.insert(vo);
 		log.info(result + "행 삽입");

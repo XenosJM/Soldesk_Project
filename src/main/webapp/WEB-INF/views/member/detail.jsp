@@ -131,7 +131,7 @@ $(document).ready(function(){
     $(document).on('click', '#btnEmailModify', function(event){
     	$('#emailModify').html(
     			'<input type="email" class="form-control" id="memberEmail" placeholder="이메일을 입력하세요.">'
-    			+ '<button type="button" class="btn btn-primary" id="btnEmailModifyCancel">이메일 수정 취소</button>'
+    			+ '<button type="button" class="btn btn-primary" id="btnEmailModifyCancel">&times;</button>'
     	);
     	$('#btnEmailModify').hide();
     }); // end btnEmailModofy
@@ -163,27 +163,27 @@ $(document).ready(function(){
     	event.preventDefault();
     	
     	let propertyIndex = $(this).closest('li').index();
-    	let itemText = $(this).closest('li').text().replace('×', '');
+    	// let itemText = $(this).closest('li').text().replace('×', ''); 혹시 모를 나중을 위해
         console.log(this);
    		console.log('propertyIndex : ' + propertyIndex);
-    	console.log('itemText : ' + itemText);
-    	$(this).closest('li').remove();
     	//let itemText = $(this).closest('li').attr('value');
+    	let memberId = '${memberVO.memberId}';
     	let isConfirmed = confirm(', 이 이모지를 정말 삭제하시겠습니까?');
     	// 몇번째 항목이 클릭되었는지 알 수 있도록 코드를 짜야함.
+    	
     	if(isConfirmed){
+    		$(this).closest('li').remove();
 	    	$.ajax({
 	    		type : 'POST',
-	    		url : '../util/deleteProperty',
+	    		url : 'deleteProperty',
 	    		data : {
 	    			memberId : memberId,
-	    			propertyIndex : propertyIndex,
+	    			propertyIndex : propertyIndex
 	    		},
 	    		success : function(result){
 	    			if(result == 1){
-	    				alert('삭제되었습니다.');
 	    				$(this).closest('li').remove();
-	    				
+	    				alert('삭제되었습니다.');
 	    			} else{
 	    				alert('이모지 삭제에 문제가 생겻습니다.');
 	    			}
@@ -251,9 +251,10 @@ $(document).ready(function(){
     		
 	    	let isConfirmed = confirm('계속 진행하시겠습니까?');
 	    	if(isConfirmed && deleteFlag){
+	    	let memberId = '${memberVO.memberId}';
 	    		$.ajax({
 	    			type : 'POST',
-	    			url : 'member/delete',
+	    			url : 'delete',
 	    			contentType: 'application/json; charset=UTF-8',
 	    			data : JSON.stringify({
 	    				memberId : memberId
@@ -261,6 +262,7 @@ $(document).ready(function(){
 	    			success : function(result){
 	    				if(result == 1){
 	    					alert('탈퇴가 성공적으로 이루어졌슨니다.');
+	    					window.location.href='checkout';
 	    				} else{
 	    					alert('죄송합니다. 잠시후 새로고침후 다시 해주세요.');
 	    				}
