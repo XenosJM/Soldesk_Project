@@ -14,7 +14,7 @@ import lombok.ToString;
 public class ManagerVO {
 	
 	private int managerId;
-	private int memberId;
+	private String memberId;
 	private int categoryId;
 	private String managerRole;
 }

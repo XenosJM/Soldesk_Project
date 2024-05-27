@@ -39,8 +39,7 @@ public class ManagerMapperTest {
 
 	private void testManagerUpdate() {
 		log.info("testUpdate()");
-		ManagerVO managerVO = new ManagerVO(1, 2, 1, "");
-		int result = managerMapper.update(managerVO);
+		int result = managerMapper.update(1, "wjddk");
 		log.info(result + "행 수정");
 		
 	}
@@ -66,7 +65,7 @@ public class ManagerMapperTest {
 
 	private void testManagerInsert() {
 		log.info("testManagerInsert()");
-		ManagerVO managerVO = new ManagerVO(0, 1, 1, "");
+		ManagerVO managerVO = new ManagerVO(0, "wjddk", 1, "");
 		int result = managerMapper.insert(managerVO);
 		log.info(result + "행 삽입");
 		
