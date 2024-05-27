@@ -6,8 +6,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 <mapper namespace="com.soldesk.ex01.persistence.AttachMapper">
 	<resultMap type="com.soldesk.ex01.domain.AttachVO"
 		id="attachResultMap">
-		<id property="attachId" column="ATTACH_ID" />
-		<result property="boardId" column="BOARD_ID" />
+		<id property="boardId" column="BOARD_ID" />
 		<result property="attachPath" column="ATTACH_PATH" />
 		<result property="attachRealName" column="ATTACH_REAL_NAME" />
 		<result property="attachChgName" column="ATTACH_CHG_NAME" />
