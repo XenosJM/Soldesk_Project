@@ -35,7 +35,7 @@ public class MemberController {
 	@Autowired
 	private MemberService memberService;
 	
-	
+	// TODO 시큐리티적용시 check 옮길것
 	
 	@PostMapping("/regist")
 	public ResponseEntity<Integer> joinMember(@RequestBody Map<String, String> res) {
@@ -141,6 +141,13 @@ public class MemberController {
 		result = 1;
 		
 		return new ResponseEntity<Integer>(result, HttpStatus.OK);
+	}
+	
+	@GetMapping("/getAllMember")
+	public ResponseEntity<List<MemberVO>> getAllMember(){
+		log.info("getAllmember()");
+		List<MemberVO> memberList = memberService.getAllMember();
+		return new ResponseEntity<List<MemberVO>>(memberList, HttpStatus.OK);
 	}
 	
 }

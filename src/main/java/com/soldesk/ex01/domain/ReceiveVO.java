@@ -17,9 +17,9 @@ public class ReceiveVO {
 	
 	private int receiveId;
 	// 친구추가 요청을 받은 사람의 id
-	private int memberId;
+	private String memberId;
 	// 친구요청을 보낸 사람의 id
-	private int requesterId;
+	private String requesterId;
 	// 현재 상태(대기중, 수락, 거절 등)
 	private String receiveState;
 	private Date receiveDate;

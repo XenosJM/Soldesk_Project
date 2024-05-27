@@ -11,6 +11,6 @@ public interface ManagerMapper {
 	int insert(ManagerVO managerVO);
 	ManagerVO selectByManagerId(int managerId);
 	List<ManagerVO> selectAllManager();
-	int update(ManagerVO managerVO);
+	int update(int managerId, String memberId);
 	int delete(int managerId);
 }

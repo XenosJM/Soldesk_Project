@@ -16,8 +16,8 @@ import lombok.ToString;
 public class FriendVO {
 	
 	private int friendshipId;
-	private int memberId;
-	private int friendMemberId;
+	private String memberId;
+	private String friendMemberId;
 	private String friendState;
 	private Date friendshipDate;
 }
