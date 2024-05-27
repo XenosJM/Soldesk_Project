@@ -16,9 +16,9 @@ import lombok.ToString;
 public class RequestVO {
 	private int requestId;
 	// 친구 추가 요청을 보내는 사람 id
-	private int memberId;
+	private String memberId;
 	// 요청을 보낼 id
-	private int receiverId;
+	private String receiverId;
 	// 현재 상태(대기중, 수락, 거절 등)
 	private String requestState;
 	private Date requestDate;

@@ -37,9 +37,9 @@ public class ManagerServiceImple implements ManagerService {
 	}
 
 	@Override
-	public int changeManager(ManagerVO managerVO) {
+	public int changeManager(int managerId, String memberId) {
 		log.info("changeManager");
-		int result = managerMapper.update(managerVO);
+		int result = managerMapper.update(managerId, memberId);
 		return result;
 	}
 

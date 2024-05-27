@@ -128,6 +128,36 @@ body {
 	background-color: #0d2f74;
 	color: #ffffff;
 }
+
+.frame-container {
+            display: none; /* Initially hidden */
+            position: fixed;
+            top: 20%;
+            right: 10%;
+            width: 30%;
+            height: 60%;
+            border: 1px solid #000;
+            background: #fff;
+            z-index: 1000;
+}
+
+iframe {
+    width: 100%;
+    height: 100%;
+    border: none;
+}
+
+.overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 999;
+}
+
 </style>
 
 </head>

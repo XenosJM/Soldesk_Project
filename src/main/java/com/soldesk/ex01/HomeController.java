@@ -1,25 +1,20 @@
 package com.soldesk.ex01;
 
-import java.text.DateFormat;
-import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.soldesk.ex01.domain.BoardVO;
-import com.soldesk.ex01.domain.ManagerVO;
 import com.soldesk.ex01.domain.MemberVO;
 import com.soldesk.ex01.service.BoardService;
 import com.soldesk.ex01.service.MemberService;
@@ -30,10 +25,11 @@ import lombok.extern.log4j.Log4j;
  * Handles requests for the application home page.
  */
 @Controller
+@CrossOrigin(origins = "http://localhost:3000")
 @Log4j
 public class HomeController {
 	
-	private static final Logger logger = LoggerFactory.getLogger(HomeController.class);
+//	private static final Logger logger = LoggerFactory.getLogger(HomeController.class); // 롬복 log4j를 안쓸경우 사용하는 logging 방법
 	
 	@Autowired
 	private MemberService memberService;
@@ -120,10 +116,5 @@ public class HomeController {
 		return "redirect:/";
 	}
 	
-	@GetMapping("manager/select")
-	@ResponseBody
-	public void getAllManager(Model model, ManagerVO managerVO) {
-		log.info("getAllManager()");
-
-	}
+	
 }
