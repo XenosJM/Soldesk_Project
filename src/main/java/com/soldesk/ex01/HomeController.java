@@ -16,8 +16,10 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.soldesk.ex01.domain.BoardVO;
+import com.soldesk.ex01.domain.ManagerVO;
 import com.soldesk.ex01.domain.MemberVO;
 import com.soldesk.ex01.service.BoardService;
 import com.soldesk.ex01.service.MemberService;
@@ -116,5 +118,12 @@ public class HomeController {
 		session.removeAttribute("memberId");
 
 		return "redirect:/";
+	}
+	
+	@GetMapping("manager/select")
+	@ResponseBody
+	public void getAllManager(Model model, ManagerVO managerVO) {
+		log.info("getAllManager()");
+
 	}
 }

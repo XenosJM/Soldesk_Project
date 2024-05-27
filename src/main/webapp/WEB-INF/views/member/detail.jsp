@@ -16,8 +16,8 @@
 					
 	<c:choose>
     <c:when test="${empty memberVO.memberProperty}">
-        <label for="buyProperty">
-            현재 보유중인 상품이 없습니다. 구매하러 가시겠습니까?<!-- //TODO 변경할 예정 -->
+        <label for="buyProperty"
+            >현재 보유중인 상품이 없습니다. 구매하러 가시겠습니까?<!-- //TODO 변경할 예정 -->
             <input type="submit" id="buyProperty" onclick="location.href='http://localhost:8080/ex01/shop/imoji'" value="상점">
         </label>
         <br>
@@ -113,7 +113,7 @@ $(document).ready(function(){
     	if(memberProperties == 'null' ||  memberProperties.length === 0){
     		$('#emptyProperty').html(
     				'<label for="btnBuyProperty">현재 보유중인 상품이 없습니다. 구매하러 가시겠습니까?<br>'
-    		        + '<button type="button" id="btnBuyProperty" class="btn btn-primary">상점</button></label></div>'
+    		        + '<button type="button" id="btnBuyProperty" class="btn btn-primary">상점</button></label>'
     				);
     		
     	} else {
