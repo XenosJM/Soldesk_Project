@@ -35,7 +35,7 @@ public class AttachMapperTest {
 	private void testAttachInsert() {
 		AttachVO vo = new AttachVO();
 		vo.setBoardId(1);
-		vo.setAttachId(120);
+		//vo.setAttachId(120);
 		vo.setAttachPath("/24/05/14");
 		vo.setAttachRealName("test");
 		vo.setAttachChgName("sdasdajskdaksmdk");

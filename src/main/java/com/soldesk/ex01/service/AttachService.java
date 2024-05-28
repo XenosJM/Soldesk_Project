@@ -7,10 +7,10 @@ import com.soldesk.ex01.domain.AttachVO;
 public interface AttachService {
    
     int createAttach(AttachVO attachVO);
-    AttachVO getAttachById(int attachId);
+    AttachVO getAttachById(int boardId);
     List<Integer> getAllId();
     int updateAttach(AttachVO attachVO);
-    int deleteAttach(int attachId);
+    int deleteAttach(int boardId);
     AttachVO getAttachByBoardId(int boardId);
 
 }

@@ -97,7 +97,7 @@ public class FriendController {
 		return new ResponseEntity<Integer>(result, HttpStatus.OK);
 	}
 	
-	@GetMapping("/getRequest/{memberId}")
+	@GetMapping("/geFriend/{memberId}")
 	public ResponseEntity<List<FriendVO>> getFriendList(@PathVariable("memberId") String memberId){
 		log.info("getFriendList()");
 		List<FriendVO> friendList = friendService.friendList(memberId);

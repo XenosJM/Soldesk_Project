@@ -16,9 +16,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	</resultMap>
 	
 	<insert id="insert"> 
-		INSERT INTO ATTACH (ATTACH_ID, BOARD_ID,
+		INSERT INTO ATTACH (BOARD_ID,
 		ATTACH_PATH, ATTACH_REAL_NAME, ATTACH_CHG_NAME, ATTACH_EXTENSION)
-		VALUES (ATTACH_SEQ.NEXTVAL, board_seq.currval, #{attachPath},
+		VALUES ((SELECT MAX(BOARD_ID) FROM BOARD WHERE BOARD_ID = ATTACH_ID), #{attachPath},
 		#{attachRealName}, #{attachChgName}, #{attachExtension}) 
 	</insert>
 	
