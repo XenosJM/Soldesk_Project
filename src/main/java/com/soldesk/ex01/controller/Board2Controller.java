@@ -55,7 +55,7 @@ public class Board2Controller {
 	private RereplyService rereplyService;
 
 
-	@PostMapping("/regist")
+	@PostMapping("/registest")
 	public String registerPost(Board2VO vo, RedirectAttributes reAttr) {
 		log.info("board controller : registerPost()");
 		log.info("board controller : Board2VO =" + vo);
@@ -76,10 +76,7 @@ public class Board2Controller {
 	
 
 	   
-	   @GetMapping("/register")
-	   public void registerGET() {
-	      log.info("registerGET()");
-	   } // end registerGET()
+	   
 
 	  
 	   @PostMapping("/attach")
