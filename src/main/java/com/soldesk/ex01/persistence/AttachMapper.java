@@ -9,9 +9,9 @@ import com.soldesk.ex01.domain.AttachVO;
 @Mapper
 public interface AttachMapper {
     int insert(AttachVO attach);
-    AttachVO selectByAttachId(int attachId);
+    AttachVO selectByAttachId(int boardId);
     List<Integer> selectIdList();
     int update(AttachVO attach);
-    int delete(int attachId);
+    int delete(int boardId);
     AttachVO selectByBoardId(int boardId);
 }

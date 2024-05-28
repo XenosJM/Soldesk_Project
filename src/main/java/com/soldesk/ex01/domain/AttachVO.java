@@ -14,7 +14,6 @@ import lombok.ToString;
 @Setter
 @ToString 
 public class AttachVO {
-   private int attachId;
    private int boardId;
    private String attachPath;
    private String attachRealName;

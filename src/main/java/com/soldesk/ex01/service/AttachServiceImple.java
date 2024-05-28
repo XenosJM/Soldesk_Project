@@ -26,9 +26,9 @@ public class AttachServiceImple implements AttachService {
     }
 
     @Override
-    public AttachVO getAttachById(int attachId) {
+    public AttachVO getAttachById(int boardId) {
        log.info("getAttachById()");
-        return attachMapper.selectByAttachId(attachId);
+        return attachMapper.selectByAttachId(boardId);
     }
     
     @Override
@@ -44,9 +44,9 @@ public class AttachServiceImple implements AttachService {
     }
 
     @Override
-    public int deleteAttach(int attachId) {
+    public int deleteAttach(int boardId) {
        log.info("deleteAttach()");	
-        return attachMapper.delete(attachId);
+        return attachMapper.delete(boardId);
     }
 
 	@Override
