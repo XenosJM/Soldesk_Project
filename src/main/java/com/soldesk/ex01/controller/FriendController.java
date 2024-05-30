@@ -97,7 +97,7 @@ public class FriendController {
 		return new ResponseEntity<Integer>(result, HttpStatus.OK);
 	}
 	
-	@GetMapping("/geFriend/{memberId}")
+	@GetMapping("/getFriend/{memberId}")
 	public ResponseEntity<List<FriendVO>> getFriendList(@PathVariable("memberId") String memberId){
 		log.info("getFriendList()");
 		List<FriendVO> friendList = friendService.friendList(memberId);
@@ -111,7 +111,7 @@ public class FriendController {
 		return new ResponseEntity<Integer>(result, HttpStatus.OK);
 	}
 	
-	@PostMapping("/delete")
+	@PostMapping("/delete/{friendshipId}")
 	public ResponseEntity<Integer> deleteFriend(@PathVariable("friendshipId") int friendshipId){
 		log.info("deleteFriend()");
 		int result = friendService.deleteFriend(friendshipId);

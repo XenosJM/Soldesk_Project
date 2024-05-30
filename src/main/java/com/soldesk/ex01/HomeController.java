@@ -14,9 +14,13 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.soldesk.ex01.domain.BoardVO;
+import com.soldesk.ex01.domain.FriendVO;
 import com.soldesk.ex01.domain.MemberVO;
 import com.soldesk.ex01.service.BoardService;
+import com.soldesk.ex01.service.FriendService;
 import com.soldesk.ex01.service.MemberService;
 
 import lombok.extern.log4j.Log4j;
@@ -36,6 +40,12 @@ public class HomeController {
 	
 	@Autowired
 	private BoardService boardService;
+	
+	@Autowired
+	private FriendService friendService;
+	
+	
+	
 	/**
 	 * Simply selects the home view to render by returning its name.
 	 */
@@ -116,5 +126,14 @@ public class HomeController {
 		return "redirect:/";
 	}
 	
+	
+	@GetMapping("member/friendList")
+	public void getFriendList(Model model, HttpServletRequest req) throws JsonProcessingException {
+		HttpSession session = req.getSession();
+		List<FriendVO> friendList = friendService.friendList((String)session.getAttribute("memberId"));
+		ObjectMapper objectMapper = new ObjectMapper();
+	    String friendListJson = objectMapper.writeValueAsString(friendList);
+	    model.addAttribute("friendList", friendListJson);
+	}
 	
 }

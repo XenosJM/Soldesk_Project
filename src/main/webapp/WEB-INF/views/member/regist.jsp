@@ -484,11 +484,6 @@ body {
 	          </span>
 	          <span id="emailMsg"></span>
 	          
-	          <!-- <span>
-	            <button id="btnEmailAuth">이메일 인증하기</button>
-	            <br>
-	          </span>
-	          <span id="emailAuthMsg"></span> -->
 	        </div>
 	      </div>
 	      <!-- 스프링 시큐리티를 사용하면 모든 post 전송에 csrf 토큰을 추가해야 함 -->
@@ -641,14 +636,14 @@ body {
 	  					$('#btnEmailAuth').css("display", "none");
 	  					emailFlag = false;
 	  				} else {
-	  					if($('#authSpan').length > 0){
+	  					if($('#btnSendCode').length > 0){
 	  						
 	  					} else{
-	  					$('#emailMsg').html("사용가능한 이메일입니당.");
-	  					$('#emailMsg').css("color", "green");
-	  					$('#authSpan').html("<span><button id='btnSendCode'>이메일 인증하기</button><br></span><span id='emailAuthMsg'></span>");
-	  					// $('#btnEmailAuth').css("display", "block")
-	  					emailFlag = true;
+		  					$('#emailMsg').html("사용가능한 이메일입니당.");
+		  					$('#emailMsg').css("color", "green");
+		  					$('#authSpan').html("<span><button id='btnSendCode'>이메일 인증하기</button><br></span><span id='emailAuthMsg'></span>");
+		  					// $('#btnEmailAuth').css("display", "block")
+		  					emailFlag = true;
 	  					}
 	  				}
 	  			}

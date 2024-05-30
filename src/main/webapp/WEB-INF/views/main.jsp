@@ -1,281 +1,290 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
-	pageEncoding="UTF-8"%>
+    pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ page session="true"%>
+<!DOCTYPE html>
+<html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>메인 페이지</title>
-<style>
-/* styles.css */
-@font-face {
-	font-family: 'Pretendard-Regular';
-	src:
-		url('https://cdn.jsdelivr.net/gh/Project-Noonnu/noonfonts_2107@1.1/Pretendard-Regular.woff')
-		format('woff');
-	font-weight: 400;
-	font-style: normal;
-}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>메인 페이지</title>
+    <style>
+        /* styles.css */
+        @font-face {
+            font-family: 'Pretendard-Regular';
+            src: url('https://cdn.jsdelivr.net/gh/Project-Noonnu/noonfonts_2107@1.1/Pretendard-Regular.woff') format('woff');
+            font-weight: 400;
+            font-style: normal;
+        }
 
-body {
-	font-family: 'Pretendard-Regular';
-	margin: 0;
-	padding: 0;
-}
+        body {
+            font-family: 'Pretendard-Regular';
+            margin: 0;
+            padding: 0;
+        }
 
-.vertical-header {
-	position: fixed;
-	left: 0;
-	top: 0;
-	width: 300px; /* 사이드 메뉴 너비를 300px로 설정 */
-	height: 100%; /* 헤더의 높이, 화면 전체 */
-	background-color: #153f93; /* 배경색상은 여기서는 검은색으로 지정 */
-	color: white;
-	padding-top: 20px; /* 로고와 메뉴 사이의 간격 */
-	text-align: center; /* 수평 가운데 정렬 */
-}
-
-.vertical-header .momenu, .menu, .mologo, .mobanner2, .mobanner3, .box,
-	.box2 {
-	display: none;
-}
-
-.vertical-header .logo {
-	display: block;
-	margin: auto;
-	max-width: 200px; /* 로고의 최대 너비 지정 */
-	padding-bottom: 20px; /* 로고와 메뉴 사이의 간격 */
-}
-
-.login-container {
-	width: 90%; /* 로그인 컨테이너의 너비를 90%로 지정 */
-	margin: 0 auto;
-	padding-top: 15px;
-	padding-bottom: 15px;
-	background-color: #0d2f74;
-	border-radius: 10px; /* 테두리를 부드럽게 만들기 위해 추가 */
-}
-
-.login-container h2 {
-	text-align: left;
-	font-size: 20px;
-	margin-left: 20px; /* 왼쪽 여백 축소 */
-	margin-bottom: 15px;
-}
-
-.login-container input[type="text"], .login-container input[type="password"],
-	.login-container input[type="submit"] {
-	width: 90%; /* 입력 필드 및 버튼 너비를 90%로 지정 */
-	margin: 10px auto; /* 상하 여백을 중앙으로 정렬 */
-	display: block; /* 한 줄에 하나씩 표시 */
-	padding: 10px;
-	border: 1px solid #ccc;
-	border-radius: 5px;
-	box-sizing: border-box;
-}
-
-.login-container input[type="submit"] {
-	background-color: #153f93;
-	color: white;
-	border: none;
-	border-radius: 5px;
-	cursor: pointer;
-}
-
-.login-container p {
-	text-align: center;
-	margin-top: 15px;
-	font-size: 15px;
-}
-
-.login-container p a {
-	color: #FFFFFF;
-	text-decoration: none;
-	margin: 25px;
-}
-
-.vertical-header nav {
-	padding-top: 10px;
-	overflow: hidden;
-}
-
-.vertical-header nav ul {
-	list-style: none;
-	padding: 0;
-	margin: 0; /* 추가 */
-}
-
-.vertical-header nav ul li {
-	margin: 15px 0;
-	padding: 10px 20px; /* 메뉴 간격을 조정 */
-}
-
-.vertical-header nav ul li a {
-	color: white;
-	text-decoration: none;
-	font-size: 17px;
-	display: flex;
-	align-items: center;
-}
-
-.vertical-header nav ul li img {
-	width: 32px; /* 이미지의 너비 */
-	height: 32px; /* 이미지의 높이 */
-	margin-right: 10px; /* 텍스트와 이미지 사이의 간격 */
-}
-
-.vertical-header nav ul li:hover {
-	background-color: #0d2f74;
-	color: #ffffff;
-}
-
-.frame-container {
-            display: none; /* Initially hidden */
+        .vertical-header {
             position: fixed;
-            top: 20%;
-            right: 10%;
-            width: 30%;
-            height: 60%;
-            border: 1px solid #000;
-            background: #fff;
-            z-index: 1000;
-}
+            left: 0;
+            top: 0;
+            width: 300px;
+            height: 100%;
+            background-color: #153f93;
+            color: white;
+            padding-top: 20px;
+            text-align: center;
+        }
 
-iframe {
-    width: 100%;
-    height: 100%;
-    border: none;
-}
+        .vertical-header .momenu, .menu, .mologo, .mobanner2, .mobanner3, .box, .box2 {
+            display: none;
+        }
 
-.overlay {
-    display: none;
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.5);
-    z-index: 999;
-}
+        .vertical-header .logo {
+            display: block;
+            margin: auto;
+            max-width: 200px;
+            padding-bottom: 20px;
+        }
 
-</style>
+        .login-container {
+            width: 90%;
+            margin: 0 auto;
+            padding-top: 15px;
+            padding-bottom: 15px;
+            background-color: #0d2f74;
+            border-radius: 10px;
+        }
 
+        .login-container h2 {
+            text-align: left;
+            font-size: 20px;
+            margin-left: 20px;
+            margin-bottom: 15px;
+        }
+
+        .login-container input[type="text"], .login-container input[type="password"], .login-container input[type="submit"] {
+            width: 90%;
+            margin: 10px auto;
+            display: block;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-sizing: border-box;
+        }
+
+        .login-container input[type="submit"] {
+            background-color: #153f93;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .login-container p {
+            text-align: center;
+            margin-top: 15px;
+            font-size: 15px;
+        }
+
+        .login-container p a {
+            color: #FFFFFF;
+            text-decoration: none;
+            margin: 25px;
+        }
+
+        .vertical-header nav {
+            padding-top: 10px;
+            overflow: hidden;
+        }
+
+        .vertical-header nav ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .vertical-header nav ul li {
+            margin: 15px 0;
+            padding: 10px 20px;
+        }
+
+        .vertical-header nav ul li a {
+            color: white;
+            text-decoration: none;
+            font-size: 17px;
+            display: flex;
+            align-items: center;
+        }
+
+        .vertical-header nav ul li img {
+            width: 32px;
+            height: 32px;
+            margin-right: 10px;
+        }
+
+        .vertical-header nav ul li:hover {
+            background-color: #0d2f74;
+            color: #ffffff;
+        }
+
+       .frame-container {
+		    display: none;
+		    position: fixed;
+		    bottom: 20px; /* 화면 하단으로부터 20px 떨어진 위치 */
+		    right: 20px;
+		    width: 20%;
+		    height: 40%;
+		    border: 1px solid #000;
+		    background: #fff;
+		}
+
+        iframe {
+            width: 100%;
+            height: 90%; /* Close 버튼 공간을 위해 높이 조정 */
+            border: none;
+        }
+       
+    </style>
 </head>
-<script src="https://code.jquery.com/jquery-3.7.1.js"></script>
 <body>
 
-	<div class="vertical-header">
-		<div class="logo">
-			<a href="/ex01/"><img src="images/logo.png" alt="메인로고"></a>
-			<!-- 로고 이미지 -->
-		</div>
-		<div class="login-container" id="loginContainer"></div>
+    <!-- 사이드 메뉴 -->
+    <div class="vertical-header">
+        <div class="logo">
+            <a href="/ex01/"><img src="images/logo.png" alt="메인로고"></a>
+        </div>
+        <div class="login-container" id="loginContainer"></div>
 
+        <nav>
+            <ul>
+                <li><a href="/ex01/board/list"><img src="" alt="">전체게시판</a></li>
+                <li><a href="/ex01/board/reverse1999"><img src="" alt="">리버스1999</a></li>
+                <li><a href="/ex01/board/starrail"><img src="" alt="">붕괴스타레일</a></li>
+                <li><a href="#"><img src="" alt="">작혼 : 리치마작</a></li>
+                <li><a href="#"><img src="" alt="">니케</a></li>
+                <li><a href="#"><img src="" alt="">마작일번가</a></li>
+            </ul>
+        </nav>
+    </div>
 
-		<nav>
-			<ul>
-				<li><a href="/ex01/board/list"><img src="" alt="">
-						전체게시판</a></li>
-				<li><a href="/ex01/board/reverse1999"><img src="" alt="">
-						리버스1999</a></li>
-				<li><a href="/ex01/board/starrail"><img src="" alt="">
-						붕괴스타레일</a></li>
-				<li><a href="#"><img src="" alt=""> 작혼 : 리치마작</a></li>
-				<li><a href="#"><img src="" alt=""> 니케</a></li>
-				<li><a href="#"><img src="" alt=""> 마작일번가</a></li>
-			</ul>
-		</nav>
+    <!-- 메인 화면 배너들 -->
+    <div>
+        <div id="Wrap">
+            <div class="banner">
+                <a href="/ex01/member/regist"><img src="images/banner1.png" alt="메인 배너"></a>
+            </div>
+
+            <div class="banner2">
+                <div class="title">
+                    <a><img src="images/title.jpg" alt="타이틀"></a>
+                </div>
+                <ul>
+                    <li><a><img src="*" alt="info"></a></li>
+                    <li><a><img src="*" alt="proceeds"></a></li>
+                    <li><a><img src="*" alt="best"></a></li>
+                    <li><a><img src="*" alt="statistics"></a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- iframe을 포함하는 컨테이너 -->
+    <div class="frame-container" id="frameContainer">
+    	<iframe id="myIframe"></iframe>
 	</div>
-	<!-- 사이드 배너 -->
 
-	<div>
-		<div id="Wrap">
-			<div class="banner">
-				<a href="/ex01/member/regist"><img src="images/banner1.png"
-					alt="메인 배너"></a>
-			</div>
+    <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
+    <script type="text/javascript">
+        $(function () {
+            if (${empty sessionScope.memberId}) {
+                $('#loginContainer').html(
+                    '<h2>로그인</h2>'
+                    + '<input type="text" id="memberId" name="memberId" placeholder="아이디">'
+                    + '<input type="password" id="memberPassword" name="memberPassword" placeholder="비밀번호"><br>'
+                    + '<button id="check">로그인</button>'
+                    + '<button id="joinMember">회원가입</button>'
+                    + '<button id="findIdPw">ID/PW찾기</button>'
+                );
+            } else {
+                $('#loginContainer').html(
+                    '<h3>${sessionScope.memberId}</h3>'
+                    + '<button id="detail">내 정보 보기</button>'
+                    + '<button id="checkout">로그아웃</button>'
+                    + '<button id="friendList">친구목록보기</button>'
+                );
+            }
 
-			<div class="banner2">
-				<div class="title">
-					<a><img src="images/title.jpg" alt="타이틀"></a>
-				</div>
-				<ul>
-					<li><a><img src="*" alt="info"></a></li>
-					<li><a><img src="*" alt="proceeds"></a></li>
-					<li><a><img src="*" alt="best"></a></li>
-					<li><a><img src="*" alt="statistics"></a></li>
-				</ul>
-			</div>
-		</div>
+            $(document).on('click', '#check', function () {
+                let memberId = $('#memberId').val();
+                let memberPassword = $('#memberPassword').val();
+                $.ajax({
+                    type: 'POST',
+                    url: 'member/check',
+                    contentType: 'application/json; charset=UTF-8',
+                    data: JSON.stringify({
+                        memberId: memberId,
+                        memberPassword: memberPassword
+                    }),
+                    success: function (result) {
+                        if (result == 1) {
+                            alert(memberId + '님 어서오세요.');
+                            $('#loginContainer').html(
+                                '<h3>' + memberId + '</h3>'
+                                + '<button id="detail">내 정보 보기</button>'
+                                + '<button id="checkout">로그아웃</button>'
+                                + '<button id="friendList">친구목록보기</button>'
+                            );
+                        } else {
+                            alert('입력하신 정보를 다시한번 확인해주세요.');
+                        }
+                    }
+                }); // end ajax
+            });
 
-	</div>
-	<!-- 메인 화면 배너들 -->
-	<script type="text/javascript">
-		$(function(){
-			
-			if(${empty sessionScope.memberId }){
-				$('#loginContainer').html(
-						'<h2>로그인</h2>'
-						+ '<input type="text" id="memberId" name="memberId" placeholder="아이디">'
-						+ '<input type="password" id="memberPassword" name="memberPassword" placeholder="비밀번호"><br>'
-						+ '<button id="check">로그인</button>'
-						+ '<button id="joinMember">회원가입</button>'
-						+ '<button id="findIdPw">ID/PW찾기</button>'
-				);
-			} else{
-				$('#loginContainer').html(
-						'<h3>${sessionScope.memberId}</h3>'
-						+ '<button id="detail">내 정보 보기</button>'
-						+ '<button id="checkout">로그아웃</button>'
-				);
-			}
-			
-			$(document).on('click', '#check', function(){
-				
-				let memberId = $('#memberId').val();
-				let memberPassword = $('#memberPassword').val();
-				let data = 
-				$.ajax({
-					type : 'POST',
-					url : 'member/check',
-					contentType: 'application/json; charset=UTF-8',
-					data : JSON.stringify({
-						memberId : memberId,
-						memberPassword : memberPassword					
-				}),					
-					success : function(result){
-						if(result == 1){
-							alert(memberId + '님 어서오세요.');
-							$('#loginContainer').html(
-									'<h3>'+memberId+'</h3>'
-									+ '<button id="detail">내 정보 보기</button>'
-									+ '<button id="checkout">로그아웃</button>'
-							);
-						} else{
-							alert('입력하신 정보를 다시한번 확인해주세요.');
-						}
-					}
-				}); // end ajax
-			});
-			
-			$(document).on('click', '#joinMember', function(){
-				window.location.href="member/regist";
-			});
-			
-			$(document).on('click', '#findIdPw', function(){
-				window.location.href="member/findIdPw";
-			});
-			
-			$(document).on('click', '#detail', function(){
-				window.location.href="member/detail";
-			});
-			
-			$(document).on('click', '#checkout', function(){
-				window.location.href="member/checkout";
-			});
-			
-		}); // end $(document).ready(function(){
-		
-	</script>
+            $(document).on('click', '#joinMember', function () {
+                window.location.href = "member/regist";
+            });
+
+            $(document).on('click', '#findIdPw', function () {
+                window.location.href = "member/findIdPw";
+            });
+
+            $(document).on('click', '#detail', function () {
+                window.location.href = "member/detail";
+            });
+
+            $(document).on('click', '#checkout', function () {
+                window.location.href = "member/checkout";
+            });
+
+        });
+
+        // iframe에 관련된 함수와 변수명 정의
+         $(document).on('click', '#friendList', function() {
+            let frameContainer = $('#frameContainer');
+            if (frameContainer.css('display') === 'none' || frameContainer.css('display') === '') {
+            	frameContainer.css('display', 'block');
+            	$('#loginContainer').find('#friendList').remove();
+            	$('#loginContainer').append('<button id="friendListClose">친구목록 닫기</button>')
+                $('#myIframe').attr('src', 'member/friendList'); // 불러올 JSP 파일의 경로 설정
+            } else {
+            	
+            }
+        });
+        
+        $(document).on('click', '#friendListClose', function(){
+        	let frameContainer = $('#frameContainer');
+        	frameContainer.css('display', 'none');
+        	$('#loginContainer').find('#friendListClose').remove();
+        	$('#loginContainer').append('<button id="friendList">친구목록보기</button>')
+            $('#myIframe').attr('src', 'about:blank');
+        });
+        
+    </script>
 </body>
 </html>
+
+
+
+
+

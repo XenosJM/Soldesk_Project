@@ -46,18 +46,18 @@ public class UtilRESTController {
 	private MemberService memberService;
 	
 	@GetMapping("/checkId/{memberId}")
-	public ResponseEntity<String> checkId(@PathVariable("memberId")String memberId){
+	public ResponseEntity<Integer> checkId(@PathVariable("memberId")String memberId){
 		log.info("checkId()");
 		log.info(memberId);
 //		MemberVO memberVO = utilService.checkId(memberId);
 //		log.info(memberVO);
-		String result = (utilService.checkId(memberId) != null) ? "1" : "0";
-		return new ResponseEntity<String>(result,HttpStatus.OK);
+		int result = (utilService.checkId(memberId) != null) ? 1 : 0;
+		return new ResponseEntity<Integer>(result,HttpStatus.OK);
 		
 	}
 	
 	@GetMapping("/checkEmail")
-	public ResponseEntity<String> checkEmail(@RequestParam("memberEmail")String memberEmail) {
+	public ResponseEntity<Integer> checkEmail(@RequestParam("memberEmail")String memberEmail) {
 		log.info("checkEmail()");
 //		log.info("memberEmailId : " + memberEmailId);
 //		log.info("domain : " + domain);
@@ -68,11 +68,12 @@ public class UtilRESTController {
 //		log.info("decodeDomain : " + decodeDomain);
 //		MemberVO memberVO = utilService.checkEmail(memberEmail);
 //		log.info(memberVO);
-		String result = (utilService.checkEmail(memberEmail) != null) ? "1" : "0";
-		return new ResponseEntity<String>(result, HttpStatus.OK);
+		int result = (utilService.checkEmail(memberEmail) != null) ? 1 : 0;
+		log.info(result);
+		return new ResponseEntity<Integer>(result, HttpStatus.OK);
 	}
 	
-	@PostMapping("/authCodeSend")
+	@GetMapping("/authCodeSend")
 	public ResponseEntity<Map<String, Integer>> AuthCodeSend(@RequestParam("memberEmail")String memberEmail){
 		int result = 0;
 		String authCode = null;
