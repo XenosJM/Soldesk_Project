@@ -2,7 +2,9 @@ package com.soldesk.ex01.controller;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.FileSystemResource;
@@ -109,25 +111,20 @@ public class BoardController {
 //	}
 	
 	@PostMapping("/regist")
-	public String registerPost(Board2VO vo, AttachVO attachvo,RedirectAttributes reAttr) {
+	public String registerPost(Board2VO vo, RedirectAttributes reAttr) {
 		log.info("board controller : registerPost()");
-		log.info("board controller : BoardVO =" + vo);
+		log.info("board controller : Board2VO =" + vo);
 		int result = board2Service.insertBoard(vo);
-		log.info("보드 "+result + "행 삽입");
-
-
-		MultipartFile file = attachvo.getFile();
-		log.info("file : "+file);
-		if (file.isEmpty() == false) {	
-			String chgName = UUID.randomUUID().toString();
-			attachvo.setAttachPath(FileUploadUtil.makeDatePath());
-			attachvo.setAttachRealName(FileUploadUtil.subStrName(file.getOriginalFilename()));
-			attachvo.setAttachChgName(chgName);
-			attachvo.setAttachExtension(FileUploadUtil.subStrExtension(file.getOriginalFilename()));
-			result = attachService.createAttach(attachvo);
-			log.info("어태치 "+result + "행 삽입");
-		}
-
+		log.info("보드 "+result + "행 삽입");		
+		AttachVO attach = vo.getAttachVO();
+		if (attach != null) {
+	        log.info("첨부 파일 경로: " + attach.getAttachPath());
+	        log.info("첨부 파일 실제 이름: " + attach.getAttachRealName());
+	        log.info("첨부 파일 변경된 이름: " + attach.getAttachChgName());
+	        log.info("첨부 파일 확장자: " + attach.getAttachExtension());
+	    } else {
+	        log.info("첨부 파일이 없습니다.");
+	    }
 		return "redirect:/";
 	}
 
@@ -172,7 +169,7 @@ public class BoardController {
 	// 첨부 파일 업로드 처리(POST)
 	@PostMapping("/attach")
 	@ResponseBody
-	public String attachPOST(AttachVO attachVO) {
+	public ResponseEntity<Map<String,String>> attachPOST(AttachVO attachVO) {
 		log.info("attachPost()");
 		log.info("attachVO = " + attachVO);
 		MultipartFile file = attachVO.getFile();
@@ -180,18 +177,19 @@ public class BoardController {
 		String chgName = UUID.randomUUID().toString();
 
 		FileUploadUtil.saveFile(uploadPath, file, chgName);
-
 		attachVO.setAttachPath(FileUploadUtil.makeDatePath());
-
 		attachVO.setAttachRealName(FileUploadUtil.subStrName(file.getOriginalFilename()));
-
 		attachVO.setAttachChgName(chgName);
-
 		attachVO.setAttachExtension(FileUploadUtil.subStrExtension(file.getOriginalFilename()));
 
 //		log.info(attachService.createAttach(attachVO) + "행 등록");
-
-		return "redirect";
+		
+		Map<String, String> response = new HashMap<>();		
+		response.put("attachPath",attachVO.getAttachPath());
+		response.put("attachRealName", attachVO.getAttachRealName());
+		response.put("attachChgName", attachVO.getAttachChgName());
+		response.put("attachExtension", attachVO.getAttachExtension());
+		return new ResponseEntity<>(response,HttpStatus.OK);
 	} // end attachPOST()
 
 	// 첨부 파일 다운로드(GET)

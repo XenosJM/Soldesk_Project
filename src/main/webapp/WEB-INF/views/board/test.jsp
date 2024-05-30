@@ -84,8 +84,13 @@
 					data : formData,
 					contentType : false,
 					processData : false,
-					success : function(result) {
-						console.log("결과 : " + result);
+					success : function(response) {
+						console.log("결과 : " + response);
+						
+						$('#boardForm').append('<input type="hidden" name="attachVO.attachPath" value=" '+response.attachPath+' ">');
+                        $('#boardForm').append('<input type="hidden" name="attachVO.attachRealName" value="' + response.attachRealName + '">');
+                        $('#boardForm').append('<input type="hidden" name="attachVO.attachChgName" value="' + response.attachChgName + '">');
+                        $('#boardForm').append('<input type="hidden" name="attachVO.attachExtension" value="' + response.attachExtension + '">');
 						
 					},
 					error : function(xhr, status, error) {
