@@ -109,18 +109,16 @@
 	    });
 	    
     	$(document).on('click', '#btnShowFriendList', function(){
-    		$('#tabList').html('');
-    	    let onlineListHTML = '';
-    	    $.each(onlineFriend, function(index, friend){
-    	        onlineListHTML += '<li class="online">' + friend.friendMemberId + '</li>';
-    	    });
-
-    	    let offlineListHTML = '';
-    	    $.each(offlineFriend, function(index, friend){
-    	        offlineListHTML += '<li class="offline">' + friend.friendMemberId + '</li>';
-    	    });
-
-    	    $('#tabList').html(
+    		let memberId = ${sessionScope.memberId};
+    		$.ajax({
+    			type : 'GET',
+    			url : '../friend/getFriend/' + memberId, 
+    			success : function(){
+    				
+    			}
+    		});
+    		
+    		$('#tabList').html(
     	        '<div id="onlineOfflineTab" class="tab-content active">'
     	        + '<h3>온라인 친구</h3>'
     	        + '<ul class="friend-list" id="onlineFriend">'
