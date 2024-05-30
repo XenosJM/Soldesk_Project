@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.soldesk.ex01.domain.Board2VO;
+import com.soldesk.ex01.persistence.AttachMapper;
 import com.soldesk.ex01.persistence.Board2Mapper;
 
 
@@ -17,10 +18,16 @@ public class Board2ServiceImple implements Board2Service {
 	
 	@Autowired
 	Board2Mapper board2Mapper;
+	
+	@Autowired
+	AttachMapper attachMapper;
 	@Override
 	public int insertBoard(Board2VO vo) {
 		log.info("service : insertBoard()");
 		int result = board2Mapper.insertBoard(vo);
+		log.info("board2Mapper.insert 결과 : "+result);
+		result = attachMapper.insert(vo.getAttachVO());
+		log.info("attachMapper.inster 결과 : "+result);
 		return result;
 	}
 
