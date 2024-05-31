@@ -20,7 +20,6 @@ import lombok.extern.log4j.Log4j;
 
 @RestController
 @RequestMapping(value="/manager")
-@CrossOrigin(origins = "http://localhost:3000")
 @Log4j
 public class ManagerController {
 	

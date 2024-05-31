@@ -46,8 +46,8 @@
 <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
     <div class="tabs">
     	<button id="btnShowFriendList" class="tab active">친구 목록</button>
-        <button id="btnSendRequestList" class="tab">보낸 요청</button>
-        <button id="btnReceiveRequestList" class="tab">받은 요청</button>
+        <!-- <button id="btnSendRequestList" class="tab">보낸 요청</button>
+        <button id="btnReceiveRequestList" class="tab">받은 요청</button> -->
     </div>
 	<div id="tabList" class="tab">
 	    <div id="onlineOfflineTab" class="tab-content active">
@@ -60,7 +60,7 @@
 	    </div>
 	</div>
 
-    <div id="sentRequestTab" class="tab-content">
+    <!-- <div id="sentRequestTab" class="tab-content">
         <h3>친구 요청 보낸 목록</h3>
         <ul class="friend-list" id="sendRequest">
         </ul>
@@ -70,7 +70,7 @@
         <h3>친구 요청 받은 목록</h3>
         <ul class="friend-list" id="receiveRequest">
         </ul>
-    </div>
+    </div> -->
 	
     <script type="text/javascript">
     $(document).ready(function(){
@@ -108,7 +108,7 @@
 	        $('#offlineFriend').append('<li class="offline">' + friend.friendMemberId + '</li>');
 	    });
 	    
-    	$(document).on('click', '#btnShowFriendList', function(){
+    	/* $(document).on('click', '#btnShowFriendList', function(){
     		let memberId = ${sessionScope.memberId};
     		$.ajax({
     			type : 'GET',
@@ -138,7 +138,7 @@
     	
     	$(document).on('click', '#btnReceiveRequestList', function(){
     		
-    	});
+    	}); */
     	
     });
     </script>

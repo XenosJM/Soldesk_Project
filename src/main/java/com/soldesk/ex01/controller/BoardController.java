@@ -107,7 +107,7 @@ public class BoardController {
 		int result = boardService.insertBoard(vo);
 		log.info(result + "Çà »ğÀÔ");
 
-		return "redirect:/";
+		return "redirect:/board/list";
 	}
 	
 //	@PostMapping("/regist")

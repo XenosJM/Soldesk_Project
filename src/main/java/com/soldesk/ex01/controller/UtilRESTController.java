@@ -5,6 +5,7 @@ import java.util.Map;
 
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
+import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -154,9 +155,9 @@ public class UtilRESTController {
 	}
 	
 	@PostMapping("/modifyPw")
-	public ResponseEntity<Integer> updatePw(@RequestBody Map<String, String> res ){
+	public ResponseEntity<Integer> updatePw(@RequestBody Map<String, String> res, HttpSession session){
 		MemberVO memberVO = new MemberVO();
-		memberVO.setMemberId(res.get("memberId"));
+		memberVO.setMemberId((String) session.getAttribute("memberId"));
 //		log.info(memberVO.getManagerId());
 		memberVO.setMemberEmail(res.get("memberEmail"));
 //		log.info(memberVO.getMemberEmail());

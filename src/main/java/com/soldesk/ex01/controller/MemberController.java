@@ -28,7 +28,6 @@ import lombok.extern.log4j.Log4j;
 
 @RestController
 @RequestMapping(value="/member")
-@CrossOrigin(origins = "http://localhost:3000")
 @Log4j
 public class MemberController {
 	

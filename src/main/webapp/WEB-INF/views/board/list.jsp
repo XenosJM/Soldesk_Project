@@ -26,7 +26,7 @@ li {
 </head>
 <body>
 		<div class="logo">
-          <a href="/ex01/"><img src="images/logo.png" alt="랩탑로고"> <!-- 로고 이미지 --></a>
+          <a href="/ex01/">메인페이지 <!-- 로고 이미지 --></a>
         </div>
 	<h1>게시판</h1>
 	<!-- 글 작성 페이지 이동 버튼 -->

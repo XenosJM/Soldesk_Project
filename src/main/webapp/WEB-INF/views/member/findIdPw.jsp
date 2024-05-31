@@ -255,32 +255,58 @@ body {
 	  			}
 	  		});	// end ajax
 	  	} // end checkMail
-		
+	  	let countdown;
+		let timerInterval;
+		let sendMailFlag = true;
 		function authCodeSend(memberEmail) {
-			  		
-			if(idFlag && emailFlag){
-				$.ajax({
-					type : "POST",
-					url : "../util/authCodeSend/",
-					data : {
-						memberEmail : memberEmail
-					},
-					success : function(response) {
-						if (response.result == 1) {
-							checkAuthCode = response.authCode;
-							console.log(checkAuthCode);
-							alert('성공적으로 메일이 보내졌습니다. 확인해 주세요.');
-							$('#emailAuthMsgForPw').html(
-									'<input id="authCode" type="number" class="memberEmail" placeholder="코드를 입력해 주세요.">' +
-									'<br><button id="btnCodeCheck">인증확인</button><br><span id="checkAuthMsg"></span>');
-							$('#btnCodeCheck').show();
-						} else {
-							alert("잠시후 다시 눌러주세요.");
+			if(sendMailFlag){
+				if(idFlag && emailFlag){
+					$.ajax({
+						type : "GET",
+						url : "../util/authCodeSend/",
+						data : {memberEmail : memberEmail},
+						success : function(response) {
+							if (response.result == 1) {
+								checkAuthCode = response.authCode;
+								console.log(checkAuthCode);
+								alert('성공적으로 메일이 보내졌습니다. 확인해 주세요.');
+								$('#emailAuthMsgForPw').html(
+										'<input id="authCode" type="number" class="memberEmail" placeholder="코드를 입력해 주세요.">' +
+										'<br><button id="btnCodeCheck">인증확인</button><br><span id="checkAuthMsg"></span>' +
+										'<span id="timer"></span>');
+								$('#btnCodeCheck').show();
+								
+								sendMailFlag = false;
+								checkAuthCode = response.authCode; // 인증코드
+						   		let count = 30; // 타이머 지속 시간 (초)
+						   		countdown = function(){
+					               if (count > 0) {
+					                   count--; // 지속 시간 감소
+					                   let min = Math.floor(count / 60); // 남은 분 계산
+					                   let sec = count % 60; // 남은 초 계산
+					                   sec = sec < 10 ? '0' + sec : sec;
+					                 $('#timer').text(
+					               		  '0' + min + ':' + sec
+					                 );
+					               } else {
+					                   checkAuthCode = null; // 인증 코드를 무효화
+					                   clearInterval(timerInterval); // 타이머 정지
+					                   sendMailFlag = true;
+					                   alert('코드 인증시간이 만료되었습니다.'); // 사용자에게 알림
+					               }
+					           } // end countdown
+						        // 매 초마다 countdown 함수 호출        	
+						        timerInterval = setInterval(countdown, 1000);
+							} else {
+								alert("잠시후 다시 눌러주세요.");
+							}
 						}
-					}
-				}); // end ajax
-			} else{
-				alert('뭔갈 안하셧습니다.');
+					}); // end ajax
+				} else{
+					alert('뭔갈 안하셧습니다.');
+				}
+			} else {
+				alert('인증을 이미 하셨거나, 이메일이 보내졌습니다. 인증시간 만료후 다시 눌러주세요.');
 			}
 		} // end authCodeSend()
 		
@@ -311,6 +337,8 @@ body {
 			
 			if (checkAuthCode == authCode) {
 				alert('인증에 성공하셨습니다.');
+				clearInterval(timerInterval);
+				sendMailFlag = false;
 				$('#checkAuthMsg').html(
 									'<h3 class="join-title">'
 									+ '<label for="memberPw">비밀번호</label>'

@@ -654,7 +654,7 @@ body {
 			authCodeSend($('#memberEmail').val());
 		}); // end btnSendCode
 		
-		function authCodeSend(memberEmail){
+		/* function authCodeSend(memberEmail){
 			
 			$.ajax({
 				type : "GET",
@@ -663,16 +663,71 @@ body {
 				success : function(response){
 					if(response.result === 1){
 						alert("작성하신 이메일로 확인 코드가 발송되었습니다.");
-						$('#emailAuthMsg').html("<input id='authCode' type='number' placeholder='코드를 입력해 주세요.'><button id='btnCodeCheck'>인증확인</button><br><span id='checkAuthMsg'></span>");
+						$('#emailAuthMsg').html("<input id='authCode' type='number' placeholder='코드를 입력해 주세요.'><button id='btnCodeCheck'>인증확인</button><br><span id='checkAuthMsg'></span>"
+								+ 
+						);
 						checkAuthCode = response.authCode;
-						console.log(checkAuthCode);
+						let codeTime = function(){
+							checkAuthCode = null;
+							alert('코드 인증시간이 만료되었습니다.')
+						}
+						setTimer(codeTime, 60000);
+						// console.log(checkAuthCode);
 					} else{
 						alert("잠시후 다시 눌러주세요.");
 					}
 				}
 			}); // end ajax
+		} // end authCodeSend() */
+		let countdown;
+		let timerInterval;
+		let sendMailFlag = true;
+		function authCodeSend(memberEmail) {
+			if(sendMailFlag){
+			    $.ajax({
+			        type: "GET", // GET 요청 타입
+			        url: "../util/authCodeSend/", // 요청을 보낼 URL
+			        data: { memberEmail: memberEmail }, // 요청에 포함할 데이터
+			        success: function(response) { // 요청이 성공적으로 완료되었을 때 실행할 함수
+			            if (response.result === 1) { // 서버로부터 성공 응답을 받았을 때
+			                alert("작성하신 이메일로 확인 코드가 발송되었습니다.");
+			                $('#emailAuthMsg').html(
+			                    "<input id='authCode' type='number' placeholder='코드를 입력해 주세요.'>" +
+			                    "<button id='btnCodeCheck'>인증확인</button><br>" +
+			                    "<span id='checkAuthMsg'></span><br>" +
+			                    '<span id="timer"></span>'
+			                );
+			                sendMailFlag = false;
+			                checkAuthCode = response.authCode; // 인증코드
+					   		let count = 30; // 타이머 지속 시간 (초)
+					   		countdown = function(){
+				               if (count > 0) {
+				                   count--; // 지속 시간 감소
+				                   let min = Math.floor(count / 60); // 남은 분 계산
+				                   let sec = count % 60; // 남은 초 계산
+				                   sec = sec < 10 ? '0' + sec : sec;
+				                 $('#timer').text(
+				               		  '0' + min + ':' + sec
+				                 );
+				               } else {
+				                   checkAuthCode = null; // 인증 코드를 무효화
+				                   clearInterval(timerInterval); // 타이머 정지
+				                   alert('코드 인증시간이 만료되었습니다.'); // 사용자에게 알림
+				                   sendMailFlag = true;
+				               }
+				           } // end countdown
+					        // 매 초마다 countdown 함수 호출        	
+					        timerInterval = setInterval(countdown, 1000);
+			            } else {
+			                alert("잠시후 다시 눌러주세요."); // 서버로부터 실패 응답을 받았을 때
+			            }
+			        }
+			    }); // end ajax
+			} else{
+				alert('인증을 이미 하셨거나, 이메일이 보내졌습니다. 인증시간 만료후 다시 눌러주세요.');
+			}
 		} // end authCodeSend()
-		
+        
 		$(document).on('click', '#btnCodeCheck', function(){
 			codeCheck($('#authCode').val());
 		});
@@ -696,6 +751,8 @@ body {
 			if(authCode == checkAuthCode){
 				alert("인증에 성공하셨습니다.");
 				$('#checkAuthMsg').html('인증코드가 확인되었습니다.');
+				clearInterval(timerInterval);
+				sendMailFlag = false;
 				$('#checkAuthMsg').css('color', 'green');
 				emailAuthFlag = true;
 			} else{
@@ -706,18 +763,40 @@ body {
 			}
 		};
 		
+		let timeout = function(){
+			
+		}
 		
 	  	
 	  	$('#btnJoin').click(function(){
-	  		console.log('idFlag : ' + idFlag);
+	  		/* console.log('idFlag : ' + idFlag);
 	  		console.log('pwFlag : ' + pwFlag);
 	  		console.log('pwConfirmFlag : ' + pwConfirmFlag);
 	  		console.log('emailFlag : ' + emailFlag);
-	  		console.log('emailAuthFlag : ' + emailAuthFlag);
+	  		console.log('emailAuthFlag : ' + emailAuthFlag); */
+	  		let memberId = $('#memberId').val();
+	  		let memberPassword = $('#memberPassword').val();
+	  		let memberEmail = $('#memberEmail').val();
 	  		setTimeout(function(){
 	  			if(idFlag && pwFlag && pwConfirmFlag && emailFlag && emailAuthFlag){
-	  				$('#joinForm').submit();
-	  				alert($('#memberId').val() + "님의 회원가입을 환영합니다.");
+	  				$.ajax({
+	  					type : 'POST',
+	  					url : 'regist',
+	  					contentType: 'application/json; charset=UTF-8',
+	  					data : JSON.stringify({
+	  						memberId : memberId,
+	  						memberPassword : memberPassword,
+	  						memberEmail : memberEmail
+	  					}),
+	  					success : function(result){
+	  						if(result === 1){
+				  				alert($('#memberId').val() + "님의 회원가입을 환영합니다.");
+				  				window.location.href = 'http://192.168.0.120:8080/ex01/';
+	  						} else {
+	  							alert('서버에 문제가 있는거 같습니다 잠시후 다시 시도해주세요');
+	  						}
+	  					}
+	  				});
 	  			} else {
 	  				alert("뭔갈 안하셧어요");
 	  			}

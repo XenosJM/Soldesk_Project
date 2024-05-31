@@ -151,42 +151,17 @@
     <!-- 사이드 메뉴 -->
     <div class="vertical-header">
         <div class="logo">
-            <a href="/ex01/"><img src="images/logo.png" alt="메인로고"></a>
         </div>
         <div class="login-container" id="loginContainer"></div>
 
         <nav>
             <ul>
-                <li><a href="/ex01/board/list"><img src="" alt="">전체게시판</a></li>
-                <li><a href="/ex01/board/reverse1999"><img src="" alt="">리버스1999</a></li>
-                <li><a href="/ex01/board/starrail"><img src="" alt="">붕괴스타레일</a></li>
-                <li><a href="#"><img src="" alt="">작혼 : 리치마작</a></li>
-                <li><a href="#"><img src="" alt="">니케</a></li>
-                <li><a href="#"><img src="" alt="">마작일번가</a></li>
+                <li><a href="/ex01/board/list">전체게시판</a></li>
             </ul>
         </nav>
     </div>
 
-    <!-- 메인 화면 배너들 -->
-    <div>
-        <div id="Wrap">
-            <div class="banner">
-                <a href="/ex01/member/regist"><img src="images/banner1.png" alt="메인 배너"></a>
-            </div>
-
-            <div class="banner2">
-                <div class="title">
-                    <a><img src="images/title.jpg" alt="타이틀"></a>
-                </div>
-                <ul>
-                    <li><a><img src="*" alt="info"></a></li>
-                    <li><a><img src="*" alt="proceeds"></a></li>
-                    <li><a><img src="*" alt="best"></a></li>
-                    <li><a><img src="*" alt="statistics"></a></li>
-                </ul>
-            </div>
-        </div>
-    </div>
+   
 
     <!-- iframe을 포함하는 컨테이너 -->
     <div class="frame-container" id="frameContainer">
