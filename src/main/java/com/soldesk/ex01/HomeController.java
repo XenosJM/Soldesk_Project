@@ -33,7 +33,6 @@ import lombok.extern.log4j.Log4j;
  * Handles requests for the application home page.
  */
 @Controller
-@CrossOrigin(origins = "http://localhost:3000")
 @Log4j
 public class HomeController {
 
