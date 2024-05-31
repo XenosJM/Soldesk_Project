@@ -30,7 +30,7 @@
 
 		<div>
 			<p>파일 업로드 :</p>
-			<input id="test" type="file" name="file">
+			<input id="test" type="file" name="file" multiple>
 		</div>
 
 		<div>
@@ -53,30 +53,40 @@
 
 			$("#test").change(function(event) {
 				var fileInput = $(this);
-				var file = fileInput.prop('files')[0]; // file 객체 참조
-				var fileName = fileInput.val();
+				var files = fileInput.prop('files'); // file 객체 참조
 
 				console.log("fileInput : " + fileInput);
-				console.log("file : " + file);
-				console.log("fileName : " + fileName);
+				console.log("files : " + files);
+				
+				if (files.length > 3) {
+		            alert("최대 " + 3 + "개의 파일만 첨부할 수 있습니다.");
+		            fileInput.val(''); // 파일 선택 해제
+		            return;
+		        }
 
-				if (file) { // 파일이 선택된 경우에만 체크
+				var formData = new FormData();
+				var maxSize = 10 * 1024 * 1024; // 10 MB 
+
+				for (var i = 0; i < files.length; i++) {
+					var file = files[i];
+					var fileName = file.name;
+
+					console.log("fileName : " + fileName);
+
 					if (blockedExtensions.test(fileName)) { // 차단된 확장자인 경우
 						alert("이 확장자의 파일은 첨부할 수 없습니다.");
 						fileInput.val(''); // 파일 선택 해제
 						return;
 					}
 
-					var maxSize = 10 * 1024 * 1024; // 10 MB 
 					if (file.size > maxSize) {
 						alert("파일 크기가 너무 큽니다. 최대 크기는 10MB입니다.");
 						fileInput.val(''); // 파일 선택 해제
 						return;
 					}
-				}
 
-				var formData = new FormData();
-				formData.append('file', file);
+					formData.append('file', file);
+				}
 
 				$.ajax({
 					url : '../board/attach',
@@ -86,12 +96,13 @@
 					processData : false,
 					success : function(response) {
 						console.log("결과 : " + response);
-						
-						$('#boardForm').append('<input type="hidden" name="attachVO.attachPath" value=" '+response.attachPath+' ">');
-                        $('#boardForm').append('<input type="hidden" name="attachVO.attachRealName" value="' + response.attachRealName + '">');
-                        $('#boardForm').append('<input type="hidden" name="attachVO.attachChgName" value="' + response.attachChgName + '">');
-                        $('#boardForm').append('<input type="hidden" name="attachVO.attachExtension" value="' + response.attachExtension + '">');
-						
+
+						response.forEach(function(item, index) {
+							$('#boardForm').append('<input type="hidden" name="attachVO[' + index + '].attachPath" value="' + item.attachPath + '">');
+							$('#boardForm').append('<input type="hidden" name="attachVO[' + index + '].attachRealName" value="' + item.attachRealName + '">');
+							$('#boardForm').append('<input type="hidden" name="attachVO[' + index + '].attachChgName" value="' + item.attachChgName + '">');
+							$('#boardForm').append('<input type="hidden" name="attachVO[' + index + '].attachExtension" value="' + item.attachExtension + '">');
+						});
 					},
 					error : function(xhr, status, error) {
 						console.error("에러 발생: " + error);

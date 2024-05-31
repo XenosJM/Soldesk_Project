@@ -8,7 +8,7 @@ import com.soldesk.ex01.domain.AttachVO;
 
 @Mapper
 public interface AttachMapper {
-    int insert(AttachVO attach);
+    int insert(AttachVO attachVO);
     AttachVO selectByAttachId(int boardId);
     List<Integer> selectIdList();
     int update(AttachVO attach);

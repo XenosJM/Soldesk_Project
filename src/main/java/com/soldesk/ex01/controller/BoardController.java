@@ -42,8 +42,8 @@ import lombok.extern.log4j.Log4j;
 public class BoardController {
 
 	@Autowired
-	private BoardService boardService;	
-	
+	private BoardService boardService;
+
 	@Autowired
 	private String uploadPath;
 
@@ -55,7 +55,7 @@ public class BoardController {
 
 	@Autowired
 	private RereplyService rereplyService;
-	
+
 	@Autowired
 	private Board2Service board2Service;
 
@@ -84,49 +84,51 @@ public class BoardController {
 //		return "redirect:/";
 //	}
 
-	@PostMapping("/regist")
-	public String registerPost(BoardVO vo, RedirectAttributes reAttr) {
-		log.info("board controller : registerPost()");
-		log.info("board controller : BoardVO =" + vo);
-
-		MultipartFile file = vo.getFile();
-
-		if (file.isEmpty()) {
-			vo.setAttachPath("");
-			vo.setAttachRealName("");
-			vo.setAttachChgName("");
-			vo.setAttachExtension("");
-		} else {
-			String chgName = UUID.randomUUID().toString();
-			FileUploadUtil.saveFile(uploadPath, file, chgName);
-			vo.setAttachPath(FileUploadUtil.makeDatePath());
-			vo.setAttachRealName(FileUploadUtil.subStrName(file.getOriginalFilename()));
-			vo.setAttachChgName(chgName);
-			vo.setAttachExtension(FileUploadUtil.subStrExtension(file.getOriginalFilename()));
-		}
-		int result = boardService.insertBoard(vo);
-		log.info(result + "행 삽입");
-
-		return "redirect:/board/list";
-	}
-	
 //	@PostMapping("/regist")
-//	public String registerPost(Board2VO vo, RedirectAttributes reAttr) {
+//	public String registerPost(BoardVO vo, RedirectAttributes reAttr) {
 //		log.info("board controller : registerPost()");
-//		log.info("board controller : Board2VO =" + vo);
-//		int result = board2Service.insertBoard(vo);
-//		log.info("보드 "+result + "행 삽입");		
-//		AttachVO attach = vo.getAttachVO();
-//		if (attach != null) {
-//	        log.info("첨부 파일 경로: " + attach.getAttachPath());
-//	        log.info("첨부 파일 실제 이름: " + attach.getAttachRealName());
-//	        log.info("첨부 파일 변경된 이름: " + attach.getAttachChgName());
-//	        log.info("첨부 파일 확장자: " + attach.getAttachExtension());
-//	    } else {
-//	        log.info("첨부 파일이 없습니다.");
-//	    }
+//		log.info("board controller : BoardVO =" + vo);
+//
+//		MultipartFile file = vo.getFile();
+//
+//		if (file.isEmpty()) {
+//			vo.setAttachPath("");
+//			vo.setAttachRealName("");
+//			vo.setAttachChgName("");
+//			vo.setAttachExtension("");
+//		} else {
+//			String chgName = UUID.randomUUID().toString();
+//			FileUploadUtil.saveFile(uploadPath, file, chgName);
+//			vo.setAttachPath(FileUploadUtil.makeDatePath());
+//			vo.setAttachRealName(FileUploadUtil.subStrName(file.getOriginalFilename()));
+//			vo.setAttachChgName(chgName);
+//			vo.setAttachExtension(FileUploadUtil.subStrExtension(file.getOriginalFilename()));
+//		}
+//		int result = boardService.insertBoard(vo);
+//		log.info(result + "행 삽입");
+//
 //		return "redirect:/";
 //	}
+
+	@PostMapping("/regist")
+	public String registerPost(Board2VO vo, RedirectAttributes reAttr) {
+		log.info("board controller : registerPost()");
+		log.info("board controller : Board2VO =" + vo);
+		int result = board2Service.insertBoard(vo);
+		log.info("보드 " + result + "행 삽입");
+		AttachVO[] attach = vo.getAttachVO();
+		if (attach != null) {
+			for (int i = 0; i < attach.length; i++) {				
+				log.info("첨부 파일 경로: " + attach[i].getAttachPath());
+				log.info("첨부 파일 실제 이름: " + attach[i].getAttachRealName());
+				log.info("첨부 파일 변경된 이름: " + attach[i].getAttachChgName());
+				log.info("첨부 파일 확장자: " + attach[i].getAttachExtension());
+			}
+		} else {
+			log.info("첨부 파일이 없습니다.");
+		}
+		return "redirect:/board/list";
+	}
 
 	@PostMapping("/update")
 	public String updatePost(BoardVO vo, RedirectAttributes reAttr) {
@@ -169,7 +171,7 @@ public class BoardController {
 	// 첨부 파일 업로드 처리(POST)
 	@PostMapping("/attach")
 	@ResponseBody
-	public ResponseEntity<Map<String,String>> attachPOST(AttachVO attachVO) {
+	public ResponseEntity<Map<String, String>> attachPOST(AttachVO attachVO) {
 		log.info("attachPost()");
 		log.info("attachVO = " + attachVO);
 		MultipartFile file = attachVO.getFile();
@@ -183,13 +185,13 @@ public class BoardController {
 		attachVO.setAttachExtension(FileUploadUtil.subStrExtension(file.getOriginalFilename()));
 
 //		log.info(attachService.createAttach(attachVO) + "행 등록");
-		
-		Map<String, String> response = new HashMap<>();		
-		response.put("attachPath",attachVO.getAttachPath());
+
+		Map<String, String> response = new HashMap<>();
+		response.put("attachPath", attachVO.getAttachPath());
 		response.put("attachRealName", attachVO.getAttachRealName());
 		response.put("attachChgName", attachVO.getAttachChgName());
 		response.put("attachExtension", attachVO.getAttachExtension());
-		return new ResponseEntity<>(response,HttpStatus.OK);
+		return new ResponseEntity<>(response, HttpStatus.OK);
 	} // end attachPOST()
 
 	// 첨부 파일 다운로드(GET)

@@ -25,6 +25,7 @@ public class Board2VO {
 	private int boardReplyCount;
 	private int attachId;
 	
+	@Setter
 	@Getter
-	private AttachVO attachVO; 
+	private AttachVO[] attachVO = new AttachVO[3]; 
 }
