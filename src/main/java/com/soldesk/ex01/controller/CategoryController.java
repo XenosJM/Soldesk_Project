@@ -16,7 +16,6 @@ import lombok.extern.log4j.Log4j;
 
 @RestController
 @RequestMapping(value="/category")
-@CrossOrigin(origins = "http://localhost:3000")
 @Log4j
 public class CategoryController {
 	

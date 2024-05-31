@@ -65,16 +65,23 @@ public class HomeController {
 		return "main";
 	}
 
+//	@GetMapping("board/detail")
+//	@ResponseBody // JSON 데이터 반환을 위한 어노테이션 추가
+//	public ResponseEntity<BoardVO> boardDetail(@RequestParam Integer boardId) {
+//		log.info("board controller : detail()");
+//		BoardVO boardVO = boardService.selectDetail(boardId);
+//		if (boardVO != null) {
+//			return new ResponseEntity<>(boardVO, HttpStatus.OK);
+//		} else {
+//			return new ResponseEntity<>(HttpStatus.NOT_FOUND); // 해당 게시물이 없을 경우 404 응답 반환
+//		}
+//	}
+	
 	@GetMapping("board/detail")
-	@ResponseBody // JSON 데이터 반환을 위한 어노테이션 추가
-	public ResponseEntity<BoardVO> boardDetail(@RequestParam Integer boardId) {
+	public void boardDetail(Model model, Integer boardId) {
 		log.info("board controller : detail()");
 		BoardVO boardVO = boardService.selectDetail(boardId);
-		if (boardVO != null) {
-			return new ResponseEntity<>(boardVO, HttpStatus.OK);
-		} else {
-			return new ResponseEntity<>(HttpStatus.NOT_FOUND); // 해당 게시물이 없을 경우 404 응답 반환
-		}
+		model.addAttribute("boardVO", boardVO);
 	}
 
 	@GetMapping("board/regist")
@@ -82,10 +89,18 @@ public class HomeController {
 		log.info("board controller : registerGet()");
 	}
 
+//	@GetMapping("board/list")
+//	public ResponseEntity<List<BoardVO>> list() {
+//		List<BoardVO> boardList = boardService.selectList();
+//		return new ResponseEntity<>(boardList, HttpStatus.OK);
+//	}
+	
 	@GetMapping("board/list")
-	public ResponseEntity<List<BoardVO>> list() {
+	public void boardList(Model model) {
+		log.info("board controller : list()");
 		List<BoardVO> boardList = boardService.selectList();
-		return new ResponseEntity<>(boardList, HttpStatus.OK);
+
+		model.addAttribute("boardList", boardList);
 	}
 
 	@GetMapping("board/update")
