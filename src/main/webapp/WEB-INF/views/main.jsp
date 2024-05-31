@@ -225,7 +225,7 @@
             });
 
             $(document).on('click', '#detail', function () {
-                window.location.href = "member/detail";
+				window.location.href = "member/detail";	
             });
 
             $(document).on('click', '#checkout', function () {

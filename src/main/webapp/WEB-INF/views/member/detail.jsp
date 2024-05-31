@@ -4,6 +4,16 @@
 <html>
 <head>
 <meta charset="UTF-8">
+ <style>
+        .checkbox-container {
+            display: flex;
+            align-items: center;
+            margin-bottom: 5px; /* 각 항목 사이에 약간의 공백을 둡니다 */
+        }
+        .checkbox-container input {
+            margin-right: 10px; /* 체크박스와 텍스트 사이에 공백을 둡니다 */
+        }
+    </style>
 <title>회원 정보</title>
 </head>
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
@@ -11,7 +21,7 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 
 <body>
-		<h2><c:out value="${memberVO.memberId}님의 정보입니다."></c:out></h2>
+		<h2><c:out value="${memberVO.memberId}"></c:out>님의 정보입니다.</h2>
 		<br>
 	<div id="emailDiv">
 		<c:out value="현재 이메일 : ${memberVO.memberEmail}"></c:out>
@@ -19,22 +29,24 @@
 	<br>
 	<div id="passwordDiv"></div>
 	
-	<c:choose>
-	    <c:when test="${empty memberVO.memberProperty}">
-	    	<p>현재 보유중인 이모티콘이 없습니다. 구매하러 가시겠습니까?<!-- //TODO 변경할 예정 -->
-	        	<input type="submit" id="buyProperty" onclick="location.href='http://localhost:8080/ex01/shop/imoji'" value="상점">
-	        <br>
-	    </c:when>
-	    <c:when test="${not empty memberVO.memberProperty}">
-	        <p>현재 보유중인 상품 목록:</p>
-	        <ul>
-	            <c:forEach var="property" items="${memberVO.memberProperty}">
-	                <li>${property}</li>
-	            </c:forEach>
-	        </ul>
-	        <br>
-	    </c:when>
-	</c:choose>
+   	<div id="propertyDiv">
+		<c:choose>
+		    <c:when test="${empty memberVO.memberProperty}">
+		    	<p>현재 보유중인 이모티콘이 없습니다. 구매하러 가시겠습니까?<!-- //TODO 변경할 예정 -->
+		        	<input type="submit" id="buyProperty" onclick="location.href='http://localhost:8080/ex01/shop/imoji'" value="상점">
+		        <br>
+		    </c:when>
+		    <c:when test="${not empty memberVO.memberProperty}">
+		        <p>현재 보유중인 상품 목록:</p>
+			        <ul>
+			            <c:forEach var="property" items="${memberVO.memberProperty}">
+			                <li>${property}</li>
+			            </c:forEach>
+			        </ul>
+		        <br>
+		    </c:when>
+		</c:choose>
+  	</div>
 	
 	<c:out value="회원가입 날짜 : ${memberVO.memberRegistDate }"></c:out>
 	<br>
@@ -50,6 +62,7 @@
 			$('#btnModifyMember').hide();
 			
 			let memberId = '${memberVO.memberId}';
+			let memberProperty = '${memberVO.memberPropertyAsString}'
 			
 			let deleteFlag = false;
 			let pwFlag = false;
@@ -70,9 +83,25 @@
 							'<input type="password" class="form-control" id="passwordCheck" placeholder="한번더 비밀번호를 입력하세요."><span id="checkMsg"></span>' +
 		    				'<button type="button" id="btnPassword">비밀번호만 수정</button>'
 							);
-					$('li').append(
-							'<input type="checkBox">'
-					);
+					if(memberProperty == 'null' ||  memberProperty.length === 0){
+			    		$('#propertyDiv').html(
+			    				'<label for="btnBuyProperty">현재 보유중인 상품이 없습니다. 구매하러 가시겠습니까?<br>'
+			    		        + '<button type="button" id="btnBuyProperty" class="btn btn-primary">상점</button></label>'
+			    				);
+			    		
+			    	} else {
+			    		$('#propertyDiv').html('삭제할 이모티콘을 선택해 주세요.');
+				    	let propertyArray = memberProperty.replace(/^\[|\]$/g, '').split(', ');
+				    	// console.log(propertyArray);
+					    for(let i = 0; i < propertyArray.length; i++){
+					    	$('#propertyDiv').append(
+				                    '<div class="checkbox-container"><input type="checkbox" class="checkBox"><li style="list-style: none;">' + propertyArray[i] + '</li></div>'
+					    	);
+					    } // end for
+					    $('#propertyDiv').append(
+					    		'<button id="selectAll">전체 선택</button><br><button id="deleteSelect">선택 삭제</button>'
+					    		);
+			    	} // end if - else	
 				} else {
 					
 				}
