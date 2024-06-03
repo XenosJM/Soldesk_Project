@@ -117,28 +117,14 @@ public class MemberController {
 	@PostMapping("/deleteProperty")
 	public ResponseEntity<Integer> removeProperty(
 			@RequestParam("memberId") String memberId,
-			@RequestParam("propertyIndex") int propertyIndex
+			@RequestParam("propertyIndex") Integer[] propertyIndexList
 			) {
+		// 리스트로 받은 목록을 넘겨준다.
 		int result = 0;
-		MemberVO memberVO = memberService.getMemberById(memberId);
-		Integer[] propertyArray = memberVO.getMemberProperty();
-		
-		// 정수배열을 리스트로 변환
-		List<Integer> list = new ArrayList<>(Arrays.asList(propertyArray));
-		list.remove(propertyIndex);
-		// 리스트를 배열로 변환
-		propertyArray = list.toArray(new Integer[0]);
-		
-		if(propertyArray.length == 0 || propertyArray == null) {
-			// 배열이 비어있거나 없으면
-			memberVO.setMemberProperty(new Integer[0]);
-		} else {
-			// 배열에 값이 있다면.
-			memberVO.setMemberProperty(propertyArray);
-		}
-		
-		memberService.updateMemberProperty(memberVO);
-		result = 1;
+		MemberVO memberVO = new MemberVO();
+		memberVO.setMemberId(memberId);
+		memberVO.setMemberProperty(propertyIndexList);
+		result = memberService.updateMemberProperty(memberVO);
 		
 		return new ResponseEntity<Integer>(result, HttpStatus.OK);
 	}

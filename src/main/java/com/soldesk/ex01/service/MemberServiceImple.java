@@ -1,5 +1,8 @@
 package com.soldesk.ex01.service;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Iterator;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -57,6 +60,50 @@ public class MemberServiceImple implements MemberService{
 	@Override
 	public int updateMemberProperty(MemberVO memberVO) {
 		log.info("updateMemberProperty()");
+		
+		// 전달받은 삭제할 상품 배열의 각 값에 접근하기위한 Array배열 선언
+		List<Integer> deletePropertyList = new ArrayList<>();
+		for(int deleteItem : memberVO.getMemberProperty()) {
+			deletePropertyList.add(deleteItem);
+		}
+		// 원래 회원의 상품 배열에 접근하기위한 Array배열 선언
+		MemberVO checkVO = memberMapper.selectByMemberId(memberVO.getMemberId());
+		List<Integer> originalPropertyList = new ArrayList<>();
+		for(int originalItem : checkVO.getMemberProperty()) {
+			originalPropertyList.add(originalItem);
+		}
+//		// 삭제할 아이템과 같은 아이템을 원래 배열에서 제거
+//		for(int i = 0; i < checkVO.getMemberProperty().length; i++) {
+//			
+//			if(originalPropertyList.get(i).equals(deletePropertyList.get(i))) {
+//				deletePropertyList.remove(i);
+//			}
+//		}
+		// Iterator를 사용하여 원래 배열에서 삭제할 아이템과 같은 아이템 제거
+		Iterator<Integer> itr = originalPropertyList.iterator();
+		while (itr.hasNext()) {
+	        Integer item = itr.next();
+	        if (deletePropertyList.contains(item)) {
+	            itr.remove();
+	        }
+	    }
+		
+		Integer[] propertyArray = originalPropertyList.toArray(new Integer[0]);
+		checkVO.setMemberProperty(propertyArray);
+		
+//		// 정수배열을 리스트로 변환
+//		List<Integer> list = new ArrayList<>(Arrays.asList(propertyArray));
+//		list.remove(propertyIndex);
+//		// 리스트를 배열로 변환
+//		propertyArray = list.toArray(new Integer[0]);
+//		
+//		if(propertyArray.length == 0 || propertyArray == null) {
+//			// 배열이 비어있거나 없으면
+//			memberVO.setMemberProperty(new Integer[0]);
+//		} else {
+//			// 배열에 값이 있다면.
+//			memberVO.setMemberProperty(propertyArray);
+//		}
 		int result = memberMapper.updateProperty(memberVO);
 		return result;
 	}

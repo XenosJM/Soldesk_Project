@@ -12,6 +12,7 @@
         }
         .checkbox-container input {
             margin-right: 10px; /* 체크박스와 텍스트 사이에 공백을 둡니다 */
+            margin-left: 10px;
         }
     </style>
 <title>회원 정보</title>
@@ -56,6 +57,23 @@
 	<button id="btnModifyMember" class="btn btn-primary">전체 수정하기</button>
 	<button id="btnBackward" class="btn btn-primary">뒤로가기</button>
 	
+	<div class="modal" id="checkModal">
+    	<div class="modal-dialog">
+	        <div class="modal-content">
+	            <div class="modal-header">
+	                <h4 class="modal-title">비밀번호 확인</h4>
+	                <button type="button" class="close" data-dismiss="modal">&times;</button>
+	            </div>
+	            <div class="modal-body">
+           			<input type="password" class="form-control" id="memberPassword" placeholder="비밀번호를 입력하세요.">
+    				<button type="button" class="close" id="btnPasswordCheck">비밀번호 확인</button>
+    				<span id="modalCheckMsg"></span>
+	            </div>
+        	</div>
+       	</div>
+   	</div>
+	        	
+	
 	<script type="text/javascript">
 		$(document).ready(function(){
 			$('#btnModifyCancel').hide();
@@ -64,49 +82,70 @@
 			let memberId = '${memberVO.memberId}';
 			let memberProperty = '${memberVO.memberPropertyAsString}'
 			
-			let deleteFlag = false;
-			let pwFlag = false;
-			let pwCheckFlag = false;
-			let emailFlag = false;
+			let modifyFlag = false
 			
-			let countModify = 0;
-			$(document).on('click', '#btnModify', function(){
-				countModify++;
-				if(countModify === 1){
-					$('#emailDiv').append(
-							'<input type="email" class="form-control" id="memberEmail" placeholder="이메일을 입력하세요.">' +
-							'<button id="btnSendCode">이메일 인증하기</button><br><span id="emailAuthMsg"></span>' +
-							'<button type="button" id="btnEmailModify">이메일만 수정</button>'
-							);
-					$('#passwordDiv').append(
-							'<input type="password" class="form-control" id="password" placeholder="비밀번호를 입력하세요."><span id="passwordMsg"></span>' +
-							'<input type="password" class="form-control" id="passwordCheck" placeholder="한번더 비밀번호를 입력하세요."><span id="checkMsg"></span>' +
-		    				'<button type="button" id="btnPassword">비밀번호만 수정</button>'
-							);
-					if(memberProperty == 'null' ||  memberProperty.length === 0){
-			    		$('#propertyDiv').html(
-			    				'<label for="btnBuyProperty">현재 보유중인 상품이 없습니다. 구매하러 가시겠습니까?<br>'
-			    		        + '<button type="button" id="btnBuyProperty" class="btn btn-primary">상점</button></label>'
-			    				);
-			    		
-			    	} else {
-			    		$('#propertyDiv').html('삭제할 이모티콘을 선택해 주세요.');
-				    	let propertyArray = memberProperty.replace(/^\[|\]$/g, '').split(', ');
-				    	// console.log(propertyArray);
-					    for(let i = 0; i < propertyArray.length; i++){
-					    	$('#propertyDiv').append(
-				                    '<div class="checkbox-container"><input type="checkbox" class="checkBox"><li style="list-style: none;">' + propertyArray[i] + '</li></div>'
-					    	);
-					    } // end for
-					    $('#propertyDiv').append(
-					    		'<button id="selectAll">전체 선택</button><br><button id="deleteSelect">선택 삭제</button>'
-					    		);
-			    	} // end if - else	
-				} else {
-					
-				}
+			$(document).on('click', '#btnModify', function(){ // 수정하기 버튼을 누르면
+				 $('#checkModal').modal('show');
 			});
 			
+			let countModify = 0;
+			 $(document).on('click', '#btnPasswordCheck', function () { // 비밀번호 확인 버튼 누를시
+	                let memberPassword = $('#memberPassword').val();
+	                $.ajax({
+	                    type: 'POST',
+	                    url: '../member/check',
+	                    contentType: 'application/json; charset=UTF-8',
+	                    data: JSON.stringify({
+	                        memberId: memberId,
+	                        memberPassword: memberPassword
+	                    }),
+	                    success: function (result) {
+	                        if (result == 1) {
+	                        	modifyFlag = true;
+	                        	$('#checkModal').modal('hide'); // 모달 닫기
+	                        	$('#memberPassword').val(''); // 비밀번호 초기화
+	                        	countModify++;
+	            				if(countModify === 1){
+	            					$('#emailDiv').append(
+	            							'<input type="email" class="form-control" id="memberEmail" placeholder="이메일을 입력하세요.">' +
+	            							'<button id="btnSendCode">이메일 인증하기</button><br><span id="emailAuthMsg"></span>' +
+	            							'<button type="button" id="btnEmailModify">이메일만 수정</button>'
+	            							);
+	            					$('#passwordDiv').append(
+	            							'<input type="password" class="form-control" id="password" placeholder="비밀번호를 입력하세요."><span id="passwordMsg"></span>' +
+	            							'<input type="password" class="form-control" id="passwordCheck" placeholder="한번더 비밀번호를 입력하세요."><span id="checkMsg"></span>' +
+	            		    				'<button type="button" id="btnPassword">비밀번호만 수정</button>'
+	            							);
+	            					if(memberProperty == 'null' ||  memberProperty.length === 0){
+	            			    		$('#propertyDiv').html(
+	            			    				'<label for="btnBuyProperty">현재 보유중인 상품이 없습니다. 구매하러 가시겠습니까?<br>'
+	            			    		        + '<button type="button" id="btnBuyProperty" class="btn btn-primary">상점</button></label>'
+	            			    				);
+	            			    		
+	            			    	} else {
+	            			    		$('#propertyDiv').html('삭제할 이모티콘을 선택해 주세요.');
+	            			    		// 배열의 [ , ]을 공백으로 바꾼후 ', ' 을 기준으로 자른 배열
+	            				    	let propertyArray = memberProperty.replace(/^\[|\]$/g, '').split(', ');
+	            				    	// console.log(propertyArray);
+	            					    for(let i = 0; i < propertyArray.length; i++){
+	            					    	$('#propertyDiv').append( // ul의 자식중 checkValue가 true인 애들의 가장 가까운 li의 text 또는 값을 가져다가 배열로 만들고 배열에 추가할 예정
+	            				                    '<div class="checkbox-container"><ul><li style="list-style: none;">' + propertyArray[i] + '</li><input type="checkbox" id="checkValue" class="checkBox"></ul></div>'
+	            					    	);
+	            					    } // end for
+	            					    $('#propertyDiv').append(
+	            					    		'<button id="selectAll">전체 선택</button><br><button id="deleteSelect">선택 삭제</button>'
+	            					    		);
+	            			    	} // end if - else	
+	            				} else {
+	            					
+	            				}
+	                        } else {
+	                            $('#modalCheckMsg').html('잘못 입력하셨습니다.');
+	                        }
+	                    }
+	                }); // end ajax
+	            });
+			 
 			$(document).on('click', '#modifyImoji', function(event){
 				console.log(this);
 		        $('#modifyModal').modal('show');
@@ -145,7 +184,7 @@
 		    	event.preventDefault();
 		    	
 		    	if($('#memberPw').length > 0){
-		    		console.log('나 여기있다.');
+		    		// 추가 생성방지
 		    	} else {
 		    		$('#modalPw').html(
 		    				'<input type="password" class="form-control" id="memberPassword" placeholder="비밀번호를 입력하세요.">'
