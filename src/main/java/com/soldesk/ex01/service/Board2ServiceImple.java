@@ -6,9 +6,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.soldesk.ex01.domain.Board2VO;
+import com.soldesk.ex01.domain.ReplyVO;
 import com.soldesk.ex01.persistence.AttachMapper;
 import com.soldesk.ex01.persistence.Board2Mapper;
-
+import com.soldesk.ex01.persistence.ReplyMapper;
+import com.soldesk.ex01.persistence.RereplyMapper;
 
 import lombok.extern.log4j.Log4j;
 
@@ -21,6 +23,14 @@ public class Board2ServiceImple implements Board2Service {
 	
 	@Autowired
 	AttachMapper attachMapper;
+	
+	@Autowired
+	ReplyMapper replyMapper;
+	
+	@Autowired
+	RereplyMapper rereplyMapper;
+	
+	
 	@Override
 	public int insertBoard(Board2VO vo) {
 		log.info("service : insertBoard()");
@@ -72,13 +82,21 @@ public class Board2ServiceImple implements Board2Service {
 	@Override
 	public int deleteBoard(int boardId) {
 		log.info("service : board deleteBoard()");
-		int result = board2Mapper.deleteBoard(boardId);
+		int result;
+		List<ReplyVO> list = replyMapper.selectReplyBoard(boardId);
+		for(int i = 0; i<list.size();i++) {
+			result = rereplyMapper.deleteRereplyToReply(list.get(i).getReplyId());
+		}
+		result = replyMapper.deleteReplyByBoard(boardId);
+		result = attachMapper.delete(boardId);
+		result = board2Mapper.deleteBoard(boardId);
 		return result;
 	}
 
 	@Override
 	public Board2VO selectDetail(int boardId) {
 		Board2VO vo = board2Mapper.selectDetail(boardId);
+		vo.setAttachVO(attachMapper.selectByBoardId(boardId));
 		return vo;
 	}
 

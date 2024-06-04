@@ -10,15 +10,16 @@ import lombok.Setter;
 import lombok.ToString;
 
 @NoArgsConstructor
-@Getter 
+@Getter
 @Setter
-@ToString 
+@ToString
 public class AttachVO {
-   private int boardId;
-   private String attachPath;
-   private String attachRealName;
-   private String attachChgName;
-   private String attachExtension;
-   private Date attachDateCreated;
-   private MultipartFile file;
+	private int attachId;
+	private int boardId;
+	private String attachPath;
+	private String attachRealName;
+	private String attachChgName;
+	private String attachExtension;
+	private Date attachDateCreated;
+	private MultipartFile file;
 }

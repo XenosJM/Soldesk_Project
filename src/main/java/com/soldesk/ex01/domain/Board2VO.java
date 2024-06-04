@@ -1,6 +1,7 @@
 package com.soldesk.ex01.domain;
 
 import java.util.Date;
+import java.util.List;
 
 import org.springframework.web.multipart.MultipartFile;
 
@@ -27,5 +28,5 @@ public class Board2VO {
 	
 	@Setter
 	@Getter
-	private AttachVO[] attachVO = new AttachVO[3]; 
+	private AttachVO[] attachVO; 
 }

@@ -11,6 +11,6 @@ public interface AttachService {
     List<Integer> getAllId();
     int updateAttach(AttachVO attachVO);
     int deleteAttach(int boardId);
-    AttachVO getAttachByBoardId(int boardId);
+    AttachVO[] getAttachByBoardId(int boardId);
 
 }

@@ -18,9 +18,11 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.soldesk.ex01.domain.Board2VO;
 import com.soldesk.ex01.domain.BoardVO;
 import com.soldesk.ex01.domain.FriendVO;
 import com.soldesk.ex01.domain.MemberVO;
+import com.soldesk.ex01.service.Board2Service;
 import com.soldesk.ex01.service.BoardService;
 import com.soldesk.ex01.service.FriendService;
 import com.soldesk.ex01.service.MemberService;
@@ -40,7 +42,7 @@ public class HomeController {
 	private MemberService memberService;
 
 	@Autowired
-	private BoardService boardService;
+	private Board2Service board2Service;
 	
 	@Autowired
 	private FriendService friendService;
@@ -78,8 +80,8 @@ public class HomeController {
 	@GetMapping("board/detail")
 	public void boardDetail(Model model, Integer boardId) {
 		log.info("board controller : detail()");
-		BoardVO boardVO = boardService.selectDetail(boardId);
-		model.addAttribute("boardVO", boardVO);
+		Board2VO board2VO = board2Service.selectDetail(boardId);
+		model.addAttribute("board2VO", board2VO);
 	}
 
 	@GetMapping("board/regist")
@@ -87,26 +89,22 @@ public class HomeController {
 		log.info("board controller : registerGet()");
 	}
 
-//	@GetMapping("board/list")
-//	public ResponseEntity<List<BoardVO>> list() {
-//		List<BoardVO> boardList = boardService.selectList();
-//		return new ResponseEntity<>(boardList, HttpStatus.OK);
-//	}
+
 	
 	@GetMapping("board/list")
 	public void boardList(Model model) {
 		log.info("board controller : list()");
-		List<BoardVO> boardList = boardService.selectList();
+		List<Board2VO> boardList = board2Service.selectList();
 
 		model.addAttribute("boardList", boardList);
 	}
 
-	@GetMapping("board/update")
-	public void boardUpdate(Model model, Integer boardId) {
-		log.info("board controller : updateGet()");
-		BoardVO boardVO = boardService.selectDetail(boardId);
-		model.addAttribute("boardVO", boardVO);
-	}
+//	@GetMapping("board/update")
+//	public void boardUpdate(Model model, Integer boardId) {
+//		log.info("board controller : updateGet()");
+//		BoardVO boardVO = board2Service.selectDetail(boardId);
+//		model.addAttribute("boardVO", boardVO);
+//	}
 
 	@GetMapping("member/regist")
 	public void joinMember() {

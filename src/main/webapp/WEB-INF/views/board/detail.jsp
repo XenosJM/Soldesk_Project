@@ -11,54 +11,59 @@
 	
 </script>
 <meta charset="UTF-8">
-<title>${boardVO.boardTitle }</title>
+<title>${board2VO.boardTitle }</title>
 </head>
 <body>
 	<h2>글 보기</h2>
 	<div>
-		<p>글 번호 : ${boardVO.boardId }</p>
+		<p>글 번호 : ${board2VO.boardId }</p>
 	</div>
 	<div>
 		<p>제목 :</p>
-		<p>${boardVO.boardTitle }</p>
+		<p>${board2VO.boardTitle }</p>
 	</div>
 	<div>
-		<p>작성자 : ${boardVO.memberId }</p>
+		<p>작성자 : ${board2VO.memberId }</p>
 		<!-- boardDateCreated 데이터 포멧 변경 -->
-		<fmt:formatDate value="${boardVO.boardRegistDate }"
+		<fmt:formatDate value="${board2VO.boardRegistDate }"
 			pattern="yyyy-MM-dd HH:mm:ss" var="boardRegistDate" />
 		<p>작성일 : ${boardRegistDate }</p>
 	</div>
 	<div>
-		<textarea rows="20" cols="120" readonly>${boardVO.boardContent }</textarea>
+		<textarea rows="20" cols="120" readonly>${board2VO.boardContent }</textarea>
 	</div>
 
-	<p>
-		첨부 파일 : <a href="download?boardId=${boardVO.boardId }">${boardVO.attachRealName }.${boardVO.attachExtension }</a>
-	</p>
+    <c:forEach var="attach" items="${board2VO.attachVO}">
+        <c:if test="${not empty attach}">
+            <p>
+                첨부 파일 : 
+                <a href="download?attachId=${attach.attachId}">
+                    ${attach.attachRealName}.${attach.attachExtension}
+                </a>
+            </p>
+        </c:if>
+    </c:forEach>
 
 
 	<button onclick="location.href='list'">글 목록</button>
-	<button onclick="location.href='update?boardId=${boardVO.boardId}'">글
+	<button onclick="location.href='update?boardId=${board2VO.boardId}'">글
 		수정</button>
 	<button id="deleteBoard">글 삭제</button>
 	<form id="deleteForm" action="delete" method="POST">
-		<input type="hidden" name="boardId" value="${boardVO.boardId }">
+		<input type="hidden" name="boardId" value="${board2VO.boardId }">
 	</form>
 
 
 	<script type="text/javascript">
 		$(document).ready(function() {
 			$(document).on('click', '#deleteBoard', function() {
-				if (confirm('삭제하시겠습니까?')) {
-
-					
+				if (confirm('삭제하시겠습니까?')) {					
 					$('#deleteForm').submit(); // form 데이터 전송
 				}
 			});
 		});
 	</script>
-	<input type="hidden" id="boardId" value="${boardVO.boardId}">
+	<input type="hidden" id="boardId" value="${board2VO.boardId}">
 
 	<hr>
 	<p3>댓글작성</p3>
