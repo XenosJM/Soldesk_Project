@@ -165,18 +165,7 @@ public class MemberController {
 		return new ResponseEntity<Integer>(result, HttpStatus.OK);
 	}
 	
-	@PostMapping("/modify")
-	public ResponseEntity<Integer> modifyMember(@RequestBody Map<String, String> res){
-		MemberVO memberVO = new MemberVO();
-		memberVO.setMemberId(res.get("memberId"));
-//		log.info(memberVO.getManagerId());
-		memberVO.setMemberPassword(res.get("memberPassword"));
-//		log.info(memberVO.getMemberPassword());
-		memberVO.setMemberEmail(res.get("memberEmail"));
-//		log.info(memberVO.getMemberEmail());
-		int result = memberService.updateMember(memberVO);
-		return new ResponseEntity<Integer>(result, HttpStatus.OK);
-	}
+	
 	
 }
 

@@ -116,13 +116,14 @@
 	            				if(countModify === 1){
 	            					$('#emailDiv').append(
 	            							'<input type="email" class="form-control" id="memberEmail" placeholder="이메일을 입력하세요.">' +
-	            							'<button id="btnSendCode">이메일 인증하기</button><br><span id="emailAuthMsg"></span>' +
+	            							'<span id="emailMsg"></span>' + 
+	            							'<button id="btnSendCode">이메일 인증하기</button><span id="emailAuthMsg"></span>' +
 	            							'<button type="button" id="btnEmailModify">이메일만 수정</button>'
 	            							);
 	            					$('#passwordDiv').append(
-	            							'<input type="password" class="form-control" id="password" placeholder="비밀번호를 입력하세요."><span id="passwordMsg"></span>' +
-	            							'<input type="password" class="form-control" id="passwordCheck" placeholder="한번더 비밀번호를 입력하세요."><span id="checkMsg"></span>' +
-	            		    				'<button type="button" id="btnPassword">비밀번호만 수정</button>'
+	            							'<input type="password" class="form-control" id="memberPassword" placeholder="비밀번호를 입력하세요."><span id="pwMsg"></span>' +
+	            							'<input type="password" class="form-control" id="memberPasswordCheck" placeholder="한번더 비밀번호를 입력하세요."><span id="pwConfirmMsg"></span>' +
+	            		    				'<button type="button" id="btnPasswordModify">비밀번호만 수정</button>'
 	            							);
 	            					if(memberProperty == 'null' ||  memberProperty.length === 0){
 	            			    		$('#propertyDiv').html(
@@ -160,10 +161,49 @@
 				 
 			 	let countdown;
 				let timerInterval;
-				let sendMailFlag = true; // 메일보내기 체커
+				let sendMailFlag = false; // 메일보내기 체커
 				let emailFlag = false; // 메일 인증 체커
-				let checkAuthCode; // 인증코드 
-				let memberEmail; // 이메일
+				let checkAuthCode; // 인증코드
+				
+				$(document).on('blur', '#memberEmail', function(){
+					
+	  				let memberEmail = $('#memberEmail').val();
+	  				let emailRegExp = /^[a-zA-Z0-9_-]+@[a-zA-Z0-9]+\.[a-zA-Z]{2,}$/;
+	  				// let emailRegExp = /(?:[a-zA-Z0-9._%+-]+@(?:naver\.com|daum\.net|kakao\.com|gmail\.com))/i;
+	  				console.log(memberEmail);
+	  				if(memberEmail === ""){
+	  					$('#emailMsg').html("이메일도 필수에오. 필수!");
+	  					$('#emailMsg').css("color", "red");
+	  					emailFlag = false;
+	  					return;
+	  				}
+	  				if(!emailRegExp.test(memberEmail)){
+	  					$('#emailMsg').html("유효한 형식의 이메일이 아니에오");
+	  					$('#emailMsg').css("color", "red");
+	  					emailFlag = false;
+	  				} else {
+			  			checkMail(memberEmail);
+		  		  	}
+				}) // end email 체크
+				
+				function checkMail(memberEmail){
+					$.ajax({
+			  			type : "GET",
+			  			url : "../util/checkEmail/",
+			  			data: { memberEmail : memberEmail },
+			  			success : function(result){
+			  				if(result == 1){
+			  					$('#emailMsg').html("누군가 벌써 사용중인 이메일입니다.");
+			  					$('#emailMsg').css("color", "red");
+			  					emailFlag = false;
+			  				} else {
+			  					$('#emailMsg').html("사용가능한 이메일입니당.");
+			  					$('#emailMsg').css("color", "green");
+			  					sendMailFlag = true;
+			  				}
+			  			}
+			  		});	// end ajax
+				}
 				
 				function authCodeSend(memberEmail) {
 					if(sendMailFlag){
@@ -182,6 +222,7 @@
 					                );
 					                sendMailFlag = false;
 					                checkAuthCode = response.authCode; // 인증코드
+					                console.log(checkAuthCode);
 							   		let count = 30; // 타이머 지속 시간 (초)
 							   		countdown = function(){
 						               if (count > 0) {
@@ -207,16 +248,17 @@
 					        }
 					    }); // end ajax
 					} else{
-						alert('인증을 이미 하셨거나, 이메일이 보내졌습니다. 인증시간 만료후 다시 눌러주세요.');
+						alert('인증을 이미 하셨거나, 사용이 불가능한 이메일 또는 이메일이 보내졌습니다. 인증시간 만료후 다시 눌러주세요.');
 					}
 				} // end authCodeSend()
 			 
 			$(document).on('click', '#btnCodeCheck', function(){
 				let checkCode = $('#authCode').val();
-				if(authCode == checkCode){
+				if(checkAuthCode == checkCode){
 					$('#checkAuthMsg').html('인증에 성공하셨습니다');
 					$('#checkAuthMsg').css('color', 'green');
 					emailFlag = true;
+					clearInterval(timerInterval);
 				} else{
 					$('#checkAuthMsg').html('인증에 실패했습니다.');
 					$('#checkAuthMsg').css('color', 'red');
@@ -224,29 +266,10 @@
 				}
 			});
 				
-			$(document).on('blur', '#memberEmail', function(){
-				$.ajax({
-		  			type : "GET",
-		  			url : "../util/checkEmail/",
-		  			data: { memberEmail : memberEmail },
-		  			success : function(result){
-		  				if(result == 1){
-		  					$('#emailMsg').html("누군가 벌써 사용중인 이메일입니다.");
-		  					$('#emailMsg').css("color", "red");
-		  					sendMailFlag = false;
-		  				} else {
-		  					$('#emailMsg').html("사용가능한 이메일입니당.");
-		  					$('#emailMsg').css("color", "green");
-		  					sendMailFlag = true;
-		  				}
-		  			}
-		  		});	// end ajax
-			})
-				
 			$(document).on('click', '#btnEmailModify', function(){
 				let memberEmail = $('#memberEmail').val();
 				let memberId = '${sessionScope.memberId}';
-				if(mailFlag){
+				if(emailFlag){
 					$.ajax({
 		                type: 'POST',
 		                url: '../member/modifyEmail',
@@ -263,13 +286,59 @@
 		                    }
 		                }
 			    	}); // end ajax
+				} else {
+					alert('메일 인증을 확인해 주세요.');
 				}
 			});
-			 
-			 btnPassword
-			 
-			 $(document).on('click', '#btnEmailModify', function(){
-					if(mailFlag){
+			
+			let pwFlag = false;
+			let pwFlagConfirm = false;
+			$(document).on('blur', '#memberPassword', function(){
+  				let memberPw = $('#memberPassword').val();
+  				let pwRegExp = /^(?=.*?[A-Z])(?=.?[a-z])(?=.*?[0-9])(?=.*?[!@#$%^&*]).{8,16}$/;
+  				
+  				if(memberPw === ""){
+  					$('#pwMsg').html("비밀번호는 필수에오. 필수!");
+  					$('#pwMsg').css("color", "red");
+  					pwFlag = false;
+  					return;
+  				}
+  				if(!pwRegExp.test(memberPw)){
+  					$('#pwMsg').html("소문자, 대문자, 숫자, 특수문자(!@#$%^&*)중 최소 하나씩을 포함한 8 에서 16 자리만 가능합니다.");
+  					$('#pwMsg').css("color", "red");
+  					pwFlag = false;
+  				} else {
+  					$('#pwMsg').html("사용가능한 비밀번호 임미다.");
+  					$('#pwMsg').css("color", "green");
+  					pwFlag = true;
+  				}
+			}); // end 비밀번호 유효성 검사
+	  		
+			$(document).on('blur', '#memberPasswordCheck', function(){
+				
+  				let pwConfirm = $('#memberPasswordCheck').val();
+  				let memberPw = $('#memberPassword').val();
+  				
+  				if(pwConfirm === ""){
+  					$('#pwConfirmMsg').html("비밀번호 확인은 필수에오.");
+  					$('#pwConfirmMsg').css("color", "red");
+  					pwConfirmFlag = false;
+  					return;
+  				}		
+  				if(memberPw === pwConfirm){
+  					$('#pwConfirmMsg').html("비밀번호 확인을 통과했습니다.");
+  					$('#pwConfirmMsg').css("color", "green");
+  					pwConfirmFlag = true;
+  				} else {
+  					$('#pwConfirmMsg').html("저런! 비밀번호를 다시 한번확인해 주세요");
+  					$('#pwConfirmMsg').css("color", "red");
+  					pwConfirmFlag = false;
+  				}
+			}) // end 비밀번호 확인 유효성 검사
+			
+			 $(document).on('click', '#btnPasswordModify', function(){
+				 let memberPassword = $('#memberPassword').val();
+					if(pwFlag && pwConfirmFlag){
 						$.ajax({
 			                type: 'POST',
 			                url: '../member/modifyPw',
@@ -287,62 +356,8 @@
 			                }
 				    	}); // end ajax
 					}
-				});
-			 
-			 
-			$(document).on('click', '#modifyImoji', function(event){
-				console.log(this);
-		        $('#modifyModal').modal('show');
-		        $('#modifyModal').html(
-		        		'<div class="modal-dialog">'
-		    	        + '<div class="modal-content">'
-		    	        + '<div class="modal-header">'
-		    	        + '<h4 class="modal-title">이모티콘 제거</h4>'
-		    	        + '<button type="button" id="closeModal" class="close" data-dismiss="modal">&times;</button>'
-		    	        + '</div>'
-		    	        + '<div class="modal-body">'
-		    	        + '<form id="modifyForm">'
-		    	        + '<div class="form-group" id="divProperty"></div>'
-		    	        + '</form>'
-		    	        + '</div>'
-		    	        + '</div>'
-		    	    	+ '</div>'	
-		        );
-		        $('#divPw').html('<span id="modalPw"></span>'
-						+ '<button type="button" class="btn btn-primary" id="btnPw">비밀번호 수정하기</button>'
-		        ); // end divPw.html
-		        $('#divProperty').html(
-		        		'<div id="emptyProperty">'
-		        		+ '<div id="notEmptyProperty"><ul id="propertyList"></ul></div>'
-		        		+ '<button type="button" class="btn btn-primary" id="btnPropertyModify"> 이모지 수정하기</button>'
-		        		+ '<button type="button" class="btn btn-primary" id="btnPropertyModifyCancel"> 이모지 수정 취소</button>'
-		        ); // end divProperty.html
-		        $('#divEmail').html(
-		        		'<div id="emailModify"></div>'
-		        		+ '<button type="button" class="btn btn-primary" id="btnEmailModify">이메일 수정</button>'
-		        ); // end divEmail
-		        $('#btnPropertyModifyCancel').hide();	
-		    }); // end modify
-		    
-		    $(document).on('click', '#btnPw', function(event){
-		    	event.preventDefault();
-		    	
-		    	if($('#memberPw').length > 0){
-		    		// 추가 생성방지
-		    	} else {
-		    		$('#modalPw').html(
-		    				'<input type="password" class="form-control" id="memberPassword" placeholder="비밀번호를 입력하세요.">'
-		    				+ '<button type="button" class="close" id="btnPwCancel">&times;</button>'
-		    		);
-		    		$('#btnPw').hide();
-		    	}
-		    }); // end 비밀번호 변경 btnPw
-		    
-			$(document).on('click', '#btnPwCancel', function(event){
-				event.preventDefault();
-				$('#modalPw').html('');
-				$('#btnPw').show();
-		    }); // end 요소 취소
+				}); // end passwordModify
+			
 		   
 		    $(document).on('click', '#btnPropertyModify', function(event){
 			    let memberProperties = '${memberVO.memberPropertyAsString}';
@@ -365,28 +380,6 @@
 				    } // end for
 		    	} // end if - else
 		    });  // end 이모지 수정 btnPropertyModify
-		    
-		    $(document).on('click', '#btnEmailModify', function(event){
-		    	$('#emailModify').html(
-		    			'<input type="email" class="form-control" id="memberEmail" placeholder="이메일을 입력하세요.">'
-		    			+ '<button type="button" class="btn btn-primary" id="btnEmailModifyCancel">&times;</button>'
-		    	);
-		    	$('#btnEmailModify').hide();
-		    }); // end btnEmailModofy
-		    
-		    $(document).on('click', '#btnEmailModifyCancel', function(event){
-		    	event.preventDefault();
-		    	$('#emailModify').html('');
-		    	$('#btnEmailModify').show();
-		    	
-		    });
-		    
-		    $(document).on('click', '#btnPropertyModifyCancel', function(event){
-				event.preventDefault();
-				$('#propertyList').html('');
-				$('#btnPropertyModify').show();
-				$('#btnPropertyModifyCancel').hide();
-		    }); // end 요소 취소
 		    
 		    $(document).on('click', '#btnBuyProperty', function(){
 			    window.location.href = 'http://localhost:8080/ex01/shop/imoji';
@@ -428,33 +421,7 @@
 		    	}
 		    }); // end btnDeleteProperty()
 		    
-		    $(document).on('click', '#btnFormSubmit', function(){
-		    	let memberId = '${sessionScope.memberId}';
-		        let memberPassword = $('#memberPassword').val();
-		        console.log(memberPassword);
-		        
-		        if (memberPassword === '' || memberEmail === '') {
-		            alert('모든 필드를 입력해주세요.');
-		        } else {
-		            $.ajax({
-		                type: 'POST',
-		                url: '../util/modifyPw/',
-		                contentType: 'application/json; charset=UTF-8',
-		                data: JSON.stringify({
-		                	memberId : memberId
-		                    memberPassword: memberPassword
-		                }),
-		                success: function(result) {
-		                    if (result === 1) {
-		                        alert('비밀번호가 성공적으로 변경되었습니다. 뒤로 돌아간뒤 변경된 비밀번호로 로그인하여 주세요.');
-		                        $('#modifyModal').modal('hide');
-		                    } else {
-		                        alert('죄송합니다 현재 서버에 문제가 생긴것 같아요.');
-		                    }
-		                }
-		            }); // end ajax
-		        }
-		    }); // end btnFormSubmit
+		    
 		    
 		    $(document).on('click', '#delete', function(){
 		    	let isConfirmed = confirm('탈퇴하시겠습니까?');
@@ -510,7 +477,6 @@
 			    	}
 		    	}
 		    }); // end 탈퇴 확인 버튼
-		    
 		}); // end document ready
 	</script>
 </body>
