@@ -87,7 +87,7 @@
 
 					formData.append('file', file);
 				}
-
+				console.log("FormData created:", formData);
 				$.ajax({
 					url : '../board/attach',
 					type : 'post',
@@ -96,7 +96,10 @@
 					processData : false,
 					success : function(response) {
 						console.log("결과 : " + response);
-
+					    if (!Array.isArray(response)) {
+					        console.error("응답이 배열 형태가 아닙니다:", response);
+					        return;
+					    }
 						response.forEach(function(item, index) {
 							$('#boardForm').append('<input type="hidden" name="attachVO[' + index + '].attachPath" value="' + item.attachPath + '">');
 							$('#boardForm').append('<input type="hidden" name="attachVO[' + index + '].attachRealName" value="' + item.attachRealName + '">');

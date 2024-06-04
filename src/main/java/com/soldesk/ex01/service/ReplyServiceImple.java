@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import com.soldesk.ex01.domain.ReplyVO;
 import com.soldesk.ex01.persistence.ReplyMapper;
+import com.soldesk.ex01.persistence.RereplyMapper;
 
 import lombok.extern.log4j.Log4j;
 
@@ -16,6 +17,9 @@ public class ReplyServiceImple implements ReplyService {
 
 	@Autowired
 	ReplyMapper replyMapper;
+	
+	@Autowired
+	RereplyMapper rereplyMapper;
 	
 	@Override
 	public int insertReply(ReplyVO vo) {
@@ -65,7 +69,9 @@ public class ReplyServiceImple implements ReplyService {
 	@Override
 	public int deleteReplyByBoard(int boardId) {
 		log.info("service : deleteReplyByBoard");
-		int result = replyMapper.deleteReplyByBoard(boardId);
+		int	result = replyMapper.deleteReplyByBoard(boardId);
+		log.info("reply 삭제 결과 : " + result);
+		
 		return result;
 	}
 

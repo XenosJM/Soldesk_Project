@@ -53,11 +53,7 @@ public class BoardController {
 	@Autowired
 	private AttachService attachService;
 
-	@Autowired
-	private ReplyService replyService;
 
-	@Autowired
-	private RereplyService rereplyService;
 
 	@Autowired
 	private Board2Service board2Service;
@@ -99,23 +95,8 @@ public class BoardController {
 
 	@PostMapping("/delete")
 	public String delete(Integer boardId, RedirectAttributes reAttr) {
-		int result;
 		log.info("board controller : deletePost()");
-		BoardVO vo = boardService.selectDetail(boardId);
-
-		List<ReplyVO> list = replyService.selectReplyBoard(boardId);
-		for (int i = 0; i < list.size(); i++) {
-			result = rereplyService.deleteRereplyToReply(list.get(i).getReplyId());
-			log.info("대댓글" + result + "행 삭제");
-			result = replyService.deleteReply(list.get(i).getReplyId());
-			log.info("댓글" + result + "행 삭제");
-		}
-
-		File file = new File("C:\\upload\\ex01\\2024\\05\\24\\" + vo.getAttachChgName());
-		if (file.exists()) {
-			log.info("파일 삭제 결과 : " + file.delete());
-		}
-		result = boardService.deleteBoard(boardId);
+		int result = board2Service.deleteBoard(boardId);
 		log.info("게시글" + result + "행 삭제");
 		return "redirect:/board/list";
 	}
@@ -163,7 +144,6 @@ public class BoardController {
 	@ResponseBody
 	public ResponseEntity<Resource> download(int attachId) throws IOException {
 		log.info("download()");
-
 
 		AttachVO attachVO = attachService.getAttachById(attachId);
 		String attachPath = attachVO.getAttachPath();

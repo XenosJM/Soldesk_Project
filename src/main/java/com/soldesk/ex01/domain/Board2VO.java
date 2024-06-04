@@ -28,5 +28,5 @@ public class Board2VO {
 	
 	@Setter
 	@Getter
-	private AttachVO[] attachVO = new AttachVO[3]; 
+	private AttachVO[] attachVO; 
 }
