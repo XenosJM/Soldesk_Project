@@ -440,7 +440,7 @@ body {
 			};
 			$.ajax({
 				type : 'POST',
-				url : '../util/modifyPw/',
+				url : '../member/modifyMember/',
 				data : JSON.stringify(data),
 				contentType: 'application/json; charset=UTF-8',
 				success : function(result){

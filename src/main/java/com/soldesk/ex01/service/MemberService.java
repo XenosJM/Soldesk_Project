@@ -14,6 +14,10 @@ public interface MemberService {
 	List<MemberVO> getAllMember();
 	// 회원 정보 수정
 	int updateMember(MemberVO memberVO);
+	// 회원 비밀번호 수정
+	int updatePassword(MemberVO memberVO);
+	// 회원 이메일 수정
+	int updateEmail(MemberVO memberVO);
 	// 회원 관리자 권한 변경
 	int updateMemberPermission(MemberVO memberVO);
 	// 회원 보유 아이템 변경

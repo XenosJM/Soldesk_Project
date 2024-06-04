@@ -154,19 +154,7 @@ public class UtilRESTController {
 		return new ResponseEntity<Integer>(result, HttpStatus.OK);
 	}
 	
-	@PostMapping("/modifyPw")
-	public ResponseEntity<Integer> updatePw(@RequestBody Map<String, String> res, HttpSession session){
-		MemberVO memberVO = new MemberVO();
-		memberVO.setMemberId((String) session.getAttribute("memberId"));
-//		log.info(memberVO.getManagerId());
-		memberVO.setMemberEmail(res.get("memberEmail"));
-//		log.info(memberVO.getMemberEmail());
-		memberVO.setMemberPassword(res.get("memberPassword"));
-//		log.info(memberVO.getMemberPassword());
-		int result = memberService.updateMember(memberVO);
-		return new ResponseEntity<Integer>(result, HttpStatus.OK);
-	}
-	
+
 	@GetMapping("/findId")
 	public ResponseEntity<String> checkIdEmail(@RequestParam("memberEmail") String memberEmail){
 		MemberVO memberVO = memberService.findId(memberEmail);

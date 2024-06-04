@@ -22,40 +22,45 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 
 <body>
+	<div id="mainDetail">
 		<h2><c:out value="${memberVO.memberId}"></c:out>님의 정보입니다.</h2>
 		<br>
-	<div id="emailDiv">
-		<c:out value="현재 이메일 : ${memberVO.memberEmail}"></c:out>
+			<div id="emailDiv">
+				<c:out value="현재 이메일 : ${memberVO.memberEmail}"></c:out>
+			</div>
+		<br>
+		<div id="passwordDiv"></div>
+		
+	   	<div>
+	   		<div id="propertyDiv">
+				<c:choose>
+				    <c:when test="${empty memberVO.memberProperty}">
+				    	<p>현재 보유중인 이모티콘이 없습니다. 구매하러 가시겠습니까?<!-- //TODO 변경할 예정 -->
+				        	<input type="submit" id="buyProperty" onclick="location.href='http://localhost:8080/ex01/shop/imoji'" value="상점">
+				        <br>
+				    </c:when>
+				    <c:when test="${not empty memberVO.memberProperty}">
+				        <p>현재 보유중인 상품 목록:</p>
+					        <ul>
+					            <c:forEach var="property" items="${memberVO.memberProperty}">
+					                <li>${property}</li>
+					            </c:forEach>
+					        </ul>
+				        <br>
+				    </c:when>
+				</c:choose>
+	   		</div>
+	   		<div id="modifyPropertyDiv"></div>		
+	  	</div>
+		
+		<c:out value="회원가입 날짜 : ${memberVO.memberRegistDate }"></c:out>
+		<br>
+		
+		<button id="btnModify" class="btn btn-primary">회원정보 수정</button>
+		<button id="btnModifyCancel" class="btn btn-primary">수정 취소</button>
+		<button id="btnModifyMember" class="btn btn-primary">전체 수정하기</button>
+		<button id="btnBackward" class="btn btn-primary">뒤로가기</button>
 	</div>
-	<br>
-	<div id="passwordDiv"></div>
-	
-   	<div id="propertyDiv">
-		<c:choose>
-		    <c:when test="${empty memberVO.memberProperty}">
-		    	<p>현재 보유중인 이모티콘이 없습니다. 구매하러 가시겠습니까?<!-- //TODO 변경할 예정 -->
-		        	<input type="submit" id="buyProperty" onclick="location.href='http://localhost:8080/ex01/shop/imoji'" value="상점">
-		        <br>
-		    </c:when>
-		    <c:when test="${not empty memberVO.memberProperty}">
-		        <p>현재 보유중인 상품 목록:</p>
-			        <ul>
-			            <c:forEach var="property" items="${memberVO.memberProperty}">
-			                <li>${property}</li>
-			            </c:forEach>
-			        </ul>
-		        <br>
-		    </c:when>
-		</c:choose>
-  	</div>
-	
-	<c:out value="회원가입 날짜 : ${memberVO.memberRegistDate }"></c:out>
-	<br>
-	
-	<button id="btnModify" class="btn btn-primary">회원정보 수정</button>
-	<button id="btnModifyCancel" class="btn btn-primary">수정 취소</button>
-	<button id="btnModifyMember" class="btn btn-primary">전체 수정하기</button>
-	<button id="btnBackward" class="btn btn-primary">뒤로가기</button>
 	
 	<div class="modal" id="checkModal">
     	<div class="modal-dialog">
@@ -75,14 +80,17 @@
 	        	
 	
 	<script type="text/javascript">
-		$(document).ready(function(){
+			
+			$(document).ready(function(){
+			
+			let modifyFlag = false
+			let memberProperty = '${memberVO.memberPropertyAsString}'
+			let memberId = '${memberVO.memberId}';
+			
+			
 			$('#btnModifyCancel').hide();
 			$('#btnModifyMember').hide();
 			
-			let memberId = '${memberVO.memberId}';
-			let memberProperty = '${memberVO.memberPropertyAsString}'
-			
-			let modifyFlag = false
 			
 			$(document).on('click', '#btnModify', function(){ // 수정하기 버튼을 누르면
 				 $('#checkModal').modal('show');
@@ -145,6 +153,142 @@
 	                    }
 	                }); // end ajax
 	            });
+				
+				$(document).on('click', '#btnSendCode', function(){
+					authCodeSend($('#memberEmail').val());
+				}); // end btnSendCode
+				 
+			 	let countdown;
+				let timerInterval;
+				let sendMailFlag = true; // 메일보내기 체커
+				let emailFlag = false; // 메일 인증 체커
+				let checkAuthCode; // 인증코드 
+				let memberEmail; // 이메일
+				
+				function authCodeSend(memberEmail) {
+					if(sendMailFlag){
+					    $.ajax({
+					        type: "GET", // GET 요청 타입
+					        url: "../util/authCodeSend/", // 요청을 보낼 URL
+					        data: { memberEmail: memberEmail }, // 요청에 포함할 데이터
+					        success: function(response) { // 요청이 성공적으로 완료되었을 때 실행할 함수
+					            if (response.result === 1) { // 서버로부터 성공 응답을 받았을 때
+					                alert("작성하신 이메일로 확인 코드가 발송되었습니다.");
+					                $('#emailAuthMsg').html(
+					                    "<input id='authCode' type='number' placeholder='코드를 입력해 주세요.'>" +
+					                    "<button id='btnCodeCheck'>인증확인</button><br>" +
+					                    "<span id='checkAuthMsg'></span><br>" +
+					                    '<span id="timer"></span>'
+					                );
+					                sendMailFlag = false;
+					                checkAuthCode = response.authCode; // 인증코드
+							   		let count = 30; // 타이머 지속 시간 (초)
+							   		countdown = function(){
+						               if (count > 0) {
+						                   count--; // 지속 시간 감소
+						                   let min = Math.floor(count / 60); // 남은 분 계산
+						                   let sec = count % 60; // 남은 초 계산
+						                   sec = sec < 10 ? '0' + sec : sec;
+						                 $('#timer').text(
+						               		  '0' + min + ':' + sec
+						                 );
+						               } else {
+						                   checkAuthCode = null; // 인증 코드를 무효화
+						                   clearInterval(timerInterval); // 타이머 정지
+						                   alert('코드 인증시간이 만료되었습니다.'); // 사용자에게 알림
+						                   sendMailFlag = true;
+						               }
+						           } // end countdown
+							        // 매 초마다 countdown 함수 호출        	
+							        timerInterval = setInterval(countdown, 1000);
+					            } else {
+					                alert("잠시후 다시 눌러주세요."); // 서버로부터 실패 응답을 받았을 때
+					            }
+					        }
+					    }); // end ajax
+					} else{
+						alert('인증을 이미 하셨거나, 이메일이 보내졌습니다. 인증시간 만료후 다시 눌러주세요.');
+					}
+				} // end authCodeSend()
+			 
+			$(document).on('click', '#btnCodeCheck', function(){
+				let checkCode = $('#authCode').val();
+				if(authCode == checkCode){
+					$('#checkAuthMsg').html('인증에 성공하셨습니다');
+					$('#checkAuthMsg').css('color', 'green');
+					emailFlag = true;
+				} else{
+					$('#checkAuthMsg').html('인증에 실패했습니다.');
+					$('#checkAuthMsg').css('color', 'red');
+					emailFlag = false;
+				}
+			});
+				
+			$(document).on('blur', '#memberEmail', function(){
+				$.ajax({
+		  			type : "GET",
+		  			url : "../util/checkEmail/",
+		  			data: { memberEmail : memberEmail },
+		  			success : function(result){
+		  				if(result == 1){
+		  					$('#emailMsg').html("누군가 벌써 사용중인 이메일입니다.");
+		  					$('#emailMsg').css("color", "red");
+		  					sendMailFlag = false;
+		  				} else {
+		  					$('#emailMsg').html("사용가능한 이메일입니당.");
+		  					$('#emailMsg').css("color", "green");
+		  					sendMailFlag = true;
+		  				}
+		  			}
+		  		});	// end ajax
+			})
+				
+			$(document).on('click', '#btnEmailModify', function(){
+				let memberEmail = $('#memberEmail').val();
+				let memberId = '${sessionScope.memberId}';
+				if(mailFlag){
+					$.ajax({
+		                type: 'POST',
+		                url: '../member/modifyEmail',
+		                contentType: 'application/json; charset=UTF-8',
+		                data: JSON.stringify({
+		                	memberId : memberId,
+		                    memberEmail : memberEmail
+		                }),
+		                success: function(result) {
+		                    if (result === 1) {
+		                        alert('이메일이 성공적으로 변경되었습니다.');
+		                    } else {
+		                        alert('죄송합니다 현재 서버에 문제가 생긴것 같아요.');
+		                    }
+		                }
+			    	}); // end ajax
+				}
+			});
+			 
+			 btnPassword
+			 
+			 $(document).on('click', '#btnEmailModify', function(){
+					if(mailFlag){
+						$.ajax({
+			                type: 'POST',
+			                url: '../member/modifyPw',
+			                contentType: 'application/json; charset=UTF-8',
+			                data: JSON.stringify({
+			                	memberId : memberId,
+			                    memberPassword: memberPassword
+			                }),
+			                success: function(result) {
+			                    if (result === 1) {
+			                        alert('비밀번호가 성공적으로 변경되었습니다.');
+			                    } else {
+			                        alert('죄송합니다 현재 서버에 문제가 생긴것 같아요.');
+			                    }
+			                }
+				    	}); // end ajax
+					}
+				});
+			 
 			 
 			$(document).on('click', '#modifyImoji', function(event){
 				console.log(this);
@@ -285,10 +429,9 @@
 		    }); // end btnDeleteProperty()
 		    
 		    $(document).on('click', '#btnFormSubmit', function(){
+		    	let memberId = '${sessionScope.memberId}';
 		        let memberPassword = $('#memberPassword').val();
 		        console.log(memberPassword);
-		        let memberEmail = $('#memberEmail').val();
-		        console.log(memberEmail);
 		        
 		        if (memberPassword === '' || memberEmail === '') {
 		            alert('모든 필드를 입력해주세요.');
@@ -298,8 +441,8 @@
 		                url: '../util/modifyPw/',
 		                contentType: 'application/json; charset=UTF-8',
 		                data: JSON.stringify({
-		                    memberPassword: memberPassword,
-		                    memberEmail: memberEmail
+		                	memberId : memberId
+		                    memberPassword: memberPassword
 		                }),
 		                success: function(result) {
 		                    if (result === 1) {
@@ -366,7 +509,7 @@
 			    		alert('잘 생각하셨어요!');
 			    	}
 		    	}
-		    });
+		    }); // end 탈퇴 확인 버튼
 		    
 		}); // end document ready
 	</script>

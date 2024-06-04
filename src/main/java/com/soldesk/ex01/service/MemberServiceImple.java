@@ -81,8 +81,8 @@ public class MemberServiceImple implements MemberService{
 //		}
 		// Iterator를 사용하여 원래 배열에서 삭제할 아이템과 같은 아이템 제거
 		Iterator<Integer> itr = originalPropertyList.iterator();
-		while (itr.hasNext()) {
-	        Integer item = itr.next();
+		while (itr.hasNext()) { // itr에 다음 값이 존재하면 참
+	        Integer item = itr.next(); // 다음요소 가져오기
 	        if (deletePropertyList.contains(item)) {
 	            itr.remove();
 	        }
@@ -124,6 +124,18 @@ public class MemberServiceImple implements MemberService{
 	@Override
 	public MemberVO findId(String memberEmail) {
 		return memberMapper.findId(memberEmail);
+	}
+
+	@Override
+	public int updatePassword(MemberVO memberVO) {
+		int result = memberMapper.updatePassword(memberVO);
+		return result;
+	}
+
+	@Override
+	public int updateEmail(MemberVO memberVO) {
+		int result = memberMapper.updateEmail(memberVO);
+		return result;
 	}
 
 }

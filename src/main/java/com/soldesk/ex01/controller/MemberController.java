@@ -50,6 +50,14 @@ public class MemberController {
 		return new ResponseEntity<Integer>(result,HttpStatus.OK);
 	}
 	
+//	@GetMapping("/detail/{memberId}")
+//	public ResponseEntity<MemberVO> detailGet(@PathVariable("memberId") String memberId) {
+//		log.info("detailGet()");
+//		MemberVO memberVO = memberService.getMemberById(memberId);
+////		log.info(memberVO);
+//		return new ResponseEntity<MemberVO>(memberVO, HttpStatus.OK);
+//	}
+	
 	@PostMapping("/modify")
 	public ResponseEntity<Integer> memberUpdate(@RequestBody Map<String, String> res) {
 		log.info("memberUpdate()");
@@ -120,11 +128,10 @@ public class MemberController {
 			@RequestParam("propertyIndex") Integer[] propertyIndexList
 			) {
 		// 리스트로 받은 목록을 넘겨준다.
-		int result = 0;
 		MemberVO memberVO = new MemberVO();
 		memberVO.setMemberId(memberId);
 		memberVO.setMemberProperty(propertyIndexList);
-		result = memberService.updateMemberProperty(memberVO);
+		int result = memberService.updateMemberProperty(memberVO);
 		
 		return new ResponseEntity<Integer>(result, HttpStatus.OK);
 	}
@@ -134,6 +141,41 @@ public class MemberController {
 		log.info("getAllmember()");
 		List<MemberVO> memberList = memberService.getAllMember();
 		return new ResponseEntity<List<MemberVO>>(memberList, HttpStatus.OK);
+	}
+	
+	@PostMapping("/modifyPw")
+	public ResponseEntity<Integer> modifyPw(@RequestBody Map<String, String> res){
+		MemberVO memberVO = new MemberVO();
+		memberVO.setMemberId(res.get("memberId"));
+//		log.info(memberVO.getManagerId());
+		memberVO.setMemberPassword(res.get("memberPassword"));
+//		log.info(memberVO.getMemberPassword());
+		int result = memberService.updatePassword(memberVO);
+		return new ResponseEntity<Integer>(result, HttpStatus.OK);
+	}
+	
+	@PostMapping("/modifyEmail")
+	public ResponseEntity<Integer> modifyEmail(@RequestBody Map<String, String> res){
+		MemberVO memberVO = new MemberVO();
+		memberVO.setMemberId(res.get("memberId"));
+//		log.info(memberVO.getManagerId());
+		memberVO.setMemberEmail(res.get("memberEmail"));
+//		log.info(memberVO.getMemberPassword());
+		int result = memberService.updateEmail(memberVO);
+		return new ResponseEntity<Integer>(result, HttpStatus.OK);
+	}
+	
+	@PostMapping("/modify")
+	public ResponseEntity<Integer> modifyMember(@RequestBody Map<String, String> res){
+		MemberVO memberVO = new MemberVO();
+		memberVO.setMemberId(res.get("memberId"));
+//		log.info(memberVO.getManagerId());
+		memberVO.setMemberPassword(res.get("memberPassword"));
+//		log.info(memberVO.getMemberPassword());
+		memberVO.setMemberEmail(res.get("memberEmail"));
+//		log.info(memberVO.getMemberEmail());
+		int result = memberService.updateMember(memberVO);
+		return new ResponseEntity<Integer>(result, HttpStatus.OK);
 	}
 	
 }
