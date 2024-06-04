@@ -79,6 +79,7 @@ public class Board2ServiceImple implements Board2Service {
 	@Override
 	public Board2VO selectDetail(int boardId) {
 		Board2VO vo = board2Mapper.selectDetail(boardId);
+		vo.setAttachVO(attachMapper.selectByBoardId(boardId));
 		return vo;
 	}
 
