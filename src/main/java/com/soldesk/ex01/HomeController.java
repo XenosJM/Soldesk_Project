@@ -150,4 +150,6 @@ public class HomeController {
 	    model.addAttribute("friendList", friendListJson);
 	}
 	
+
+	
 }

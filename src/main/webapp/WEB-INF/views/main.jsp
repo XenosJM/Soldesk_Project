@@ -5,6 +5,9 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>메인 페이지</title>
@@ -132,8 +135,8 @@
 		    position: fixed;
 		    bottom: 20px; /* 화면 하단으로부터 20px 떨어진 위치 */
 		    right: 20px;
-		    width: 20%;
-		    height: 40%;
+		    width: 80%;
+		    height: 80%;
 		    border: 1px solid #000;
 		    background: #fff;
 		}
@@ -165,12 +168,13 @@
 
     <!-- iframe을 포함하는 컨테이너 -->
     <div class="frame-container" id="frameContainer">
-    	<iframe id="myIframe"></iframe>
+    	<!-- <iframe id="friendIframe"></iframe> -->
+    	<iframe id="detailIframe"></iframe>
 	</div>
 
-    <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
     <script type="text/javascript">
         $(function () {
+        	
             if (${empty sessionScope.memberId}) {
                 $('#loginContainer').html(
                     '<h2>로그인</h2>'
@@ -190,7 +194,7 @@
             }
 
             $(document).on('click', '#check', function () {
-                let memberId = $('#memberId').val();
+            	let memberId = $('#memberId').val();
                 let memberPassword = $('#memberPassword').val();
                 $.ajax({
                     type: 'POST',
@@ -224,16 +228,33 @@
                 window.location.href = "member/findIdPw";
             });
 
-            $(document).on('click', '#detail', function () {
-				window.location.href = "member/detail";	
-            });
+			//$(document).on('click', '#detail', function () {
+			//	window.location.href = "member/detail";	
+            //});
 
             $(document).on('click', '#checkout', function () {
                 window.location.href = "member/checkout";
             });
 
         });
-
+		
+        $(document).on('click', '#detail', function() {
+        	let memberId = $('#memberId').val();
+            let frameContainer = $('#frameContainer');
+            if (frameContainer.css('display') === 'none' || frameContainer.css('display') === '') {
+	            frameContainer.css('display', 'block');	
+            	$('#detailIframe').attr('src', 'member/detail'); // 불러올 JSP 파일의 경로 설정		
+            } else {
+            	
+            }
+        });
+        
+        $(document).on('click', '#friendListClose', function(){
+        	let frameContainer = $('#frameContainer');
+        	frameContainer.css('display', 'none');
+            $('#detailIframe').attr('src', 'about:blank');
+        });
+        
         // iframe에 관련된 함수와 변수명 정의
          $(document).on('click', '#friendList', function() {
             let frameContainer = $('#frameContainer');
@@ -241,7 +262,7 @@
             	frameContainer.css('display', 'block');
             	$('#loginContainer').find('#friendList').remove();
             	$('#loginContainer').append('<button id="friendListClose">친구목록 닫기</button>')
-                $('#myIframe').attr('src', 'member/friendList'); // 불러올 JSP 파일의 경로 설정
+                $('#friendIframe').attr('src', 'member/friendList'); // 불러올 JSP 파일의 경로 설정
             } else {
             	
             }
@@ -252,7 +273,7 @@
         	frameContainer.css('display', 'none');
         	$('#loginContainer').find('#friendListClose').remove();
         	$('#loginContainer').append('<button id="friendList">친구목록보기</button>')
-            $('#myIframe').attr('src', 'about:blank');
+            $('#friendIframe').attr('src', 'about:blank');
         });
         
     </script>
