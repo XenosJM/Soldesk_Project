@@ -45,9 +45,6 @@ import lombok.extern.log4j.Log4j;
 public class BoardController {
 
 	@Autowired
-	private BoardService boardService;
-
-	@Autowired
 	private String uploadPath;
 
 	@Autowired
@@ -85,10 +82,19 @@ public class BoardController {
 
 	
 	@PostMapping("/update")
-	public String updatePost(BoardVO vo, RedirectAttributes reAttr) {
+	public String updatePost(Board2VO vo, RedirectAttributes reAttr) {
 		log.info("board controller : updatePost()");
-
-		int result = boardService.updateBoard(vo);
+		log.info(vo);
+		int result = board2Service.updateBoard(vo);
+		AttachVO[] attach = vo.getAttachVO();
+		if(attach!=null) {
+			for(int i = 0; i<attach.length;i++) {
+				log.info("첨부 파일 경로: " + attach[i].getAttachPath());
+				log.info("첨부 파일 실제 이름: " + attach[i].getAttachRealName());
+				log.info("첨부 파일 변경된 이름: " + attach[i].getAttachChgName());
+				log.info("첨부 파일 확장자: " + attach[i].getAttachExtension());
+			}
+		}
 		log.info(result + "행 수정");
 		return "redirect:/board/list";
 	}
