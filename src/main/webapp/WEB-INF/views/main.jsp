@@ -6,7 +6,9 @@
 <html lang="en">
 <head>
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+	<link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
     <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -132,13 +134,13 @@
 
        .frame-container {
 		    display: none;
-		    position: fixed;
 		    bottom: 20px; /* 화면 하단으로부터 20px 떨어진 위치 */
 		    right: 20px;
-		    width: 80%;
-		    height: 80%;
-		    border: 1px solid #000;
+		    width: 25%;
+		    height: 60%;
+		    border: 2px solid;
 		    background: #fff;
+		    overflow: hidden;
 		}
 
         iframe {
@@ -168,8 +170,8 @@
 
     <!-- iframe을 포함하는 컨테이너 -->
     <div class="frame-container" id="frameContainer">
-    	<!-- <iframe id="friendIframe"></iframe> -->
-    	<iframe id="detailIframe"></iframe>
+    	<iframe id="friendIframe"></iframe>
+    	<!-- <iframe id="detailIframe"></iframe> -->
 	</div>
 
     <script type="text/javascript">
@@ -228,9 +230,9 @@
                 window.location.href = "member/findIdPw";
             });
 
-			//$(document).on('click', '#detail', function () {
-			//	window.location.href = "member/detail";	
-            //});
+			$(document).on('click', '#detail', function () {
+				window.location.href = "member/detail";	
+            });
 
             $(document).on('click', '#checkout', function () {
                 window.location.href = "member/checkout";
@@ -238,7 +240,7 @@
 
         });
 		
-        $(document).on('click', '#detail', function() {
+        /* $(document).on('click', '#detail', function() {
         	let memberId = $('#memberId').val();
             let frameContainer = $('#frameContainer');
             if (frameContainer.css('display') === 'none' || frameContainer.css('display') === '') {
@@ -253,7 +255,10 @@
         	let frameContainer = $('#frameContainer');
         	frameContainer.css('display', 'none');
             $('#detailIframe').attr('src', 'about:blank');
-        });
+        }); */
+        
+        // 움직이고 사이즈 조절 가능은 하게 해놨는데 큰 의미는 없는거 같음
+        $(".frame-container").draggable();
         
         // iframe에 관련된 함수와 변수명 정의
          $(document).on('click', '#friendList', function() {

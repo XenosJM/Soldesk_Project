@@ -49,8 +49,7 @@
 				        <br>
 				    </c:when>
 				</c:choose>
-	   		</div>
-	   		<div id="modifyPropertyDiv"></div>		
+	   		</div>	
 	  	</div>
 		
 		<c:out value="회원가입 날짜 : ${memberVO.memberRegistDate }"></c:out>
@@ -60,6 +59,7 @@
 		<button id="btnModifyCancel" class="btn btn-primary">수정 취소</button>
 		<button id="btnModifyMember" class="btn btn-primary">전체 수정하기</button>
 		<button id="btnBackward" class="btn btn-primary">뒤로가기</button>
+		<button id="btnDelete" class="btn btn-primary">탈퇴하기</button>
 	</div>
 	
 	<div class="modal" id="checkModal">
@@ -73,6 +73,20 @@
            			<input type="password" class="form-control" id="memberPassword" placeholder="비밀번호를 입력하세요.">
     				<button type="button" class="close" id="btnPasswordCheck">비밀번호 확인</button>
     				<span id="modalCheckMsg"></span>
+	            </div>
+        	</div>
+       	</div>
+   	</div>
+   	
+   	<div class="modal" id="deleteModal">
+    	<div class="modal-dialog">
+	        <div class="modal-content">
+	            <div class="modal-header">
+	                <h4 class="modal-title">회원 탈퇴 확인</h4>
+	                <button type="button" class="close" data-dismiss="modal">&times;</button>
+	            </div>
+	            <div class="modal-body">
+    				<span id="deleteMsg"></span>
 	            </div>
         	</div>
        	</div>
@@ -130,7 +144,7 @@
 	            			    				'<label for="btnBuyProperty">현재 보유중인 상품이 없습니다. 구매하러 가시겠습니까?<br>'
 	            			    		        + '<button type="button" id="btnBuyProperty" class="btn btn-primary">상점</button></label>'
 	            			    				);
-	            			    		
+	            			    	
 	            			    	} else {
 	            			    		$('#propertyDiv').html('삭제하실 항목을 선택해주세요.<br><ul></ul>');
 	            			    		// 배열의 [ , ]을 공백으로 바꾼후 ', ' 을 기준으로 자른 배열
@@ -138,13 +152,13 @@
 	            				    	// console.log(propertyArray);
 	            					    for(let i = 0; i < propertyArray.length; i++){
 	            					    	$('ul').append( 
-	            				                    '<li style="list-style: none;">' + propertyArray[i] + '</li><input type="checkbox" id="checkValue" class="checkBox"><br>'
+	            				                    '<li style="list-style: none;">' + propertyArray[i] + '</li><input type="checkbox" id="checkValue" class="checkBox">'
 	            					    	);
 	            					    } // end for
 	            					    $('#propertyDiv').append(
-	            					    		'<button id="selectAll">전체 선택</button><br><button id="deleteSelect">선택 삭제</button>'
+	            					    		'<button id="btnSelectAll">전체 선택</button><br><button id="btnDeleteSelect">선택 삭제</button>'
 	            					    		);
-	            			    	} // end if - else	
+	            			    	} // end if - else
 	            				} else {
 	            					
 	            				}
@@ -367,49 +381,50 @@
 				window.location.href = '/ex01/';
 			});
 			
-		    let deleteList = [];
-	    	let propertyArray = memberProperty.replace(/^\[|\]$/g, '').split(', ');
-	    	console.log(propertyArray);
+	    	// let propertyArray = memberProperty.replace(/^\[|\]$/g, '').split(', ');
+	    	// console.log(propertyArray);
+		    
 	    	
+	    	let deleteList = []; // 삭제할 상품이 추가될 배열 선언
 	    	$(document).on('click', '.checkBox', function(event){
 	    		let checked = $(this).is(':checked');
-	    		let item = $(this).closest('li').index();
-	    		console.log(this);
+	    		let selectedItem = $(this).prev().text(); // 이전 요소의 텍스트
+	    		let item = parseInt(selectedItem, 0); // 혹시라도 값이 잘못되어 파싱을 못하는 경우 0으로
+	    		console.log(this); // 선택된 체크박스
 	    		console.log('item : ' + item);
-	    		if(checked == true){
+	    		if(checked == true){ // 체크 된 경우
 	    			deleteList.push(item);
 	    			console.log(deleteList);
 	    		} else{
-	    			let index = deleteList.indexOf(item);
-	    	        if (index > -1) {
-	    	            deleteList.splice(index, 1); // 배열에서 해당 인덱스를 제거
+	    			let index = deleteList.indexOf(item); // 배열에서 item과 일치하는 곳의 인덱스값
+	    	        if (index > -1) { // item이 존재할시
+	    	            deleteList.splice(index, 1); // 배열에서 해당 인덱스를 제거(위치로부터 1개만 제거);
+	    	            console.log(deleteList);
 	    	        }
 	    		}
 		    })
 		    
-		    $(document).on('click', '#btnDeleteProperty', function(event){
+		    $(document).on('click', '#btnDeleteSelect', function(event){
 		    	event.preventDefault();
-		    	
-		    	let propertyIndex = $(this).closest('li').index(); // 클릭된 버튼의 가장 가까운 li태그의 인덱스
-		        // console.log(this);
-		   		// console.log('propertyIndex : ' + propertyIndex);
-		    	let memberId = '${memberVO.memberId}';
-		    	let isConfirmed = confirm(', 이 이모지를 정말 삭제하시겠습니까?');
-		    	// 몇번째 항목이 클릭되었는지 알 수 있도록 코드를 짜야함.
-		    	
+		    	let checked = $('ul input[type="checkbox"]:checked');
+		    	let isConfirmed = confirm('정말 삭제하시겠습니까?');
 		    	if(isConfirmed){
-		    		$(this).closest('li').remove();
 			    	$.ajax({
 			    		type : 'POST',
-			    		url : 'deleteProperty',
-			    		data : {
+			    		url : '../member/deleteProperty',
+			    		contentType: 'application/json; charset=UTF-8',
+			    		data : JSON.stringify({
 			    			memberId : memberId,
-			    			propertyIndex : propertyIndex
-			    		},
+			    			memberProperty : deleteList
+			    		}),
 			    		success : function(result){
 			    			if(result == 1){
-			    				$(this).closest('li').remove();
 			    				alert('삭제되었습니다.');
+			    				checked.each(function(){
+			    					let delProd = $(this).prev();
+			    					delProd.remove();
+			    					$(this).remove();
+			    				});
 			    			} else{
 			    				alert('이모지 삭제에 문제가 생겻습니다.');
 			    			}
@@ -419,14 +434,18 @@
 		    }); // end btnDeleteProperty()
 		    
 		    
-		    
-		    $(document).on('click', '#delete', function(){
+		    let deleteFlag = false;
+		    $(document).on('click', '#btnDelete', function(){
 		    	let isConfirmed = confirm('탈퇴하시겠습니까?');
 		    	if(isConfirmed){
+		    		$('#deleteModal').modal('show');
 		    		$('#deleteMsg').html(
 		    				'정말 탈퇴하시려면 <strong>회원님의 아이디<strong>를 입력한 후 확인 버튼을 눌러주세요.'
+		    				+ '<br>'
 		    				+ '<input type="text" id="delMemberId" placeholder="회원님의 아이디">'
-		    				+ '<span id=delCheckMsg></span>'
+		    				+ '<br>'
+		    				+ '<span id="delCheckMsg"></span>'
+		    				+ '<br>'
 		    				+ '<button id="btnDeleteCheck">확인</button>'
 		    		);
 		    	}
@@ -446,13 +465,7 @@
 		    
 		    $(document).on('click', '#btnDeleteCheck', function(event){
 		    	event.preventDefault();
-		    	if(!deleteFlag){
-		    		
-		    	} else{
-		    		
-			    	let isConfirmed = confirm('계속 진행하시겠습니까?');
-			    	if(isConfirmed && deleteFlag){
-			    	let memberId = '${memberVO.memberId}';
+			    	if(deleteFlag){
 			    		$.ajax({
 			    			type : 'POST',
 			    			url : 'delete',
@@ -470,10 +483,12 @@
 			    			}
 			    		});
 			    	} else {
-			    		alert('잘 생각하셨어요!');
+			    		$('#delCheckMsg').html('아이디를 정확히 입력해주세요.');
 			    	}
-		    	}
 		    }); // end 탈퇴 확인 버튼
+		    
+		    // 필요하면 회원 수정 완료후 다시 원래 화면으로 만들도록 코드 추가할것
+		    
 		}); // end document ready
 	</script>
 </body>

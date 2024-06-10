@@ -123,14 +123,13 @@ public class MemberController {
 	}
 	
 	@PostMapping("/deleteProperty")
-	public ResponseEntity<Integer> removeProperty(
-			@RequestParam("memberId") String memberId,
-			@RequestParam("propertyIndex") Integer[] propertyIndexList
-			) {
+	public ResponseEntity<Integer> removeProperty(@RequestBody MemberVO delVO) {
 		// 리스트로 받은 목록을 넘겨준다.
 		MemberVO memberVO = new MemberVO();
-		memberVO.setMemberId(memberId);
-		memberVO.setMemberProperty(propertyIndexList);
+		memberVO.setMemberId(delVO.getMemberId());
+		log.info(memberVO.getMemberId());
+		memberVO.setMemberProperty(delVO.getMemberProperty());
+		log.info(memberVO.getMemberProperty());
 		int result = memberService.updateMemberProperty(memberVO);
 		
 		return new ResponseEntity<Integer>(result, HttpStatus.OK);

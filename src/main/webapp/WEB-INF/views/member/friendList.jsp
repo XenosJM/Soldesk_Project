@@ -108,7 +108,7 @@
 	        $('#offlineFriend').append('<li class="offline">' + friend.friendMemberId + '</li>');
 	    });
 	    
-    	/* $(document).on('click', '#btnShowFriendList', function(){
+    	$(document).on('click', '#btnShowFriendList', function(){
     		let memberId = ${sessionScope.memberId};
     		$.ajax({
     			type : 'GET',
@@ -138,7 +138,7 @@
     	
     	$(document).on('click', '#btnReceiveRequestList', function(){
     		
-    	}); */
+    	});
     	
     });
     </script>

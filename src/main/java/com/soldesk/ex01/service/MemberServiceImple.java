@@ -72,13 +72,6 @@ public class MemberServiceImple implements MemberService{
 		for(int originalItem : checkVO.getMemberProperty()) {
 			originalPropertyList.add(originalItem);
 		}
-//		// 삭제할 아이템과 같은 아이템을 원래 배열에서 제거
-//		for(int i = 0; i < checkVO.getMemberProperty().length; i++) {
-//			
-//			if(originalPropertyList.get(i).equals(deletePropertyList.get(i))) {
-//				deletePropertyList.remove(i);
-//			}
-//		}
 		// Iterator를 사용하여 원래 배열에서 삭제할 아이템과 같은 아이템 제거
 		Iterator<Integer> itr = originalPropertyList.iterator();
 		while (itr.hasNext()) { // itr에 다음 값이 존재하면 참
@@ -87,24 +80,9 @@ public class MemberServiceImple implements MemberService{
 	            itr.remove();
 	        }
 	    }
-		
 		Integer[] propertyArray = originalPropertyList.toArray(new Integer[0]);
 		checkVO.setMemberProperty(propertyArray);
-		
-//		// 정수배열을 리스트로 변환
-//		List<Integer> list = new ArrayList<>(Arrays.asList(propertyArray));
-//		list.remove(propertyIndex);
-//		// 리스트를 배열로 변환
-//		propertyArray = list.toArray(new Integer[0]);
-//		
-//		if(propertyArray.length == 0 || propertyArray == null) {
-//			// 배열이 비어있거나 없으면
-//			memberVO.setMemberProperty(new Integer[0]);
-//		} else {
-//			// 배열에 값이 있다면.
-//			memberVO.setMemberProperty(propertyArray);
-//		}
-		int result = memberMapper.updateProperty(memberVO);
+		int result = memberMapper.updateProperty(checkVO);
 		return result;
 	}
 
