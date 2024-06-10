@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.soldesk.ex01.domain.Board2VO;
 import com.soldesk.ex01.domain.BoardVO;
 import com.soldesk.ex01.persistence.BoardMapper;
 
@@ -51,12 +52,12 @@ public class BoardServiceImple implements BoardService {
 		return list;
 	}
 
-	@Override
-	public int updateBoard(BoardVO vo) {
-		log.info("service : board updateBoard()");
-		int result = boardMapper.updateBoard(vo);
-		return result;
-	}
+//	@Override
+//	public int updateBoard(Board2VO vo) {
+//		log.info("service : board updateBoard()");
+//		int result = boardMapper.updateBoard(vo);
+//		return result;
+//	}
 
 	@Override
 	public int deleteBoard(int boardId) {
@@ -69,6 +70,18 @@ public class BoardServiceImple implements BoardService {
 	public BoardVO selectDetail(int boardId) {
 		BoardVO vo = boardMapper.selectDetail(boardId);
 		return vo;
+	}
+
+	@Override
+	public int updateBoard(BoardVO vo) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public int updateBoard(Board2VO vo) {
+		// TODO Auto-generated method stub
+		return 0;
 	}
 
 }

@@ -35,6 +35,6 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		ATTACH_REAL_NAME = #{attachRealName}, ATTACH_CHG_NAME =
 		#{attachChgName}, ATTACH_EXTENSION = #{attachExtension} WHERE
 		ATTACH_ID = #{attachId} </update>
-	<delete id="delete"> DELETE FROM ATTACH WHERE ATTACH_ID = #{attachId}
+	<delete id="delete"> DELETE FROM ATTACH WHERE BOARD_ID = #{boardId}
 	</delete>
 </mapper>

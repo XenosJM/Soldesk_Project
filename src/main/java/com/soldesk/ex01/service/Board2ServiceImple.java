@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.soldesk.ex01.domain.AttachVO;
 import com.soldesk.ex01.domain.Board2VO;
 import com.soldesk.ex01.domain.ReplyVO;
 import com.soldesk.ex01.persistence.AttachMapper;
@@ -43,6 +44,23 @@ public class Board2ServiceImple implements Board2Service {
 		}
 		return result;
 	}
+	
+	@Override
+	public int updateBoard(Board2VO vo) {
+		log.info("service : board updateBoard()");
+		int result = board2Mapper.updateBoard(vo);
+		AttachVO[] attach = vo.getAttachVO();
+		log.info(attach);
+		if(attach != null) {
+			result = attachMapper.delete(vo.getBoardId());
+			log.info("attachMapper.delete 결과 : "+result);
+			for(int i=0;i<vo.getAttachVO().length;i++) {
+				result = attachMapper.insert(vo.getAttachVO()[i]);
+				log.info("attachMapper.inster 결과 : "+result);			
+			}			
+		}
+		return result;
+	}
 
 	@Override
 	public List<Board2VO> selectList() {
@@ -72,12 +90,7 @@ public class Board2ServiceImple implements Board2Service {
 		return list;
 	}
 
-	@Override
-	public int updateBoard(Board2VO vo) {
-		log.info("service : board updateBoard()");
-		int result = board2Mapper.updateBoard(vo);
-		return result;
-	}
+
 
 	@Override
 	public int deleteBoard(int boardId) {

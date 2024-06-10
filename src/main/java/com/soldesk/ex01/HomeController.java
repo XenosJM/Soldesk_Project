@@ -22,6 +22,7 @@ import com.soldesk.ex01.domain.Board2VO;
 import com.soldesk.ex01.domain.BoardVO;
 import com.soldesk.ex01.domain.FriendVO;
 import com.soldesk.ex01.domain.MemberVO;
+import com.soldesk.ex01.service.AttachService;
 import com.soldesk.ex01.service.Board2Service;
 import com.soldesk.ex01.service.BoardService;
 import com.soldesk.ex01.service.FriendService;
@@ -46,6 +47,10 @@ public class HomeController {
 	
 	@Autowired
 	private FriendService friendService;
+	
+	@Autowired
+	private AttachService attachService;
+	
 	
 	
 	/**
@@ -99,12 +104,14 @@ public class HomeController {
 		model.addAttribute("boardList", boardList);
 	}
 
-//	@GetMapping("board/update")
-//	public void boardUpdate(Model model, Integer boardId) {
-//		log.info("board controller : updateGet()");
-//		BoardVO boardVO = board2Service.selectDetail(boardId);
-//		model.addAttribute("boardVO", boardVO);
-//	}
+
+	@GetMapping("board/update")
+	public void boardUpdate(Model model, Integer boardId) {
+		log.info("board controller : updateGet()");
+		Board2VO board2VO = board2Service.selectDetail(boardId);
+		board2VO.setAttachVO(attachService.getAttachByBoardId(boardId));
+		model.addAttribute("board2VO", board2VO);
+	}
 
 	@GetMapping("member/regist")
 	public void joinMember() {
