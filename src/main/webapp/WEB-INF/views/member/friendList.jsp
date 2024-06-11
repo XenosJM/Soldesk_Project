@@ -129,8 +129,10 @@
 	    $(document).on('click', '.tab', function() {
             // 모든 탭에서 active 클래스를 제거하고
             $('.tab').removeClass('active');
+            $('.tab').hide();
             // 클릭된 탭에만 active 클래스를 추가합니다.
             $(this).addClass('active');
+            $(this).show();
         });
 	    
     	$(document).on('click', '#btnShowFriendList', function(){
@@ -161,11 +163,17 @@
     	$(document).on('click', '#btnSendRequest', function(){
     		$.ajax({
     			type : 'GET',
-    			url : '../friend/getFriend/' + memberId, 
-    			success : function(receiveList){
-    				$.each(receiveList, function(index, item){
-    		    	   
-    				});
+    			url : '../friend/getRequest/' + memberId, 
+    			success : function(requestList){
+    				$.each(requestList, function(index, item){
+    					if(item.requestState === 'waiting'){
+	    		    	   	$('#sendRequest').append(
+	    		    				'<li>' + item.requestId + '</li><p>' + item.requestState + '</p>'
+	    		    	   	);    						
+    					} else{
+    						
+    					}
+   					});
     			}
     		});
     	});
@@ -173,23 +181,10 @@
     	$(document).on('click', '#btnReceiveRequestList', function(){
     		$.ajax({
     			type : 'GET',
-    			url : '../friend/getFriend/' + memberId, 
-    			success : function(friendList){
-    				$.each(friendList, function(index, item){
-    		    	    let result = '';
-    		    	    result += index + ' : ' + item.friendshipId + ', ' + item.memberId + ', ' + item.friendMemberId + ', ' + item.friendState + ', ' + item.friendshipDate;
-    		    	    console.log(result);
-
-    		    	    // 온라인인 경우
-    		    	    if (item.friendState === 'online') {
-    		    	    	// 온라인친구 배열에 값을 추가
-    		    	        onlineFriend.push(item);
-    		    	    }
-    		    	    // 오프라인인 경우
-    		    	    else if (item.friendState === 'offline') {
-    		    	    	// 오프라인친구 배열에 값 추가
-    		    	        offlineFriend.push(item);
-    		    	    }
+    			url : '../friend/getReceive/' + memberId, 
+    			success : function(receiveList){
+    				$.each(receiveList, function(index, item){
+    		    	   
     				});
     			}
     		});
