@@ -83,16 +83,15 @@ public class FriendServiceImple implements FriendService {
 	@Override
 	public List<FriendVO> friendList(String memberId) {
 		log.info("friendList()");
-		log.info(friendMapper.friendList(memberId));
 		List<FriendVO> list = friendMapper.friendList(memberId);
 		log.info(list);
 		return list;
 	}
 
 	@Override
-	public int friendStateChange(int friendshipId, String friendState) {
+	public int friendStateChange(String memberId, String friendState) {
 		log.info("friendStateChange()");
-		int result = friendMapper.friendStateChange(friendshipId, friendState);
+		int result = friendMapper.friendStateChange(memberId, friendState);
 		return result;
 	}
 

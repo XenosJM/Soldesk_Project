@@ -5,50 +5,69 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>친구 목록</title>
+    <title>Fixed Button with Scroll</title>
     <style>
+    .button-container {
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        z-index: 1000;
+    }
 
-        .tab.active {
-            background-color: #ccc;
-        }
+    .button {
+        padding: 10px 20px;
+        background-color: #007bff;
+        color: #fff;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+    }
 
-        .tab-content {
-            display: none;
-            padding: 10px;
-            border: 1px solid #ccc;
-            border-top: none;
-        }
+    .tab.active {
+        background-color: #ccc;
+    }
 
-        .tab-content.active {
-            display: block;
-        }
+    .tab-content {
+        display: none;
+        padding: 10px;
+        border: 1px solid #ccc;
+        border-top: none;
+    }
 
-        .friend-list {
-            list-style-type: none;
-            padding: 0;
-        }
+    .tab-content.active {
+        display: block;
+        margin-top: 60px; /* 버튼 영역의 높이 + 여백 */
+    }
 
-        .friend-list li {
-            padding: 8px;
-            border-bottom: 1px solid #ddd;
-        }
+    .friend-list {
+        list-style-type: none;
+        padding: 0;
+    }
 
-        .online {
-            color: green;
-        }
+    .friend-list li {
+        padding: 8px;
+        border-bottom: 1px solid #ddd;
+    }
 
-        .offline {
-            color: black;	
-        }
-    </style>
+    .online {
+        color: green;
+    }
+
+    .offline {
+        color: black;	
+    }
+</style>
 </head>
 <body>
+<script src="https://cdn.jsdelivr.net/npm/sockjs-client@1/dist/sockjs.min.js"></script>
 <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
-    <div class="tabs">
-    	<button id="btnShowFriendList" class="tab active">친구 목록</button>
-        <!-- <button id="btnSendRequestList" class="tab">보낸 요청</button>
-        <button id="btnReceiveRequestList" class="tab">받은 요청</button> -->
-    </div>
+
+	<div class="button-container">
+	    <button id="btnShowFriendList" class="tab active">친구 목록</button>
+	    <button id="btnSendRequestList" class="tab">보낸 요청</button>
+	    <button id="btnReceiveRequestList" class="tab">받은 요청</button>
+	</div>
+	
 	<div id="tabList" class="tab">
 	    <div id="onlineOfflineTab" class="tab-content active">
 	        <h3>온라인 친구</h3>
@@ -58,19 +77,17 @@
 	        <ul class="friend-list" id="offlineFriend">
 	        </ul>
 	    </div>
+	    <div id="sendRequestTab" class="tab-content">
+	        <h3>친구 요청 보낸 목록</h3>
+	        <ul class="friend-list" id="sendRequest">
+	        </ul>
+	    </div>
+	    <div id="receivedRequestTab" class="tab-content">
+	        <h3>친구 요청 받은 목록</h3>
+	        <ul class="friend-list" id="receiveRequest">
+	        </ul>
+	    </div>
 	</div>
-
-    <!-- <div id="sentRequestTab" class="tab-content">
-        <h3>친구 요청 보낸 목록</h3>
-        <ul class="friend-list" id="sendRequest">
-        </ul>
-    </div>
-
-    <div id="receivedRequestTab" class="tab-content">
-        <h3>친구 요청 받은 목록</h3>
-        <ul class="friend-list" id="receiveRequest">
-        </ul>
-    </div> -->
 	
     <script type="text/javascript">
     $(document).ready(function(){
@@ -81,12 +98,13 @@
     	let friendList =${friendList}; // 모델로 받아온 List배열
     	let onlineFriend = []; // 친구의 상태가 온라인인지 오프라인 인지에 따라 나눌 배열
     	let offlineFriend = [];
+   		let memberId = '${sessionScope.memberId}';
 		
     	// 모델로 받아온 List의 각 값들(요소)에 대해 인덱스를 부여하고 변수명 item으로 값을 반복처리
     	$.each(friendList, function(index, item){
-    	    let result = '';
-    	    result += index + ' : ' + item.friendshipId + ', ' + item.memberId + ', ' + item.friendMemberId + ', ' + item.friendState + ', ' + item.friendshipDate;
-    	    console.log(result);
+    	    // let result = '';
+    	    // result += index + ' : ' + item.friendshipId + ', ' + item.memberId + ', ' + item.friendMemberId + ', ' + item.friendState + ', ' + item.friendshipDate;
+    	    // console.log(result);
 
     	    // 온라인인 경우
     	    if (item.friendState === 'online') {
@@ -108,37 +126,77 @@
 	        $('#offlineFriend').append('<li class="offline">' + friend.friendMemberId + '</li>');
 	    });
 	    
+	    $(document).on('click', '.tab', function() {
+            // 모든 탭에서 active 클래스를 제거하고
+            $('.tab').removeClass('active');
+            // 클릭된 탭에만 active 클래스를 추가합니다.
+            $(this).addClass('active');
+        });
+	    
     	$(document).on('click', '#btnShowFriendList', function(){
-    		let memberId = ${sessionScope.memberId};
     		$.ajax({
     			type : 'GET',
     			url : '../friend/getFriend/' + memberId, 
-    			success : function(){
-    				
+    			success : function(friendList){
+    				$.each(friendList, function(index, item){
+    		    	    let result = '';
+    		    	    result += index + ' : ' + item.friendshipId + ', ' + item.memberId + ', ' + item.friendMemberId + ', ' + item.friendState + ', ' + item.friendshipDate;
+    		    	    console.log(result);
+
+    		    	    // 온라인인 경우
+    		    	    if (item.friendState === 'online') {
+    		    	    	// 온라인친구 배열에 값을 추가
+    		    	        onlineFriend.push(item);
+    		    	    }
+    		    	    // 오프라인인 경우
+    		    	    else if (item.friendState === 'offline') {
+    		    	    	// 오프라인친구 배열에 값 추가
+    		    	        offlineFriend.push(item);
+    		    	    }
+    				});
     			}
     		});
-    		
-    		$('#tabList').html(
-    	        '<div id="onlineOfflineTab" class="tab-content active">'
-    	        + '<h3>온라인 친구</h3>'
-    	        + '<ul class="friend-list" id="onlineFriend">'
-    	        + onlineListHTML
-    	        + '</ul>'
-    	        + '<h3>오프라인 친구</h3>'
-    	        + '<ul class="friend-list" id="offlineFriend">'
-    	        + offlineListHTML
-    	        + '</ul>'
-    	        + '</div>'
-    	    );
 		});
     	
     	$(document).on('click', '#btnSendRequest', function(){
-    		
+    		$.ajax({
+    			type : 'GET',
+    			url : '../friend/getFriend/' + memberId, 
+    			success : function(receiveList){
+    				$.each(receiveList, function(index, item){
+    		    	   
+    				});
+    			}
+    		});
     	});
     	
     	$(document).on('click', '#btnReceiveRequestList', function(){
-    		
+    		$.ajax({
+    			type : 'GET',
+    			url : '../friend/getFriend/' + memberId, 
+    			success : function(friendList){
+    				$.each(friendList, function(index, item){
+    		    	    let result = '';
+    		    	    result += index + ' : ' + item.friendshipId + ', ' + item.memberId + ', ' + item.friendMemberId + ', ' + item.friendState + ', ' + item.friendshipDate;
+    		    	    console.log(result);
+
+    		    	    // 온라인인 경우
+    		    	    if (item.friendState === 'online') {
+    		    	    	// 온라인친구 배열에 값을 추가
+    		    	        onlineFriend.push(item);
+    		    	    }
+    		    	    // 오프라인인 경우
+    		    	    else if (item.friendState === 'offline') {
+    		    	    	// 오프라인친구 배열에 값 추가
+    		    	        offlineFriend.push(item);
+    		    	    }
+    				});
+    			}
+    		});
     	});
+    	
+    	// 전송된 채팅이 존재할시 친구 이름 주황색으로 변경되게 할것
+    	
     	
     });
     </script>

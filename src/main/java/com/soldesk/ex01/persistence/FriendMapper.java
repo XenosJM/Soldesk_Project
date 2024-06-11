@@ -23,7 +23,7 @@ public interface FriendMapper {
 	
 	int insertFriend(FriendVO friendVO);
 	List<FriendVO> friendList(String memberId);
-	int friendStateChange(int friendshipId, String friendState);
+	int friendStateChange(String memberId, String friendState);
 	int deleteFriend(int friendshipId);
 	
 }

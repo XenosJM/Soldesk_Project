@@ -4,6 +4,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
+
+import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -94,14 +97,21 @@ public class MemberServiceImple implements MemberService{
 	}
 
 	@Override
-	public MemberVO memberCheck(String memberId) {
+	public int memberCheck(Map<String, String> res, HttpSession session) {
 		log.info("memberCheck()");
-		return memberMapper.memberCheck(memberId);
-	}
+		String memberId = res.get("memberId");
+        String memberPassword = res.get("memberPassword");
+        MemberVO memberVO = memberMapper.memberCheck(memberId);
 
-	@Override
-	public MemberVO findId(String memberEmail) {
-		return memberMapper.findId(memberEmail);
+        if (memberVO != null && memberPassword.equals(memberVO.getMemberPassword())) {
+            session.setAttribute("memberId", memberVO.getMemberId());
+            if (memberVO.getManagerId() != 0) {
+                session.setAttribute("managerId", memberVO.getManagerId());
+            }
+            return 1;
+        } else {
+            return 0;
+        }
 	}
 
 	@Override

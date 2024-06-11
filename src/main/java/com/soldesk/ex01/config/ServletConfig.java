@@ -9,13 +9,18 @@ import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry
 import org.springframework.web.servlet.config.annotation.ViewResolverRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.springframework.web.servlet.view.InternalResourceViewResolver;
+import org.springframework.web.socket.config.annotation.EnableWebSocket;
+import org.springframework.web.socket.config.annotation.WebSocketConfigurer;
+import org.springframework.web.socket.config.annotation.WebSocketHandlerRegistry;
+import org.springframework.web.socket.server.standard.ServletServerContainerFactoryBean;
 
 
 // servlet-context.xml과 동일 
 @Configuration // Spring Container에서 관리하는 설정 클래스
 @EnableWebMvc // Spring MVC 기능 사용
+@EnableWebSocket // 웹소켓 활성화
 @ComponentScan(basePackages = {"com.soldesk.ex01"}) // component scan 설정
-public class ServletConfig implements WebMvcConfigurer {
+public class ServletConfig implements WebMvcConfigurer, WebSocketConfigurer {
 
    // ViewResolver 설정 메서드
    @Override
@@ -37,9 +42,8 @@ public class ServletConfig implements WebMvcConfigurer {
    // 파일을 저장할 경로 bean 생성, 이 경로에 저장후 DB에는 파일명만 저장
    @Bean
    public String uploadPath() {
-      return "C:\\upload\\ex01";
-   }	
-   
+	   return "C:\\upload\\ex01";
+   }
    
    // MultipartResolver bean 생성
    @Bean
@@ -54,4 +58,34 @@ public class ServletConfig implements WebMvcConfigurer {
 
       return resolver;
    }
+   
+   // 웹 소켓 연결 설정
+	@Override
+	public void registerWebSocketHandlers(WebSocketHandlerRegistry registry) {
+		registry.addHandler(privateChatHandler(), "/private") // 연결 호출
+	    		.setAllowedOrigins("*"); // 허가된 도메인에서의 연결만 허용 현재는 테스트라 모두 허용
+		
+	}
+	// 웹 소켓 연결에 필요한 빈 생성
+	@Bean
+	public PrivateChatHandler privateChatHandler() {
+		return new PrivateChatHandler();
+	}
+	
+	// 웹 소켓 사용시 컨테이너 설정 빈 생성
+	@Bean
+    public ServletServerContainerFactoryBean createWebSocketContainer() {
+		ServletServerContainerFactoryBean container = new ServletServerContainerFactoryBean();
+		container.setMaxTextMessageBufferSize(8192);
+		container.setMaxBinaryMessageBufferSize(8192);
+		
+		return container;
+		
+	}	
+	
+	
 } // end ServletConfig
+
+
+
+

@@ -1,6 +1,9 @@
 package com.soldesk.ex01.service;
 
 import java.util.List;
+import java.util.Map;
+
+import javax.servlet.http.HttpSession;
 
 import com.soldesk.ex01.domain.MemberVO;
 
@@ -25,9 +28,7 @@ public interface MemberService {
 	// 회원 정보 삭제(탈퇴)
 	int deleteMember(String memberId);
 	// 로그인
-	MemberVO memberCheck(String memberId);
-	// 아이디 찾기
-	MemberVO findId(String memberEmail);
+	int memberCheck(Map<String, String> res, HttpSession session);
 	// TODO 회원 친구 보기 -> 친구 서비스에서
 	
 	// 친구 신청(등록)

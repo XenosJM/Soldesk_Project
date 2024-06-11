@@ -42,9 +42,6 @@ public class UtilRESTController {
 	@Autowired
 	private AuthCodeGenerator authCodeGenerator;
 	
-	@Autowired
-	private MemberService memberService;
-	
 	@GetMapping("/checkId/{memberId}")
 	public ResponseEntity<Integer> checkId(@PathVariable("memberId")String memberId){
 		log.info("checkId()");
@@ -116,12 +113,11 @@ public class UtilRESTController {
 	@PostMapping("/authCodeId")
 	public ResponseEntity<Integer> AuthIdSend(@RequestParam("memberEmail")String memberEmail){
 		int result = 0;
-		MemberVO memberVO = memberService.findId(memberEmail);
-		if(memberVO == null) {
+		String memberId = utilService.checkEmail(memberEmail);
+		if(memberId == null) {
 			result =0;
 			return new ResponseEntity<Integer>(result, HttpStatus.OK);
 		}
-		String memberId = memberVO.getMemberId();
 		String sealedId = memberId.substring(0, memberId.length()-3);
 		String setFrom = "wjdalsqaa123@gmail.com"; // config에 입력한 자신의 이메일 주소를 입력
         String toMail = memberEmail;
@@ -157,9 +153,9 @@ public class UtilRESTController {
 
 	@GetMapping("/findId")
 	public ResponseEntity<String> checkIdEmail(@RequestParam("memberEmail") String memberEmail){
-		MemberVO memberVO = memberService.findId(memberEmail);
-		log.info(memberVO);
-		String result = (memberVO != null) ? memberVO.getMemberId() : null;
+		String memberId = utilService.checkEmail(memberEmail);
+		log.info(memberId);
+		String result = (memberId != null) ? memberId : null;
 		log.info(result);
 		return new ResponseEntity<String>(result, HttpStatus.OK);
 	}

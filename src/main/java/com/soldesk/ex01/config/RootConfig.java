@@ -31,6 +31,7 @@ import com.zaxxer.hikari.HikariDataSource;
 public class RootConfig {
    
 	// 오라클 설정
+	private static final String JDBC_DRIVER = "oracle.jdbc.OracleDriver";
 	private static final String JDBC_URL =  "jdbc:oracle:thin:@192.168.0.161:1521:xe";
 	private static final String JDBC_USER = "sdp";
 	private static final String JDBC_PW = "asdf";
@@ -44,7 +45,7 @@ public class RootConfig {
    @Bean // 스프링 bean으로 설정
    public DataSource dataSource() { // DataSource 객체 리턴 메서드
       HikariConfig config = new HikariConfig(); // 설정 객체
-      config.setDriverClassName("oracle.jdbc.OracleDriver"); // jdbc 드라이버 정보
+      config.setDriverClassName(JDBC_DRIVER); // jdbc 드라이버 정보
       // TODO 집에서 할때는 url 설정 바꿔야함.
 //    config.setJdbcUrl("jdbc:oracle:thin:@localhost:1521:xe"); // DB 연결 url
       config.setJdbcUrl(JDBC_URL); // DB 연결 url

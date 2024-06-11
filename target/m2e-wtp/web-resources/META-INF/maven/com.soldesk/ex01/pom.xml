@@ -215,20 +215,44 @@
 			<artifactId>spring-security-config</artifactId>
 			<version>5.2.2.RELEASE</version>
 		</dependency>
+		
 		<!-- Spring Security의 핵심 기능을 제공하는 모듈 -->
 		<dependency>
 			<groupId>org.springframework.security</groupId>
 			<artifactId>spring-security-core</artifactId>
 			<version>5.2.2.RELEASE</version>
 		</dependency>
+		
 		<!-- Spring Security 태그 라이브러리를 제공하는 모듈 -->
 		<dependency>
 			<groupId>org.springframework.security</groupId>
 			<artifactId>spring-security-taglibs</artifactId>
 			<version>5.2.2.RELEASE</version>
 		</dependency>
-	
-		        
+		
+		<!-- 웹소켓 모듈 주입 -->
+		<dependency>
+	        <groupId>org.springframework</groupId>
+	        <artifactId>spring-websocket</artifactId>
+	        <version>${org.springframework-version}</version>
+	    </dependency>
+	    
+	    <dependency>
+		    <groupId>javax.websocket</groupId>
+		    <artifactId>javax.websocket-api</artifactId>
+		    <version>1.1</version>
+		    <scope>provided</scope>
+		</dependency>
+	    
+		<!-- 웹소켓의 json 통신을 위한 jackson 라이브러리 모듈 -->
+	    <!-- https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-core -->
+		<dependency>
+		    <groupId>com.fasterxml.jackson.core</groupId>
+		    <artifactId>jackson-core</artifactId>
+		    <version>2.12.3</version>
+		</dependency>
+
+			 
 	</dependencies>
     <build>
         <plugins>

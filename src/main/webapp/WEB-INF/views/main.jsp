@@ -134,17 +134,20 @@
 
        .frame-container {
 		    display: none;
-		    bottom: 20px; /* 화면 하단으로부터 20px 떨어진 위치 */
+		    position: fixed;
+		    bottom: 20px; 
 		    right: 20px;
-		    width: 25%;
-		    height: 60%;
-		    border: 2px solid;
+		    width: 15%;
+		    height: 40%;
+		    border: 1px solid;
 		    background: #fff;
 		    overflow: hidden;
+            cursor: move; /* 드래그할 때 마우스 커서를 변경 */
 		}
 
         iframe {
             width: 100%;
+            top: 20px;
             height: 90%; /* Close 버튼 공간을 위해 높이 조정 */
             border: none;
         }
@@ -257,7 +260,7 @@
             $('#detailIframe').attr('src', 'about:blank');
         }); */
         
-        // 움직이고 사이즈 조절 가능은 하게 해놨는데 큰 의미는 없는거 같음
+        // 움직이기 가능
         $(".frame-container").draggable();
         
         // iframe에 관련된 함수와 변수명 정의

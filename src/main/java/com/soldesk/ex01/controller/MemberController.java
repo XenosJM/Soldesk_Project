@@ -1,7 +1,5 @@
 package com.soldesk.ex01.controller;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -11,7 +9,6 @@ import javax.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -29,11 +26,12 @@ import lombok.extern.log4j.Log4j;
 
 @RestController
 @RequestMapping(value="/member")
+// @CrossOrigin(origins = "http://localhost:3000")
 @Log4j
 public class MemberController {
 	
 	@Autowired
-	private MemberService memberService;
+	private MemberService member;
 	
 	// TODO 시큐리티적용시 check 옮길것
 	
@@ -45,7 +43,7 @@ public class MemberController {
 		memberVO.setMemberPassword(res.get("memberPassword"));
 		memberVO.setMemberEmail(res.get("memberEmail"));
 		log.info("memberVO = " + memberVO.toString());
-		int result = memberService.createMember(memberVO);
+		int result = member.createMember(memberVO);
 		log.info(result + "행 등록");
 		return new ResponseEntity<Integer>(result,HttpStatus.OK);
 	}
@@ -62,7 +60,7 @@ public class MemberController {
 	public ResponseEntity<Integer> memberUpdate(@RequestBody Map<String, String> res) {
 		log.info("memberUpdate()");
 		int result = 0;
-		MemberVO compareVO = memberService.getMemberById(res.get("memberId"));
+		MemberVO compareVO = member.getMemberById(res.get("memberId"));
 		if(compareVO != null) {
 			MemberVO memberVO = new MemberVO();
 			memberVO.setMemberId(res.get("memberId"));
@@ -77,7 +75,7 @@ public class MemberController {
 				memberVO.setMemberEmail(compareVO.getMemberEmail());
 			}
 			log.info("memberVO = " + memberVO.toString());
-			result = memberService.updateMember(memberVO);
+			result = member.updateMember(memberVO);
 			log.info(result + "행 수정");
 		} else {
 			result = 0;
@@ -89,7 +87,7 @@ public class MemberController {
 	public ResponseEntity<Integer> deletePost(@RequestBody Map<String, String> res) {
 		log.info("delete()");
 		// 회원 탈퇴도 삭제를 바로 할지 아니면 컬럼을 만들어서 탈퇴했다고 업데이트후에 스케쥴러로 비교해서 이 컬럼에 값이 있으면 지우게 할지 고민해볼것.
-		int result = memberService.deleteMember(res.get("memberId"));	
+		int result = member.deleteMember(res.get("memberId"));	
 		log.info(res.get("memberId"));
 		log.info(result + "행 삭제");
 		return new ResponseEntity<Integer>(result, HttpStatus.OK);
@@ -98,27 +96,8 @@ public class MemberController {
 	@PostMapping("/check")
 	public ResponseEntity<Integer> memberCheck(@RequestBody Map<String, String> res, HttpServletRequest req) {
 		log.info("memberCheck()");
-		int result = 0;
-		MemberVO memberVO = new MemberVO();
-		memberVO = memberService.memberCheck(res.get("memberId"));
-		if(memberVO != null && res.get("memberPassword").equals(memberVO.getMemberPassword())) {
-			if(memberVO.getManagerId() != 0) {
-				log.info(memberVO.getMemberId());
-				HttpSession session = req.getSession();
-				session.setAttribute("memberId", memberVO.getMemberId());
-				session.setAttribute("managerId", memberVO.getManagerId());
-//				session.setAttribute("memberName", memberVO.getMemberName());
-			} else {
-				HttpSession session = req.getSession();
-				log.info(memberVO.getMemberId());
-				session.setAttribute("memberId", memberVO.getMemberId());
-				log.info(session.getAttribute("memberId"));
-//				session.setAttribute("memberName", memberVO.getMemberName());
-			}
-			result = 1;
-		} else { // 아이디 또는 비밀번호가 틀렸을경우
-			result = 0;
-		}
+		HttpSession session = req.getSession();
+		int result = member.memberCheck(res, session);
 		return new ResponseEntity<Integer>(result, HttpStatus.OK);
 	}
 	
@@ -130,7 +109,7 @@ public class MemberController {
 		log.info(memberVO.getMemberId());
 		memberVO.setMemberProperty(delVO.getMemberProperty());
 		log.info(memberVO.getMemberProperty());
-		int result = memberService.updateMemberProperty(memberVO);
+		int result = member.updateMemberProperty(memberVO);
 		
 		return new ResponseEntity<Integer>(result, HttpStatus.OK);
 	}
@@ -138,7 +117,7 @@ public class MemberController {
 	@GetMapping("/getAllMember")
 	public ResponseEntity<List<MemberVO>> getAllMember(){
 		log.info("getAllmember()");
-		List<MemberVO> memberList = memberService.getAllMember();
+		List<MemberVO> memberList = member.getAllMember();
 		return new ResponseEntity<List<MemberVO>>(memberList, HttpStatus.OK);
 	}
 	
@@ -149,7 +128,7 @@ public class MemberController {
 //		log.info(memberVO.getManagerId());
 		memberVO.setMemberPassword(res.get("memberPassword"));
 //		log.info(memberVO.getMemberPassword());
-		int result = memberService.updatePassword(memberVO);
+		int result = member.updatePassword(memberVO);
 		return new ResponseEntity<Integer>(result, HttpStatus.OK);
 	}
 	
@@ -160,7 +139,7 @@ public class MemberController {
 //		log.info(memberVO.getManagerId());
 		memberVO.setMemberEmail(res.get("memberEmail"));
 //		log.info(memberVO.getMemberPassword());
-		int result = memberService.updateEmail(memberVO);
+		int result = member.updateEmail(memberVO);
 		return new ResponseEntity<Integer>(result, HttpStatus.OK);
 	}
 	

@@ -104,9 +104,9 @@ public class FriendController {
 	}
 	
 	@PostMapping("/friendState")
-	public ResponseEntity<Integer> friendStateChange(@RequestParam("friendshipId") int friendshipId, @RequestParam("friendState") String friendState){
+	public ResponseEntity<Integer> friendStateChange(@RequestParam("memberId") String memberId, @RequestParam("friendState") String friendState){
 		log.info("friendStateChange()");
-		int result = friendService.friendStateChange(friendshipId, friendState);
+		int result = friendService.friendStateChange(memberId, friendState);
 		return new ResponseEntity<Integer>(result, HttpStatus.OK);
 	}
 	
