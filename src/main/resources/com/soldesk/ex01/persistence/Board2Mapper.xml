@@ -73,25 +73,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	<select id="selectListByPagination" resultMap="boardResultMap">
 		SELECT * FROM (
 		SELECT ROW_NUMBER() OVER (ORDER BY BOARD_ID DESC) AS RN,
-		BOARD.*
-		FROM
-		BOARD
-		)
-		WHERE RN BETWEEN #{start} AND #{end}
-	</select>
-
-	<!-- resultType : 쿼리 결과를 자바 객체에 매핑하기 위해 사용 -->
-	<select id="selectTotalCount" resultType="Integer">
-		SELECT COUNT(*)
-		TOTAL_COUNT FROM BOARD
-	</select>
-
-	<select id="selectListByPaginataion" resultMap="boardResultMap">
-		SELECT * FROM (
-		SELECT ROW_NUMBER() OVER(ORDER BY BOARD_ID DESC) AS RN,
 		BOARD2.*
 		FROM
-		BOARD
+		BOARD2
 		)
 		WHERE RN BETWEEN #{start} AND #{end}
 	</select>

@@ -18,7 +18,7 @@ public interface Board2Mapper {
 	Board2VO selectDetail(int boardId);
 	int updateBoard(Board2VO vo);
 	int deleteBoard(int boardId);	
-	List<Board2VO> selectListByPaginataion(Pagination pagination);
+	List<Board2VO> selectListByPagination(Pagination pagination);
 	int selectTotalCount();
 
 }

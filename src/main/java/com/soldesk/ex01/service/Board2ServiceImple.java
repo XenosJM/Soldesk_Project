@@ -117,7 +117,7 @@ public class Board2ServiceImple implements Board2Service {
 	@Override
 	public List<Board2VO> getPagingBoards(Pagination pagination) {
 		log.info("getPagingBoards");
-		List<Board2VO> list = board2Mapper.selectListByPaginataion(pagination);
+		List<Board2VO> list = board2Mapper.selectListByPagination(pagination);
 		return list;
 	}
 
