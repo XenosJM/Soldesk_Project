@@ -39,9 +39,12 @@ public class Board2ServiceImple implements Board2Service {
 		int result = board2Mapper.insertBoard(vo);
 		log.info("board2Mapper.insert 결과 : "+result);
 		//result = attachMapper.insert(vo.getAttachVO());
-		for(int i=0;i<vo.getAttachVO().length;i++) {
-			result = attachMapper.insert(vo.getAttachVO()[i]);
-			log.info("attachMapper.inster 결과 : "+result);			
+		AttachVO[] attach = vo.getAttachVO();
+		if(attach != null) {			
+			for (int i = 0; i < attach.length; i++) {
+				result = attachMapper.insert(vo.getAttachVO()[i]);
+				log.info("attachMapper.inster 결과 : " + result);
+			}
 		}
 		return result;
 	}
