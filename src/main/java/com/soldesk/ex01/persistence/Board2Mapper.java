@@ -6,6 +6,7 @@ import org.apache.ibatis.annotations.Mapper;
 
 import com.soldesk.ex01.domain.Board2VO;
 import com.soldesk.ex01.domain.BoardVO;
+import com.soldesk.ex01.util.Pagination;
 
 @Mapper
 public interface Board2Mapper {
@@ -17,5 +18,7 @@ public interface Board2Mapper {
 	Board2VO selectDetail(int boardId);
 	int updateBoard(Board2VO vo);
 	int deleteBoard(int boardId);	
+	List<Board2VO> selectListByPaginataion(Pagination pagination);
+	int selectTotalCount();
 
 }

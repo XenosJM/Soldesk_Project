@@ -7,6 +7,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -93,8 +95,13 @@ public class HomeController {
 	public void boardRegister() {
 		log.info("board controller : registerGet()");
 	}
-
-
+	
+//	@GetMapping("board/detail")
+//	public ResponseEntity<Board2VO> boardDetail(Integer boardId) {
+//		log.info("board controller : detail()");
+//		Board2VO board2VO = board2Service.selectDetail(boardId);
+//		return new ResponseEntity<>(board2VO,HttpStatus.OK);
+//	}
 	
 	@GetMapping("board/list")
 	public void boardList(Model model) {
@@ -103,6 +110,14 @@ public class HomeController {
 
 		model.addAttribute("boardList", boardList);
 	}
+	
+//	@GetMapping("board/list")
+//	public ResponseEntity<List<Board2VO>> boardList(Model model) {
+//		log.info("board controller : list()");
+//		List<Board2VO> boardList = board2Service.selectList();
+//
+//		return new ResponseEntity<>(boardList, HttpStatus.OK);
+//	}
 
 
 	@GetMapping("board/update")
@@ -112,6 +127,16 @@ public class HomeController {
 		board2VO.setAttachVO(attachService.getAttachByBoardId(boardId));
 		model.addAttribute("board2VO", board2VO);
 	}
+	
+//	@GetMapping("board/update")
+//	public ResponseEntity<Board2VO> boardUpdate(Integer boardId) {
+//		log.info("board controller : updateGet()");
+//		Board2VO board2VO = board2Service.selectDetail(boardId);
+//		board2VO.setAttachVO(attachService.getAttachByBoardId(boardId));
+//		return new ResponseEntity<>(board2VO,HttpStatus.OK);
+//	}
+//	
+	
 
 	@GetMapping("member/regist")
 	public void joinMember() {

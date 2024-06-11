@@ -3,7 +3,9 @@ package com.soldesk.ex01.util;
 import java.io.File;
 import java.io.IOException;
 import java.text.DecimalFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
 
 import org.apache.commons.io.FilenameUtils;
 import org.springframework.web.multipart.MultipartFile;
@@ -126,4 +128,32 @@ public class FileUploadUtil {
         }
     }
     
+    /**
+     * 로컬 디렉토리의 모든 파일 이름을 가져옴
+     * 
+     * @param uploadPath, path 디렉토리 경로
+     * @return 파일 이름 목록
+     */
+    public static List<String> getFileNames(String uploadPath,String path) {
+        List<String> fileNames = new ArrayList<>();
+        String fullPath = uploadPath + File.separator + path + File.separator;
+        File folder = new File(fullPath);
+
+        if (folder.exists() && folder.isDirectory()) {
+            File[] files = folder.listFiles();
+            if (files != null) {
+                for (File file : files) {
+                    if (file.isFile()) {
+                        fileNames.add(file.getName());
+                    }
+                }
+            } else {
+                System.out.println("폴더 비어있음");
+            }
+        } else {
+            System.out.println("폴더 미존재");
+        }
+
+        return fileNames;
+    }
 }

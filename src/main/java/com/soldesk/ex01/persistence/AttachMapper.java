@@ -14,4 +14,5 @@ public interface AttachMapper {
     int update(AttachVO attach);
     int delete(int boardId);
     AttachVO[] selectByBoardId(int boardId);
+    List<AttachVO> selectYesterday();
 }
