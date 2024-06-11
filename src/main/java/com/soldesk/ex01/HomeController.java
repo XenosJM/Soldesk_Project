@@ -7,6 +7,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -27,6 +29,8 @@ import com.soldesk.ex01.service.Board2Service;
 import com.soldesk.ex01.service.BoardService;
 import com.soldesk.ex01.service.FriendService;
 import com.soldesk.ex01.service.MemberService;
+import com.soldesk.ex01.util.PageMaker;
+import com.soldesk.ex01.util.Pagination;
 
 import lombok.extern.log4j.Log4j;
 
@@ -93,16 +97,66 @@ public class HomeController {
 	public void boardRegister() {
 		log.info("board controller : registerGet()");
 	}
-
-
 	
+//	@GetMapping("board/detail")
+//	public ResponseEntity<Board2VO> boardDetail(Integer boardId) {
+//		log.info("board controller : detail()");
+//		Board2VO board2VO = board2Service.selectDetail(boardId);
+//		return new ResponseEntity<>(board2VO,HttpStatus.OK);
+//	}
+	
+	//이게 내가 쓸거임 
+//	@GetMapping("board/list")
+//	public void boardList(Model model) {
+//		log.info("board controller : list()");
+//		List<Board2VO> boardList = board2Service.selectList();
+//
+//		model.addAttribute("boardList", boardList);
+//	}
+	
+	//이게 내가 쓰던거를 페이징 처리 한거임
 	@GetMapping("board/list")
-	public void boardList(Model model) {
-		log.info("board controller : list()");
-		List<Board2VO> boardList = board2Service.selectList();
-
+	public void list(Model model, Pagination pagination) {
+		log.info("list()");
+		log.info("pagination = "+pagination);
+		List<Board2VO> boardList = board2Service.getPagingBoards(pagination);
+		
+		PageMaker pageMaker = new PageMaker();
+		pageMaker.setPagination(pagination);
+		pageMaker.setTotalCount(board2Service.getTotalCount());
+		
+		model.addAttribute("pageMaker", pageMaker);
 		model.addAttribute("boardList", boardList);
 	}
+	
+	//페이징 한걸 비동기 한거임
+//	@GetMapping("/list")
+//	public ResponseEntity<Map<String, Object>> list(Pagination pagination) {
+//	    log.info("list()");
+//	    log.info("pagination = " + pagination);
+//
+//	    List<BoardVO> boardList = boardService.getPagingBoards(pagination);
+//
+//	    PageMaker pageMaker = new PageMaker();
+//	    pageMaker.setPagination(pagination);
+//	    pageMaker.setTotalCount(boardService.getTotalCount());
+//
+//	    // 데이터를 담을 Map 생성
+//	    Map<String, Object> response = new HashMap<>();
+//	    response.put("pageMaker", pageMaker);
+//	    response.put("boardList", boardList);
+//
+//	    // ResponseEntity에 Map을 담아서 반환
+//	    return ResponseEntity.ok(response);
+//	}
+	
+//	@GetMapping("board/list")
+//	public ResponseEntity<List<Board2VO>> boardList(Model model) {
+//		log.info("board controller : list()");
+//		List<Board2VO> boardList = board2Service.selectList();
+//
+//		return new ResponseEntity<>(boardList, HttpStatus.OK);
+//	}
 
 
 	@GetMapping("board/update")
@@ -112,6 +166,16 @@ public class HomeController {
 		board2VO.setAttachVO(attachService.getAttachByBoardId(boardId));
 		model.addAttribute("board2VO", board2VO);
 	}
+	
+//	@GetMapping("board/update")
+//	public ResponseEntity<Board2VO> boardUpdate(Integer boardId) {
+//		log.info("board controller : updateGet()");
+//		Board2VO board2VO = board2Service.selectDetail(boardId);
+//		board2VO.setAttachVO(attachService.getAttachByBoardId(boardId));
+//		return new ResponseEntity<>(board2VO,HttpStatus.OK);
+//	}
+//	
+	
 
 	@GetMapping("member/regist")
 	public void joinMember() {

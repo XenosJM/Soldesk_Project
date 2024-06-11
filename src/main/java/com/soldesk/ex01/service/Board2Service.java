@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.soldesk.ex01.domain.Board2VO;
 import com.soldesk.ex01.domain.BoardVO;
+import com.soldesk.ex01.util.Pagination;
 
 public interface Board2Service {
 	int insertBoard(Board2VO vo);
@@ -14,4 +15,6 @@ public interface Board2Service {
 	Board2VO selectDetail(int boardId);
 	int updateBoard(Board2VO vo);
 	int deleteBoard(int boardId);	
+	List<Board2VO> getPagingBoards(Pagination pagination);
+	int getTotalCount();
 }

@@ -12,6 +12,7 @@ import com.soldesk.ex01.persistence.AttachMapper;
 import com.soldesk.ex01.persistence.Board2Mapper;
 import com.soldesk.ex01.persistence.ReplyMapper;
 import com.soldesk.ex01.persistence.RereplyMapper;
+import com.soldesk.ex01.util.Pagination;
 
 import lombok.extern.log4j.Log4j;
 
@@ -38,9 +39,12 @@ public class Board2ServiceImple implements Board2Service {
 		int result = board2Mapper.insertBoard(vo);
 		log.info("board2Mapper.insert 결과 : "+result);
 		//result = attachMapper.insert(vo.getAttachVO());
-		for(int i=0;i<vo.getAttachVO().length;i++) {
-			result = attachMapper.insert(vo.getAttachVO()[i]);
-			log.info("attachMapper.inster 결과 : "+result);			
+		AttachVO[] attach = vo.getAttachVO();
+		if(attach != null) {			
+			for (int i = 0; i < attach.length; i++) {
+				result = attachMapper.insert(vo.getAttachVO()[i]);
+				log.info("attachMapper.inster 결과 : " + result);
+			}
 		}
 		return result;
 	}
@@ -113,6 +117,18 @@ public class Board2ServiceImple implements Board2Service {
 		return vo;
 	}
 
+	@Override
+	public List<Board2VO> getPagingBoards(Pagination pagination) {
+		log.info("getPagingBoards");
+		List<Board2VO> list = board2Mapper.selectListByPagination(pagination);
+		return list;
+	}
+
+	@Override
+	public int getTotalCount() {
+		log.info("getTotalCount()");
+		return board2Mapper.selectTotalCount();
+	}
 
 
 }

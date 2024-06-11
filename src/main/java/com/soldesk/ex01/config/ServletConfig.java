@@ -3,6 +3,7 @@ package com.soldesk.ex01.config;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.web.multipart.commons.CommonsMultipartResolver;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
@@ -19,6 +20,7 @@ import org.springframework.web.socket.server.standard.ServletServerContainerFact
 @Configuration // Spring Container에서 관리하는 설정 클래스
 @EnableWebMvc // Spring MVC 기능 사용
 @EnableWebSocket // 웹소켓 활성화
+@EnableScheduling // 스케줄링 기능 사용
 @ComponentScan(basePackages = {"com.soldesk.ex01"}) // component scan 설정
 public class ServletConfig implements WebMvcConfigurer, WebSocketConfigurer {
 
@@ -55,7 +57,7 @@ public class ServletConfig implements WebMvcConfigurer, WebSocketConfigurer {
 
       // 클라이언트가 업로드하는 각 파일의 최대 크기 (bytes)
       resolver.setMaxUploadSizePerFile(10485760); // 10MB
-
+      
       return resolver;
    }
    
