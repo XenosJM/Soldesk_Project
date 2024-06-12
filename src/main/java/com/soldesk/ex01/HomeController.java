@@ -1,5 +1,6 @@
 package com.soldesk.ex01;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
@@ -165,6 +166,22 @@ public class HomeController {
 		Board2VO board2VO = board2Service.selectDetail(boardId);
 		board2VO.setAttachVO(attachService.getAttachByBoardId(boardId));
 		model.addAttribute("board2VO", board2VO);
+	}
+	
+	@GetMapping("board/search")
+	public void boardSearch(Model model, @RequestParam String searchOption, @RequestParam String search) {
+	    log.info("board controller: search()");
+	    List<Board2VO> boardList;
+	    if ("title".equals(searchOption)) {
+	        boardList = board2Service.selectByTitle(search);
+	    } else if ("content".equals(searchOption)) {
+	        boardList = board2Service.selectByContent(search);
+	    } else {
+	    	boardList = new ArrayList<Board2VO>();
+	    }
+	    model.addAttribute("boardList", boardList);
+	    
+	    
 	}
 	
 //	@GetMapping("board/update")

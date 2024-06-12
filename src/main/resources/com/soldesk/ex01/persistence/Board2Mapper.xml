@@ -34,12 +34,12 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
 	<select id="selectByTitle" resultMap="boardResultMap">
 		<!-- 게시글 제목으로 검색 -->
-		SELECT * FROM BOARD2 WHERE BOARD_TITLE LIKE '%${boardTitle}%'
+		SELECT * FROM BOARD2 WHERE BOARD_TITLE LIKE '%${boardTitle}%' order by BOARD_ID desc
 	</select>
 
 	<select id="selectByContent" resultMap="boardResultMap">
-		<!-- 게시글 제목으로 검색 -->
-		SELECT * FROM BOARD2 WHERE BOARD_CONTENT LIKE '%${boardContent}%'
+		<!-- 게시글 내용으로 검색 -->
+		SELECT * FROM BOARD2 WHERE BOARD_CONTENT LIKE '%${boardContent}%' order by BOARD_ID desc
 	</select>
 
 	<select id="selectByMember" resultMap="boardResultMap">
@@ -69,7 +69,17 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		DELETE BOARD2
 		WHERE BOARD_ID = #{boardId}
 	</delete>
-
+	
+	<update id = "insertReplyCount">
+		update board2 set board_reply_count = board_reply_count + 1 where board_id = #{boardId}
+	</update>
+	
+	<update id = "deleteReplyCount">
+		update board2 set board_reply_count = board_reply_count - 1 where board_id = #{boardId}
+	</update>
+	
+	
+	
 	<select id="selectListByPagination" resultMap="boardResultMap">
 		SELECT * FROM (
 		SELECT ROW_NUMBER() OVER (ORDER BY BOARD_ID DESC) AS RN,

@@ -17,4 +17,5 @@ public interface Board2Service {
 	int deleteBoard(int boardId);	
 	List<Board2VO> getPagingBoards(Pagination pagination);
 	int getTotalCount();
+
 }
