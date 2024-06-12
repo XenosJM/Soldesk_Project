@@ -175,10 +175,11 @@
     <div class="frame-container" id="frameContainer">
     	<iframe id="friendIframe"></iframe>
     	<!-- <iframe id="detailIframe"></iframe> -->
+		<button id="btnSendRequest">친구 요청 보내기</button>
 	</div>
-
     <script type="text/javascript">
         $(function () {
+        	let memberId = '${sessionScope.memberId}';
         	
             if (${empty sessionScope.memberId}) {
                 $('#loginContainer').html(
@@ -241,48 +242,58 @@
                 window.location.href = "member/checkout";
             });
 
-        });
-		
-        /* $(document).on('click', '#detail', function() {
-        	let memberId = $('#memberId').val();
-            let frameContainer = $('#frameContainer');
-            if (frameContainer.css('display') === 'none' || frameContainer.css('display') === '') {
-	            frameContainer.css('display', 'block');	
-            	$('#detailIframe').attr('src', 'member/detail'); // 불러올 JSP 파일의 경로 설정		
-            } else {
+         	// 움직이기 가능
+            $(".frame-container").draggable();
+            
+            // iframe에 관련된 함수와 변수명 정의
+             $(document).on('click', '#friendList', function() {
+                let frameContainer = $('#frameContainer');
+                if (frameContainer.css('display') === 'none' || frameContainer.css('display') === '') {
+                	frameContainer.css('display', 'block');
+                	$('#loginContainer').find('#friendList').remove();
+                	$('#loginContainer').append('<button id="friendListClose">친구목록 닫기</button>')
+                    $('#friendIframe').attr('src', 'member/friendList'); // 불러올 JSP 파일의 경로 설정
+                } else {
+                	
+                }
+            });
+            
+            $(document).on('click', '#friendListClose', function(){
+            	let frameContainer = $('#frameContainer');
+            	frameContainer.css('display', 'none');
+            	$('#loginContainer').find('#friendListClose').remove();
+            	$('#loginContainer').append('<button id="friendList">친구목록보기</button>')
+                $('#friendIframe').attr('src', 'about:blank');
+            });
+            
+            
+            $(document).on('click', '#btnSendRequest', function(){
             	
-            }
-        });
+            	let promptVal = prompt('친구요청을 보낼아이디를 입력하세요.');
+            	if(promptVal === null){
+            		
+            	} else{
+            		$.ajax({
+            			type : 'post',
+            			url : 'friend/send',
+            			contentType: 'application/json; charset=UTF-8',
+            			data : JSON.stringify({
+            				memberId : memberId,
+            				receiverId : promptVal
+            			}),
+            			success : function(result){
+            				if(result == 1){
+            					alert('친구요청이 성공적으로 보내졌습니다.');
+            				} else{
+            					alert('요청하신 아이디는 존재하지 않는 회원이신거 같습니다. 다시 확인해주세요.');
+            				}
+            			}
+            		}); // end ajax
+            	}
+            })
+            
+        }); // end document
         
-        $(document).on('click', '#friendListClose', function(){
-        	let frameContainer = $('#frameContainer');
-        	frameContainer.css('display', 'none');
-            $('#detailIframe').attr('src', 'about:blank');
-        }); */
-        
-        // 움직이기 가능
-        $(".frame-container").draggable();
-        
-        // iframe에 관련된 함수와 변수명 정의
-         $(document).on('click', '#friendList', function() {
-            let frameContainer = $('#frameContainer');
-            if (frameContainer.css('display') === 'none' || frameContainer.css('display') === '') {
-            	frameContainer.css('display', 'block');
-            	$('#loginContainer').find('#friendList').remove();
-            	$('#loginContainer').append('<button id="friendListClose">친구목록 닫기</button>')
-                $('#friendIframe').attr('src', 'member/friendList'); // 불러올 JSP 파일의 경로 설정
-            } else {
-            	
-            }
-        });
-        
-        $(document).on('click', '#friendListClose', function(){
-        	let frameContainer = $('#frameContainer');
-        	frameContainer.css('display', 'none');
-        	$('#loginContainer').find('#friendListClose').remove();
-        	$('#loginContainer').append('<button id="friendList">친구목록보기</button>')
-            $('#friendIframe').attr('src', 'about:blank');
-        });
         
     </script>
 </body>

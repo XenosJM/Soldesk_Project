@@ -1,4 +1,4 @@
-package com.soldesk.ex01.config;
+package com.soldesk.ex01.util;
 
 import java.io.IOException;
 

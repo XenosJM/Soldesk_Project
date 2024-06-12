@@ -17,12 +17,22 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	 <!-- 친구 요청 삽입 -->
     <insert id="insertRequest">
         INSERT INTO REQUEST (REQUEST_ID, MEMBER_ID, RECEIVER_ID, REQUEST_STATE, REQUEST_SENDDATE)
-        VALUES (REQUEST_SEQ, #{memberId}, #{receiverId}, "대기중", SYSDATE)
+        VALUES (REQUEST_SEQ.NEXTVAL, #{memberId}, #{receiverId}, null, SYSDATE)
     </insert>
 
     <!-- 특정 회원이 보낸 친구 요청 목록 조회 -->
     <select id="sendListRequest" resultMap="requestResultMap">
         SELECT * FROM REQUEST WHERE MEMBER_ID = #{memberId}
+    </select>
+    
+    <!-- 친구 요청 존재여부 조회 -->
+    <select id="selectRequestById" resultType="String">
+        SELECT RECEIVER_ID FROM REQUEST WHERE MEMBER_ID = #{memberId}
+    </select>
+    
+    <!-- 스케쥴링으로 기준 시간이 지난 요청 삭제 -->
+    <select id="allSendList" resultMap="requestResultMap">
+        SELECT REQUEST_ID, REQUEST_STATE, REQUEST_SENDDATE FROM REQUEST
     </select>
 
     <!-- 친구 요청 상태 변경 -->
@@ -39,7 +49,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		id="receiveResultMap">
 		<id property="receiveId" column="RECEIVE_ID" />
 		<result property="memberId" column="MEMBER_ID" />
-		<result property="receiverId" column="RECEIVER_ID" />
+		<result property="requesterId" column="REQUESTER_ID" />
 		<result property="receiveState" column="RECEIVE_STATE" />
 		<result property="receiveDate" column="RECEIVE_DATE" />
 	</resultMap>
@@ -47,12 +57,17 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	    <!-- 친구 요청 수신 삽입 -->
     <insert id="insertReceive">
         INSERT INTO RECEIVE (RECEIVE_ID, MEMBER_ID, REQUESTER_ID, RECEIVE_STATE, RECEIVE_DATE)
-        VALUES (RECEIVE_SEQ, #{memberId}, #{requesterId}, "대기중", SYSDATE)
+        VALUES (RECEIVE_SEQ.NEXTVAL, #{memberId}, #{requesterId}, null, SYSDATE)
     </insert>
 
     <!-- 특정 회원이 받은 친구 요청 목록 조회 -->
     <select id="receiveListRequest" resultMap="receiveResultMap">
         SELECT * FROM RECEIVE WHERE MEMBER_ID = #{memberId}
+    </select>
+    
+    <!-- 스케쥴링으로 기준 시간이 지난 요청 삭제 -->
+    <select id="allReceiveList" resultMap="receiveResultMap">
+        SELECT RECEIVE_ID, RECEIVE_STATE, RECEIVE_DATE FROM RECEIVE
     </select>
 
     <!-- 친구 요청 수신 상태 변경 -->
@@ -77,14 +92,19 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     <!-- 친구 추가 -->
     <insert id="insertFriend">
         INSERT INTO FRIEND (FRIENDSHIP_ID, MEMBER_ID, FRIEND_MEMBER_ID, FRIEND_STATE, FRIENDSHIP_DATE)
-        VALUES (FRIENDSHIP_SEQ, #{memberId}, #{friendMemberId}, #{friendState}, SYSDATE)
+        VALUES (FRIENDSHIP_SEQ.NEXTVAL, #{memberId}, #{friendMemberId}, #{friendState}, SYSDATE)
     </insert>
 
     <!-- 특정 회원의 친구 목록 조회 -->
     <select id="friendList" resultMap="friendResultMap">
         SELECT * FROM FRIEND WHERE MEMBER_ID = #{memberId}
     </select>
-
+	
+	<!-- 스케쥴링으로 기준 시간이 지난 요청 삭제 -->
+    <select id="allFriend" resultMap="friendResultMap">
+        SELECT FRIENDSHIP_ID, FRIEND_STATE FROM FRIEND
+    </select>
+	
     <!-- 친구 상태 변경 -->
     <update id="friendStateChange">
         UPDATE FRIEND SET FRIEND_STATE = #{friendState} WHERE FRIEND_MEMBER_ID = #{memberId}

@@ -27,14 +27,14 @@
         background-color: #ccc;
     }
 
-    .tab-content {
+    .content {
         display: none;
         padding: 10px;
         border: 1px solid #ccc;
         border-top: none;
     }
 
-    .tab-content.active {
+    .content.active {
         display: block;
         margin-top: 60px; /* 버튼 영역의 높이 + 여백 */
     }
@@ -63,27 +63,27 @@
 <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
 
 	<div class="button-container">
-	    <button id="btnShowFriendList" class="tab active">친구 목록</button>
+	    <button id="btnShowFriendList" class="tab">친구 목록</button>
 	    <button id="btnSendRequestList" class="tab">보낸 요청</button>
 	    <button id="btnReceiveRequestList" class="tab">받은 요청</button>
 	</div>
 	
-	<div id="tabList" class="tab">
-	    <div id="onlineOfflineTab" class="tab-content active">
-	        <h3>온라인 친구</h3>
+	<div id="tabList">
+	    <div id="onlineOfflineTab" class="content">
+	        <h5>온라인 친구</h5>
 	        <ul class="friend-list" id="onlineFriend">
 	        </ul>
-	        <h3>오프라인 친구</h3>
+	        <h5>오프라인 친구</h5>
 	        <ul class="friend-list" id="offlineFriend">
 	        </ul>
 	    </div>
-	    <div id="sendRequestTab" class="tab-content">
-	        <h3>친구 요청 보낸 목록</h3>
+	    <div id="sendRequestTab" class="content">
+	        <h5>친구 요청 보낸 목록</h5>
 	        <ul class="friend-list" id="sendRequest">
 	        </ul>
 	    </div>
-	    <div id="receivedRequestTab" class="tab-content">
-	        <h3>친구 요청 받은 목록</h3>
+	    <div id="receivedRequestTab" class="content">
+	        <h5>친구 요청 받은 목록</h5>
 	        <ul class="friend-list" id="receiveRequest">
 	        </ul>
 	    </div>
@@ -99,96 +99,134 @@
     	let onlineFriend = []; // 친구의 상태가 온라인인지 오프라인 인지에 따라 나눌 배열
     	let offlineFriend = [];
    		let memberId = '${sessionScope.memberId}';
-		
-    	// 모델로 받아온 List의 각 값들(요소)에 대해 인덱스를 부여하고 변수명 item으로 값을 반복처리
-    	$.each(friendList, function(index, item){
-    	    // let result = '';
-    	    // result += index + ' : ' + item.friendshipId + ', ' + item.memberId + ', ' + item.friendMemberId + ', ' + item.friendState + ', ' + item.friendshipDate;
-    	    // console.log(result);
-
-    	    // 온라인인 경우
-    	    if (item.friendState === 'online') {
-    	    	// 온라인친구 배열에 값을 추가
-    	        onlineFriend.push(item);
-    	    }
-    	    // 오프라인인 경우
-    	    else if (item.friendState === 'offline') {
-    	    	// 오프라인친구 배열에 값 추가
-    	        offlineFriend.push(item);
-    	    }
-    	});
     	
-	    $.each(onlineFriend, function(index, friend){
-	        $('#onlineFriend').append('<li class="online">' + friend.friendMemberId + '</li>');
-	    });
-
-	    $.each(offlineFriend, function(index, friend){
-	        $('#offlineFriend').append('<li class="offline">' + friend.friendMemberId + '</li>');
-	    });
-	    
+    	let onlineList = function(onlineFriend){
+		    $.each(onlineFriend, function(index, friend){
+		        $('#onlineFriend').append('<li class="online">' + friend.friendMemberId + '</li>');
+		    });
+    	}
+		
+    	let offlineList = function(offlineFriend){
+		    $.each(offlineFriend, function(index, friend){
+		        $('#offlineFriend').append('<li class="offline">' + friend.friendMemberId + '</li>');
+		    });
+    	}
+    	
 	    $(document).on('click', '.tab', function() {
             // 모든 탭에서 active 클래스를 제거하고
             $('.tab').removeClass('active');
-            $('.tab').hide();
             // 클릭된 탭에만 active 클래스를 추가합니다.
             $(this).addClass('active');
-            $(this).show();
         });
 	    
+	    function cleanTab(){
+	    	// $('#receiveRequest').html('');
+	    	// $('#sendRequest').html('');
+    		// $('#onlineFriend').html('');
+    		// $('#offlineFriend').html('');
+    		$('.friend-list').html('');
+	    }
+	    
     	$(document).on('click', '#btnShowFriendList', function(){
+    		$('.content').removeClass('active');
+    		$('#onlineOfflineTab').addClass('active');
+    		cleanTab();
     		$.ajax({
     			type : 'GET',
     			url : '../friend/getFriend/' + memberId, 
     			success : function(friendList){
-    				$.each(friendList, function(index, item){
-    		    	    let result = '';
-    		    	    result += index + ' : ' + item.friendshipId + ', ' + item.memberId + ', ' + item.friendMemberId + ', ' + item.friendState + ', ' + item.friendshipDate;
-    		    	    console.log(result);
-
-    		    	    // 온라인인 경우
-    		    	    if (item.friendState === 'online') {
-    		    	    	// 온라인친구 배열에 값을 추가
-    		    	        onlineFriend.push(item);
-    		    	    }
-    		    	    // 오프라인인 경우
-    		    	    else if (item.friendState === 'offline') {
-    		    	    	// 오프라인친구 배열에 값 추가
-    		    	        offlineFriend.push(item);
-    		    	    }
-    				});
+    				if(friendList != null){
+	    				$.each(friendList, function(index, item){
+	    		    	    // 온라인인 경우
+	    		    	    if (item.friendState === 'online') {
+	    		    	    	let index = onlineFriend.indexOf(item);
+	    		    	    	if(index > -1){
+	    		    	    		
+	    		    	    	} else{
+		    		    	    	// 온라인친구 배열에 값을 추가
+		    		    	        onlineFriend.push(item);	    		    	    		
+	    		    	    	}
+	    		    	    }
+	    		    	    // 오프라인인 경우
+	    		    	    else if (item.friendState === 'offline') {
+	    		    	    	let index = offlineFriend.indexOf(item);
+								if(index > -1){
+	    		    	    		
+	    		    	    	} else{
+		    		    	    	// 오프라인친구 배열에 값 추가
+		    		    	        offlineFriend.push(item);
+	    		    	    	}
+	    		    	    }
+	    				});
+	    		    	    onlineList(onlineFriend);
+	    		    	    offlineList(offlineFriend);
+    				} else{
+    					
+    				}
     			}
     		});
 		});
     	
-    	$(document).on('click', '#btnSendRequest', function(){
+    	$(document).on('click', '#btnSendRequestList', function(){
+    		$('.content').removeClass('active');
+    		$('#sendRequestTab').addClass('active');
+    		cleanTab();
     		$.ajax({
     			type : 'GET',
     			url : '../friend/getRequest/' + memberId, 
     			success : function(requestList){
     				$.each(requestList, function(index, item){
-    					if(item.requestState === 'waiting'){
-	    		    	   	$('#sendRequest').append(
-	    		    				'<li>' + item.requestId + '</li><p>' + item.requestState + '</p>'
-	    		    	   	);    						
-    					} else{
-    						
-    					}
-   					});
-    			}
-    		});
-    	});
+    					let reqState = function(item){
+    						if(item.requestState === null){
+    							return '대기중'
+    						} else if(item.requestState === 'accept'){
+    							return '수락됨'
+    						} else if(item.requestState === 'reject'){
+    							return '거절됨'
+    						}
+    					};
+    		    	   	$('#sendRequest').append(
+    		    				'<li>' + item.receiverId + 
+    		    				'<input disabled type="text" value=' + reqState(item) +
+    		    				' style="border: none; background: transparent;">' +
+    		    				'<button id="btnRequestCancel">취소</button></li>'
+   		    		   	);    						
+   					}); // end each
+				}
+    		}); // end ajax
+    	}); // end btnSendRequestList
     	
     	$(document).on('click', '#btnReceiveRequestList', function(){
+    		$('.content').removeClass('active');
+    		$('#receivedRequestTab').addClass('active');
+    		cleanTab();
     		$.ajax({
     			type : 'GET',
     			url : '../friend/getReceive/' + memberId, 
     			success : function(receiveList){
     				$.each(receiveList, function(index, item){
-    		    	   
-    				});
-    			}
-    		});
-    	});
+    					$('#receiveRequest').append(
+	    					'<li>' + item.requesterId +  
+	    					'<button id="btnAccept">수락</button>' +
+		    				'<button id="btnReject">거절</button>' +
+		    				'</li>'
+	    				);
+    				}); // end each
+    			} // end success
+    		}); // end ajax
+    	}); // end btnReceiveRequestList
+    	
+    	$(document).on('click', '#btnRequestCancel', function(){
+    		
+    	})
+    	
+    	$(document).on('click', '#btnAccept', function(){
+    		
+    	})
+    	
+    	$(document).on('click', '#btnReject', function(){
+    		
+    	})
     	
     	// 전송된 채팅이 존재할시 친구 이름 주황색으로 변경되게 할것
     	

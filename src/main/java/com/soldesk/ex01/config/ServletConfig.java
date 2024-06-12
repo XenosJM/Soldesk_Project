@@ -15,11 +15,13 @@ import org.springframework.web.socket.config.annotation.WebSocketConfigurer;
 import org.springframework.web.socket.config.annotation.WebSocketHandlerRegistry;
 import org.springframework.web.socket.server.standard.ServletServerContainerFactoryBean;
 
+import com.soldesk.ex01.util.PrivateChatHandler;
+
 
 // servlet-context.xml과 동일 
 @Configuration // Spring Container에서 관리하는 설정 클래스
 @EnableWebMvc // Spring MVC 기능 사용
-@EnableWebSocket // 웹소켓 활성화
+//@EnableWebSocket // 웹소켓 활성화
 @EnableScheduling // 스케줄링 기능 사용
 @ComponentScan(basePackages = {"com.soldesk.ex01"}) // component scan 설정
 public class ServletConfig implements WebMvcConfigurer, WebSocketConfigurer {
@@ -81,10 +83,8 @@ public class ServletConfig implements WebMvcConfigurer, WebSocketConfigurer {
 		container.setMaxTextMessageBufferSize(8192);
 		container.setMaxBinaryMessageBufferSize(8192);
 		
-		return container;
-		
-	}	
-	
+		return container;	
+	}
 	
 } // end ServletConfig
 

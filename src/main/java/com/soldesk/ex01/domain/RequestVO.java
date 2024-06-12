@@ -1,6 +1,6 @@
 package com.soldesk.ex01.domain;
 
-import java.util.Date;
+import java.time.LocalDate;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -21,7 +21,7 @@ public class RequestVO {
 	private String receiverId;
 	// 현재 상태(대기중, 수락, 거절 등)
 	private String requestState;
-	private Date requestDate;
+	private LocalDate requestSendDate;
 	
 
 }

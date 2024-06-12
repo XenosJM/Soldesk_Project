@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -40,6 +41,7 @@ public class FriendController {
 	public ResponseEntity<List<RequestVO>> getRequestList(@PathVariable("memberId") String memberId){
 		log.info("getRequestList()");
 		List<RequestVO> requestList = friendService.sendList(memberId);
+		log.info(requestList);
 		return new ResponseEntity<List<RequestVO>>(requestList, HttpStatus.OK);
 	}
 	
@@ -70,6 +72,7 @@ public class FriendController {
 	public ResponseEntity<List<ReceiveVO>> getReceiveList(@PathVariable("memberId") String memberId){
 		log.info("getReceiveList()");
 		List<ReceiveVO> receiveList = friendService.receiveList(memberId);
+		log.info(receiveList);
 		return new ResponseEntity<List<ReceiveVO>>(receiveList, HttpStatus.OK);
 	}
 	
