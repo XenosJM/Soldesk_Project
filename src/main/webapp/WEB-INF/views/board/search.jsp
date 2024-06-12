@@ -7,7 +7,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>게시판 메인 페이지</title>
+<title>검색결과</title>
 <style>
 body {
 	font-family: Arial, sans-serif;
@@ -108,9 +108,9 @@ ul li a {
 <body>
 	<div class="container">
 		<div class="logo">
-			<a href="/ex01/">메인페이지</a>
+			<a href="/ex01/">검색결과</a>
 		</div>
-		<h1>게시판</h1>
+		
 
 		<form class="search-container" method="get" action="search">
 			<select name="searchOption" id="searchOption">
@@ -127,7 +127,6 @@ ul li a {
 					<th style="width: 60px">번호</th>
 					<th style="width: 700px">제목</th>
 					<th style="width: 120px">작성자</th>
-					<th style="width : 120px">댓글수</th>
 					<th style="width: 100px">작성일</th>
 				</tr>
 			</thead>
@@ -137,7 +136,6 @@ ul li a {
 						<td>${BoardVO.boardId}</td>
 						<td><a href="detail?boardId=${BoardVO.boardId}">${BoardVO.boardTitle}</a></td>
 						<td>${BoardVO.memberId}</td>
-						<td>${BoardVO.boardReplyCount }
 						<fmt:formatDate value="${BoardVO.boardRegistDate}"
 							pattern="yyyy-MM-dd HH:mm:ss" var="boardRegistDate" />
 						<td>${boardRegistDate}</td>
@@ -145,18 +143,3 @@ ul li a {
 				</c:forEach>
 			</tbody>
 		</table>
-		<ul>
-			<c:if test="${pageMaker.isPrev()}">
-				<li><a href="list?pageNum=${pageMaker.startNum - 1}">이전</a></li>
-			</c:if>
-			<c:forEach begin="${pageMaker.startNum}" end="${pageMaker.endNum}"
-				var="num">
-				<li><a href="list?pageNum=${num}">${num}</a></li>
-			</c:forEach>
-			<c:if test="${pageMaker.isNext()}">
-				<li><a href="list?pageNum=${pageMaker.endNum + 1}">다음</a></li>
-			</c:if>
-		</ul>
-	</div>
-</body>
-</html>

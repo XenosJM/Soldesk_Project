@@ -20,5 +20,6 @@ public interface Board2Mapper {
 	int deleteBoard(int boardId);	
 	List<Board2VO> selectListByPagination(Pagination pagination);
 	int selectTotalCount();
-
+	int insertReplyCount(int boardId);
+	int deleteReplyCount(int boardId);
 }
