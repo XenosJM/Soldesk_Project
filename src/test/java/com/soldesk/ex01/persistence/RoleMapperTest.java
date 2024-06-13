@@ -7,17 +7,17 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import com.soldesk.ex01.config.RootConfig;
-import com.soldesk.ex01.domain.ManagerVO;
+import com.soldesk.ex01.domain.RoleVO;
 
 import lombok.extern.log4j.Log4j;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = {RootConfig.class})
 @Log4j
-public class ManagerMapperTest {
+public class RoleMapperTest {
 	
 	@Autowired
-	private ManagerMapper managerMapper;
+	private RoleMapper managerMapper;
 	
 	@Test
 	public void test() {
@@ -36,36 +36,21 @@ public class ManagerMapperTest {
 		
 	}
 
-
-	private void testManagerUpdate() {
-		log.info("testUpdate()");
-		int result = managerMapper.update(1, "wjddk");
-		log.info(result + "행 수정");
-		
-	}
-
-
-	private void testGetAll() {
-		log.info("testGetAll()");
-		for(ManagerVO managerVO : managerMapper.selectAllManager()) {
-			log.info(managerVO); 
-		}
-		
-	}
+//	private void testGetAll() {
+//		log.info("testGetAll()");
+//		for(RoleVO managerVO : managerMapper.selectAllManager()) {
+//			log.info(managerVO); 
+//		}
+//		
+//	}
 
 
-	private void testGetDetail() {
-		log.info("testGetDetail()");
-		ManagerVO managerVO = managerMapper.selectByManagerId(1);
-		log.info(managerVO);
-		
-		
-	}
+	
 
 
 	private void testManagerInsert() {
 		log.info("testManagerInsert()");
-		ManagerVO managerVO = new ManagerVO(0, "wjddk", 1, "");
+		RoleVO managerVO = new RoleVO(0, 1, "");
 		int result = managerMapper.insert(managerVO);
 		log.info(result + "행 삽입");
 		

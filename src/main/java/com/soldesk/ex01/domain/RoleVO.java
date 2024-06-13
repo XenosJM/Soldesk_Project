@@ -11,10 +11,9 @@ import lombok.ToString;
 @Setter
 @Getter
 @ToString
-public class ManagerVO {
+public class RoleVO {
 	
-	private int managerId;
-	private String memberId;
+	private int roleId;
 	private int categoryId;
-	private String managerRole;
+	private String roleName;
 }

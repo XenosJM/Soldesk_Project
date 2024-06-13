@@ -11,12 +11,14 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.EnableAspectJAutoProxy;
+import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.soldesk.ex01.util.AuthCodeGenerator;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
@@ -96,5 +98,13 @@ public class RootConfig {
    @Bean
    public PlatformTransactionManager transactionManager() {
       return new DataSourceTransactionManager(dataSource());
+   }
+   
+   // Jackson 에 java 날짜 객체 설정 추가
+   @Bean
+   public Jackson2ObjectMapperBuilder jackson2ObjectMapperBuilder() {
+       Jackson2ObjectMapperBuilder builder = new Jackson2ObjectMapperBuilder();
+       builder.modules(new JavaTimeModule());
+       return builder;
    }
 } // end RootConfig

@@ -1,10 +1,13 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 <!DOCTYPE html>
 <html>
 <head>
 <meta charset="UTF-8">
+<!-- csrf 토큰 설정 -->
+<sec:csrfMetaTags/>
 <title>Find ID or Change Password</title>
 <style>
 body {
@@ -95,6 +98,20 @@ body {
 		let checkEmail; // 체크용 이메일ㅅ
 		// TODO 이메일 보내기 버튼 클릭시 이메일 안가는데 html에 memberEmail이 없어서 값을 못받아서 그럼 id값을 조정하면 쉽게 끝남
 		// 아이디를 찾는 버튼은 또 다른 버튼을 만들어야하고, 컨트롤러에서 새로 만들어야함.
+		
+		const token = $("meta[name='_csrf']").attr("content");
+		console.log(token);
+       	const header = $("meta[name='_csrf_header']").attr("content");
+       	console.log(header);
+       	const name = $("#userName").val();
+       	console.log(name);
+       	
+       	$.ajaxSetup({
+	        beforeSend: function(xhr) {
+	        	xhr.setRequestHeader(header, token);
+	        }
+        });
+        	
 		
 		// 나중에 그냥 클릭 할떄마다 새로 쓰도록 변경 예정
 		$('#optionSelect').change(function() {
@@ -205,6 +222,9 @@ body {
 				data : {
 					memberEmail : memberEmail
 				},
+				beforeSend : function(xhr) {
+			        xhr.setRequestHeader(header, token);
+			    },
 				success : function(result) {
 					if (result == 1) {
 						alert("작성하신 이메일로 확인 코드가 발송되었습니다.");

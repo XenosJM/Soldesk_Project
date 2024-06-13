@@ -96,18 +96,24 @@ public class SchedulerCollection {
 		return attach.getAttachChgName();
 	}
 //	cron = "0 0 4 1/1 * ?"
+	// 7일이상 대기중인 요청건과 요청받은 건이 남아있을시 둘다 제거
 	@Scheduled(cron = "0 0 4 1/1 * ?")
 	public void removeOldRequestAndReceive() {
 		log.info("removeOldRequestAndReceive()");
 		List<RequestVO> allRequestList = new ArrayList<>();
 		allRequestList = friend.allSendList();
+		// 날짜 형식 포맷
 		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yy/MM/dd");
+		// 현재 날짜를 포맷하여 문자열로 저장
 		String nowDate = LocalDate.now().format(formatter);
+		// 요청과 요청받음 날짜 선언
 		LocalDate startDate;
+		// 포맷된 현재 날짜를 파싱하여 저장
 		LocalDate endDate = LocalDate.parse(nowDate, formatter);
 		
 		for(RequestVO item : allRequestList) {
 			startDate = item.getRequestSendDate();
+			// 날짜 계산
 			long daysBetween = ChronoUnit.DAYS.between(startDate, endDate);
 			// requestState가 대기중(null)이면서 7일이 지난 요청에대해
 			if(item.getRequestState() == null && daysBetween >= 7) {
@@ -126,20 +132,10 @@ public class SchedulerCollection {
 			}
 		} // end forEach
 	} // end removeOldRequest()
-	
-	@Scheduled(cron = "0 0 3 1/1 * ?")
-	public void removeNomoreFriend() {
-		List<FriendVO> allFriendList = new ArrayList<>();
-		allFriendList = friend.allFriend();
-		
-		// a와 b가 친구인 상황에서 db에는 a b데이터, b a 데이터가 들어가있다. 
-		// 이를 비교해서 한쪽이라도 친구삭제를 통해 
-		for(FriendVO item : allFriendList) {
-			if(item.getFriendState() == "delete") {
-				friend.deleteFriend(item.getFriendshipId());
-			}
-		}
-		
-	} // end removeNomoreFriend()
 
 } // end SchedulerCollection
+
+
+
+
+

@@ -189,6 +189,7 @@
     		    				'<li>' + item.receiverId + 
     		    				'<input disabled type="text" value=' + reqState(item) +
     		    				' style="border: none; background: transparent;">' +
+    		    				'<input type="hidden" id="requestId" value='+ item.requestId +'>' +
     		    				'<button id="btnRequestCancel">취소</button></li>'
    		    		   	);    						
    					}); // end each
@@ -208,6 +209,7 @@
     					$('#receiveRequest').append(
 	    					'<li>' + item.requesterId +  
 	    					'<button id="btnAccept">수락</button>' +
+	    					'<input type="hidden" id="receiveId" value='+ item.receiveId +'>' +
 		    				'<button id="btnReject">거절</button>' +
 		    				'</li>'
 	    				);
@@ -217,18 +219,22 @@
     	}); // end btnReceiveRequestList
     	
     	$(document).on('click', '#btnRequestCancel', function(){
+    		// 삭제 두번
     		
     	})
     	
     	$(document).on('click', '#btnAccept', function(){
-    		
+    		// 삭제후 친구목록에 2번 추가 
     	})
     	
     	$(document).on('click', '#btnReject', function(){
-    		
+    		// 보내요청 받은요청 삭제 작업
     	})
     	
+    	
     	// 전송된 채팅이 존재할시 친구 이름 주황색으로 변경되게 할것
+    	
+    	
     	
     	
     });

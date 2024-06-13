@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -45,8 +46,8 @@ public class FriendController {
 		return new ResponseEntity<List<RequestVO>>(requestList, HttpStatus.OK);
 	}
 	
-	@PostMapping("/requestState")
-	public ResponseEntity<Integer> requestStateChange(@RequestParam("requestId") int requestId, @RequestParam("requestState") String requestState){
+	@PutMapping("/requestState/{requestId}")
+	public ResponseEntity<Integer> requestStateChange(@PathVariable("requestId") int requestId, @RequestParam("requestState") String requestState){
 		log.info("requestStateChange()");
 		int result = friendService.requestStateChange(requestId, requestState);
 		return new ResponseEntity<Integer>(result, HttpStatus.OK);

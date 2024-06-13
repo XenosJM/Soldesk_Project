@@ -17,7 +17,7 @@ import lombok.ToString;
 public class MemberVO {
 	private String memberId;
 	private String memberPassword;
-	private int managerId;
+	private int roleId;
 	private String memberEmail;
 	private Integer[] memberProperty;
 	private Date memberRegistDate;

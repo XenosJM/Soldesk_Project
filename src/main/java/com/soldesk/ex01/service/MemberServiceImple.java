@@ -9,6 +9,7 @@ import java.util.Map;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -24,10 +25,15 @@ public class MemberServiceImple implements MemberService{
 	@Autowired
 	public MemberMapper memberMapper;
 	
+//	@Autowired
+//	public PasswordEncoder encoder;
+	
 	@Transactional
 	@Override
 	public int createMember(MemberVO memberVO) {
 		log.info("createMember()");
+//		String encodedPassword = encoder.encode(memberVO.getMemberPassword());
+//		memberVO.setMemberPassword(encodedPassword);
 		int result = memberMapper.insert(memberVO);
 		return result;
 	}
@@ -105,8 +111,8 @@ public class MemberServiceImple implements MemberService{
 
         if (memberVO != null && memberPassword.equals(memberVO.getMemberPassword())) {
             session.setAttribute("memberId", memberVO.getMemberId());
-            if (memberVO.getManagerId() != 0) {
-                session.setAttribute("managerId", memberVO.getManagerId());
+            if (memberVO.getRoleId() != 0) {
+                session.setAttribute("managerId", memberVO.getRoleId());
             }
             return 1;
         } else {

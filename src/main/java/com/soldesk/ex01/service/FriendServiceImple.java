@@ -28,7 +28,7 @@ public class FriendServiceImple implements FriendService {
 		
 		int result = 0;
 		if(friendMapper.selectRequestById(requestVO.getMemberId()) != null) {
-			result = 0;
+			result = 2;
 		} else {
 			int req = friendMapper.insertRequest(requestVO);
 			int rec = friendMapper.insertReceive(receiveVO);

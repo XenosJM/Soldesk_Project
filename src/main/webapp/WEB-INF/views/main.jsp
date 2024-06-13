@@ -1,6 +1,8 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%--시큐리티 태그를 사용하귀 위해 입력. --%>
+<%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 <%@ page session="true"%>
 <!DOCTYPE html>
 <html lang="en">
@@ -11,6 +13,11 @@
     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
     <meta charset="UTF-8">
+    <!-- csrf 토큰 설정 -->
+    <sec:csrfMetaTags/>
+    <%-- 위 태그립을 사용하면 아래와 같이 자동 생성해줌 --%>
+    <%-- <meta name="_csrf" content="${_csrf.token}"/>
+	<meta name="_csrf_header" content="${_csrf.headerName}"/> --%>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>메인 페이지</title>
     <style>
@@ -180,6 +187,15 @@
     <script type="text/javascript">
         $(function () {
         	let memberId = '${sessionScope.memberId}';
+        	const token = $("meta[name='_csrf']").attr("content");
+        	const header = $("meta[name='_csrf_header']").attr("content");
+        	const name = $("#userName").val();
+        	
+        	$.ajaxSetup({
+                beforeSend: function(xhr) {
+                    xhr.setRequestHeader(header, token);
+                }
+            });
         	
             if (${empty sessionScope.memberId}) {
                 $('#loginContainer').html(
@@ -199,7 +215,8 @@
                 );
             }
 
-            $(document).on('click', '#check', function () {
+            $(document).on('click', '#check', function (event) {
+            	event.preventDefault();
             	let memberId = $('#memberId').val();
                 let memberPassword = $('#memberPassword').val();
                 $.ajax({
@@ -284,8 +301,10 @@
             			success : function(result){
             				if(result == 1){
             					alert('친구요청이 성공적으로 보내졌습니다.');
+            				} else if (result == 2){
+            					alert('이미 요청을 보낸 회원입니다.');
             				} else{
-            					alert('요청하신 아이디는 존재하지 않는 회원이신거 같습니다. 다시 확인해주세요.');
+            					alert('요청하신 아이디는 존재하지 않는 회원이신거 같습니다. 다시 확인해주세요.');            					
             				}
             			}
             		}); // end ajax
