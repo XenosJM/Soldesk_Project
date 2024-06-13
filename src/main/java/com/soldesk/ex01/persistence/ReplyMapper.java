@@ -15,5 +15,5 @@ public interface ReplyMapper {
 	int updateReply(ReplyVO vo);
 	int deleteReply(int replyId);
 	int deleteReplyByBoard(int boardId);
-	
+	ReplyVO findReply(int replyId);
 }
