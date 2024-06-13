@@ -3,7 +3,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -73,6 +73,22 @@ h1 {
 	background-color: #45a049;
 }
 
+.register-button {
+	display: block;
+	width: 100px;
+	padding: 10px;
+	background-color: #007bff;
+	color: #fff;
+	text-align: center;
+	text-decoration: none;
+	border-radius: 5px;
+	margin: 0 auto 20px;
+}
+
+.register-button:hover {
+	background-color: #0056b3;
+}
+
 table {
 	width: 100%;
 	border-collapse: collapse;
@@ -111,6 +127,9 @@ ul li a {
 			<a href="/ex01/">메인페이지</a>
 		</div>
 		<h1>게시판</h1>
+		
+		<!-- 등록 버튼 추가 -->
+		<a href="regist" class="register-button">등록</a>
 
 		<form class="search-container" method="get" action="search">
 			<select name="searchOption" id="searchOption">
@@ -137,10 +156,10 @@ ul li a {
 						<td>${BoardVO.boardId}</td>
 						<td><a href="detail?boardId=${BoardVO.boardId}">${BoardVO.boardTitle}</a></td>
 						<td>${BoardVO.memberId}</td>
-						<td>${BoardVO.boardReplyCount }
+						<td>${BoardVO.boardReplyCount }</td>
 						<fmt:formatDate value="${BoardVO.boardRegistDate}"
 							pattern="yyyy-MM-dd HH:mm:ss" var="boardRegistDate" />
-						<td>${boardRegistDate}</td>
+						<td>${boardRegistDate}</td	>
 					</tr>
 				</c:forEach>
 			</tbody>

@@ -6,34 +6,43 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	<resultMap type="com.soldesk.ex01.domain.ReplyVO"
 		id="ReplyResultMap">
 		<id property="replyId" column="REPLY_ID" />
-		<result property="boardId" column="BOARD_ID"/>
-		<result property="categoryId" column="CATEGORY_ID"/>
-		<result property="memberId" column="MEMBER_ID"/>
-		<result property="replyContent" column="REPLY_CONTENT"/>
+		<result property="boardId" column="BOARD_ID" />
+		<result property="categoryId" column="CATEGORY_ID" />
+		<result property="memberId" column="MEMBER_ID" />
+		<result property="replyContent" column="REPLY_CONTENT" />
 		<result property="replyRegistDate" column="REPLY_REGISTDATE" />
 	</resultMap>
-	<insert id="insertReply"> INSERT INTO REPLY VALUES (REPLY_SEQ.NEXTVAL,#{boardId}, #{categoryId} <!-- 1234 -->,#{memberId},
+	<insert id="insertReply">
+		INSERT INTO REPLY VALUES (REPLY_SEQ.NEXTVAL,#{boardId}, #{categoryId} <!-- 
+			1234 -->
+		,#{memberId},
 		#{replyContent},SYSDATE)
 	</insert>
-	<select id="selectReplyMemberList" resultMap="ReplyResultMap"> 
+	<select id="selectReplyMemberList" resultMap="ReplyResultMap">
 		SELECT * FROM REPLY WHERE MEMBER_ID = #{memberId}
 	</select>
-	<select id="selectReplyContentList" resultMap="ReplyResultMap"> 
-		SELECT * FROM REPLY	WHERE REPLY_CONTENT LIKE '%${replyContent}%'
+	<select id="selectReplyContentList" resultMap="ReplyResultMap">
+		SELECT * FROM REPLY WHERE REPLY_CONTENT LIKE '%${replyContent}%'
 	</select>
-	<select id="selectReplyBoard" resultMap="ReplyResultMap"> 
-		SELECT * FROM REPLY WHERE BOARD_ID = #{boardId} ORDER BY REPLY_ID ASC
-	</select>	
 	
-	<update id="updateReply"> 
-		UPDATE REPLY SET 
+	<select id="selectReplyBoard" resultMap="ReplyResultMap">
+		SELECT * FROM REPLY WHERE BOARD_ID = #{boardId} ORDER BY REPLY_ID ASC
+	</select>
+
+	<select id="findReply" resultMap="ReplyResultMap">
+		select * from reply
+		where reply_id = ${replyId}
+	</select>
+
+	<update id="updateReply">
+		UPDATE REPLY SET
 		REPLY_CONTENT = #{replyContent}
 		WHERE REPLY_ID = #{replyId}
 	</update>
-	<delete id="deleteReply"> 
-		DELETE FROM	REPLY WHERE Reply_ID = #{replyId}
+	<delete id="deleteReply">
+		DELETE FROM REPLY WHERE Reply_ID = #{replyId}
 	</delete>
-	
+
 	<delete id="deleteReplyByBoard">
 		DELETE FROM REPLY WHERE BOARD_ID = #{boardId}
 	</delete>
