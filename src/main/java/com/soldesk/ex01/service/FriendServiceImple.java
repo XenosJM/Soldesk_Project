@@ -28,7 +28,8 @@ public class FriendServiceImple implements FriendService {
 		
 		int result = 0;
 		if(friendMapper.selectRequestById(requestVO.getMemberId()) != null) {
-			result = 2;
+			result = 2; // request 요청목록에 형재 요청한 정보다 있다면
+			return result;
 		} else {
 			int req = friendMapper.insertRequest(requestVO);
 			int rec = friendMapper.insertReceive(receiveVO);

@@ -7,7 +7,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	<resultMap type="com.soldesk.ex01.domain.MemberVO" id="memberResultMap">
 		<id property="memberId" column="MEMBER_ID" />
 		<result property="memberPassword" column="MEMBER_PASSWORD" />
-		<result property="managerId" column="MANAGER_ID" />
+		<result property="roleId" column="ROLE_ID" />
 		<result property="memberEmail" column="MEMBER_EMAIL" />
 		<result property="memberRegistDate" column="MEMBER_REGISTDATE" />
 		<result property="memberPropertyAsString" column="MEMBER_PROPERTY" />
@@ -15,7 +15,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
 	<!-- 회원 가입 -->
 	<insert id="insert">
-		INSERT INTO MEMBER (MEMBER_ID, MEMBER_PASSWORD, MANAGER_ID, MEMBER_EMAIL, MEMBER_PROPERTY, MEMBER_REGISTDATE)
+		INSERT INTO MEMBER (MEMBER_ID, MEMBER_PASSWORD, ROLE_ID, MEMBER_EMAIL, MEMBER_PROPERTY, MEMBER_REGISTDATE)
 		VALUES (#{memberId}, #{memberPassword}, 0, #{memberEmail}, null, SYSDATE)
 	</insert>
 	<!-- 회원 자기정보 보기 -->
@@ -23,7 +23,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	<!-- 회원 리스트 -->
 	<select id="selectIdList" resultMap="memberResultMap"> SELECT MEMBER_ID FROM MEMBER </select>
 	<!-- 로그인 체크 -->
-	<select id="memberCheck" resultMap="memberResultMap"> SELECT MEMBER_PASSWORD, MEMBER_ID, MANAGER_ID FROM MEMBER WHERE MEMBER_ID = #{memberId} </select>
+	<select id="memberCheck" resultMap="memberResultMap"> SELECT MEMBER_PASSWORD, MEMBER_ID, ROLE_ID FROM MEMBER WHERE MEMBER_ID = #{memberId} </select>
 	<!-- 체크 아이디 -->
 	<select id="checkId" resultType="String"> SELECT MEMBER_ID FROM MEMBER WHERE MEMBER_ID = #{memberId} </select>
 	<!-- 체크 이메일 -->
@@ -56,9 +56,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		WHERE MEMBER_ID = #{memberId}
 	</update>
 	<!-- 회원 관리자 자격 수정 -->
-	<update id="updateManager">
+	<update id="updateRole">
 		UPDATE MEMBER SET
-		MANAGER_ID = #{managerId}
+		ROLE_ID = #{roleId}
 		WHERE MEMBER_ID = #{memberId}
 	</update>
 	<!-- 회원 삭제(탈퇴) -->

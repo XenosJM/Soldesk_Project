@@ -21,11 +21,11 @@ public class RoleMapperTest {
 	
 	@Test
 	public void test() {
-//		testManagerInsert();
+		testManagerInsert();
 //		testGetDetail();
 //		testGetAll();
 //		testManagerUpdate();
-		testDelete();
+//		testDelete();
 	}
 
 
@@ -43,16 +43,13 @@ public class RoleMapperTest {
 //		}
 //		
 //	}
-
-
 	
-
-
 	private void testManagerInsert() {
 		log.info("testManagerInsert()");
-		RoleVO managerVO = new RoleVO(0, 1, "");
+		RoleVO managerVO = new RoleVO(0, 1, "dsa");
 		int result = managerMapper.insert(managerVO);
 		log.info(result + "Çà »ğÀÔ");
+		
 		
 	}
 }

@@ -229,15 +229,18 @@ public class HomeController {
 		return "redirect:/";
 	}
 	
+//	@GetMapping("member/friendList")
+//	public void getFriendList(Model model, HttpServletRequest req) throws JsonProcessingException {
+//		HttpSession session = req.getSession();
+//		List<FriendVO> friendList = friendService.friendList((String)session.getAttribute("memberId"));
+//		ObjectMapper objectMapper = new ObjectMapper();
+//	    String friendListJson = objectMapper.writeValueAsString(friendList);
+//	    model.addAttribute("friendList", friendListJson);
+//	}
 	@GetMapping("member/friendList")
-	public void getFriendList(Model model, HttpServletRequest req) throws JsonProcessingException {
-		HttpSession session = req.getSession();
-		List<FriendVO> friendList = friendService.friendList((String)session.getAttribute("memberId"));
-		ObjectMapper objectMapper = new ObjectMapper();
-	    String friendListJson = objectMapper.writeValueAsString(friendList);
-	    model.addAttribute("friendList", friendListJson);
+	public void getFriendList() {
+		
 	}
-	
 
 	
 }

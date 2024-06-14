@@ -95,7 +95,7 @@
     // 대기중인 요청만 리스트로 가져오고 거절 또는 수락 된 요청은 안가져옴, 수락 거절 된 요청들은 정해진시간에 스케쥴러를 이용해 제거하도록 할 예정
     // <li class="online">친구1</li>  <li class="offline">친구3</li>
     	
-    	let friendList =${friendList}; // 모델로 받아온 List배열
+    	//let friendList =${friendList}; // 모델로 받아온 List배열
     	let onlineFriend = []; // 친구의 상태가 온라인인지 오프라인 인지에 따라 나눌 배열
     	let offlineFriend = [];
    		let memberId = '${sessionScope.memberId}';
@@ -134,30 +134,28 @@
     		$.ajax({
     			type : 'GET',
     			url : '../friend/getFriend/' + memberId, 
-    			success : function(friendList){
-    				if(friendList != null){
-	    				$.each(friendList, function(index, item){
-	    		    	    // 온라인인 경우
-	    		    	    if (item.friendState === 'online') {
-	    		    	    	let index = onlineFriend.indexOf(item);
-	    		    	    	if(index > -1){
-	    		    	    		
-	    		    	    	} else{
-		    		    	    	// 온라인친구 배열에 값을 추가
-		    		    	        onlineFriend.push(item);	    		    	    		
-	    		    	    	}
-	    		    	    }
-	    		    	    // 오프라인인 경우
-	    		    	    else if (item.friendState === 'offline') {
-	    		    	    	let index = offlineFriend.indexOf(item);
-								if(index > -1){
-	    		    	    		
-	    		    	    	} else{
-		    		    	    	// 오프라인친구 배열에 값 추가
-		    		    	        offlineFriend.push(item);
-	    		    	    	}
-	    		    	    }
-	    				});
+    			success : function(data){
+    				if(data != null){
+    					data.forEach(function(item) {
+    						// 받아온 data의 값중 friendState가 online인 경우
+    					    if (item.friendState === 'online') {
+    					    	// onlineFriend 배열에 item.friendMemberId값을 가진 값이 하나이상 있는지 여부 
+    					    	let exist = onlineFriend.some(function(friend){
+    					    		return friend.friendMemberId === item.friendMemberId
+    					    	});
+    					    	// 없다면 추가
+    					        if (!exist) {
+    					            onlineFriend.push(item);
+    					        }
+    					    } else if (item.friendState === 'offline') {
+    					    	let exist = offlineFriend.some(function(friend){
+    					    		return friend.friendMemberId === item.friendMemberId
+    					    	});
+    					        if (!exist) {
+    					            offlineFriend.push(item);
+    					        }
+    					    }
+    					});
 	    		    	    onlineList(onlineFriend);
 	    		    	    offlineList(offlineFriend);
     				} else{

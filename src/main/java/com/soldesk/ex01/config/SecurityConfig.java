@@ -12,16 +12,13 @@ import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 @EnableWebSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	
-	private static final int HEAD_MANAGER = 1;
-	private static final int MEMBER = 0;
-	
 	// HttpSecurity 객체를 통해 Http 보안 기능을 구성
 	@Override
 	protected void configure(HttpSecurity httpSecurity) throws Exception {
 		httpSecurity
 			.authorizeRequests() // 요청에 권한 부여
 				.antMatchers("/", "/member/regist", "/member/findIdPw", "/member/check", "/board/list", "/board/detail", "/board/search", "/util/**").permitAll() // 루트 URL에 대한 모든 사용자 접근을 허용
-				
+				.antMatchers("/member/**", "/friend/**", "/board/**", "/reply/**", "/rereply/**", "/attach/**").permitAll()
 				.anyRequest().authenticated() // 이외에 URL은 사용자 인증을 수행해야 함
 				.and()
 			.formLogin()
