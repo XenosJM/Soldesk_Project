@@ -1,9 +1,11 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 <!DOCTYPE html>
 <html>
 <head>
 <meta charset="UTF-8">
+<sec:csrfMetaTags/>
  <style>
         .checkbox-container {
             display: flex;
@@ -101,10 +103,18 @@
 			let memberProperty = '${memberVO.memberPropertyAsString}'
 			let memberId = '${memberVO.memberId}';
 			
-			
 			$('#btnModifyCancel').hide();
 			$('#btnModifyMember').hide();
 			
+			const token = $("meta[name='_csrf']").attr("content");
+        	const header = $("meta[name='_csrf_header']").attr("content");
+        	const name = $("#userName").val();
+			
+			$.ajaxSetup({
+                beforeSend: function(xhr) {
+                    xhr.setRequestHeader(header, token);
+                }
+            });
 			
 			$(document).on('click', '#btnModify', function(){ // 수정하기 버튼을 누르면
 				 $('#checkModal').modal('show');

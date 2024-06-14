@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.soldesk.ex01.domain.FriendVO;
 import com.soldesk.ex01.domain.ReceiveVO;
@@ -19,6 +20,7 @@ public class FriendServiceImple implements FriendService {
 	@Autowired
 	private FriendMapper friendMapper;
 	
+	@Transactional
 	@Override
 	public int insertRequest(RequestVO requestVO) {
 		log.info("insertRequest()");
@@ -52,6 +54,7 @@ public class FriendServiceImple implements FriendService {
 	@Override
 	public int requestStateChange(int requestId, String requestState) {
 		log.info("requestStateChange()");
+		log.info(requestState);
 		int result = friendMapper.requestStateChange(requestId, requestState);
 		return result;
 	}
