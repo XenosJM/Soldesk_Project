@@ -129,6 +129,7 @@ ul li a {
 		<h1>게시판</h1>
 		
 		<!-- 등록 버튼 추가 -->
+		<input type="hidden" name = "categoryId" value='0'>
 		<a href="regist" class="register-button">등록</a>
 
 		<form class="search-container" method="get" action="search">

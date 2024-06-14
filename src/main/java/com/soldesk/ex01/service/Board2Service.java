@@ -17,5 +17,10 @@ public interface Board2Service {
 	int deleteBoard(int boardId);	
 	List<Board2VO> getPagingBoards(Pagination pagination);
 	int getTotalCount();
+	
+	int insertReverse(Board2VO vo);
+	List<Board2VO> selectReverse();
+	int insertStarrail(Board2VO vo);
+	List<Board2VO> selectStarrail();
 
 }
