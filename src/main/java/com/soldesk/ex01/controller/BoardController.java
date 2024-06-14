@@ -71,20 +71,21 @@ public class BoardController {
 		log.info("board controller : Board2VO =" + vo);
 		int result = board2Service.insertBoard(vo);
 		log.info("보드 " + result + "행 삽입");
-		AttachVO[] attach = vo.getAttachVO();
-		if (attach != null) {
-			for (int i = 0; i < attach.length; i++) {				
-				log.info("첨부 파일 경로: " + attach[i].getAttachPath());
-				log.info("첨부 파일 실제 이름: " + attach[i].getAttachRealName());
-				log.info("첨부 파일 변경된 이름: " + attach[i].getAttachChgName());
-				log.info("첨부 파일 확장자: " + attach[i].getAttachExtension());
-			}
-		} else {
-			log.info("첨부 파일이 없습니다.");
-		}
+//		AttachVO[] attach = vo.getAttachVO();
+//		if (attach != null) {
+//			for (int i = 0; i < attach.length; i++) {				
+//				log.info("첨부 파일 경로: " + attach[i].getAttachPath());
+//				log.info("첨부 파일 실제 이름: " + attach[i].getAttachRealName());
+//				log.info("첨부 파일 변경된 이름: " + attach[i].getAttachChgName());
+//				log.info("첨부 파일 확장자: " + attach[i].getAttachExtension());
+//			}
+//		} else {
+//			log.info("첨부 파일이 없습니다.");
+//		}
 		return "redirect:/board/list";
 	}
 
+	
 	
 	@PostMapping("/update")
 	public String updatePost(Board2VO vo, RedirectAttributes reAttr) {

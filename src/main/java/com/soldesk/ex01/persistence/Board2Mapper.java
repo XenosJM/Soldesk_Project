@@ -22,4 +22,9 @@ public interface Board2Mapper {
 	int selectTotalCount();
 	int insertReplyCount(int boardId);
 	int deleteReplyCount(int boardId);
+	int insertReverse(Board2VO vo);
+	List<Board2VO> selectReverse();
+	int insertStarrail(Board2VO vo);
+	List<Board2VO> selectStarrail();
+	
 }

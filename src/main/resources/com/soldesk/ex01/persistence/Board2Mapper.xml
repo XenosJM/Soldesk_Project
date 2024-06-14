@@ -15,7 +15,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		<result property="boardReplyCount" column="BOARD_REPLY_COUNT" />
 		<result property="attachId" column="ATTACH_ID" />
 	</resultMap>
-	
+
 	<insert id="insertBoard">
 		<!-- 게시글 등록 -->
 		INSERT INTO BOARD2 VALUES
@@ -93,8 +93,46 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		FROM
 		BOARD2
 		)
-		WHERE RN BETWEEN #{start} AND #{end}
+		WHERE RN BETWEEN #{start} AND #{end} and category_id = 0
 	</select>
+
+	<select id="selectReverse" resultMap="boardResultMap">
+		SELECT * FROM (
+		SELECT ROW_NUMBER() OVER (ORDER BY BOARD_ID DESC) AS RN,
+		BOARD2.*
+		FROM
+		BOARD2
+		)
+		WHERE RN BETWEEN #{start} AND #{end} and category_id = 1
+	</select>
+
+	<insert id="insertReverse">
+		<!-- 게시글 등록 -->
+		SELECT * FROM (
+		SELECT ROW_NUMBER() OVER (ORDER BY BOARD_ID DESC) AS RN,
+		BOARD2.*
+		FROM
+		BOARD2
+		)
+		WHERE RN BETWEEN #{start} AND #{end} and category_id = 2
+	</insert>
+
+
+	<select id="selectStarrail" resultMap="boardResultMap">
+		select *
+		from board2
+		where
+		category_Id = 2;
+	</select>
+
+	<insert id="insertStarrail">
+		<!-- 게시글 등록 -->
+		INSERT INTO BOARD2 VALUES
+		(BOARD_SEQ.NEXTVAL, 2,
+		#{memberId}, #{boardTitle}, #{boardContent}, SYSDATE,
+		0,
+		BOARD_SEQ.CURRVAL)
+	</insert>
 
 
 	<select id="selectTotalCount" resultType="Integer">
