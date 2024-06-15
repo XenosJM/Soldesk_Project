@@ -1,9 +1,12 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%--시큐리티 태그를 사용하귀 위해 입력. --%>
+<%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 <!DOCTYPE html>
 <html lang="en">
 <head>
+	<sec:csrfMetaTags/>
     <meta charset="UTF-8">
     <title>Fixed Button with Scroll</title>
     <style>
@@ -95,6 +98,16 @@
     // 대기중인 요청만 리스트로 가져오고 거절 또는 수락 된 요청은 안가져옴, 수락 거절 된 요청들은 정해진시간에 스케쥴러를 이용해 제거하도록 할 예정
     // <li class="online">친구1</li>  <li class="offline">친구3</li>
     	
+    	const token = $("meta[name='_csrf']").attr("content");
+       	const header = $("meta[name='_csrf_header']").attr("content");
+       	const name = $("#userName").val();
+    	
+    	$.ajaxSetup({
+                beforeSend: function(xhr) {
+                    xhr.setRequestHeader(header, token);
+                }
+            });
+    	
     	//let friendList =${friendList}; // 모델로 받아온 List배열
     	let onlineFriend = []; // 친구의 상태가 온라인인지 오프라인 인지에 따라 나눌 배열
     	let offlineFriend = [];
@@ -172,8 +185,9 @@
     		$.ajax({
     			type : 'GET',
     			url : '../friend/getRequest/' + memberId, 
-    			success : function(requestList){
-    				$.each(requestList, function(index, item){
+    			success : function(data){
+    				console.log(data);
+    				$.each(data, function(index, item){
     					let reqState = function(item){
     						if(item.requestState === null){
     							return '대기중'
@@ -202,36 +216,91 @@
     		$.ajax({
     			type : 'GET',
     			url : '../friend/getReceive/' + memberId, 
-    			success : function(receiveList){
-    				$.each(receiveList, function(index, item){
-    					$('#receiveRequest').append(
-	    					'<li>' + item.requesterId +  
-	    					'<button id="btnAccept">수락</button>' +
-	    					'<input type="hidden" id="receiveId" value='+ item.receiveId +'>' +
-		    				'<button id="btnReject">거절</button>' +
-		    				'</li>'
-	    				);
+    			success : function(data){
+    				$.each(data, function(index, item){
+    					let recState = function(item){
+    						if(item.receiveState === null){
+    							return '대기중'
+    						} else if(item.receiveState === 'accept'){
+    							return '수락됨'
+    						} else if(item.receiveState === 'reject'){
+    							return '거절됨'
+    						}
+    					};
+    					if(recState(item) === '대기중'){
+	    					$('#receiveRequest').append(
+		    					'<li>' + item.requesterId +  
+		    					'<input id="recState" disabled type="text" value=' + recState(item) + '>' +
+		    					'<button id="btnAccept">수락</button>' +
+		    					'<input type="hidden" id="receiveId" value='+ item.receiveId +'>' +
+			    				'<button id="btnReject">거절</button>' +
+			    				'</li>'
+		    				);
+    					} else {
+    						$('#receiveRequest').append(
+    		    					'<li>' + item.requesterId +  
+    		    					'<input id="recState" disabled type="text" value=' + recState(item) + '>' +
+    		    					'<input type="hidden" id="receiveId" value='+ item.receiveId +'>' +
+    			    				'</li>'
+    		    			);
+    					}
     				}); // end each
     			} // end success
     		}); // end ajax
     	}); // end btnReceiveRequestList
     	
-    	$(document).on('click', '#btnRequestCancel', function(){
-    		// 삭제 두번
-    		
-    	})
+    	$(document).on('click', '#btnRequestCancel', async function(){
+    	    let requestId = $(this).prev().val();
+    	    let receiveId = $(this).prev().val();
+    	    let requestState = 'cancel';
+			let receiveState = 'cancel';
+    	    //console.log('Request ID:', requestId);
+    	    //console.log('Receive ID:', receiveId);
+    	    //console.log('Request State:', requestState);
+
+    	    try {
+    	        const [updateResponse, insertResponse] = await Promise.all([
+    	            $.ajax({
+    	                type: 'post',
+    	                url: '../friend/requestState',
+    	                contentType: 'application/json; charset=UTF-8',
+    	                data: JSON.stringify({
+    	                	requestId : requestId,
+    	                	requestState: requestState
+    	                })  // 데이터 전송을 위해 JSON.stringify() 사용
+    	            }),
+    	            $.ajax({
+    	                type: 'post',
+    	                url: '../friend/receiveState',
+    	                contentType: 'application/json; charset=UTF-8',
+    	                data: JSON.stringify({ 
+    	                	receiveId : receiveId,
+    	                	receiveState : receiveState
+    	                })  // 데이터 전송을 위해 JSON.stringify() 사용
+    	            })
+    	        ]);
+
+    	        //console.log('Update Response:', updateResponse);
+    	        //console.log('Insert Response:', insertResponse);
+    	        alert('친구요청이 취소 되었습니다.');
+    	    } catch (error) {
+    	        console.error('Error:', error);
+    	        alert('친구 요청 처리 중 오류가 발생했습니다.');
+    	    }
+    	});
     	
     	$(document).on('click', '#btnAccept', function(){
-    		// 삭제후 친구목록에 2번 추가 
+    		// 업데이트이후 친구목록에 2번 추가진행  
     	})
     	
     	$(document).on('click', '#btnReject', function(){
-    		// 보내요청 받은요청 삭제 작업
+    		// 보낸요청 받은요청 업데이트 작업
     	})
     	
     	
     	// 전송된 채팅이 존재할시 친구 이름 주황색으로 변경되게 할것
-    	
+    	// 웹소켓으로 변경시 탭이활성화 되면 수락 또는 거절 목록을 5초뒤 삭제하도록 명령문 실행되게 짤것
+    	// 웹소켓 연결시켜놓고 새로고침하면 다시 재연결 시키도록 코드 짜기
     	
     	
     	

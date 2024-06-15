@@ -1,6 +1,7 @@
 package com.soldesk.ex01.controller;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -32,7 +33,7 @@ public class FriendController {
 	@Autowired
 	private FriendService friendService;
 	
-	@Transactional
+	
 	@PostMapping("/send")
 	public ResponseEntity<Integer> sendRequest(@RequestBody RequestVO requestVO ){
 		log.info("sendRequest()");
@@ -48,12 +49,21 @@ public class FriendController {
 		return new ResponseEntity<List<RequestVO>>(requestList, HttpStatus.OK);
 	}
 	
-	@PutMapping("/requestState/{requestId}")
-	public ResponseEntity<Integer> requestStateChange(@PathVariable("requestId") int requestId, @RequestParam("requestState") String requestState){
+	@PostMapping("/requestState")
+	public ResponseEntity<Integer> requestStateChange(@RequestBody RequestVO requestVO /* @PathVariable ("requestId") int requestId, @RequestParam("requestState") String requestState */){
 		log.info("requestStateChange()");
-		int result = friendService.requestStateChange(requestId, requestState);
+		log.info(requestVO);
+		int result = friendService.requestStateChange(requestVO.getRequestId(), requestVO.getRequestState());
 		return new ResponseEntity<Integer>(result, HttpStatus.OK);
 	}
+	
+//	@PostMapping("/requestChange/{requestId}")
+//    public ResponseEntity<Integer> requestStateChange(@PathVariable("requestId") int requestId, @RequestParam("requestState") String requestState){
+//	    log.info("requestStateChange()");
+//	    log.info(requestState);
+//		int result = friendService.requestStateChange(requestId, requestState);
+//		return new ResponseEntity<Integer>(result, HttpStatus.OK);
+//	}
 	
 	@PostMapping("/cancel/{requestId}")
 	public ResponseEntity<Integer> cancelRequest(@PathVariable("requestId") int requestId){
@@ -80,11 +90,19 @@ public class FriendController {
 	}
 	
 	@PostMapping("/receiveState")
-	public ResponseEntity<Integer> receiveStateChange(@RequestParam("receiveId") int receiveId, @RequestParam("receiveState") String receiveState){
+	public ResponseEntity<Integer> receiveStateChange(@RequestBody ReceiveVO receiveVO/*@PathVariable("receiveId") int receiveId, @RequestParam("receiveState") String receiveState*/){
 		log.info("receiveStateChange()");
-		int result = friendService.receiveStateChange(receiveId, receiveState);
+		log.info(receiveVO);
+		int result = friendService.receiveStateChange(receiveVO.getReceiveId(), receiveVO.getReceiveState());
 		return new ResponseEntity<Integer>(result, HttpStatus.OK);
 	}
+	
+//	@PostMapping("/receiveChange/{receiveId}")
+//    public ResponseEntity<Integer> receiveStateChange(@PathVariable("receiveId") int receiveId, @RequestParam("receiveState") String receiveState){
+//	    log.info("requestStateChange()");
+//		int result = friendService.receiveStateChange(receiveId, receiveState);
+//		return new ResponseEntity<Integer>(result, HttpStatus.OK);
+//	}
 	
 	@PostMapping("/reject/{receiveId}")
 	public ResponseEntity<Integer> rejentRequest(@PathVariable("receiveId") int receiveId){

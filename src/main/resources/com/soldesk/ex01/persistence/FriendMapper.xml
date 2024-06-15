@@ -37,7 +37,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
     <!-- 친구 요청 상태 변경 -->
     <update id="requestStateChange">
-        UPDATE REQUEST SET REQUEST_STATE = #{requestState} WHERE REQUEST_ID = #{requestId}
+        UPDATE REQUEST SET 
+        REQUEST_STATE = #{requestState}
+        WHERE REQUEST_ID = #{requestId}
     </update>
 
     <!-- 친구 요청 취소 -->
@@ -72,7 +74,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
     <!-- 친구 요청 수신 상태 변경 -->
     <update id="receiveStateChange">
-        UPDATE RECEIVE SET RECEIVE_STATE = #{requestState} WHERE RECEIVE_ID = #{receiveId}
+        UPDATE RECEIVE SET 
+        RECEIVE_STATE = #{receiveState} 
+        WHERE RECEIVE_ID = #{receiveId}
     </update>
 
     <!-- 친구 요청 거절 -->

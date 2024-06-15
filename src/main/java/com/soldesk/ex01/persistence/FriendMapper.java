@@ -3,6 +3,7 @@ package com.soldesk.ex01.persistence;
 import java.util.List;
 
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 
 import com.soldesk.ex01.domain.FriendVO;
 import com.soldesk.ex01.domain.ReceiveVO;
@@ -15,12 +16,12 @@ public interface FriendMapper {
 	List<RequestVO> sendListRequest(String memberId);
 	String selectRequestById(String memberId);
 	List<RequestVO> allSendList();
-	int requestStateChange(int requestId, String requestState);
+	int requestStateChange(@Param("requestId")int requestId, @Param("requestState")String requestState);
 	int cancelRequest(int requestId);
 	
 	int insertReceive(ReceiveVO receiveVO);
 	List<ReceiveVO> receiveListRequest(String memberId);
-	int receiveStateChange(int receiveId, String receiveState);
+	int receiveStateChange(@Param("receiveId")int receiveId, @Param("receiveState")String receiveState);
 	List<ReceiveVO> allReceiveList();
 	int rejectRequest(int receiveId);
 	
