@@ -2,10 +2,13 @@
 	pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
+
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
+
 <meta charset="UTF-8">
+<script src="https://code.jquery.com/jquery-3.7.1.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>검색결과</title>
 <style>
@@ -143,3 +146,6 @@ ul li a {
 				</c:forEach>
 			</tbody>
 		</table>
+	</div>
+	
+</body>

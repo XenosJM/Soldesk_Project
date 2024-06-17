@@ -37,13 +37,13 @@ public class Board2ServiceImple implements Board2Service {
 	public int insertBoard(Board2VO vo) {
 		log.info("service : insertBoard()");
 		int result = board2Mapper.insertBoard(vo);
-		log.info("board2Mapper.insert °á°ú : "+result);
+		log.info("board2Mapper.insert ï¿½ï¿½ï¿½ : "+result);
 		//result = attachMapper.insert(vo.getAttachVO());
 		AttachVO[] attach = vo.getAttachVO();
 		if(attach != null) {			
 			for (int i = 0; i < attach.length; i++) {
 				result = attachMapper.insert(vo.getAttachVO()[i]);
-				log.info("attachMapper.inster °á°ú : " + result);
+				log.info("attachMapper.inster ï¿½ï¿½ï¿½ : " + result);
 			}
 		}
 		return result;
@@ -57,10 +57,10 @@ public class Board2ServiceImple implements Board2Service {
 		log.info(attach);
 		if(attach != null) {
 			result = attachMapper.delete(vo.getBoardId());
-			log.info("attachMapper.delete °á°ú : "+result);
+			log.info("attachMapper.delete ï¿½ï¿½ï¿½ : "+result);
 			for(int i=0;i<vo.getAttachVO().length;i++) {
 				result = attachMapper.insert(vo.getAttachVO()[i]);
-				log.info("attachMapper.inster °á°ú : "+result);			
+				log.info("attachMapper.inster ï¿½ï¿½ï¿½ : "+result);			
 			}			
 		}
 		return result;
@@ -130,48 +130,26 @@ public class Board2ServiceImple implements Board2Service {
 		return board2Mapper.selectTotalCount();
 	}
 
+	
+
 	@Override
-	public int insertReverse(Board2VO vo) {
-		log.info("service : insertBoard()");
-		int result = board2Mapper.insertReverse(vo);
-		log.info("board2Mapper.insert °á°ú : "+result);
-		//result = attachMapper.insert(vo.getAttachVO());
-		AttachVO[] attach = vo.getAttachVO();
-		if(attach != null) {			
-			for (int i = 0; i < attach.length; i++) {
-				result = attachMapper.insert(vo.getAttachVO()[i]);
-				log.info("attachMapper.inster °á°ú : " + result);
-			}
-		}
-		return result;
+	public List<Board2VO> selectReverse(Pagination pagination) {
+		log.info("selectReverse()");
+		List<Board2VO> list = board2Mapper.selectReverse(pagination);
+		return list;
+	}
+
+	
+
+	@Override
+	public List<Board2VO> selectStarrail(Pagination pagination) {
+		log.info("selectStarrail()");
+		return board2Mapper.selectStarrail(pagination);
 	}
 
 	@Override
-	public List<Board2VO> selectReverse() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public int insertStarrail(Board2VO vo) {
-		log.info("service : insertBoard()");
-		int result = board2Mapper.insertStarrail(vo);
-		log.info("board2Mapper.insert °á°ú : "+result);
-		//result = attachMapper.insert(vo.getAttachVO());
-		AttachVO[] attach = vo.getAttachVO();
-		if(attach != null) {			
-			for (int i = 0; i < attach.length; i++) {
-				result = attachMapper.insert(vo.getAttachVO()[i]);
-				log.info("attachMapper.inster °á°ú : " + result);
-			}
-		}
-		return result;
-	}
-
-	@Override
-	public List<Board2VO> selectStarrail() {
-		// TODO Auto-generated method stub
-		return null;
+	public int recommendIncrease(int boardId) {
+		return board2Mapper.recommendIncrease(boardId);
 	}
 
 

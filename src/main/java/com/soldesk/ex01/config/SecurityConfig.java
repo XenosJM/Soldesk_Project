@@ -12,14 +12,14 @@ import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 @EnableWebSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	
-	// HttpSecurity °´Ã¼¸¦ ÅëÇØ Http º¸¾È ±â´ÉÀ» ±¸¼º
+
 	@Override
 	protected void configure(HttpSecurity httpSecurity) throws Exception {
 		httpSecurity
-			.authorizeRequests() // ¿äÃ»¿¡ ±ÇÇÑ ºÎ¿©
-				.antMatchers("/", "/member/regist", "/member/findIdPw", "/member/check", "/board/list", "/board/detail", "/board/search", "/util/**").permitAll() // ·çÆ® URL¿¡ ´ëÇÑ ¸ğµç »ç¿ëÀÚ Á¢±ÙÀ» Çã¿ë
-				.antMatchers("/member/**", "/friend/**", "/reply/**", "/rereply/**", "/attach/**").permitAll()
-				.anyRequest().authenticated() // ÀÌ¿Ü¿¡ URLÀº »ç¿ëÀÚ ÀÎÁõÀ» ¼öÇàÇØ¾ß ÇÔ
+			.authorizeRequests() 
+				.antMatchers("/", "/member/regist", "/member/findIdPw", "/member/check", "/board/list", "/board/detail", "/board/search", "/util/**").permitAll() 
+				.antMatchers("/member/**", "/friend/**", "/reply/**", "/rereply/**", "/attach/**","/board/**").permitAll()
+				.anyRequest().authenticated() 
 				.and()
 			.formLogin()
 				.loginPage("/login/check")
@@ -38,7 +38,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 			
 	}
 	
-	// AuthenticationManagerBuilder °´Ã¼¸¦ ÅëÇØ ÀÎÁõ±â´ÉÀ» ±¸¼º
+	// AuthenticationManagerBuilder å ì™ì˜™ì²´å ì™ì˜™ å ì™ì˜™å ì™ì˜™ å ì™ì˜™å ì™ì˜™å ì™ì˜™å ì™ì˜™å ï¿½ å ì™ì˜™å ì™ì˜™
 	@Override
 	protected void configure(AuthenticationManagerBuilder auth) throws Exception {
 		
@@ -53,7 +53,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         csrfRepository.setHeaderName("X-CSRF-TOKEN");
         csrfRepository.setParameterName("_csrf");
         csrfRepository.setCookieName("XSRF-TOKEN");
-        //csrfRepository.setCookiePath("..."); // ±âº»°ª: request.getContextPath()
+        //csrfRepository.setCookiePath("..."); // å ì©ë³¸å ì™ì˜™: request.getContextPath()
 
         return csrfRepository;
     }

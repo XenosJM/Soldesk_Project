@@ -42,7 +42,7 @@ import lombok.extern.log4j.Log4j;
 @Log4j
 public class HomeController {
 
-//	private static final Logger logger = LoggerFactory.getLogger(HomeController.class); // ·Òº¹ log4j¸¦ ¾È¾µ°æ¿ì »ç¿ëÇÏ´Â logging ¹æ¹ý
+//	private static final Logger logger = LoggerFactory.getLogger(HomeController.class); // ï¿½Òºï¿½ log4jï¿½ï¿½ ï¿½È¾ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½Ï´ï¿½ logging ï¿½ï¿½ï¿½
 
 	@Autowired
 	private MemberService memberService;
@@ -76,14 +76,14 @@ public class HomeController {
 	}
 
 //	@GetMapping("board/detail")
-//	@ResponseBody // JSON µ¥ÀÌÅÍ ¹ÝÈ¯À» À§ÇÑ ¾î³ëÅ×ÀÌ¼Ç Ãß°¡
+//	@ResponseBody // JSON ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½È¯ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ì¼ï¿½ ï¿½ß°ï¿½
 //	public ResponseEntity<BoardVO> boardDetail(@RequestParam Integer boardId) {
 //		log.info("board controller : detail()");
 //		BoardVO boardVO = boardService.selectDetail(boardId);
 //		if (boardVO != null) {
 //			return new ResponseEntity<>(boardVO, HttpStatus.OK);
 //		} else {
-//			return new ResponseEntity<>(HttpStatus.NOT_FOUND); // ÇØ´ç °Ô½Ã¹°ÀÌ ¾øÀ» °æ¿ì 404 ÀÀ´ä ¹ÝÈ¯
+//			return new ResponseEntity<>(HttpStatus.NOT_FOUND); // ï¿½Ø´ï¿½ ï¿½Ô½Ã¹ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ 404 ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½È¯
 //		}
 //	}
 	
@@ -106,7 +106,7 @@ public class HomeController {
 //		return new ResponseEntity<>(board2VO,HttpStatus.OK);
 //	}
 	
-	//ÀÌ°Ô ³»°¡ ¾µ°ÅÀÓ 
+	//ï¿½Ì°ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ 
 //	@GetMapping("board/list")
 //	public void boardList(Model model) {
 //		log.info("board controller : list()");
@@ -115,7 +115,7 @@ public class HomeController {
 //		model.addAttribute("boardList", boardList);
 //	}
 	
-	//ÀÌ°Ô ³»°¡ ¾²´ø°Å¸¦ ÆäÀÌÂ¡ Ã³¸® ÇÑ°ÅÀÓ
+	//ï¿½Ì°ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Å¸ï¿½ ï¿½ï¿½ï¿½ï¿½Â¡ Ã³ï¿½ï¿½ ï¿½Ñ°ï¿½ï¿½ï¿½
 	@GetMapping("board/list")
 	public void list(Model model, Pagination pagination) {
 		log.info("list()");
@@ -130,7 +130,39 @@ public class HomeController {
 		model.addAttribute("boardList", boardList);
 	}
 	
-	//ÆäÀÌÂ¡ ÇÑ°É ºñµ¿±â ÇÑ°ÅÀÓ
+	@GetMapping("board/reverse1999")
+	public void reverse1999(Model model, Pagination pagination) {
+		log.info("reverse1999()");
+		log.info("pagination = "+pagination);
+		List<Board2VO> boardList = board2Service.selectReverse(pagination);
+		
+		PageMaker pageMaker = new PageMaker();
+		log.info(pageMaker);
+		pageMaker.setPagination(pagination);
+		pageMaker.setTotalCount(board2Service.getTotalCount());
+		log.info("start : " + pageMaker.getStartNum());
+		log.info("end : " + pageMaker.getEndNum());
+		model.addAttribute("pageMaker", pageMaker);
+		model.addAttribute("boardList", boardList);
+	}
+	
+	@GetMapping("board/starrail")
+	public void starrail(Model model, Pagination pagination) {
+		log.info("starrail()");
+		log.info("pagination = "+pagination);
+		List<Board2VO> boardList = board2Service.selectStarrail(pagination);
+		
+		PageMaker pageMaker = new PageMaker();
+		pageMaker.setPagination(pagination);
+		pageMaker.setTotalCount(board2Service.getTotalCount());
+		
+		model.addAttribute("pageMaker", pageMaker);
+		model.addAttribute("boardList", boardList);
+	}
+	
+	
+	
+	//ï¿½ï¿½ï¿½ï¿½Â¡ ï¿½Ñ°ï¿½ ï¿½ñµ¿±ï¿½ ï¿½Ñ°ï¿½ï¿½ï¿½
 //	@GetMapping("/list")
 //	public ResponseEntity<Map<String, Object>> list(Pagination pagination) {
 //	    log.info("list()");
@@ -142,12 +174,12 @@ public class HomeController {
 //	    pageMaker.setPagination(pagination);
 //	    pageMaker.setTotalCount(boardService.getTotalCount());
 //
-//	    // µ¥ÀÌÅÍ¸¦ ´ãÀ» Map »ý¼º
+//	    // ï¿½ï¿½ï¿½ï¿½ï¿½Í¸ï¿½ ï¿½ï¿½ï¿½ï¿½ Map ï¿½ï¿½ï¿½ï¿½
 //	    Map<String, Object> response = new HashMap<>();
 //	    response.put("pageMaker", pageMaker);
 //	    response.put("boardList", boardList);
 //
-//	    // ResponseEntity¿¡ MapÀ» ´ã¾Æ¼­ ¹ÝÈ¯
+//	    // ResponseEntityï¿½ï¿½ Mapï¿½ï¿½ ï¿½ï¿½Æ¼ï¿½ ï¿½ï¿½È¯
 //	    return ResponseEntity.ok(response);
 //	}
 	
