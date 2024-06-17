@@ -229,6 +229,10 @@ public class HomeController {
 		return "redirect:/";
 	}
 	
+	@GetMapping("member/login")
+	public void login() {
+		log.info("login()");
+	}
 //	@GetMapping("member/friendList")
 //	public void getFriendList(Model model, HttpServletRequest req) throws JsonProcessingException {
 //		HttpSession session = req.getSession();

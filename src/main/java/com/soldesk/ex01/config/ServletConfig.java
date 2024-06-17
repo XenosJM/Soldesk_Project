@@ -87,14 +87,16 @@ public class ServletConfig implements WebMvcConfigurer, WebSocketConfigurer {
 		return container;	
 	}
 	
+	// cross origin ¼³Á¤
 	@Override
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/**")
                 .allowedOrigins("http://192.168.0.144:3000")
-                .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
+                .allowedMethods("GET", "POST", "PUT", "DELETE", "HEAD", "OPTIONS")
                 .allowedHeaders("*")
                 .allowCredentials(true);
     }
+	
 	
 } // end ServletConfig
 
