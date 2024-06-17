@@ -25,6 +25,7 @@ public class Board2VO {
 	private Date boardRegistDate;
 	private int boardReplyCount;
 	private int attachId;
+	private int recommend;
 	
 	@Setter
 	@Getter

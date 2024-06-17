@@ -84,6 +84,14 @@ public class BoardController {
 //		}
 		return "redirect:/board/list";
 	}
+	
+	@PostMapping("/recommend")
+	public ResponseEntity<Integer> recommend(Integer boardId) {
+		log.info("board controller : recommend()");
+		int result = board2Service.recommendIncrease(boardId);
+		return new ResponseEntity<Integer>(result,HttpStatus.OK);
+		
+	}
 
 	
 	

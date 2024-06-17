@@ -3,9 +3,11 @@
 	pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
+<%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 <!DOCTYPE html>
 <html>
 <head>
+<sec:csrfMetaTags/>
 <!-- jquery 라이브러리 import -->
 <script src="https://code.jquery.com/jquery-3.7.1.js">
 	
@@ -83,6 +85,15 @@
 
 	<script type="text/javascript">
 		$(document).ready(function() {
+			const token = $("meta[name='_csrf']").attr("content");
+        	const header = $("meta[name='_csrf_header']").attr("content");
+        	const name = $("#userName").val();
+        	
+        	$.ajaxSetup({
+                beforeSend: function(xhr) {
+                    xhr.setRequestHeader(header, token);
+                }
+            });
 			getAllReply(); // 함수 호출
 			$('#btnAdd').click(function() {
 				let boardId = $('#boardId').val(); // 게시판 번호 데이터

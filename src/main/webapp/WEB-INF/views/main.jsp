@@ -172,6 +172,8 @@
         <nav>
             <ul>
                 <li><a href="/ex01/board/list">전체게시판</a></li>
+                <li><a href="/ex01/board/reverse1999">릾1999</a></li>
+                <li><a href="/ex01/board/starrail">붕스</a></li>
             </ul>
         </nav>
     </div>

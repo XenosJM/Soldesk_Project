@@ -27,22 +27,21 @@ import lombok.extern.log4j.Log4j;
 @EnableWebSecurity
 @Log4j
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
-	
+
 	@Autowired
 	private DataSource dataSource;
-	
-	
-	// HttpSecurity °´Ã¼¸¦ ÅëÇØ Http º¸¾È ±â´ÉÀ» ±¸¼º
+
 	@Override
 	protected void configure(HttpSecurity httpSecurity) throws Exception {
-		log.info("½ÃÅ¥¸®Æ¼°¡ ½ÇÇàµÊ");
+		log.info("ï¿½ï¿½Å¥ï¿½ï¿½Æ¼ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½");
 		httpSecurity
-			.authorizeRequests() // ¿äÃ»¿¡ ±ÇÇÑ ºÎ¿©
-				.antMatchers("/", "/member/regist", "/member/findIdPw", "/member/check", "/board/list", "/board/detail", "/board/search", "/util/**").permitAll() // ·çÆ® URL¿¡ ´ëÇÑ ¸ğµç »ç¿ëÀÚ Á¢±ÙÀ» Çã¿ë
-				.antMatchers("/member/**", "/friend/**", "/reply/**", "/rereply/**", "/attach/**").permitAll()
-				.anyRequest().authenticated() // ÀÌ¿Ü¿¡ URLÀº »ç¿ëÀÚ ÀÎÁõÀ» ¼öÇàÇØ¾ß ÇÔ
-				
+
+			.authorizeRequests() 
+				.antMatchers("/", "/member/regist", "/member/findIdPw", "/member/check", "/board/list", "/board/detail", "/board/search", "/util/**").permitAll() 
+				.antMatchers("/member/**", "/friend/**", "/reply/**", "/rereply/**", "/attach/**", "/board/**").permitAll()
+				.anyRequest().authenticated() 
 				.and()
+				
 			.formLogin()
 				.loginPage("member/login")
 				.loginProcessingUrl("member/login")
@@ -67,31 +66,31 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	
 	@Bean
     public CorsConfigurationSource corsConfigurationSource() {
-        // »õ·Î¿î CORS ¼³Á¤À» »ı¼º.
+        // ï¿½ï¿½ï¿½Î¿ï¿½ CORS ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½.
         CorsConfiguration corsConfiguration = new CorsConfiguration();
 
         corsConfiguration.setAllowedOrigins(List.of("http://192.168.0.144:3000"));
-        // ¿À¸®Áø ÆĞÅÏÀ» ¼³Á¤. ¿©±â¼­´Â Æ¯Á¤ IP¿Í Æ÷Æ®¸¦ °¡Áø µµ¸ŞÀÎÀ» Çã¿ë.
+        // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½. ï¿½ï¿½ï¿½â¼­ï¿½ï¿½ Æ¯ï¿½ï¿½ IPï¿½ï¿½ ï¿½ï¿½Æ®ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½.
         corsConfiguration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "HEAD", "OPTIONS"));
-        // Çã¿ëÇÒ HTTP ¸Ş¼­µå¸¦ ¼³Á¤.
+        // ï¿½ï¿½ï¿½ï¿½ï¿½ HTTP ï¿½Ş¼ï¿½ï¿½å¸¦ ï¿½ï¿½ï¿½ï¿½.
         corsConfiguration.setAllowedHeaders(List.of("Authorization", "Cache-Control", "Content-Type"));
-        // Çã¿ëÇÒ HTTP Çì´õ¸¦ ¼³Á¤ÇÕ´Ï´Ù.
+        // ï¿½ï¿½ï¿½ï¿½ï¿½ HTTP ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Õ´Ï´ï¿½.
         corsConfiguration.setAllowCredentials(true);
-        // ÀÚ°İ Áõ¸íÀ» Æ÷ÇÔÇÑ ¿äÃ»À» Çã¿ë.
+        // ï¿½Ú°ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Ã»ï¿½ï¿½ ï¿½ï¿½ï¿½.
 
-        // »õ·Î¿î URL ±â¹İ CORS ¼³Á¤ ¼Ò½º¸¦ »ı¼º.
+        // ï¿½ï¿½ï¿½Î¿ï¿½ URL ï¿½ï¿½ï¿½ CORS ï¿½ï¿½ï¿½ï¿½ ï¿½Ò½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½.
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", corsConfiguration);
-        // ¸ğµç °æ·Î¿¡ ´ëÇØ CORS ¼³Á¤À» Àû¿ëÇÕ´Ï´Ù.
+        // ï¿½ï¿½ï¿½ ï¿½ï¿½Î¿ï¿½ ï¿½ï¿½ï¿½ï¿½ CORS ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Õ´Ï´ï¿½.
 
         return source;
-        // CORS ¼³Á¤ ¼Ò½º¸¦ ¹İÈ¯ÇÕ´Ï´Ù.
+        // CORS ï¿½ï¿½ï¿½ï¿½ ï¿½Ò½ï¿½ï¿½ï¿½ ï¿½ï¿½È¯ï¿½Õ´Ï´ï¿½.
     }
 	
-	// AuthenticationManagerBuilder °´Ã¼¸¦ ÅëÇØ ÀÎÁõ±â´ÉÀ» ±¸¼º
+	// AuthenticationManagerBuilder
 	@Override
 	protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-		log.info("±ÇÇÑ È®ÀÎ");
+		log.info("ï¿½ï¿½ï¿½ï¿½ È®ï¿½ï¿½");
 		 auth.jdbcAuthentication()
          .dataSource(dataSource)
          .usersByUsernameQuery("SELECT MEMBER_ID, MEMBER_PASSWORD, 1 as enabled FROM MEMBER WHERE MEMBER_ID = ?")
@@ -103,7 +102,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	
 	@Override
 	public void configure(WebSecurity web) throws Exception {
-		// Á¤Àû ¸®¼Ò½ºµé Á¦¿Ü
+		// ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Ò½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
 		web.ignoring().antMatchers("/resources/**", "/css/**", "/js/**", "/images/**");
 	}
 	
@@ -116,7 +115,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         csrfRepository.setHeaderName("X-CSRF-TOKEN");
         csrfRepository.setParameterName("_csrf");
         csrfRepository.setCookieName("XSRF-TOKEN");
-        //csrfRepository.setCookiePath("..."); // ±âº»°ª: request.getContextPath()
+        //csrfRepository.setCookiePath("..."); // å ì©ë³¸å ì™ì˜™: request.getContextPath()
 
         return csrfRepository;
     }

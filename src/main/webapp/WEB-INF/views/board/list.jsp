@@ -2,10 +2,13 @@
 	pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
+
 <!DOCTYPE html>
 <html>
 <head>
 <meta charset="UTF-8">
+<sec:csrfMetaTags/>
+
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>게시판 메인 페이지</title>
 <style>
@@ -129,8 +132,10 @@ ul li a {
 		<h1>게시판</h1>
 		
 		<!-- 등록 버튼 추가 -->
-		<input type="hidden" name = "categoryId" value='0'>
-		<a href="regist" class="register-button">등록</a>
+		<form method="get" action=regist>
+			<input type="hidden" name = "categoryId" value='0'>
+			<input type="submit" value = "등록">
+		</form>
 
 		<form class="search-container" method="get" action="search">
 			<select name="searchOption" id="searchOption">
@@ -178,5 +183,6 @@ ul li a {
 			</c:if>
 		</ul>
 	</div>
+	
 </body>
 </html>
