@@ -31,33 +31,20 @@ import com.zaxxer.hikari.HikariDataSource;
 @MapperScan(basePackages = {"com.soldesk.ex01.persistence"})
 @EnableTransactionManagement // 트랜잭션 관리 활성화
 public class RootConfig {
-   
-	// 오라클 설정
-	private static final String JDBC_DRIVER = "oracle.jdbc.OracleDriver";
-	// aws 설정
-	private static final String JDBC_URL =  "jdbc:oracle:thin:@awsdb.ch4u24ks029o.ap-southeast-2.rds.amazonaws.com:1521:tpdb";
-	private static final String JDBC_USER = "awsAdmin";
-	private static final String JDBC_PW = "=q'?H6V2W#-3RJw";
-	// 기존 오라클 연결 설정
-//	private static final String JDBC_URL =  "jdbc:oracle:thin:@192.168.0.161:1521:xe";
-//	private static final String JDBC_USER = "sdp";
-//	private static final String JDBC_PW = "asdf";
-	// 메일 설정
-	private static final String MAIL_HOST = "smtp.gmail.com";
-	private static final int MAIL_PORT = 587;
-	private static final String MAIL_USER = "wjdalsqaaz123@gmail.com";
-	private static final String MAIL_PW = "lmob akef narj lhcu";
-	
+
 	
    @Bean // 스프링 bean으로 설정
    public DataSource dataSource() { // DataSource 객체 리턴 메서드
       HikariConfig config = new HikariConfig(); // 설정 객체
-      config.setDriverClassName(JDBC_DRIVER); // jdbc 드라이버 정보
-      // TODO 집에서 할때는 url 설정 바꿔야함.
-//    config.setJdbcUrl("jdbc:oracle:thin:@localhost:1521:xe"); // DB 연결 url
-      config.setJdbcUrl(JDBC_URL); // DB 연결 url
-      config.setUsername(JDBC_USER); // DB 사용자 아이디
-      config.setPassword(JDBC_PW); // DB 사용자 비밀번호
+      config.setDriverClassName("oracle.jdbc.OracleDriver"); // jdbc 드라이버 정보
+      // 기존 오라클 연결 설정
+//		config.setJdbcUrl("jdbc:oracle:thin:@192.168.0.161:1521:xe");
+//		config.setUsername("sdp");
+//		config.setPassword("asdf");	
+      // aws 오라클 연결 설정
+      config.setJdbcUrl("jdbc:oracle:thin:@teamproject.c1asumy42bvk.ap-northeast-2.rds.amazonaws.com:1521:database"); // DB 연결 url
+      config.setUsername("soldeskTeam"); // DB 사용자 아이디
+      config.setPassword("soldeskProject"); // DB 사용자 비밀번호
       
       config.setMaximumPoolSize(10); // 최대 풀(Pool) 크기 설정
       config.setConnectionTimeout(30000); // Connection 타임 아웃 설정(30초)
@@ -74,10 +61,10 @@ public class RootConfig {
    @Bean
    public JavaMailSender mailSender() { // 이메일 확인 또는 아이디 비밀번호 찾기시 이용할 객체 리턴 메서드
 	   JavaMailSenderImpl mailSender = new JavaMailSenderImpl(); // 객체 생성
-	   mailSender.setHost(MAIL_HOST); // 이메일 전송에 사용될 smtp 호스트 설정
-	   mailSender.setPort(MAIL_PORT); // 포트 설정
-	   mailSender.setUsername(MAIL_USER); // 사용될 이메일
-	   mailSender.setPassword(MAIL_PW); // 생성한 앱 비밀번호 입력.
+	   mailSender.setHost("smtp.gmail.com"); // 이메일 전송에 사용될 smtp 호스트 설정
+	   mailSender.setPort(587); // 포트 설정
+	   mailSender.setUsername("wjdalsqaaz123@gmail.com"); // 사용될 이메일
+	   mailSender.setPassword("lmob akef narj lhcu"); // 생성한 앱 비밀번호 입력.
 	   
 	   Properties javaMailProperties = new Properties(); // JavaMail 속성 설정을 위한 객체 생성
 	   javaMailProperties.put("mail.tranport.protocl", "smtp"); // smtp를 프로토콜로 사용

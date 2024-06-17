@@ -18,15 +18,17 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 		httpSecurity
 			.authorizeRequests() // 요청에 권한 부여
 				.antMatchers("/", "/member/regist", "/member/findIdPw", "/member/check", "/board/list", "/board/detail", "/board/search", "/util/**").permitAll() // 루트 URL에 대한 모든 사용자 접근을 허용
-				.antMatchers("/member/**", "/friend/**", "/board/**", "/reply/**", "/rereply/**", "/attach/**").permitAll()
+				.antMatchers("/member/**", "/friend/**", "/reply/**", "/rereply/**", "/attach/**").permitAll()
 				.anyRequest().authenticated() // 이외에 URL은 사용자 인증을 수행해야 함
 				.and()
 			.formLogin()
-				.loginPage("/login")
+				.loginPage("/login/check")
+				.usernameParameter("memberId")
+                .passwordParameter("memberPassword")
 				.permitAll()
 				.and()
 			.logout()
-				.logoutUrl("/logout")
+				.logoutUrl("/login/checkout")
 				.logoutSuccessUrl("/")
 				.permitAll()
 				.and()
