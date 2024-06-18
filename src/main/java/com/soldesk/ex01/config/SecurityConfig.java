@@ -33,18 +33,19 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
 	@Override
 	protected void configure(HttpSecurity httpSecurity) throws Exception {
-		log.info("��ť��Ƽ�� �����");
+		log.info("시큐리티가 실행됨");
 		httpSecurity
 
-			.authorizeRequests() 
-				.antMatchers("/", "/member/regist", "/member/findIdPw", "/member/check", "/board/list", "/board/detail", "/board/search", "/util/**").permitAll() 
-				.antMatchers("/member/**", "/friend/**", "/reply/**", "/rereply/**", "/attach/**", "/board/**").permitAll()
-				.anyRequest().authenticated() 
+			.authorizeRequests()  // 요청에 권한 부여
+				.antMatchers("/", "/member/regist", "/member/findIdPw", "/member/check", "/board/list", "/board/detail", "/board/search", "/util/**").permitAll()  // 루트 URL에 대한 모든 사용자 접근
+				.antMatchers("/member/**", "/friend/**", "/reply/**", "/rereply/**", "/attach/**", "/board/**").permitAll()  // 루트 URL에 대한 모든 사용자 접근
+				.anyRequest().authenticated() // 이외에 URL은 사용자 인증을 수행해야 함
 				.and()
 				
 			.formLogin()
-				.loginPage("member/login")
-				.loginProcessingUrl("member/login")
+				.loginPage("/member/login")
+				.loginProcessingUrl("/member/login")
+				.failureUrl("/login?error=true") 
 				.usernameParameter("memberId")
                 .passwordParameter("memberPassword")
 				.permitAll()
@@ -57,48 +58,49 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 				
 				.and()
 			.csrf()
-				.csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
+			 	.csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse()) // CSRF 토큰을 쿠키로 저장
 				
 				.and();
-		httpSecurity.cors().configurationSource(corsConfigurationSource());
+//		httpSecurity.cors().configurationSource(corsConfigurationSource());
 				
 	}
 	
 	@Bean
     public CorsConfigurationSource corsConfigurationSource() {
-        // ���ο� CORS ������ ����.
+		// 새로운 CORS 설정을 생성.
         CorsConfiguration corsConfiguration = new CorsConfiguration();
 
+        // 오리진 패턴을 설정. 여기서는 특정 IP와 포트를 가진 도메인을 허용.
         corsConfiguration.setAllowedOrigins(List.of("http://192.168.0.144:3000"));
-        // ������ ������ ����. ���⼭�� Ư�� IP�� ��Ʈ�� ���� �������� ���.
+        // 허용할 HTTP 메서드를 설정
         corsConfiguration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "HEAD", "OPTIONS"));
-        // ����� HTTP �޼��带 ����.
+        // 허용할 HTTP 헤더를 설정합니다.
         corsConfiguration.setAllowedHeaders(List.of("Authorization", "Cache-Control", "Content-Type"));
-        // ����� HTTP ����� �����մϴ�.
+        // 자격 증명을 포함한 요청을 허용.
         corsConfiguration.setAllowCredentials(true);
-        // �ڰ� ������ ������ ��û�� ���.
 
-        // ���ο� URL ��� CORS ���� �ҽ��� ����.
+        // 새로운 URL 기반 CORS 설정 소스를 생성.
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        // 모든 경로에 대해 CORS 설정을 적용합니다.
         source.registerCorsConfiguration("/**", corsConfiguration);
-        // ��� ��ο� ���� CORS ������ �����մϴ�.
 
+        // CORS 설정 소스를 반환합니다.
         return source;
-        // CORS ���� �ҽ��� ��ȯ�մϴ�.
     }
 	
-	// AuthenticationManagerBuilder
-	@Override
-	protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-		log.info("���� Ȯ��");
-		 auth.jdbcAuthentication()
-         .dataSource(dataSource)
-         .usersByUsernameQuery("SELECT MEMBER_ID, MEMBER_PASSWORD, 1 as enabled FROM MEMBER WHERE MEMBER_ID = ?")
-		 .authoritiesByUsernameQuery("SELECT m.MEMBER_ID, r.ROLE_NAME " +
-                 "FROM MEMBER m " +
-                 "JOIN ROLE r ON m.ROLE_ID = r.ROLE_ID " +
-                 "WHERE m.MEMBER_ID = ?");
-	}
+	
+//	// AuthenticationManagerBuilder 객체를 통해 인증기능을 구성
+//	@Override
+//	protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+//		log.info("권한 확인");
+//		 auth.jdbcAuthentication()
+//         .dataSource(dataSource)
+//         .usersByUsernameQuery("SELECT MEMBER_ID, MEMBER_PASSWORD, 1 as enabled FROM MEMBER WHERE MEMBER_ID = ?")
+//		 .authoritiesByUsernameQuery("SELECT m.MEMBER_ID, r.ROLE_NAME " +
+//                 "FROM MEMBER m " +
+//                 "JOIN ROLE r ON m.ROLE_ID = r.ROLE_ID " +
+//                 "WHERE m.MEMBER_ID = ?");
+//	}
 	
 	@Override
 	public void configure(WebSecurity web) throws Exception {
@@ -115,7 +117,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         csrfRepository.setHeaderName("X-CSRF-TOKEN");
         csrfRepository.setParameterName("_csrf");
         csrfRepository.setCookieName("XSRF-TOKEN");
-        //csrfRepository.setCookiePath("..."); // 占썩본占쏙옙: request.getContextPath()
+        //csrfRepository.setCookiePath("..."); // 기본값: request.getContextPath()
 
         return csrfRepository;
     }
