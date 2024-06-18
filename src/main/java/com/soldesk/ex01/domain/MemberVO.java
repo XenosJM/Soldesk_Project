@@ -1,5 +1,6 @@
 package com.soldesk.ex01.domain;
 
+import java.io.Serializable;
 import java.util.Arrays;
 import java.util.Date;
 
@@ -14,7 +15,12 @@ import lombok.ToString;
 @Getter
 @Setter
 @ToString
-public class MemberVO {
+public class MemberVO implements Serializable{
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	
 	private String memberId;
 	private String memberPassword;
 	private int roleId;

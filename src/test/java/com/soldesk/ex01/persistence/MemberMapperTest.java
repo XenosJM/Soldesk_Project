@@ -9,6 +9,8 @@ import org.junit.runner.Request;
 import org.junit.runner.RunWith;
 import org.junit.runner.Runner;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
@@ -27,9 +29,9 @@ public class MemberMapperTest {
 	
 	@Test
 	public void test() {
-//		testMemberInsert();
+		testMemberInsert();
 //		testMemberList();
-		testMemberByMemberId();
+//		testMemberByMemberId();
 //		testMemberUpdate();
 //		testMemberPropertyUpdate();
 //		testMemberManagerUpdate();
@@ -82,8 +84,14 @@ public class MemberMapperTest {
 	}
 
 	private void testMemberInsert() {
-		MemberVO vo = new MemberVO("wjddk", "1q2w3e4r", 2, "wjdalsqaaz123@gmail.com", new Integer[] {1, 2}, new Date(), null) ;
-		 vo.setMemberPropertyAsString(Arrays.toString(vo.getMemberProperty()));
+		MemberVO vo = new MemberVO();
+		vo.setMemberId("test2");
+		vo.setMemberPassword("test");
+		vo.setMemberEmail("test");
+		PasswordEncoder encoder = new BCryptPasswordEncoder();
+		String endcodePw = encoder.encode(vo.getMemberPassword());
+		vo.setMemberPassword(endcodePw);
+//		vo.setMemberPropertyAsString(Arrays.toString(vo.getMemberProperty()));
 		int result = memberMapper.insert(vo);
 		log.info(result + "Çà »ðÀÔ");
 	}

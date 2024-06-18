@@ -9,6 +9,7 @@ import java.util.Map;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -23,19 +24,17 @@ import lombok.extern.log4j.Log4j;
 public class MemberServiceImple implements MemberService{
 	
 	@Autowired
-	public MemberMapper memberMapper;
+	private MemberMapper memberMapper;
 	
-//	@Autowired
-//	public PasswordEncoder encoder;
+	private PasswordEncoder encoder = new BCryptPasswordEncoder();
 	
 	@Transactional
 	@Override
 	public int createMember(MemberVO memberVO) {
 		log.info("createMember()");
-//		String encodedPassword = encoder.encode(memberVO.getMemberPassword());
-//		memberVO.setMemberPassword(encodedPassword);
-		int result = memberMapper.insert(memberVO);
-		return result;
+		String encodedPassword = encoder.encode(memberVO.getMemberPassword());
+		memberVO.setMemberPassword(encodedPassword);
+		return memberMapper.insert(memberVO);
 	}
 
 	@Override
@@ -54,6 +53,8 @@ public class MemberServiceImple implements MemberService{
 	@Override
 	public int updateMember(MemberVO memberVO) {
 		log.info("updateMember()");
+		String encodedPassword = encoder.encode(memberVO.getMemberPassword());
+		memberVO.setMemberPassword(encodedPassword);
 		return memberMapper.update(memberVO);
 	}
 

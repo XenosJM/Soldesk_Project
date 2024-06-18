@@ -23,11 +23,19 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	<!-- 회원 리스트 -->
 	<select id="selectIdList" resultMap="memberResultMap"> SELECT MEMBER_ID FROM MEMBER </select>
 	<!-- 로그인 체크 -->
-	<select id="memberCheck" resultMap="memberResultMap"> SELECT MEMBER_PASSWORD, MEMBER_ID, ROLE_ID FROM MEMBER WHERE MEMBER_ID = #{memberId} </select>
+	<select id="memberCheck" resultMap="memberResultMap"> SELECT MEMBER_PASSWORD, MEMBER_ID FROM MEMBER WHERE MEMBER_ID = #{memberId} </select>
 	<!-- 체크 아이디 -->
 	<select id="checkId" resultType="String"> SELECT MEMBER_ID FROM MEMBER WHERE MEMBER_ID = #{memberId} </select>
 	<!-- 체크 이메일 -->
 	<select id="checkEmail" resultType="String"> SELECT MEMBER_ID FROM MEMBER WHERE MEMBER_EMAIL = #{memberEmail} </select>
+	<!-- 로그인시 권한 설정 위한 이름 가져오는 join 사용 쿼리 -->
+	<select id="memberRole" resultType="String"> 
+	    SELECT r.ROLE_NAME
+	    FROM MEMBER m
+	    JOIN ROLE r ON m.ROLE_ID = r.ROLE_ID
+	    WHERE m.MEMBER_ID = #{memberId}
+	</select>
+
 	<!-- 이메일을 이용해 아이디 찾기 -->
 	<!-- <select id="findId" resultMap="memberResultMap"> SELECT MEMBER_ID FROM MEMBER WHERE MEMBER_EMAIL = #{memberEmail} </select> -->
 	<!-- 회원 정보 수정 -->
