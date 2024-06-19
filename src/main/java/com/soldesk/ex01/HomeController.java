@@ -261,10 +261,6 @@ public class HomeController {
 		return "redirect:/";
 	}
 	
-	@GetMapping("member/login")
-	public void sequrityLogin() {
-		log.info("sequrityLogin()");
-	}
 //	@GetMapping("member/friendList")
 //	public void getFriendList(Model model, HttpServletRequest req) throws JsonProcessingException {
 //		HttpSession session = req.getSession();
@@ -279,9 +275,20 @@ public class HomeController {
 	}
 	
 	@GetMapping("/login")
-	public void login() {
+	public void login(HttpServletRequest req) {
 		log.info("login");
+		// 이전페이지 정보를담고있는 헤더의 Referer 객체
+		String uri = req.getHeader("Referer");
+		// 이전 페이지가 존재하며 로그인 요청을 먼저 한게 아닐시
+		if(uri != null && uri.contains("/login")) {
+			// 세션에 이전페이지 정보 저장
+			req.getSession().setAttribute("prevPage", uri);
+		}
 	}
-
+	
+	@GetMapping("/error/403")
+	public void accessDeny() {
+		log.info("accessDeny");
+	}
 	
 }

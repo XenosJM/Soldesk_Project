@@ -49,8 +49,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
 			.authorizeRequests()  // 요청에 권한 부여
 				.antMatchers("/", "/member/regist", "/member/findIdPw", "/member/check", "/board/list", "/board/detail", "/board/search", "/util/**").permitAll()  // 루트 URL에 대한 모든 사용자 접근
-				.antMatchers("/member/**", "/friend/**", "/reply/**", "/rereply/**", "/attach/**").permitAll()  // 루트 URL에 대한 모든 사용자 접근
-				.antMatchers("/board/**").hasRole("MEMBER")
+				.antMatchers("/member/**", "/friend/**", "/reply/**", "/rereply/**", "/attach/**", "/board/**").hasRole("MEMBER")  // 루트 URL에 대한 MEMBER 역할을 가진 사용자만 접근 가능
 				.anyRequest().authenticated() // 이외에 URL은 사용자 인증을 수행해야 함
 				.and()
 				
@@ -58,7 +57,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 				.loginPage("/login") // 권한 없을때 이동할 로그인 페이지
 				.loginProcessingUrl("/member/check")
 				.defaultSuccessUrl("/")
-				.successHandler(loginHandler()) // 로그인 성공이 이행할 핸들러
+//				.successHandler(loginHandler()) // 로그인 성공이 이행할 핸들러
 				.failureUrl("/login?error=true") // 로그인 실패시 보여질 url 
 				.usernameParameter("memberId")
                 .passwordParameter("memberPassword")
@@ -75,7 +74,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 				.and()
 			.csrf()
 //				.disable();
-			 	.csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse()) // CSRF 토큰을 쿠키로 저장
+			 	.csrfTokenRepository(cookieCsrfRepository()) // CSRF 토큰을 쿠키로 저장
 				.and();
 				
 //		httpSecurity.cors().configurationSource(corsConfigurationSource());
@@ -111,6 +110,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	protected void configure(AuthenticationManagerBuilder auth) throws Exception {
 		log.info("권한 확인");
 		auth.userDetailsService(userDetail);
+		log.info(userDetail);
 	}
 	
 	@Override
@@ -138,13 +138,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         return new BCryptPasswordEncoder();
     }
 	
-	// 로그인 성공시 사용될 핸들러
-	@Bean
-	public AuthenticationSuccessHandler loginHandler() {
-		SimpleUrlAuthenticationSuccessHandler handler = new SimpleUrlAuthenticationSuccessHandler();
-		handler.setUseReferer(true); // 이전 요청으로 돌아가는 리퍼러 설정
-		return 	handler;
-	}
 	// 로그아웃 성공시 사용되는 핸들러
 	@Bean
 	public LogoutSuccessHandler logoutHandler() {
@@ -160,7 +153,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 			@Override
 			public void handle(HttpServletRequest request, HttpServletResponse response,
 					AccessDeniedException accessDeniedException) throws IOException, ServletException {
-				response.sendRedirect("/error/403");
+				response.sendRedirect("/ex01/error/403");
 			}
 	    };
 	}

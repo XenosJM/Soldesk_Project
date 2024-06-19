@@ -23,7 +23,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		(BOARD_SEQ.NEXTVAL, #{categoryId},
 		#{memberId}, #{boardTitle}, #{boardContent}, SYSDATE,
 		0,
-		BOARD_SEQ.CURRVAL)
+		BOARD_SEQ.CURRVAL,0)
 	</insert>
 
 
