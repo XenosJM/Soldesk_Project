@@ -25,6 +25,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -67,24 +68,44 @@ public class BoardController {
 
 	@PostMapping("/regist")
 	public String registerPost(Board2VO vo, RedirectAttributes reAttr) {
-		log.info("board controller : registerPost()");
-		log.info("board controller : Board2VO =" + vo);
+		
+		
 		int result = board2Service.insertBoard(vo);
-		log.info("º¸µå " + result + "Çà »ðÀÔ");
+		
 //		AttachVO[] attach = vo.getAttachVO();
 //		if (attach != null) {
 //			for (int i = 0; i < attach.length; i++) {				
-//				log.info("Ã·ºÎ ÆÄÀÏ °æ·Î: " + attach[i].getAttachPath());
-//				log.info("Ã·ºÎ ÆÄÀÏ ½ÇÁ¦ ÀÌ¸§: " + attach[i].getAttachRealName());
-//				log.info("Ã·ºÎ ÆÄÀÏ º¯°æµÈ ÀÌ¸§: " + attach[i].getAttachChgName());
-//				log.info("Ã·ºÎ ÆÄÀÏ È®ÀåÀÚ: " + attach[i].getAttachExtension());
+//				log.info("Ã·ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½: " + attach[i].getAttachPath());
+//				log.info("Ã·ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ì¸ï¿½: " + attach[i].getAttachRealName());
+//				log.info("Ã·ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ì¸ï¿½: " + attach[i].getAttachChgName());
+//				log.info("Ã·ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ È®ï¿½ï¿½ï¿½ï¿½: " + attach[i].getAttachExtension());
 //			}
 //		} else {
-//			log.info("Ã·ºÎ ÆÄÀÏÀÌ ¾ø½À´Ï´Ù.");
+//			log.info("Ã·ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï´ï¿½.");
 //		}
 		return "redirect:/board/list";
 	}
 	
+//	@PostMapping("/regist")
+//	public ResponseEntity<Integer> registerPost(@RequestBody Board2VO vo) {
+//		log.info("board controller : registerPost()");
+//		log.info("board controller : Board2VO =" + vo);
+//		int result = board2Service.insertBoard(vo);
+//		log.info("ï¿½ï¿½ï¿½ï¿½ " + result + "ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½");
+////		AttachVO[] attach = vo.getAttachVO();
+////		if (attach != null) {
+////			for (int i = 0; i < attach.length; i++) {				
+////				log.info("Ã·ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½: " + attach[i].getAttachPath());
+////				log.info("Ã·ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ì¸ï¿½: " + attach[i].getAttachRealName());
+////				log.info("Ã·ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ì¸ï¿½: " + attach[i].getAttachChgName());
+////				log.info("Ã·ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ È®ï¿½ï¿½ï¿½ï¿½: " + attach[i].getAttachExtension());
+////			}
+////		} else {
+////			log.info("Ã·ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï´ï¿½.");
+////		}
+//		return new ResponseEntity<Integer>(result,HttpStatus.OK);
+//	}
+//	
 	@PostMapping("/recommend")
 	public ResponseEntity<Integer> recommend(Integer boardId) {
 		log.info("board controller : recommend()");
@@ -103,13 +124,13 @@ public class BoardController {
 		AttachVO[] attach = vo.getAttachVO();
 		if(attach!=null) {
 			for(int i = 0; i<attach.length;i++) {
-				log.info("Ã·ºÎ ÆÄÀÏ °æ·Î: " + attach[i].getAttachPath());
-				log.info("Ã·ºÎ ÆÄÀÏ ½ÇÁ¦ ÀÌ¸§: " + attach[i].getAttachRealName());
-				log.info("Ã·ºÎ ÆÄÀÏ º¯°æµÈ ÀÌ¸§: " + attach[i].getAttachChgName());
-				log.info("Ã·ºÎ ÆÄÀÏ È®ÀåÀÚ: " + attach[i].getAttachExtension());
+				log.info("Ã·ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½: " + attach[i].getAttachPath());
+				log.info("Ã·ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ì¸ï¿½: " + attach[i].getAttachRealName());
+				log.info("Ã·ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ì¸ï¿½: " + attach[i].getAttachChgName());
+				log.info("Ã·ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ È®ï¿½ï¿½ï¿½ï¿½: " + attach[i].getAttachExtension());
 			}
 		}
-		log.info(result + "Çà ¼öÁ¤");
+		log.info(result + "ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½");
 		return "redirect:/board/list";
 	}
 
@@ -117,11 +138,11 @@ public class BoardController {
 	public String delete(Integer boardId, RedirectAttributes reAttr) {
 		log.info("board controller : deletePost()");
 		int result = board2Service.deleteBoard(boardId);
-		log.info("°Ô½Ã±Û" + result + "Çà »èÁ¦");
+		log.info("ï¿½Ô½Ã±ï¿½" + result + "ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½");
 		return "redirect:/board/list";
 	}
 
-	// Ã·ºÎ ÆÄÀÏ ¾÷·Îµå ÆäÀÌÁö ÀÌµ¿(GET)
+	// Ã·ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Îµï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ìµï¿½(GET)
 	@GetMapping("/registAttach")
 	public void registerGET() {
 		log.info("registerGET()");
@@ -157,9 +178,9 @@ public class BoardController {
 
 	    return new ResponseEntity<>(responseList, HttpStatus.OK);
 	}
-	// Ã·ºÎ ÆÄÀÏ ´Ù¿î·Îµå(GET)
-	// ÆÄÀÏÀ» Å¬¸¯ÇÏ¸é »ç¿ëÀÚ°¡ ´Ù¿î·ÎµåÇÏ´Â ¹æ½Ä
-	// ÆÄÀÏ ¸®¼Ò½º¸¦ ºñµ¿±â·Î Àü¼ÛÇÏ¿© ÆÄÀÏ ´Ù¿î·Îµå
+	// Ã·ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ù¿ï¿½Îµï¿½(GET)
+	// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ Å¬ï¿½ï¿½ï¿½Ï¸ï¿½ ï¿½ï¿½ï¿½ï¿½Ú°ï¿½ ï¿½Ù¿ï¿½Îµï¿½ï¿½Ï´ï¿½ ï¿½ï¿½ï¿½
+	// ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Ò½ï¿½ï¿½ï¿½ ï¿½ñµ¿±ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï¿ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ù¿ï¿½Îµï¿½
 	@GetMapping(value = "/download", produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
 	@ResponseBody
 	public ResponseEntity<Resource> download(int attachId) throws IOException {
@@ -171,16 +192,16 @@ public class BoardController {
 		String attachExtension = attachVO.getAttachExtension();
 		String attachRealName = attachVO.getAttachRealName();
 
-		// ¼­¹ö¿¡ ÀúÀåµÈ ÆÄÀÏ Á¤º¸ »ý¼º
+		// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
 		String resourcePath = uploadPath + File.separator + attachPath + File.separator + attachChgName;
-		// ÆÄÀÏ ¸®¼Ò½º »ý¼º
+		// ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Ò½ï¿½ ï¿½ï¿½ï¿½ï¿½
 		Resource resource = new FileSystemResource(resourcePath);
-		// ´Ù¿î·ÎµåÇÒ ÆÄÀÏ ÀÌ¸§À» Çì´õ¿¡ ¼³Á¤
+		// ï¿½Ù¿ï¿½Îµï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ì¸ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
 		HttpHeaders headers = new HttpHeaders();
 		String attachName = new String(attachRealName.getBytes("UTF-8"), "ISO-8859-1");
 		headers.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + attachName + "." + attachExtension);
 
-		// ÆÄÀÏÀ» Å¬¶óÀÌ¾ðÆ®·Î Àü¼Û
+		// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ Å¬ï¿½ï¿½ï¿½Ì¾ï¿½Æ®ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
 		return new ResponseEntity<Resource>(resource, headers, HttpStatus.OK);
 	} // end download()
 

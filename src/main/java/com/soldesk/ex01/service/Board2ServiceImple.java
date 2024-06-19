@@ -43,7 +43,6 @@ public class Board2ServiceImple implements Board2Service {
 		if(attach != null) {			
 			for (int i = 0; i < attach.length; i++) {
 				result = attachMapper.insert(vo.getAttachVO()[i]);
-				log.info("attachMapper.inster ��� : " + result);
 			}
 		}
 		return result;
@@ -125,9 +124,9 @@ public class Board2ServiceImple implements Board2Service {
 	}
 
 	@Override
-	public int getTotalCount() {
+	public int getTotalCount(int categoryId) {
 		log.info("getTotalCount()");
-		return board2Mapper.selectTotalCount();
+		return board2Mapper.selectTotalCount(categoryId);
 	}
 
 	

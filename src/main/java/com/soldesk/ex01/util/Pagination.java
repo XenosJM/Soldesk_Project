@@ -24,7 +24,7 @@ public class Pagination {
 		this.pageSize = pageSize;
 	}
 
-	// 선택된 페이지의 시작 글 일련번호(rn) - #{start}
+	// 선택된 페이지의 시작 글 일련번호(rn) - #{start}, getter로 매핑해서 사용
 	public int getStart() {
 		return (this.pageNum - 1) * this.pageSize + 1;
 	}

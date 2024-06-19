@@ -16,7 +16,7 @@ public interface Board2Service {
 	int updateBoard(Board2VO vo);
 	int deleteBoard(int boardId);	
 	List<Board2VO> getPagingBoards(Pagination pagination);
-	int getTotalCount();
+	int getTotalCount(int categoryId);
 	
 	
 	List<Board2VO> selectReverse(Pagination pagination);

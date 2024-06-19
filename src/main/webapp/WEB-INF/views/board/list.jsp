@@ -7,7 +7,6 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<sec:csrfMetaTags/>
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>게시판 메인 페이지</title>
@@ -172,14 +171,14 @@ ul li a {
 		</table>
 		<ul>
 			<c:if test="${pageMaker.isPrev()}">
-				<li><a href="list?pageNum=${pageMaker.startNum - 1}">이전</a></li>
+				<li><a href='list?pageNum=${pageMaker.startNum - 1}&categoryId=${param.categoryId}'>이전</a></li>
 			</c:if>
 			<c:forEach begin="${pageMaker.startNum}" end="${pageMaker.endNum}"
 				var="num">
-				<li><a href="list?pageNum=${num}">${num}</a></li>
+				<li><a href='list?pageNum=${num}&categoryId=${param.categoryId}'>${num}</a></li>
 			</c:forEach>
 			<c:if test="${pageMaker.isNext()}">
-				<li><a href="list?pageNum=${pageMaker.endNum + 1}">다음</a></li>
+				<li><a href='list?pageNum=${pageMaker.endNum + 1}&categoryId=${param.categoryId}'>다음</a></li>
 			</c:if>
 		</ul>
 	</div>

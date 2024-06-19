@@ -171,9 +171,9 @@
 
         <nav>
             <ul>
-                <li><a href="/ex01/board/list">전체게시판</a></li>
-                <li><a href="/ex01/board/reverse1999">릾1999</a></li>
-                <li><a href="/ex01/board/starrail">붕스</a></li>
+                <li><a href="/ex01/board/list?categoryId=0">전체게시판</a></li>
+                <li><a href="/ex01/board/list?categoryId=1">릾1999</a></li>
+                <li><a href="/ex01/board/list?categoryId=2">붕스</a></li>
             </ul>
         </nav>
     </div>
@@ -189,7 +189,7 @@
     <script type="text/javascript">
         $(function () {
         	let memberId = '${sessionScope.memberId}';
-        	const token = $("meta[name='_csrf']").attr("content");
+        	/* const token = $("meta[name='_csrf']").attr("content");
         	const header = $("meta[name='_csrf_header']").attr("content");
         	const name = $("#userName").val();
         	
@@ -197,7 +197,7 @@
                 beforeSend: function(xhr) {
                     xhr.setRequestHeader(header, token);
                 }
-            });
+            }); */
         	
             if (${empty sessionScope.memberId}) {
                 $('#loginContainer').html(

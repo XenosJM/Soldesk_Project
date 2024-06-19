@@ -91,34 +91,17 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		BOARD2.*
 		FROM
 		BOARD2
+		where category_id = 0
 		)
-		WHERE RN BETWEEN #{start} AND #{end} and category_id = 0
+		WHERE RN BETWEEN #{start} AND #{end}
 	</select>
 
-	<select id="selectReverse" resultMap="boardResultMap">
-		SELECT * FROM (
-		SELECT ROW_NUMBER() OVER (ORDER BY BOARD_ID DESC) AS RN,
-		BOARD2.*
-		FROM
-		BOARD2
-		)
-		WHERE RN BETWEEN #{start} AND #{end} and category_id = 1
-	</select>
-
-	<select id="selectStarrail" resultMap="boardResultMap">
-		<!-- 게시글 등록 -->
-		SELECT * FROM (
-		SELECT ROW_NUMBER() OVER (ORDER BY BOARD_ID DESC) AS RN,
-		BOARD2.*
-		FROM
-		BOARD2
-		)
-		WHERE RN BETWEEN #{start} AND #{end} and category_id = 2
-	</select>
+	
 
 	<select id="selectTotalCount" resultType="Integer">
 		SELECT COUNT(*)
-		TOTAL_COUNT FROM BOARD2		
+		TOTAL_COUNT FROM BOARD2	
+		where category_id = #{categoryId}
 	</select>
 	
 	<update id="recommendIncrease">
