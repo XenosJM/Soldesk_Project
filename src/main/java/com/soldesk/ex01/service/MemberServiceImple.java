@@ -9,6 +9,8 @@ import java.util.Map;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PostAuthorize;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -36,7 +38,8 @@ public class MemberServiceImple implements MemberService{
 		memberVO.setMemberPassword(encodedPassword);
 		return memberMapper.insert(memberVO);
 	}
-
+	
+	@PostAuthorize("isAuthenticated() and (#memberId == principal.username)")
 	@Override
 	public MemberVO getMemberById(String memberId) {
 		log.info("getMemberById()");
@@ -49,16 +52,17 @@ public class MemberServiceImple implements MemberService{
 		return memberMapper.selectIdList();
 	}
 
-	@Transactional
-	@Override
-	public int updateMember(MemberVO memberVO) {
-		log.info("updateMember()");
-		String encodedPassword = encoder.encode(memberVO.getMemberPassword());
-		memberVO.setMemberPassword(encodedPassword);
-		return memberMapper.update(memberVO);
-	}
+//	@Transactional
+//	@Override
+//	public int updateMember(MemberVO memberVO) {
+//		log.info("updateMember()");
+//		String encodedPassword = encoder.encode(memberVO.getMemberPassword());
+//		memberVO.setMemberPassword(encodedPassword);
+//		return memberMapper.update(memberVO);
+//	}
 
 	@Transactional
+	@PreAuthorize("isAuthenticated() and (#memberVO.memberId == principal.username)")
 	@Override
 	public int updateMemberPermission(MemberVO memberVO) {
 		log.info("updateMemberPermission()");
@@ -67,6 +71,7 @@ public class MemberServiceImple implements MemberService{
 	}
 
 	@Transactional
+	@PreAuthorize("isAuthenticated() and (#memberVO.memberId == principal.username)")
 	@Override
 	public int updateMemberProperty(MemberVO memberVO) {
 		log.info("updateMemberProperty()");
@@ -97,6 +102,7 @@ public class MemberServiceImple implements MemberService{
 	}
 
 	@Transactional
+	@PreAuthorize("isAuthenticated() and (#memberId == principal.username)")
 	@Override
 	public int deleteMember(String memberId) {
 		log.info("deleteMember()");
@@ -120,15 +126,23 @@ public class MemberServiceImple implements MemberService{
             return 0;
         }
 	}
-
+	
+	@Transactional
+	@PreAuthorize("isAuthenticated() and (#memberVO.memberId == principal.username)")
 	@Override
 	public int updatePassword(MemberVO memberVO) {
+		log.info("updatePw");
+		String encodedPassword = encoder.encode(memberVO.getMemberPassword());
+		memberVO.setMemberPassword(encodedPassword);
 		int result = memberMapper.updatePassword(memberVO);
 		return result;
 	}
-
+	
+	@Transactional
+	@PreAuthorize("isAuthenticated() and (#memberVO.memberId == principal.username)")
 	@Override
 	public int updateEmail(MemberVO memberVO) {
+		log.info("updateEamil");
 		int result = memberMapper.updateEmail(memberVO);
 		return result;
 	}

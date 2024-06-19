@@ -11,7 +11,7 @@
     <title>Login</title>
     <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
     <script>
-        /* $(document).ready(function () {
+        $(document).ready(function () {
         	
         	const token = $("meta[name='_csrf']").attr("content");
         	const header = $("meta[name='_csrf_header']").attr("content");
@@ -48,12 +48,12 @@
                     }
                 });
             });
-        }); */
+        });
     </script>
 </head>
 <body>
     <h2>로그인</h2>
-    <form id="loginForm" action="member/check" method="post">
+    <form id="loginForm">
         <label for="memberId">아이디:</label>
         <input type="text" id="memberId" name="memberId" required><br><br>
         

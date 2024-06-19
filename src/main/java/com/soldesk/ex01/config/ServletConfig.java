@@ -60,6 +60,7 @@ public class ServletConfig implements WebMvcConfigurer, WebSocketConfigurer {
 
       // 클라이언트가 업로드하는 각 파일의 최대 크기 (bytes)
       resolver.setMaxUploadSizePerFile(10485760); // 10MB
+      resolver.setDefaultEncoding("UTF-8");
       
       return resolver;
    }

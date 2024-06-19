@@ -9,6 +9,7 @@ import javax.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -51,37 +52,36 @@ public class MemberController {
 //	@GetMapping("/detail/{memberId}")
 //	public ResponseEntity<MemberVO> detailGet(@PathVariable("memberId") String memberId) {
 //		log.info("detailGet()");
-//		MemberVO memberVO = memberService.getMemberById(memberId);
+//		MemberVO memberVO = member.getMemberById(memberId);
 ////		log.info(memberVO);
 //		return new ResponseEntity<MemberVO>(memberVO, HttpStatus.OK);
 //	}
-	
-	@PostMapping("/modify")
-	public ResponseEntity<Integer> memberUpdate(@RequestBody Map<String, String> res) {
-		log.info("memberUpdate()");
-		int result = 0;
-		MemberVO compareVO = member.getMemberById(res.get("memberId"));
-		if(compareVO != null) {
-			MemberVO memberVO = new MemberVO();
-			memberVO.setMemberId(res.get("memberId"));
-			memberVO.setMemberPassword(res.get("memberPassword"));
-			memberVO.setMemberEmail(res.get("memberEmail"));
-			if(memberVO.getMemberPassword() == null) {
-				// 비밀번호를 변경안했다면
-				memberVO.setMemberPassword(compareVO.getMemberPassword());
-			}
-			if(memberVO.getMemberEmail() == null) {
-				// 이메일을 변경안했다면
-				memberVO.setMemberEmail(compareVO.getMemberEmail());
-			}
-			log.info("memberVO = " + memberVO.toString());
-			result = member.updateMember(memberVO);
-			log.info(result + "행 수정");
-		} else {
-			result = 0;
-		}
-		return new ResponseEntity<Integer>(result, HttpStatus.OK);
-	}
+//	@PostMapping("/modify")
+//	public ResponseEntity<Integer> memberUpdate(@RequestBody Map<String, String> res) {
+//		log.info("memberUpdate()");
+//		int result = 0;
+//		MemberVO compareVO = member.getMemberById(res.get("memberId"));
+//		if(compareVO != null) {
+//			MemberVO memberVO = new MemberVO();
+//			memberVO.setMemberId(res.get("memberId"));
+//			memberVO.setMemberPassword(res.get("memberPassword"));
+//			memberVO.setMemberEmail(res.get("memberEmail"));
+//			if(memberVO.getMemberPassword() == null) {
+//				// 비밀번호를 변경안했다면
+//				memberVO.setMemberPassword(compareVO.getMemberPassword());
+//			}
+//			if(memberVO.getMemberEmail() == null) {
+//				// 이메일을 변경안했다면
+//				memberVO.setMemberEmail(compareVO.getMemberEmail());
+//			}
+//			log.info("memberVO = " + memberVO.toString());
+//			result = member.updateMember(memberVO);
+//			log.info(result + "행 수정");
+//		} else {
+//			result = 0;
+//		}
+//		return new ResponseEntity<Integer>(result, HttpStatus.OK);
+//	}
 	
 	@PostMapping("/delete")
 	public ResponseEntity<Integer> deletePost(@RequestBody Map<String, String> res) {

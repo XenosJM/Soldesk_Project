@@ -654,31 +654,6 @@ body {
 			authCodeSend($('#memberEmail').val());
 		}); // end btnSendCode
 		
-		/* function authCodeSend(memberEmail){
-			
-			$.ajax({
-				type : "GET",
-				url : "../util/authCodeSend/",
-				data : {memberEmail : memberEmail},
-				success : function(response){
-					if(response.result === 1){
-						alert("작성하신 이메일로 확인 코드가 발송되었습니다.");
-						$('#emailAuthMsg').html("<input id='authCode' type='number' placeholder='코드를 입력해 주세요.'><button id='btnCodeCheck'>인증확인</button><br><span id='checkAuthMsg'></span>"
-								+ 
-						);
-						checkAuthCode = response.authCode;
-						let codeTime = function(){
-							checkAuthCode = null;
-							alert('코드 인증시간이 만료되었습니다.')
-						}
-						setTimer(codeTime, 60000);
-						// console.log(checkAuthCode);
-					} else{
-						alert("잠시후 다시 눌러주세요.");
-					}
-				}
-			}); // end ajax
-		} // end authCodeSend() */
 		let countdown;
 		let timerInterval;
 		let sendMailFlag = true;

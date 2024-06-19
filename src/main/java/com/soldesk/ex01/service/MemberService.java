@@ -15,8 +15,6 @@ public interface MemberService {
 	MemberVO getMemberById(String memberId);
 	// 회원 검색
 	List<MemberVO> getAllMember();
-	// 회원 정보 수정
-	int updateMember(MemberVO memberVO);
 	// 회원 비밀번호 수정
 	int updatePassword(MemberVO memberVO);
 	// 회원 이메일 수정
