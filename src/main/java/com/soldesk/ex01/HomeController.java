@@ -117,48 +117,18 @@ public class HomeController {
 	
 	//占싱곤옙 占쏙옙占쏙옙 占쏙옙占쏙옙占신몌옙 占쏙옙占쏙옙징 처占쏙옙 占싼곤옙占쏙옙
 	@GetMapping("board/list")
-	public void list(Model model, Pagination pagination) {
-		log.info("list()");
-		log.info("pagination = "+pagination);
-		List<Board2VO> boardList = board2Service.getPagingBoards(pagination);
-		
-		PageMaker pageMaker = new PageMaker();
-		pageMaker.setPagination(pagination);
-		pageMaker.setTotalCount(board2Service.getTotalCount());
-		
-		model.addAttribute("pageMaker", pageMaker);
-		model.addAttribute("boardList", boardList);
-	}
-	
-	@GetMapping("board/reverse1999")
-	public void reverse1999(Model model, Pagination pagination) {
-		log.info("reverse1999()");
-		log.info("pagination = "+pagination);
-		List<Board2VO> boardList = board2Service.selectReverse(pagination);
-		
-		PageMaker pageMaker = new PageMaker();
-		log.info(pageMaker);
-		pageMaker.setPagination(pagination);
-		pageMaker.setTotalCount(board2Service.getTotalCount());
-		log.info("start : " + pageMaker.getStartNum());
-		log.info("end : " + pageMaker.getEndNum());
-		model.addAttribute("pageMaker", pageMaker);
-		model.addAttribute("boardList", boardList);
-	}
-	
-	@GetMapping("board/starrail")
-	public void starrail(Model model, Pagination pagination) {
-		log.info("starrail()");
-		log.info("pagination = "+pagination);
-		List<Board2VO> boardList = board2Service.selectStarrail(pagination);
-		
-		PageMaker pageMaker = new PageMaker();
-		pageMaker.setPagination(pagination);
-		pageMaker.setTotalCount(board2Service.getTotalCount());
-		
-		model.addAttribute("pageMaker", pageMaker);
-		model.addAttribute("boardList", boardList);
-	}
+	public void list(Model model, Pagination pagination, @RequestParam int categoryId) {
+			log.info("list()");
+			log.info("pagination = "+pagination);
+			List<Board2VO> boardList = board2Service.getPagingBoards(pagination);
+			
+			PageMaker pageMaker = new PageMaker();
+			pageMaker.setPagination(pagination);
+			pageMaker.setTotalCount(board2Service.getTotalCount(categoryId));
+			
+			model.addAttribute("pageMaker", pageMaker);
+			model.addAttribute("boardList", boardList);
+		}
 	
 	
 	

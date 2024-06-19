@@ -19,7 +19,7 @@ public interface Board2Mapper {
 	int updateBoard(Board2VO vo);
 	int deleteBoard(int boardId);	
 	List<Board2VO> selectListByPagination(Pagination pagination);
-	int selectTotalCount();
+	int selectTotalCount(int categoryId);
 	int insertReplyCount(int boardId);
 	int deleteReplyCount(int boardId);
 	
