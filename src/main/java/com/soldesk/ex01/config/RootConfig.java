@@ -38,13 +38,13 @@ public class RootConfig {
       HikariConfig config = new HikariConfig(); // 설정 객체
       config.setDriverClassName("oracle.jdbc.OracleDriver"); // jdbc 드라이버 정보
       // 기존 오라클 연결 설정
-//		config.setJdbcUrl("jdbc:oracle:thin:@192.168.0.161:1521:xe");
-//		config.setUsername("sdp");
-//		config.setPassword("asdf");	
+		config.setJdbcUrl("jdbc:oracle:thin:@192.168.0.161:1521:xe");
+		config.setUsername("sdp");
+		config.setPassword("asdf");	
       // aws 오라클 연결 설정
-      config.setJdbcUrl("jdbc:oracle:thin:@teamproject.c1asumy42bvk.ap-northeast-2.rds.amazonaws.com:1521:database"); // DB 연결 url
-      config.setUsername("soldeskTeam"); // DB 사용자 아이디
-      config.setPassword("soldeskProject"); // DB 사용자 비밀번호
+//      config.setJdbcUrl("jdbc:oracle:thin:@teamproject.c1asumy42bvk.ap-northeast-2.rds.amazonaws.com:1521:database"); // DB 연결 url
+//      config.setUsername("soldeskTeam"); // DB 사용자 아이디
+//      config.setPassword("soldeskProject"); // DB 사용자 비밀번호
       
       config.setMaximumPoolSize(10); // 최대 풀(Pool) 크기 설정
       config.setConnectionTimeout(30000); // Connection 타임 아웃 설정(30초)

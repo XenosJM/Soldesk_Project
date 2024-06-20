@@ -5,15 +5,20 @@ import java.util.List;
 import java.util.Locale;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -204,10 +209,7 @@ public class HomeController {
 	@GetMapping("member/detail")
 	public void detailGet(Model model, HttpServletRequest req) {
 		log.info("detailGet()");
-		MemberVO memberVO = new MemberVO();
-		HttpSession session = req.getSession();
-		String memberId = (String) session.getAttribute("memberId");
-		memberVO = memberService.getMemberById(memberId);
+		MemberVO memberVO = memberService.getMemberById(req.getUserPrincipal().getName());
 		log.info(memberVO);
 		model.addAttribute("memberVO", memberVO);
 	}
@@ -241,14 +243,14 @@ public class HomeController {
 		log.info("login");
 	}
 	
-	@GetMapping("logout")
-	public String logout(HttpServletRequest req) {
-		log.info("logout()");
-		HttpSession session = req.getSession();
-		session.removeAttribute("memberId");
-
-		return "redirect:/";
-	}
+	@PostMapping("/logout")
+    public String logout(HttpServletRequest request, HttpServletResponse response) {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        if (auth != null) {
+            new SecurityContextLogoutHandler().logout(request, response, auth);
+        }
+        return "redirect:/login?logout";
+    }
 	
 	@GetMapping("/error/403")
 	public void accessDeny() {

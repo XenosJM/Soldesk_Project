@@ -6,6 +6,7 @@ import java.util.Collection;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.AuthenticationCredentialsNotFoundException;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -31,7 +32,7 @@ public class UserDetailServiceImple implements UserDetailsService, Serializable 
 	@Override
 	public UserDetails loadUserByUsername(String memberId) throws UsernameNotFoundException {
 		log.info("security userdetail");
-		log.info(memberId);
+		log.info("memberId : " + memberId);
 		// 멤버인지 확인
 		MemberVO memberVO = member.memberCheck(memberId);
 		log.info("security MemberVO : " + memberVO);
@@ -49,13 +50,15 @@ public class UserDetailServiceImple implements UserDetailsService, Serializable 
 		log.info("getAuth 권한 가져오기");
 		String memberRole = member.memberRole(memberId);
 		List<GrantedAuthority> auth = new ArrayList<>();
-		// 가져온 역할이 멤버인 경우 
-		if(memberRole.contains("MEMBER")) {
+		// 가져온 역할이 null이 아닌경우 
+		if(memberRole != null) {
 			auth.add(new SimpleGrantedAuthority("ROLE_" + memberRole));
-		// 가져온 역할이 멤버가 아닌 관리자 쪽인 경우
 		} else {
-			auth.add(new SimpleGrantedAuthority("ROLE_" + memberRole));
-			auth.add(new SimpleGrantedAuthority("ROLE_" + "MEMBER"));
+//			// 가져온 역할이 멤버가 아닌 관리자 쪽인 경우
+//			auth.add(new SimpleGrantedAuthority("ROLE_" + memberRole));
+//			auth.add(new SimpleGrantedAuthority("ROLE_" + "MEMBER"));
+			throw new AuthenticationCredentialsNotFoundException("설정된 권한이 존재하질 않습니다.");
+			
 		}
 		log.info(auth);
 		return auth;

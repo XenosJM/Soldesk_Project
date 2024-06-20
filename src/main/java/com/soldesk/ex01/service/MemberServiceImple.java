@@ -117,10 +117,6 @@ public class MemberServiceImple implements MemberService{
         MemberVO memberVO = memberMapper.memberCheck(memberId);
 
         if (memberVO != null && memberPassword.equals(memberVO.getMemberPassword())) {
-            session.setAttribute("memberId", memberVO.getMemberId());
-            if (memberVO.getRoleId() != 0) {
-                session.setAttribute("managerId", memberVO.getRoleId());
-            }
             return 1;
         } else {
             return 0;

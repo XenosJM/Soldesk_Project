@@ -13,7 +13,7 @@
     <script>
         $(document).ready(function () {
         	
-        	const token = $("meta[name='_csrf']").attr("content");
+        	/* const token = $("meta[name='_csrf']").attr("content");
         	const header = $("meta[name='_csrf_header']").attr("content");
         	const name = $("#userName").val();
         	
@@ -47,13 +47,13 @@
                         alert('서버 오류로 인해 로그인을 처리할 수 없습니다.');
                     }
                 });
-            });
+            }); */
         });
     </script>
 </head>
 <body>
     <h2>로그인</h2>
-    <form id="loginForm">
+    <form id="loginForm" method="post" action="member/check">
         <label for="memberId">아이디:</label>
         <input type="text" id="memberId" name="memberId" required><br><br>
         

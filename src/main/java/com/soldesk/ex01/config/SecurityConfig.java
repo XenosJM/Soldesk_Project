@@ -38,15 +38,12 @@ import lombok.extern.log4j.Log4j;
 
 @Configuration
 @EnableWebSecurity
-@EnableGlobalMethodSecurity(prePostEnabled = true) // 메소드 수준 보안 설정을 활성화
+//@EnableGlobalMethodSecurity(prePostEnabled = true) // 메소드 수준 보안 설정을 활성화
 @Log4j
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	
 	@Autowired
 	private UserDetailServiceImple userDetail;
-	
-	@Autowired
-	private ApplicationContext applicationContext;
 	
 	@Override
 	protected void configure(HttpSecurity httpSecurity) throws Exception {
@@ -55,7 +52,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 		httpSecurity
 			.authorizeRequests()  // 요청에 권한 부여
 				.antMatchers("/", "/member/regist", "/member/findIdPw", "/member/check", "/board/list", "/board/detail", "/board/search", "/util/**").permitAll()  // 루트 URL에 대한 모든 사용자 접근
-				.antMatchers("/friend/**", "/reply/**", "/rereply/**", "/attach/**", "/board/**").hasRole("MEMBER")  // 루트 URL에 대한 MEMBER 역할을 가진 사용자만 접근 가능
+				.antMatchers("/member/**", "/friend/**", "/reply/**", "/rereply/**", "/attach/**", "/board/**").hasRole("MEMBER")  // 루트 URL에 대한 MEMBER 역할을 가진 사용자만 접근 가능
 				.anyRequest().authenticated() // 이외에 URL은 사용자 인증을 수행해야 함
 					.and()
 			.formLogin()
@@ -69,7 +66,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 				.permitAll()
 					.and()
 			.logout()
-				.logoutUrl("/login/checkout")
+				.logoutUrl("/logout")
+				.logoutSuccessUrl("/")
 				.logoutSuccessHandler(logoutHandler())
 				.permitAll()
 					.and()
@@ -152,7 +150,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	protected void configure(AuthenticationManagerBuilder auth) throws Exception {
 		log.info("권한 확인");
 		auth.userDetailsService(userDetail);
-		log.info(userDetail);
 	}
 	
 	
@@ -179,6 +176,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	
 	@Bean
     public PasswordEncoder passwordEncoder() {
+		log.info("encoder 사용됨");
         return new BCryptPasswordEncoder();
     }
 	

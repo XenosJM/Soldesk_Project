@@ -766,7 +766,7 @@ body {
 	  					success : function(result){
 	  						if(result === 1){
 				  				alert($('#memberId').val() + "님의 회원가입을 환영합니다.");
-				  				window.location.href = 'http://192.168.0.120:8080/ex01/';
+				  				window.location.href = 'http://192.168.0.120:9090/ex01/';
 	  						} else {
 	  							alert('서버에 문제가 있는거 같습니다 잠시후 다시 시도해주세요');
 	  						}

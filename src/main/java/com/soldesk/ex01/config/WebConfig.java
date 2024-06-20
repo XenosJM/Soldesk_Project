@@ -32,18 +32,16 @@ public class WebConfig extends AbstractAnnotationConfigDispatcherServletInitiali
       return new String[] {"/"}; // 기본 경로 리턴
    }
    
-   // Filter 설정 메서드
+// Filter 설정 메서드
    @Override
    protected Filter[] getServletFilters() {
-      CharacterEncodingFilter encodingFilter = new CharacterEncodingFilter();
-      encodingFilter.setEncoding("UTF-8");
-      encodingFilter.setForceEncoding(true);
+	   CharacterEncodingFilter encodingFilter = new CharacterEncodingFilter();
+		encodingFilter.setEncoding("UTF-8");
+		encodingFilter.setForceEncoding(true);
       CSPFilter cspFilter = new CSPFilter();
       return new Filter[] { encodingFilter, cspFilter };
    }
    
-  
-
 } // end WebConfig
 
 
