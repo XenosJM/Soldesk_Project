@@ -3,11 +3,11 @@
 	pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
-
+<%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 <!DOCTYPE html>
 <html>
 <head>
-
+<sec:csrfMetaTags/>
 <!-- jquery 라이브러리 import -->
 <script src="https://code.jquery.com/jquery-3.7.1.js">
 	
@@ -70,7 +70,7 @@
 	<hr>
 	<p3>댓글작성</p3>
 	<div style="text-align: left;">
-		<input type="text" id="memberId" value = "${sessionScope.memberId }" readonly> <input type="text"
+		<input type="text" id="memberId" value = "${pageContext.request.userPrincipal.name}" readonly> <input type="text"
 			id="replyContent">
 		<button id="btnAdd">작성</button>
 	</div>
@@ -85,11 +85,32 @@
 
 	<script type="text/javascript">
 		$(document).ready(function() {
+			const token = $("meta[name='_csrf']").attr("content");
+			const header = $("meta[name='_csrf_header']").attr("content");
+			const name = $("#userName").val();
+			let memberId = $("#memberId").val(); // 작성자 데이터
+			$.ajaxSetup({
+				beforeSend: function(xhr) {
+					xhr.setRequestHeader(header, token);
+					}
+			});
+			
+/* 			let aaa = new XMLHttpRequest();
+			aaa.open('GET', '/util/memberId', true);
+
+			aaa.onreadystatechange = function() {
+			    if (aaa.readyState === 4 && aaa.status === 200) {
+			        memberId = aaa.responseText; // 전역 변수 memberId에 할당
+			        console.log('Member ID:', memberId); // memberId 변수에 서버에서 받은 문자열 데이터가 할당됩니다.
+			        // 이곳에서 memberId를 다른 곳에서도 사용할 수 있습니다.
+			    }
+			};
+
+			aaa.send(); */
 
 			getAllReply(); // 함수 호출
 			$('#btnAdd').click(function() {
 				let boardId = $('#boardId').val(); // 게시판 번호 데이터
-				let memberId = $('#memberId').val(); // 작성자 데이터
 				let replyContent = $('#replyContent').val(); // 댓글 내용
 				let obj = {
 						'boardId' : boardId,
@@ -170,7 +191,7 @@
 							let replyItem = $(this).closest('.reply_item');
 							if (replyItem.find('.rereplyInputFields').length === 0) {
 								let rereplyInputFields = '<div class="rereplyInputFields" style="text-align: center;">'
-								+ '<input type="text" class="rereply_memberId" value = "${sessionScope.memberId }" readonly placeholder="작성자">'
+								+ '<input type="text" class="rereply_memberId" value = "'+memberId+'" readonly placeholder="작성자">'
 								+ '<input type="text" class="rereply_content" placeholder="대댓글 내용">'
 								+ '<button class="btnAddRereply">작성</button>'
 								+ '</div>';
@@ -179,7 +200,7 @@
 							});
 				$('#replies').on('click','.reply_item .btnAddRereply',function() {
 					let replyId = $(this).closest('.reply_item').find('.replyId').val();
-					let memberId = $(this).closest('.reply_item').find('.rereply_memberId').val();
+					//let memberId = $(this).closest('.reply_item').find('.rereply_memberId').val();
 					let rereplyContent = $(this).closest('.reply_item').find('.rereply_content').val();
 					console.log(replyId);
 					console.log(memberId);

@@ -47,7 +47,7 @@ import lombok.extern.log4j.Log4j;
 @Log4j
 public class HomeController {
 
-//	private static final Logger logger = LoggerFactory.getLogger(HomeController.class); // 占쌀븝옙 log4j占쏙옙 占싫억옙占쏙옙占� 占쏙옙占쏙옙求占� logging 占쏙옙占�
+//	private static final Logger logger = LoggerFactory.getLogger(HomeController.class); // 
 
 	@Autowired
 	private MemberService memberService;
@@ -81,14 +81,14 @@ public class HomeController {
 	}
 
 //	@GetMapping("board/detail")
-//	@ResponseBody // JSON 占쏙옙占쏙옙占쏙옙 占쏙옙환占쏙옙 占쏙옙占쏙옙 占쏙옙占쏙옙占쏙옙抉占� 占쌩곤옙
+//	@ResponseBody 
 //	public ResponseEntity<BoardVO> boardDetail(@RequestParam Integer boardId) {
 //		log.info("board controller : detail()");
 //		BoardVO boardVO = boardService.selectDetail(boardId);
 //		if (boardVO != null) {
 //			return new ResponseEntity<>(boardVO, HttpStatus.OK);
 //		} else {
-//			return new ResponseEntity<>(HttpStatus.NOT_FOUND); // 占쌔댐옙 占쌉시뱄옙占쏙옙 占쏙옙占쏙옙 占쏙옙占� 404 占쏙옙占쏙옙 占쏙옙환
+//			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 //		}
 //	}
 	
@@ -111,7 +111,7 @@ public class HomeController {
 //		return new ResponseEntity<>(board2VO,HttpStatus.OK);
 //	}
 	
-	//占싱곤옙 占쏙옙占쏙옙 占쏙옙占쏙옙占쏙옙 
+
 //	@GetMapping("board/list")
 //	public void boardList(Model model) {
 //		log.info("board controller : list()");
@@ -120,7 +120,7 @@ public class HomeController {
 //		model.addAttribute("boardList", boardList);
 //	}
 	
-	//占싱곤옙 占쏙옙占쏙옙 占쏙옙占쏙옙占신몌옙 占쏙옙占쏙옙징 처占쏙옙 占싼곤옙占쏙옙
+	
 	@GetMapping("board/list")
 	public void list(Model model, Pagination pagination, @RequestParam int categoryId) {
 			log.info("list()");
@@ -137,7 +137,7 @@ public class HomeController {
 	
 	
 	
-	//占쏙옙占쏙옙징 占싼곤옙 占쏟동깍옙 占싼곤옙占쏙옙
+
 //	@GetMapping("/list")
 //	public ResponseEntity<Map<String, Object>> list(Pagination pagination) {
 //	    log.info("list()");
@@ -149,12 +149,12 @@ public class HomeController {
 //	    pageMaker.setPagination(pagination);
 //	    pageMaker.setTotalCount(boardService.getTotalCount());
 //
-//	    // 占쏙옙占쏙옙占싶몌옙 占쏙옙占쏙옙 Map 占쏙옙占쏙옙
+//	    
 //	    Map<String, Object> response = new HashMap<>();
 //	    response.put("pageMaker", pageMaker);
 //	    response.put("boardList", boardList);
 //
-//	    // ResponseEntity占쏙옙 Map占쏙옙 占쏙옙티占� 占쏙옙환
+//	    
 //	    return ResponseEntity.ok(response);
 //	}
 	

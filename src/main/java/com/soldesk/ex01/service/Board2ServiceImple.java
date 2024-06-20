@@ -117,9 +117,9 @@ public class Board2ServiceImple implements Board2Service {
 	}
 
 	@Override
-	public List<Board2VO> getPagingBoards(Pagination pagination) {
+	public List<Board2VO> getPagingBoards(Pagination pagination/*int categoryId, int start, int end*/) {
 		log.info("getPagingBoards");
-		List<Board2VO> list = board2Mapper.selectListByPagination(pagination);
+		List<Board2VO> list = board2Mapper.selectListByPagination(/*categoryId,start,end*/pagination);
 		return list;
 	}
 
@@ -127,7 +127,7 @@ public class Board2ServiceImple implements Board2Service {
 	public int getTotalCount(int categoryId) {
 		log.info("getTotalCount()");
 		return board2Mapper.selectTotalCount(categoryId);
-	}
+	}	
 
 	
 

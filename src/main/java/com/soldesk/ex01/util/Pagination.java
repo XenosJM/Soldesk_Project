@@ -11,6 +11,7 @@ import lombok.ToString;
 public class Pagination {
 	private int pageNum; // 현재 페이지 번호
 	private int pageSize; // 현재 페이지 사이즈
+	private int categoryId;
 	private String type; // 검색 항목
 	private String keyword; // 검색 키워드 
 

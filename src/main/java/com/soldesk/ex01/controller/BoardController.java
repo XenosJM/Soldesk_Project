@@ -83,7 +83,7 @@ public class BoardController {
 //		} else {
 //			log.info("÷�� ������ �����ϴ�.");
 //		}
-		return "redirect:/board/list";
+		return "redirect:/board/list?categoryId="+vo.getCategoryId();
 	}
 	
 //	@PostMapping("/regist")

@@ -91,7 +91,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		BOARD2.*
 		FROM
 		BOARD2
-		where category_id = 0
+		where CATEGORY_ID = #{categoryId}
 		)
 		WHERE RN BETWEEN #{start} AND #{end}
 	</select>
