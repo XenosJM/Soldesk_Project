@@ -20,44 +20,49 @@ import com.soldesk.ex01.persistence.MemberMapper;
 
 import lombok.extern.log4j.Log4j;
 
-// ·Î±×ÀÎ½Ã, security filter°¡ °¡·ÎÃ¤¼­ È£ÃâÇÏ´Â ¼­ºñ½º
+//ë¡œê·¸ì¸ì‹œ, security filterê°€ ê°€ë¡œì±„ì„œ í˜¸ì¶œí•˜ëŠ” ì„œë¹„ìŠ¤
 @Log4j
 @Service
 public class UserDetailServiceImple implements UserDetailsService, Serializable {
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	
 	@Autowired
 	private MemberMapper member;
 	
-	// °¡·ÎÃ¦ form µ¥ÀÌÅÍÀÇ memberId¸¦ °¡Á®¿Í¼­ »ç¿ë
+	// ê°€ë¡œì±ˆ form ë°ì´í„°ì˜ memberIdë¥¼ ê°€ì ¸ì™€ì„œ ì‚¬ìš©
 	@Override
 	public UserDetails loadUserByUsername(String memberId) throws UsernameNotFoundException {
 		log.info("security userdetail");
 		log.info("memberId : " + memberId);
-		// ¸â¹öÀÎÁö È®ÀÎ
+		// ë©¤ë²„ì¸ì§€ í™•ì¸
 		MemberVO memberVO = member.memberCheck(memberId);
 		log.info("security MemberVO : " + memberVO);
-		// ³ÎÃ¼Å©
+		// ë„ê°’ì´ ì•„ë‹ˆë¼ë©´
 		if(memberVO == null) {
-			throw new UsernameNotFoundException("memberId¸¦ Ã£À»¼ö ¾ø½À´Ï´Ù.");
+			throw new UsernameNotFoundException("memberIdë¥¼ ì°¾ì„ìˆ˜ ì—†ìŠµë‹ˆë‹¤..");
 		}
-		// ListÇüÅÂ°¡ ¾Æ´Ñ VOÀÇ roleId Ãß°¡ÇÏ±âÀ§ÇÑ ¸Ş¼­µå ÀÛ¼º
+		// Listí˜•íƒœê°€ ì•„ë‹Œ VOì˜ roleId ì¶”ê°€í•˜ê¸°ìœ„í•œ ë©”ì„œë“œ ì‘ì„±
 		Collection<? extends GrantedAuthority> auth = getAuth(memberVO.getMemberId());
 		log.info("auth : " + auth);
 		return new MemberCustomDTO(memberVO, auth);
 	}
-	// ¸â¹ö ¿ªÇÒ¿¡ Ãß°¡µÉ ¿ªÇÒ ÀÌ¸§À» °¡Á®¿À´Â Äõ¸®·Î °¡Á®¿Í ´ã°í 
+	// ë©¤ë²„ ì—­í• ì— ì¶”ê°€ë  ì—­í•  ì´ë¦„ì„ ê°€ì ¸ì˜¤ëŠ” ì¿¼ë¦¬ë¡œ ê°€ì ¸ì™€ ë‹´ê³ 
 	private Collection<? extends GrantedAuthority> getAuth(String memberId) {
-		log.info("getAuth ±ÇÇÑ °¡Á®¿À±â");
+		log.info("getAuth ê¶Œí•œ ê°€ì ¸ì˜¤ê¸°");
 		String memberRole = member.memberRole(memberId);
 		List<GrantedAuthority> auth = new ArrayList<>();
-		// °¡Á®¿Â ¿ªÇÒÀÌ nullÀÌ ¾Æ´Ñ°æ¿ì 
+		// ê°€ì ¸ì˜¨ ì—­í• ì´ ë©¤ë²„ì¸ ê²½ìš° 
 		if(memberRole != null) {
 			auth.add(new SimpleGrantedAuthority("ROLE_" + memberRole));
 		} else {
-//			// °¡Á®¿Â ¿ªÇÒÀÌ ¸â¹ö°¡ ¾Æ´Ñ °ü¸®ÀÚ ÂÊÀÎ °æ¿ì
+//			// ê°€ì ¸ì˜¨ ì—­í• ì´ ë©¤ë²„ê°€ ì•„ë‹Œ ê´€ë¦¬ì ìª½ì¸ ê²½ìš°
 //			auth.add(new SimpleGrantedAuthority("ROLE_" + memberRole));
 //			auth.add(new SimpleGrantedAuthority("ROLE_" + "MEMBER"));
-			throw new AuthenticationCredentialsNotFoundException("¼³Á¤µÈ ±ÇÇÑÀÌ Á¸ÀçÇÏÁú ¾Ê½À´Ï´Ù.");
+			throw new AuthenticationCredentialsNotFoundException("ê¶Œí•œì´ ì—†ëŠ” ì‚¬ìš©ì ì…ë‹ˆë‹¤.");
 			
 		}
 		log.info(auth);

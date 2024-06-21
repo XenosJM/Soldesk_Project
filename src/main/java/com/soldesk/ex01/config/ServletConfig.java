@@ -16,69 +16,69 @@ import org.springframework.web.socket.config.annotation.WebSocketConfigurer;
 import org.springframework.web.socket.config.annotation.WebSocketHandlerRegistry;
 import org.springframework.web.socket.server.standard.ServletServerContainerFactoryBean;
 
-import com.soldesk.ex01.util.PrivateChatHandler;
+import com.soldesk.ex01.handler.PrivateChatHandler;
 
 
-// servlet-context.xml°ú µ¿ÀÏ 
-@Configuration // Spring Container¿¡¼­ °ü¸®ÇÏ´Â ¼³Á¤ Å¬·¡½º
-@EnableWebMvc // Spring MVC ±â´É »ç¿ë
-//@EnableWebSocket // À¥¼ÒÄÏ È°¼ºÈ­
-@EnableScheduling // ½ºÄÉÁÙ¸µ ±â´É »ç¿ë
-@ComponentScan(basePackages = {"com.soldesk.ex01"}) // component scan ¼³Á¤
+// servlet-context.xmlï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ 
+@Configuration // Spring Containerï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï´ï¿½ ï¿½ï¿½ï¿½ï¿½ Å¬ï¿½ï¿½ï¿½ï¿½
+@EnableWebMvc // Spring MVC ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½
+//@EnableWebSocket // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ È°ï¿½ï¿½È­
+@EnableScheduling // ï¿½ï¿½ï¿½ï¿½ï¿½Ù¸ï¿½ ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½
+@ComponentScan(basePackages = {"com.soldesk.ex01"}) // component scan ï¿½ï¿½ï¿½ï¿½
 public class ServletConfig implements WebMvcConfigurer, WebSocketConfigurer {
 
-   // ViewResolver ¼³Á¤ ¸Þ¼­µå
+   // ViewResolver ï¿½ï¿½ï¿½ï¿½ ï¿½Þ¼ï¿½ï¿½ï¿½
    @Override
    public void configureViewResolvers(ViewResolverRegistry registry) {
-      // InternalResourceViewResolver »ý¼º ¹× ¼³Á¤
+      // InternalResourceViewResolver ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
       InternalResourceViewResolver viewResolver = new InternalResourceViewResolver();
       viewResolver.setPrefix("/WEB-INF/views/");
       viewResolver.setSuffix(".jsp");
       registry.viewResolver(viewResolver);
    }
 
-   // ResourceHandlers ¼³Á¤ ¸Þ¼­µå
+   // ResourceHandlers ï¿½ï¿½ï¿½ï¿½ ï¿½Þ¼ï¿½ï¿½ï¿½
    @Override
    public void addResourceHandlers(ResourceHandlerRegistry registry) {
-      // resources µð·ºÅä¸® ¼³Á¤
+      // resources ï¿½ï¿½ï¿½ä¸® ï¿½ï¿½ï¿½ï¿½
       registry.addResourceHandler("/resources/**").addResourceLocations("/resources/");
    }
    
-   // ÆÄÀÏÀ» ÀúÀåÇÒ °æ·Î bean »ý¼º, ÀÌ °æ·Î¿¡ ÀúÀåÈÄ DB¿¡´Â ÆÄÀÏ¸í¸¸ ÀúÀå
+   // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ bean ï¿½ï¿½ï¿½ï¿½, ï¿½ï¿½ ï¿½ï¿½Î¿ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ DBï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Ï¸ï¿½ ï¿½ï¿½ï¿½ï¿½
    @Bean
    public String uploadPath() {
 	   return "C:\\upload\\ex01";
    }
    
-   // MultipartResolver bean »ý¼º
+   // MultipartResolver bean ï¿½ï¿½ï¿½ï¿½
    @Bean
    public CommonsMultipartResolver multipartResolver() {
       CommonsMultipartResolver resolver = new CommonsMultipartResolver();
 
-      // Å¬¶óÀÌ¾ðÆ®°¡ ¾÷·ÎµåÇÏ´Â ¿äÃ»ÀÇ ÀüÃ¼ Å©±â (bytes)
-      resolver.setMaxUploadSize(31457280); // 10MB °¢ 
+      // Å¬ï¿½ï¿½ï¿½Ì¾ï¿½Æ®ï¿½ï¿½ ï¿½ï¿½ï¿½Îµï¿½ï¿½Ï´ï¿½ ï¿½ï¿½Ã»ï¿½ï¿½ ï¿½ï¿½Ã¼ Å©ï¿½ï¿½ (bytes)
+      resolver.setMaxUploadSize(31457280); // 10MB ï¿½ï¿½ 
 
-      // Å¬¶óÀÌ¾ðÆ®°¡ ¾÷·ÎµåÇÏ´Â °¢ ÆÄÀÏÀÇ ÃÖ´ë Å©±â (bytes)
+      // Å¬ï¿½ï¿½ï¿½Ì¾ï¿½Æ®ï¿½ï¿½ ï¿½ï¿½ï¿½Îµï¿½ï¿½Ï´ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ö´ï¿½ Å©ï¿½ï¿½ (bytes)
       resolver.setMaxUploadSizePerFile(10485760); // 10MB
       resolver.setDefaultEncoding("UTF-8");
       
       return resolver;
    }
    
-   // À¥ ¼ÒÄÏ ¿¬°á ¼³Á¤
+   // ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
 	@Override
 	public void registerWebSocketHandlers(WebSocketHandlerRegistry registry) {
-		registry.addHandler(privateChatHandler(), "/private") // ¿¬°á È£Ãâ
-	    		.setAllowedOrigins("*"); // Çã°¡µÈ µµ¸ÞÀÎ¿¡¼­ÀÇ ¿¬°á¸¸ Çã¿ë ÇöÀç´Â Å×½ºÆ®¶ó ¸ðµÎ Çã¿ë
+		registry.addHandler(privateChatHandler(), "/private") // ï¿½ï¿½ï¿½ï¿½ È£ï¿½ï¿½
+	    		.setAllowedOrigins("*"); // ï¿½ã°¡ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Î¿ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½á¸¸ ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½×½ï¿½Æ®ï¿½ï¿½ ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½
 		
 	}
-	// À¥ ¼ÒÄÏ ¿¬°á¿¡ ÇÊ¿äÇÑ ºó »ý¼º
+	// ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½á¿¡ ï¿½Ê¿ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
 	@Bean
 	public PrivateChatHandler privateChatHandler() {
 		return new PrivateChatHandler();
 	}
 	
-	// À¥ ¼ÒÄÏ »ç¿ë½Ã ÄÁÅ×ÀÌ³Ê ¼³Á¤ ºó »ý¼º
+	// ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ì³ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
 	@Bean
     public ServletServerContainerFactoryBean createWebSocketContainer() {
 		ServletServerContainerFactoryBean container = new ServletServerContainerFactoryBean();
@@ -88,7 +88,7 @@ public class ServletConfig implements WebMvcConfigurer, WebSocketConfigurer {
 		return container;	
 	}
 	
-	// cross origin ¼³Á¤
+	// cross origin ï¿½ï¿½ï¿½ï¿½
 	@Override
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/**")

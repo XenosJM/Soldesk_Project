@@ -12,6 +12,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -75,30 +76,30 @@ public class UtilRESTController {
 		int result = 0;
 		String authCode = null;
 		authCode = authCodeGenerator.generateAuthCode();
-		String setFrom = "wjdalsqaa123@gmail.com"; // config¿¡ ÀÔ·ÂÇÑ ÀÚ½ÅÀÇ ÀÌ¸ŞÀÏ ÁÖ¼Ò¸¦ ÀÔ·Â
+		String setFrom = "wjdalsqaa123@gmail.com"; // configì— ì…ë ¥í•œ ìì‹ ì˜ ì´ë©”ì¼ ì£¼ì†Œë¥¼ ì…ë ¥
         String toMail = memberEmail;
-        String title = "¾È³çÇÏ¼¼¿ä. Gain ÀÔ´Ï´Ù."; // ÀÌ¸ŞÀÏ Á¦¸ñ
+        String title = "ì•ˆë…•í•˜ì„¸ìš”. Gain ì…ë‹ˆë‹¤."; // ì´ë©”ì¼ ì œëª©
         String content =
-				"ÀÌ¸ŞÀÏ ÀÎÁõ¹øÈ£¸¦ ¹ß¼ÛÇÏ¿´½À´Ï´Ù." + 	
+				"ì´ë©”ì¼ ì¸ì¦ë²ˆí˜¸ë¥¼ ë°œì†¡í•˜ì˜€ìŠµë‹ˆë‹¤." + 	
 		        "<br><br>" +
-		        "ÀÎÁõ ¹øÈ£´Â " + authCode + " ÀÔ´Ï´Ù." +
+		        "ì¸ì¦ ë²ˆí˜¸ëŠ” " + authCode + " ì…ë‹ˆë‹¤." +
 		        "<br>" +
-		        "ÀÎÁõ¹øÈ£¸¦ Á¦´ë·Î ÀÔ·ÂÇØÁÖ¼¼¿ä"; //ÀÌ¸ŞÀÏ ³»¿ë »ğÀÔ
-        // mailSender °´Ã¼¿¡ ¼¼ÆÃµÈ °ªÀ» ÀÌ¿ëÇÑ ¸ŞÀÏ °´Ã¼ »ı¼º 
+		        "ì¸ì¦ë²ˆí˜¸ë¥¼ ì œëŒ€ë¡œ ì…ë ¥í•´ì£¼ì„¸ìš”"; //ì´ë©”ì¼ ë‚´ìš© ì‚½ì…
+        // mailSender ê°ì²´ì— ì„¸íŒ…ëœ ê°’ì„ ì´ìš©í•œ ë©”ì¼ ê°ì²´ ìƒì„± 
 		MimeMessage mail = mailSender.createMimeMessage();
 		Map<String, Integer> res = new HashMap<>();
 		try {
-			// ÀÌ¸ŞÀÏ °ü·ÃµÈ ¼³Á¤(¸ŞÀÏ º¸³»±â)¸¦ ¼öÇàÇÒ helper °´Ã¼ »ı¼º.
-            // true¸¦ Àü´ŞÇÏ¿© multipart Çü½ÄÀÇ ¸Ş½ÃÁö¸¦ Áö¿øÇÏ°í, "utf-8"À» Àü´ŞÇÏ¿© ¹®ÀÚ ÀÎÄÚµùÀ» ¼³Á¤
+			// ì´ë©”ì¼ ê´€ë ¨ëœ ì„¤ì •(ë©”ì¼ ë³´ë‚´ê¸°)ë¥¼ ìˆ˜í–‰í•  helper ê°ì²´ ìƒì„±.
+            // trueë¥¼ ì „ë‹¬í•˜ì—¬ multipart í˜•ì‹ì˜ ë©”ì‹œì§€ë¥¼ ì§€ì›í•˜ê³ , "utf-8"ì„ ì „ë‹¬í•˜ì—¬ ë¬¸ì ì¸ì½”ë”©ì„ ì„¤ì •
 			MimeMessageHelper helper = new MimeMessageHelper(mail, true, "UTF-8");
-			helper.setFrom(setFrom); // ¹ß½ÅÀÚ ¼³Á¤
-			helper.setTo(toMail); // ¼ö½ÅÀÚ ¼³Á¤
-			helper.setSubject(title); // Á¦¸ñ ¼³Á¤
-			helper.setText(content, true); // ³»¿ë ¼³Á¤, html ¼³Á¤
-			// TODO ÆÄÀÏ ¾÷·Îµå Ãß°¡µµ °¡´É 
+			helper.setFrom(setFrom); // ë°œì‹ ì ì„¤ì •
+			helper.setTo(toMail); // ìˆ˜ì‹ ì ì„¤ì •
+			helper.setSubject(title); // ì œëª© ì„¤ì •
+			helper.setText(content, true); // ë‚´ìš© ì„¤ì •, html ì„¤ì •
+			// TODO íŒŒì¼ ì—…ë¡œë“œ ì¶”ê°€ë„ ê°€ëŠ¥ 
 			
 			mailSender.send(mail); 
-			result = Integer.parseInt(authCode); // ¹®ÀÚ¿­·Î ¸¸µé¾îÁø ÀÎÁõÄÚµå¸¦ ¼ıÀÚ·Î ÆÄ½ÌÇØ¼­ Àü´Ş
+			result = Integer.parseInt(authCode); // ë¬¸ìì—´ë¡œ ë§Œë“¤ì–´ì§„ ì¸ì¦ì½”ë“œë¥¼ ìˆ«ìë¡œ íŒŒì‹±í•´ì„œ ì „ë‹¬
 			res.put("result", 1);
 			res.put("authCode", result);
 		} catch (MessagingException e) {
@@ -119,26 +120,26 @@ public class UtilRESTController {
 			return new ResponseEntity<Integer>(result, HttpStatus.OK);
 		}
 		String sealedId = memberId.substring(0, memberId.length()-3);
-		String setFrom = "wjdalsqaa123@gmail.com"; // config¿¡ ÀÔ·ÂÇÑ ÀÚ½ÅÀÇ ÀÌ¸ŞÀÏ ÁÖ¼Ò¸¦ ÀÔ·Â
+		String setFrom = "wjdalsqaa123@gmail.com"; // configì— ì…ë ¥í•œ ìì‹ ì˜ ì´ë©”ì¼ ì£¼ì†Œë¥¼ ì…ë ¥
         String toMail = memberEmail;
-        String title = "¾È³çÇÏ¼¼¿ä. Gain ÀÔ´Ï´Ù."; // ÀÌ¸ŞÀÏ Á¦¸ñ
+        String title = "ì•ˆë…•í•˜ì„¸ìš”. Gain ì…ë‹ˆë‹¤."; // ì´ë©”ì¼ ì œëª©
         String content =
-				"¿äÃ»ÇÏ½Å È¸¿ø´ÔÀÇ ¾ÆÀÌµğÀÔ´Ï´Ù. º¸¾È»ó ³¡¿¡ 3ÀÚ¸®¸¦ °¡·Á¼­ ¾Ë·Áµå¸³´Ï´Ù." + 	
+				"ìš”ì²­í•˜ì‹  íšŒì›ë‹˜ì˜ ì•„ì´ë””ì…ë‹ˆë‹¤. ë³´ì•ˆìƒ ëì— 3ìë¦¬ë¥¼ ê°€ë ¤ì„œ ì•Œë ¤ë“œë¦½ë‹ˆë‹¤." + 	
 		        "<br><br>" +
-		        "È¸¿ø´ÔÀÇ ¾ÆÀÌµğ´Â " + sealedId + "***" + " ÀÔ´Ï´Ù." +
+		        "íšŒì›ë‹˜ì˜ ì•„ì´ë””ëŠ” " + sealedId + "***" + " ì…ë‹ˆë‹¤." +
 		        "<br>" +
-		        "ÀÌ¿ëÇØ ÁÖ¼Å¼­ °¨»çÇÕ´Ï´Ù."; //ÀÌ¸ŞÀÏ ³»¿ë »ğÀÔ
-        // mailSender °´Ã¼¿¡ ¼¼ÆÃµÈ °ªÀ» ÀÌ¿ëÇÑ ¸ŞÀÏ °´Ã¼ »ı¼º 
+		        "ì´ìš©í•´ ì£¼ì…”ì„œ ê°ì‚¬í•©ë‹ˆë‹¤."; //ì´ë©”ì¼ ë‚´ìš© ì‚½ì…
+        // mailSender ê°ì²´ì— ì„¸íŒ…ëœ ê°’ì„ ì´ìš©í•œ ë©”ì¼ ê°ì²´ ìƒì„± 
 		MimeMessage mail = mailSender.createMimeMessage();
 			try {
-				// ÀÌ¸ŞÀÏ °ü·ÃµÈ ¼³Á¤(¸ŞÀÏ º¸³»±â)¸¦ ¼öÇàÇÒ helper °´Ã¼ »ı¼º.
-	            // true¸¦ Àü´ŞÇÏ¿© multipart Çü½ÄÀÇ ¸Ş½ÃÁö¸¦ Áö¿øÇÏ°í, "utf-8"À» Àü´ŞÇÏ¿© ¹®ÀÚ ÀÎÄÚµùÀ» ¼³Á¤
+				// ì´ë©”ì¼ ê´€ë ¨ëœ ì„¤ì •(ë©”ì¼ ë³´ë‚´ê¸°)ë¥¼ ìˆ˜í–‰í•  helper ê°ì²´ ìƒì„±.
+	            // trueë¥¼ ì „ë‹¬í•˜ì—¬ multipart í˜•ì‹ì˜ ë©”ì‹œì§€ë¥¼ ì§€ì›í•˜ê³ , "utf-8"ì„ ì „ë‹¬í•˜ì—¬ ë¬¸ì ì¸ì½”ë”©ì„ ì„¤ì •
 				MimeMessageHelper helper = new MimeMessageHelper(mail, true, "UTF-8");
-				helper.setFrom(setFrom); // ¹ß½ÅÀÚ ¼³Á¤
-				helper.setTo(toMail); // ¼ö½ÅÀÚ ¼³Á¤
-				helper.setSubject(title); // Á¦¸ñ ¼³Á¤
-				helper.setText(content, true); // ³»¿ë ¼³Á¤, html ¼³Á¤
-				// TODO ÆÄÀÏ ¾÷·Îµå Ãß°¡µµ °¡´É 
+				helper.setFrom(setFrom); // ë°œì‹ ì ì„¤ì •
+				helper.setTo(toMail); // ìˆ˜ì‹ ì ì„¤ì •
+				helper.setSubject(title); // ì œëª© ì„¤ì •
+				helper.setText(content, true); // ë‚´ìš© ì„¤ì •, html ì„¤ì •
+				// TODO íŒŒì¼ ì—…ë¡œë“œ ì¶”ê°€ë„ ê°€ëŠ¥ 
 				
 				mailSender.send(mail); 
 				result = 1; 
@@ -160,6 +161,11 @@ public class UtilRESTController {
 		return new ResponseEntity<String>(result, HttpStatus.OK);
 	}
 	
+	
+	@GetMapping("/memberId")
+    public String getCurrentMemberId(Authentication authentication) {
+        return authentication.getName();
+    }
 }
 
 

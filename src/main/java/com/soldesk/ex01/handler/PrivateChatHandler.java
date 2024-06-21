@@ -1,4 +1,4 @@
-package com.soldesk.ex01.util;
+package com.soldesk.ex01.handler;
 
 import java.io.IOException;
 
@@ -14,13 +14,13 @@ public class PrivateChatHandler extends TextWebSocketHandler {
 	
 	@Override
 	public void afterConnectionEstablished(WebSocketSession session) {
-//		log.info(session.getPrincipal().getName() + "´ÔÀÌ ¿¬°áµÇ¾ú½À´Ï´Ù.");
-		log.info("¿¬°áÈ®ÀÎ");
+//		log.info(session.getPrincipal().getName() + "ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½Ç¾ï¿½ï¿½ï¿½ï¿½Ï´ï¿½.");
+		log.info("ï¿½ï¿½ï¿½ï¿½È®ï¿½ï¿½");
 	}
 	
 	@Override
 	protected void handleTextMessage(WebSocketSession session, TextMessage msg) throws IOException {
-//		½ÃÅ¥¸®Æ¼ Àû¿ëÈÄ »ç¿ëÇÒ ÄÚµå
+//		ï¿½ï¿½Å¥ï¿½ï¿½Æ¼ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Úµï¿½
 //		String userName = session.getPrincipal().getName();
 //		String newMsg = userName + ":" + msg.getPayload();
 //		
@@ -30,7 +30,7 @@ public class PrivateChatHandler extends TextWebSocketHandler {
 	
 	@Override
 	public void afterConnectionClosed(WebSocketSession session, CloseStatus status) {
-		log.info("¿¬°áÁ¾·á");
+		log.info("ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½");
 	}
 }
 
