@@ -29,7 +29,7 @@ public class ReplyServiceImple implements ReplyService {
 	public int insertReply(ReplyVO vo) {
 		log.info("service : insertReply()");
 		int result = replyMapper.insertReply(vo);
-		result = board2Mapper.insertReplyCount(vo.getBoardId());
+		result = board2Mapper.increaseReplyCount(vo.getBoardId());
 		return result;
 	}
 
@@ -71,9 +71,9 @@ public class ReplyServiceImple implements ReplyService {
 		log.info(vo);
 		int result = replyMapper.deleteReply(replyId);
 		
-		result = board2Mapper.deleteReplyCount(vo.getBoardId());
+		result = board2Mapper.decreaseReplyCount(vo.getBoardId());
 		
-		log.info("replycount-1 °á°ú : "+result);
+		log.info("replycount-1 ï¿½ï¿½ï¿½ : "+result);
 		return result;
 	}
 	
@@ -81,7 +81,7 @@ public class ReplyServiceImple implements ReplyService {
 	public int deleteReplyByBoard(int boardId) {
 		log.info("service : deleteReplyByBoard");
 		int	result = replyMapper.deleteReplyByBoard(boardId);
-		log.info("reply »èÁ¦ °á°ú : " + result);
+		log.info("reply ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ : " + result);
 
 		return result;
 	}

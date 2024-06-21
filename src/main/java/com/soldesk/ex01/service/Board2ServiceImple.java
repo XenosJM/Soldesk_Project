@@ -56,10 +56,11 @@ public class Board2ServiceImple implements Board2Service {
 		log.info(attach);
 		if(attach != null) {
 			result = attachMapper.delete(vo.getBoardId());
-			log.info("attachMapper.delete ��� : "+result);
+			log.info("attachMapper.delete 결과 : "+result);
 			for(int i=0;i<vo.getAttachVO().length;i++) {
-				result = attachMapper.insert(vo.getAttachVO()[i]);
-				log.info("attachMapper.inster ��� : "+result);			
+				attach[i].setBoardId(vo.getBoardId());
+				result = attachMapper.updateAttach(vo.getAttachVO()[i]);
+				log.info("attachMapper.update 결과 : "+result);			
 			}			
 		}
 		return result;
@@ -131,25 +132,14 @@ public class Board2ServiceImple implements Board2Service {
 
 	
 
-	@Override
-	public List<Board2VO> selectReverse(Pagination pagination) {
-		log.info("selectReverse()");
-		List<Board2VO> list = board2Mapper.selectReverse(pagination);
-		return list;
-	}
 
-	
-
-	@Override
-	public List<Board2VO> selectStarrail(Pagination pagination) {
-		log.info("selectStarrail()");
-		return board2Mapper.selectStarrail(pagination);
-	}
 
 	@Override
 	public int recommendIncrease(int boardId) {
 		return board2Mapper.recommendIncrease(boardId);
 	}
+
+	
 
 
 

@@ -132,7 +132,7 @@ ul li a {
 		
 		<!-- 등록 버튼 추가 -->
 		<form method="get" action=regist>
-			<input type="hidden" name = "categoryId" value='0'>
+			<input type="hidden" name = "categoryId" value='${param.categoryId}'>
 			<input type="submit" value = "등록">
 		</form>
 

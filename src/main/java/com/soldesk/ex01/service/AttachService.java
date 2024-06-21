@@ -9,7 +9,7 @@ public interface AttachService {
     int createAttach(AttachVO attachVO);
     AttachVO getAttachById(int boardId);
     List<Integer> getAllId();
-    int updateAttach(AttachVO attachVO);
+    int updateAttach(AttachVO attachvo);
     int deleteAttach(int boardId);
     AttachVO[] getAttachByBoardId(int boardId);
 

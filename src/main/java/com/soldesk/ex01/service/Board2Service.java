@@ -20,9 +20,5 @@ public interface Board2Service {
 	List<Board2VO> getPagingBoards(Pagination pagination/*@Param("categoryId")int categoryId, @Param("start")int start,@Param("end")int end*/);
 	int getTotalCount(int categoryId);
 	
-	
-	List<Board2VO> selectReverse(Pagination pagination);
-	
-	List<Board2VO> selectStarrail(Pagination pagination);
 	int recommendIncrease(int boardId);
 }

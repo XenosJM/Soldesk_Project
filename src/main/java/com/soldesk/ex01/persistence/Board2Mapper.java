@@ -21,11 +21,7 @@ public interface Board2Mapper {
 	int deleteBoard(int boardId);	
 	List<Board2VO> selectListByPagination(Pagination pagination/*@Param("categoryId") int categoryId,@Param("start")int start,@Param("end")int end*/);
 	int selectTotalCount(int categoryId);
-	int insertReplyCount(int boardId);
-	int deleteReplyCount(int boardId);
-	
-	List<Board2VO> selectReverse(Pagination pagination);
-	
-	List<Board2VO> selectStarrail(Pagination pagination);
+	int increaseReplyCount(int boardId);
+	int decreaseReplyCount(int boardId);
 	int recommendIncrease(int boardId);
 }

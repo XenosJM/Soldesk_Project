@@ -122,15 +122,8 @@ public class BoardController {
 		log.info(vo);
 		int result = board2Service.updateBoard(vo);
 		AttachVO[] attach = vo.getAttachVO();
-		if(attach!=null) {
-			for(int i = 0; i<attach.length;i++) {
-				log.info("÷�� ���� ���: " + attach[i].getAttachPath());
-				log.info("÷�� ���� ���� �̸�: " + attach[i].getAttachRealName());
-				log.info("÷�� ���� ����� �̸�: " + attach[i].getAttachChgName());
-				log.info("÷�� ���� Ȯ����: " + attach[i].getAttachExtension());
-			}
-		}
-		log.info(result + "�� ����");
+
+
 		return "redirect:/board/list";
 	}
 

@@ -13,6 +13,7 @@
 	<h2>글 수정 페이지</h2>
 	<form id = boardForm action="update" method="POST">
 		<div>
+		<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
 			<p>번호 :</p>
 			<input type="text" name="boardId" value="${board2VO.boardId }"
 				readonly>
