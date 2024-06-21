@@ -1,8 +1,10 @@
 package com.soldesk.ex01;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -26,12 +28,11 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.soldesk.ex01.domain.Board2VO;
 import com.soldesk.ex01.domain.BoardVO;
+
 import com.soldesk.ex01.domain.FriendVO;
 import com.soldesk.ex01.domain.MemberVO;
 import com.soldesk.ex01.service.AttachService;
-import com.soldesk.ex01.service.Board2Service;
 import com.soldesk.ex01.service.BoardService;
 import com.soldesk.ex01.service.FriendService;
 import com.soldesk.ex01.service.MemberService;
@@ -53,7 +54,7 @@ public class HomeController {
 	private MemberService memberService;
 
 	@Autowired
-	private Board2Service board2Service;
+	private BoardService board2Service;
 	
 	@Autowired
 	private FriendService friendService;
@@ -95,7 +96,7 @@ public class HomeController {
 	@GetMapping("board/detail")
 	public void boardDetail(Model model, Integer boardId) {
 		log.info("board controller : detail()");
-		Board2VO board2VO = board2Service.selectDetail(boardId);
+		BoardVO board2VO = board2Service.selectDetail(boardId);
 		model.addAttribute("board2VO", board2VO);
 	}
 
@@ -125,7 +126,7 @@ public class HomeController {
 	public void list(Model model, Pagination pagination, @RequestParam int categoryId) {
 			log.info("list()");
 			log.info("pagination = "+pagination);
-			List<Board2VO> boardList = board2Service.getPagingBoards(pagination);
+			List<BoardVO> boardList = board2Service.getPagingBoards(pagination);
 			
 			PageMaker pageMaker = new PageMaker();
 			pageMaker.setPagination(pagination);
@@ -138,25 +139,24 @@ public class HomeController {
 	
 	
 
-//	@GetMapping("/list")
-//	public ResponseEntity<Map<String, Object>> list(Pagination pagination) {
-//	    log.info("list()");
-//	    log.info("pagination = " + pagination);
+//	@GetMapping("board/list")
+//	   public ResponseEntity<Map<String, Object>> list(Pagination pagination) {
+//	       log.info("list()");
+//	       log.info("pagination = " + pagination);
 //
-//	    List<BoardVO> boardList = boardService.getPagingBoards(pagination);
+//	       List<Board2VO> boardList = board2Service.getPagingBoards(pagination);
 //
-//	    PageMaker pageMaker = new PageMaker();
-//	    pageMaker.setPagination(pagination);
-//	    pageMaker.setTotalCount(boardService.getTotalCount());
+//	       PageMaker pageMaker = new PageMaker();
+//	       pageMaker.setPagination(pagination);
+//	       pageMaker.setTotalCount(board2Service.getTotalCount(pagination.getCategoryId()));
+//	       
+//	       Map<String, Object> response = new HashMap<>();
+//	       response.put("pageMaker", pageMaker);
+//	       response.put("boardList", boardList);
 //
-//	    
-//	    Map<String, Object> response = new HashMap<>();
-//	    response.put("pageMaker", pageMaker);
-//	    response.put("boardList", boardList);
-//
-//	    
-//	    return ResponseEntity.ok(response);
-//	}
+//	       
+//	       return new ResponseEntity<>(response,HttpStatus.OK);
+//	   }
 	
 //	@GetMapping("board/list")
 //	public ResponseEntity<List<Board2VO>> boardList(Model model) {
@@ -170,21 +170,21 @@ public class HomeController {
 	@GetMapping("board/update")
 	public void boardUpdate(Model model, Integer boardId) {
 		log.info("board controller : updateGet()");
-		Board2VO board2VO = board2Service.selectDetail(boardId);
-		board2VO.setAttachVO(attachService.getAttachByBoardId(boardId));
-		model.addAttribute("board2VO", board2VO);
+		BoardVO boardVO = board2Service.selectDetail(boardId);
+		boardVO.setAttachVO(attachService.getAttachByBoardId(boardId));
+		model.addAttribute("board2VO", boardVO);
 	}
 	
 	@GetMapping("board/search")
 	public void boardSearch(Model model, @RequestParam String searchOption, @RequestParam String search) {
 	    log.info("board controller: search()");
-	    List<Board2VO> boardList;
+	    List<BoardVO> boardList;
 	    if ("title".equals(searchOption)) {
 	        boardList = board2Service.selectByTitle(search);
 	    } else if ("content".equals(searchOption)) {
 	        boardList = board2Service.selectByContent(search);
 	    } else {
-	    	boardList = new ArrayList<Board2VO>();
+	    	boardList = new ArrayList<BoardVO>();
 	    }
 	    model.addAttribute("boardList", boardList);
 	    
