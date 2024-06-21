@@ -19,6 +19,7 @@
 	<h2>글 보기</h2>
 	<div>
 		<p>글 번호 : ${board2VO.boardId }</p>
+		
 	</div>
 	<div>
 		<p>제목 :</p>
@@ -35,6 +36,7 @@
 		<textarea rows="20" cols="120" readonly>${board2VO.boardContent }</textarea>
 	</div>
 
+	<input type="hidden" id="boardId" value="${board2VO.boardId}">
     <c:forEach var="attach" items="${board2VO.attachVO}">
         <c:if test="${not empty attach}">
             <p>
@@ -47,25 +49,17 @@
     </c:forEach>
 
 
-	<button onclick="location.href='list'">글 목록</button>
+	<button onclick="location.href='list?categoryId=${board2VO.categoryId}'">글 목록</button>
 	<button onclick="location.href='update?boardId=${board2VO.boardId}'">글
 		수정</button>
-	<button id="deleteBoard">글 삭제</button>
 	<form id="deleteForm" action="delete" method="POST">
 		<input type="hidden" name="boardId" value="${board2VO.boardId }">
+		<button type="submit">글 삭제</button>
+		<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
 	</form>
 
 
-	<script type="text/javascript">
-		$(document).ready(function() {
-			$(document).on('click', '#deleteBoard', function() {
-				if (confirm('삭제하시겠습니까?')) {					
-					$('#deleteForm').submit(); // form 데이터 전송
-				}
-			});
-		});
-	</script>
-	<input type="hidden" id="boardId" value="${board2VO.boardId}">
+
 
 	<hr>
 	<p3>댓글작성</p3>

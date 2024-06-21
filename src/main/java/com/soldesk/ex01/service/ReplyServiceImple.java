@@ -6,7 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.soldesk.ex01.domain.ReplyVO;
-import com.soldesk.ex01.persistence.Board2Mapper;
+import com.soldesk.ex01.persistence.BoardMapper;
 import com.soldesk.ex01.persistence.ReplyMapper;
 import com.soldesk.ex01.persistence.RereplyMapper;
 
@@ -23,13 +23,13 @@ public class ReplyServiceImple implements ReplyService {
 	RereplyMapper rereplyMapper;
 	
 	@Autowired
-	Board2Mapper board2Mapper;
+	BoardMapper boardMapper;
 	
 	@Override
 	public int insertReply(ReplyVO vo) {
 		log.info("service : insertReply()");
 		int result = replyMapper.insertReply(vo);
-		result = board2Mapper.insertReplyCount(vo.getBoardId());
+		result = boardMapper.increaseReplyCount(vo.getBoardId());
 		return result;
 	}
 
@@ -71,9 +71,9 @@ public class ReplyServiceImple implements ReplyService {
 		log.info(vo);
 		int result = replyMapper.deleteReply(replyId);
 		
-		result = board2Mapper.deleteReplyCount(vo.getBoardId());
+		result = boardMapper.decreaseReplyCount(vo.getBoardId());
 		
-		log.info("replycount-1 °á°ú : "+result);
+		log.info("replycount-1 ï¿½ï¿½ï¿½ : "+result);
 		return result;
 	}
 	
@@ -81,7 +81,7 @@ public class ReplyServiceImple implements ReplyService {
 	public int deleteReplyByBoard(int boardId) {
 		log.info("service : deleteReplyByBoard");
 		int	result = replyMapper.deleteReplyByBoard(boardId);
-		log.info("reply »èÁ¦ °á°ú : " + result);
+		log.info("reply ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ : " + result);
 
 		return result;
 	}
