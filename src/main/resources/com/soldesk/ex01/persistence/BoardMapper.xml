@@ -116,8 +116,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		order by
 		BOARD_ID desc
 		)
-		WHERE RN BETWEEN #{start} AND
-		#{end}
+		WHERE RN BETWEEN #{pagination.start} AND
+		#{pagination.end}
 	</select>
 
 	<select id="selectTotalCount" resultType="Integer">
@@ -135,7 +135,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	<select id="searchTotalCountByContent" resultType="Integer">
 		SELECT COUNT(*)
 		TOTAL_COUNT FROM BOARD
-		where category_id = #{categoryId} and BOARD_TITLE LIKE '%${boardContent}%'
+		where category_id = #{categoryId} and BOARD_Content LIKE '%${boardContent}%'
 	</select>
 
 	<update id="recommendIncrease">

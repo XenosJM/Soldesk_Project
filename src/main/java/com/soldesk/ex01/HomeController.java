@@ -180,14 +180,18 @@ public class HomeController {
 	    if ("title".equals(searchOption)) {
 	        boardList = boardService.selectByTitle(search,categoryId, pagination);
 	        pageMaker.setTotalCount(boardService.searchTotalCountByTitle(categoryId, search));
+	        
+	        
 	    } else if ("content".equals(searchOption)) {
 	        boardList = boardService.selectByContent(search,categoryId,pagination);
 	        pageMaker.setTotalCount(boardService.searchTotalCountByTitle(categoryId, search));
+	        
 	    } else {
 	    	boardList = new ArrayList<BoardVO>();
 	    }	
 		
-
+	    model.addAttribute("pageMaker", pageMaker);
+		model.addAttribute("boardList", boardList);
 	}
 	
 	
