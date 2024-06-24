@@ -15,10 +15,11 @@ public class MemberCustomDTO extends User {
 	private MemberVO member;
 	
 	public MemberCustomDTO(MemberVO memberVO, Collection<? extends GrantedAuthority> auth) {
-		super(memberVO.getMemberId(), memberVO.getMemberPassword(), auth);
+		super(memberVO.getMemberId(), null, auth); // payload 부분에 들어갈 정보로는 이름과 권한만 들어가도록 설정함.
 		 this.member = memberVO;
 	}
 	
+
 	public MemberVO getMember() {
 		return member;
 	}

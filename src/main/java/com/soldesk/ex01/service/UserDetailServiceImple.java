@@ -18,11 +18,13 @@ import com.soldesk.ex01.domain.MemberCustomDTO;
 import com.soldesk.ex01.domain.MemberVO;
 import com.soldesk.ex01.persistence.MemberMapper;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j;
 
 //로그인시, security filter가 가로채서 호출하는 서비스
 @Log4j
 @Service
+@RequiredArgsConstructor
 public class UserDetailServiceImple implements UserDetailsService, Serializable {
 	
 	/**
@@ -45,13 +47,13 @@ public class UserDetailServiceImple implements UserDetailsService, Serializable 
 		if(memberVO == null) {
 			throw new UsernameNotFoundException("memberId를 찾을수 없습니다..");
 		}
-		// List형태가 아닌 VO의 roleId 추가하기위한 메서드 작성
+		// VO의 List형태가 아닌 roleId 추가하기위한 메서드 작성
 		Collection<? extends GrantedAuthority> auth = getAuth(memberVO.getMemberId());
 		log.info("auth : " + auth);
 		return new MemberCustomDTO(memberVO, auth);
 	}
 	// 멤버 역할에 추가될 역할 이름을 가져오는 쿼리로 가져와 담고
-	private Collection<? extends GrantedAuthority> getAuth(String memberId) {
+	public Collection<? extends GrantedAuthority> getAuth(String memberId) {
 		log.info("getAuth 권한 가져오기");
 		String memberRole = member.memberRole(memberId);
 		List<GrantedAuthority> auth = new ArrayList<>();

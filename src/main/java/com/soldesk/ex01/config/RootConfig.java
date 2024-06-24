@@ -25,6 +25,7 @@ import com.soldesk.ex01.util.AuthCodeGenerator;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 
+import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 
 // root-context.xml과 동일
@@ -106,8 +107,9 @@ public class RootConfig {
    // JWT 시크릿키 설정
    @Bean
    public SecretKey secretKey() {
-       String secret = "64461f01e1af406da538b9c48d801ce59142452199ff112fb5404c8e7e98e3ff";
-       return Keys.hmacShaKeyFor(secret.getBytes());
+       String secret = "7IKs7Jqp7J6QIOyduOymneydtCDrkJjslrQg7J6I64qUIO2MgO2UhOuhnOygne2KuCDsoJHqt7wg7Yag7YGw7J6F64uI64ukLg=="; // base64 인코딩된 문자열
+       byte[] keyByte = Decoders.BASE64.decode(secret);
+       return Keys.hmacShaKeyFor(keyByte);
    }
 
    // JWT 액세스 토큰 만료 기간 설정

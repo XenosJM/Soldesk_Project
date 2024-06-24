@@ -181,6 +181,8 @@
 		    
 		    <sec:authorize access="!isAuthenticated()">
 		        <h2>로그인되지 않은 사용자</h2>
+		        <input type="text" id="memberId" name="memberId" placeholder="아이디">
+                <input type="password" id="memberPassword" name="memberPassword" placeholder="비밀번호"><br>
 		        <button id="check">로그인</button>
                 <button id="joinMember">회원가입</button>
                 <button id="findIdPw">ID/PW찾기</button>
@@ -206,7 +208,7 @@
 	</div>
     <script type="text/javascript">
         $(function () {
-        	const token = $("meta[name='_csrf']").attr("content");
+        	/* const token = $("meta[name='_csrf']").attr("content");
         	const header = $("meta[name='_csrf_header']").attr("content");
         	const name = $("#userName").val();
         	
@@ -214,7 +216,7 @@
                 beforeSend: function(xhr) {
                     xhr.setRequestHeader(header, token);
                 }
-            });
+            }); */
         	
             /* if (${empty sessionScope.memberId}) {
                 $('#loginContainer').html(
@@ -234,13 +236,13 @@
                 );
             } */
 
-            /* $(document).on('click', '#check', function (event) {
+            $(document).on('click', '#check', function (event) {
             	event.preventDefault();
             	let memberId = $('#memberId').val();
                 let memberPassword = $('#memberPassword').val();
                 $.ajax({
                     type: 'POST',
-                    url: 'member/check',
+                    url: 'login/check',
                     contentType: 'application/json; charset=UTF-8',
                     data: JSON.stringify({
                         memberId: memberId,
@@ -260,11 +262,12 @@
                         }
                     }
                 }); // end ajax
-            }); */
-            $(document).on('click', '#check', function (event) {
+            });
+            
+            /* $(document).on('click', '#check', function (event) {
             	event.preventDefault();
             	window.location.href = "login";
-            });
+            }); */
 
             $(document).on('click', '#joinMember', function () {
                 window.location.href = "member/regist";

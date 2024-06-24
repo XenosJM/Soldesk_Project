@@ -6,17 +6,25 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PostAuthorize;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.soldesk.ex01.domain.JwtTokenDTO;
 import com.soldesk.ex01.domain.MemberVO;
+import com.soldesk.ex01.jwt.JwtTokenProvider;
+import com.soldesk.ex01.persistence.FriendMapper;
 import com.soldesk.ex01.persistence.MemberMapper;
 
 import lombok.extern.log4j.Log4j;
@@ -27,6 +35,15 @@ public class MemberServiceImple implements MemberService{
 	
 	@Autowired
 	private MemberMapper memberMapper;
+	
+	@Autowired
+	private FriendMapper friend;
+	
+	@Autowired
+    private AuthenticationManager authenticationManager;
+
+    @Autowired
+    private JwtTokenProvider tokenProvider;
 	
 	private PasswordEncoder encoder = new BCryptPasswordEncoder();
 	
@@ -76,21 +93,21 @@ public class MemberServiceImple implements MemberService{
 	public int updateMemberProperty(MemberVO memberVO) {
 		log.info("updateMemberProperty()");
 		
-		// Àü´Ş¹ŞÀº »èÁ¦ÇÒ »óÇ° ¹è¿­ÀÇ °¢ °ª¿¡ Á¢±ÙÇÏ±âÀ§ÇÑ Array¹è¿­ ¼±¾ğ
+		// ï¿½ï¿½ï¿½Ş¹ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Ç° ï¿½è¿­ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï±ï¿½ï¿½ï¿½ï¿½ï¿½ Arrayï¿½è¿­ ï¿½ï¿½ï¿½ï¿½
 		List<Integer> deletePropertyList = new ArrayList<>();
 		for(int deleteItem : memberVO.getMemberProperty()) {
 			deletePropertyList.add(deleteItem);
 		}
-		// ¿ø·¡ È¸¿øÀÇ »óÇ° ¹è¿­¿¡ Á¢±ÙÇÏ±âÀ§ÇÑ Array¹è¿­ ¼±¾ğ
+		// ï¿½ï¿½ï¿½ï¿½ È¸ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Ç° ï¿½è¿­ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï±ï¿½ï¿½ï¿½ï¿½ï¿½ Arrayï¿½è¿­ ï¿½ï¿½ï¿½ï¿½
 		MemberVO checkVO = memberMapper.selectByMemberId(memberVO.getMemberId());
 		List<Integer> originalPropertyList = new ArrayList<>();
 		for(int originalItem : checkVO.getMemberProperty()) {
 			originalPropertyList.add(originalItem);
 		}
-		// Iterator¸¦ »ç¿ëÇÏ¿© ¿ø·¡ ¹è¿­¿¡¼­ »èÁ¦ÇÒ ¾ÆÀÌÅÛ°ú °°Àº ¾ÆÀÌÅÛ Á¦°Å
+		// Iteratorï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½Ï¿ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½è¿­ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Û°ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
 		Iterator<Integer> itr = originalPropertyList.iterator();
-		while (itr.hasNext()) { // itr¿¡ ´ÙÀ½ °ªÀÌ Á¸ÀçÇÏ¸é Âü
-	        Integer item = itr.next(); // ´ÙÀ½¿ä¼Ò °¡Á®¿À±â
+		while (itr.hasNext()) { // itrï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï¸ï¿½ ï¿½ï¿½
+	        Integer item = itr.next(); // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 	        if (deletePropertyList.contains(item)) {
 	            itr.remove();
 	        }
@@ -109,18 +126,29 @@ public class MemberServiceImple implements MemberService{
 		return memberMapper.delete(memberId);
 	}
 
-	@Override
-	public int memberCheck(Map<String, String> res, HttpSession session) {
-		log.info("memberCheck()");
-		String memberId = res.get("memberId");
-        String memberPassword = res.get("memberPassword");
-        MemberVO memberVO = memberMapper.memberCheck(memberId);
+	
+	public JwtTokenDTO memberCheck(Map<String, String> map, HttpServletResponse response) {
+	    log.info("memberCheck()");
+	    log.info(map.get("memberId"));
+	    log.info(map.get("memberPassword"));
 
-        if (memberVO != null && memberPassword.equals(memberVO.getMemberPassword())) {
-            return 1;
-        } else {
-            return 0;
-        }
+	    MemberVO memberVO = memberMapper.memberCheck(map.get("memberId"));
+	    // ì¸ì½”ë”©ë˜ì–´ ì €ì¥ëœ ë¹„ë°€ë²ˆí˜¸ì™€ ì…ë ¥ë°›ì€ ë¹„ë°€ë²ˆí˜¸ê°€ ì¼ì¹˜í•˜ëŠ”ì§€ í™•ì¸
+	    if (memberVO != null && encoder.matches(map.get("memberPassword"), memberVO.getMemberPassword())) {
+	        log.info("ì—¬ê¸° ë„˜ì–´ê°”ë‹¤.");
+	        // ì´ ë‹¤ìŒë¶€í„° userDetailServiceimplì´ ê°€ë¡œì±„ì„œ ì§„í–‰.
+	        Authentication auth = new UsernamePasswordAuthenticationToken(
+	                memberVO.getMemberId(), memberVO.getMemberPassword());
+	        log.info("ìƒì„±ë„ í–ˆë‹¤.");
+	        JwtTokenDTO jwtToken = tokenProvider.createAccessToken(auth);
+
+	        // JWT í† í°ì„ Authorization í—¤ë”ì— ì¶”ê°€
+	        response.setHeader("Authorization", "Bearer " + jwtToken.getAccessToken());
+
+	        return jwtToken;
+	    } else {
+	        return null;
+	    }
 	}
 	
 	@Transactional

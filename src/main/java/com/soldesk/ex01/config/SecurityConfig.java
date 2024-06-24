@@ -8,12 +8,11 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
-import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -35,7 +34,6 @@ import org.springframework.web.multipart.commons.CommonsMultipartResolver;
 import org.springframework.web.multipart.support.MultipartFilter;
 
 import com.soldesk.ex01.jwt.JwtAuthenticationFilter;
-import com.soldesk.ex01.jwt.JwtTokenProvider;
 import com.soldesk.ex01.service.UserDetailServiceImple;
 
 import lombok.extern.log4j.Log4j;
@@ -49,9 +47,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	@Autowired
 	private UserDetailServiceImple userDetail;
 	
-	@Autowired
-	private JwtAuthenticationFilter jwtAuthenticationFilter;
-	
 //	private final JwtTokenProvider jwtTokenProvider;
 //	
 //	public  SerurityConfig(JwtTokenProvider jwtTokenProvider) {
@@ -64,7 +59,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 		// 권한 설정 및 로그인 로그아웃 관련
 		httpSecurity
 			.authorizeRequests()  // 요청에 권한 부여
-				.antMatchers("/", "/member/regist", "/member/findIdPw", "/member/check", "/board/list", "/board/detail", "/board/search", "/util/**").permitAll()  // 루트 URL에 대한 모든 사용자 접근
+				.antMatchers("/", "/member/regist", "/member/findIdPw", "/login/check", "/board/list", "/board/detail", "/board/search", "/util/**").permitAll()  // 루트 URL에 대한 모든 사용자 접근
 				.antMatchers("/member/**", "/friend/**", "/reply/**", "/rereply/**", "/attach/**", "/board/**").hasRole("MEMBER")  // 루트 URL에 대한 MEMBER 역할을 가진 사용자만 접근 가능
 				.anyRequest().authenticated() // 이외에 URL은 사용자 인증을 수행해야 함
 					.and()
@@ -90,15 +85,16 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 		// csrf 및 다른 보안 설정 관련
 		httpSecurity
 			.csrf()
-				.disable() // 리액트랑 연결시 적용할지 고민
-				
-//				.csrfTokenRepository(cookieCsrfRepository()) // CSRF 토큰을 쿠키로 저장
+				.disable() // 리액트랑 연결시 적용
+			.sessionManagement()
+	        	.sessionCreationPolicy(SessionCreationPolicy.STATELESS) // 세션 관리 설정 (STATELESS: 세션을 사용하지 않음)
+	        		.and()
+//				.csrfTokenRepository(cookieCsrfRepository()) // CSRF 토큰을 쿠키로 저장 리액트랑 연결 안할시 사용.
 //				.and()
 				
 			.headers()
 				.contentSecurityPolicy("script-src 'self' ")
 					.and()
-				
 				.xssProtection()
 					.block(true)
 					.and();
@@ -106,16 +102,19 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 //		httpSecurity.cors().configurationSource(corsConfigSource());
 		// 필터 관련 설정
 		httpSecurity
-//			.sessionManagement()
-//	        	.sessionCreationPolicy(SessionCreationPolicy.STATELESS) // 세션 관리 설정 (STATELESS: 세션을 사용하지 않음)
-//	        		.and()
-		  	.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)  // JwtAuthenticationFilter 추가
+		  	.addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class)  // JwtAuthenticationFilter 추가
     		.addFilterBefore(multipartFilter(), CsrfFilter.class) // MultipartFilter를 CSRF 필터 전에 적용
     		.addFilterBefore(encodingFilter(), MultipartFilter.class); // CharacterEncodingFilter를 MultipartFilter 전에 적용
 //			.addFilterAt(new JwtAuthFilter(authenticationManager(), jwtTokenProvider), UsernamePasswordAuthenticationFilter.class)
 //			.addFilterBefore(new JwtAuthFilter(jwtTokenProvider), UsernamePasswordAuthenticationFilter.class);
 				
 	}
+	
+	@Bean
+    @Override
+    public AuthenticationManager authenticationManagerBean() throws Exception {
+        return super.authenticationManagerBean();
+    }
 	
 	@Bean
 	public JwtAuthenticationFilter jwtAuthenticationFilter() {

@@ -29,17 +29,19 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         try {
             // HTTP 요청에서 JWT 추출
             String jwt = getJwtFromRequest(request);
-
+            log.info("jwt 체킹");
+            
             // 추출된 JWT가 유효하면
             if (jwt != null && tokenProvider.validateToken(jwt)) {
-                // JWT에서 사용자 이름을 추출
-                String username = tokenProvider.getUsernameFromToken(jwt);
+            	log.info("jwt 체크 통과");
 
-                // 추출된 사용자 이름으로 Authentication 객체 생성
-                Authentication authentication = new UsernamePasswordAuthenticationToken(username, null, null);
+                // jwt를 이용해 Authentication 객체 생성
+                Authentication authentication = tokenProvider.getAuthentication(jwt);
 
                 // SecurityContext에 인증 객체 설정
                 SecurityContextHolder.getContext().setAuthentication(authentication);
+                log.info("현재 사용자: {}" + authentication.getName());
+                log.info("사용자의 권한: {}" + authentication.getAuthorities());
             }
         } catch (Exception e) {
             // 예외 발생 시 로깅
@@ -54,7 +56,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     private String getJwtFromRequest(HttpServletRequest request) {
         String bearerToken = request.getHeader("Authorization");
         if (StringUtils.hasText(bearerToken) && bearerToken.startsWith("Bearer ")) {
-            return bearerToken.substring(7); // "Bearer " 이후의 JWT 문자열 반환
+            return bearerToken.split(" ")[1].trim(); // "Bearer " 이후의 JWT 문자열 반환
         }
         return null; // JWT가 없으면 null 반환
     }
