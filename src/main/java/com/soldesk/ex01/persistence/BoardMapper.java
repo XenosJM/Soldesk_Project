@@ -13,8 +13,8 @@ import com.soldesk.ex01.util.Pagination;
 public interface BoardMapper {
 	int insertBoard(BoardVO vo);
 	List<BoardVO> selectList();
-	List<BoardVO> selectByTitle(String title);
-	List<BoardVO> selectByContent(String content);
+	List<BoardVO> selectByTitle(@Param("boardTitle")String title,@Param("categoryId")int categoryId,@Param("pagination")Pagination pagination);
+	List<BoardVO> selectByContent(@Param("boardContent")String content,@Param("categoryId")int categoryId,@Param("pagination")Pagination pagination);
 	List<BoardVO> selectByMember(int memberId);
 	BoardVO selectDetail(int boardId);
 	int updateBoard(BoardVO vo);
@@ -24,4 +24,6 @@ public interface BoardMapper {
 	int increaseReplyCount(int boardId);
 	int decreaseReplyCount(int boardId);
 	int recommendIncrease(int boardId);
+	int searchTotalCountByTitle(@Param("categoryId")int categoryId, @Param("boardTitle")String title);
+	int searchTotalCountByContent(@Param("categoryId")int categoryId, @Param("boardContent")String content);
 }

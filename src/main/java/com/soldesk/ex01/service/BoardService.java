@@ -10,14 +10,15 @@ import com.soldesk.ex01.util.Pagination;
 public interface BoardService {
 	int insertBoard(BoardVO vo);
 	List<BoardVO> selectList();
-	List<BoardVO> selectByTitle(String title);
-	List<BoardVO> selectByContent(String content);
+	List<BoardVO> selectByTitle(@Param("boardTitle") String title,@Param("categoryId")int categoryId,@Param("pagination")Pagination pagination);
+	List<BoardVO> selectByContent(@Param("boardContent")String content,@Param("categoryId")int categoryId,@Param("pagination")Pagination pagination);
 	List<BoardVO> selectByMember(int member_id);
 	BoardVO selectDetail(int boardId);
 	int updateBoard(BoardVO vo);
 	int deleteBoard(int boardId);	
 	List<BoardVO> getPagingBoards(Pagination pagination/*@Param("categoryId")int categoryId, @Param("start")int start,@Param("end")int end*/);
 	int getTotalCount(int categoryId);
-	
+	int searchTotalCountByTitle(@Param("categoryId")int categoryId, @Param("boardTitle")String title);
+	int searchTotalCountByContent(@Param("categoryId")int categoryId, @Param("boardContent")String content);
 	int recommendIncrease(int boardId);
 }

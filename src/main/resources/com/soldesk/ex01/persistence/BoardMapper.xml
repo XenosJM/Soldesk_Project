@@ -14,7 +14,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		<result property="boardRegistDate" column="BOARD_REGISTDATE" />
 		<result property="boardReplyCount" column="BOARD_REPLY_COUNT" />
 		<result property="attachId" column="ATTACH_ID" />
-		<result property="recommend" column = "RECOMMEND"/>
+		<result property="recommend" column="RECOMMEND" />
 	</resultMap>
 
 	<insert id="insertBoard">
@@ -35,17 +35,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 			FROM BOARD와 동일 -->
 	</select>
 
-	<select id="selectByTitle" resultMap="boardResultMap">
-		<!-- 게시글 제목으로 검색 -->
-		SELECT * FROM BOARD WHERE BOARD_TITLE LIKE '%${boardTitle}%' order by
-		BOARD_ID desc
-	</select>
 
-	<select id="selectByContent" resultMap="boardResultMap">
-		<!-- 게시글 내용으로 검색 -->
-		SELECT * FROM BOARD WHERE BOARD_CONTENT LIKE '%${boardContent}%'
-		order by BOARD_ID desc
-	</select>
 
 	<select id="selectByMember" resultMap="boardResultMap">
 		<!-- 게시글 작성자로 검색 -->
@@ -93,20 +83,65 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		BOARD
 		where CATEGORY_ID = #{categoryId}
 		)
-		WHERE RN BETWEEN #{start} AND #{end}
+		WHERE RN BETWEEN #{start} AND
+		#{end}
 	</select>
 
-	
+	<select id="selectByTitle" resultMap="boardResultMap">
+		SELECT * FROM (
+		SELECT
+		ROW_NUMBER() OVER (ORDER BY BOARD_ID DESC) AS RN,
+		BOARD.*
+		FROM
+		BOARD
+		where CATEGORY_ID = #{categoryId} and BOARD_TITLE LIKE
+		'%${boardTitle}%'
+		order by
+		BOARD_ID desc
+		)
+		WHERE RN BETWEEN
+		#{pagination.start} AND #{pagination.end}
+	</select>
+
+	<select id="selectByContent" resultMap="boardResultMap">
+
+		SELECT * FROM (
+		SELECT
+		ROW_NUMBER() OVER (ORDER BY BOARD_ID DESC) AS RN,
+		BOARD.*
+		FROM
+		BOARD
+		where CATEGORY_ID = #{categoryId} and BOARD_CONTENT LIKE
+		'%${boardContent}%'
+		order by
+		BOARD_ID desc
+		)
+		WHERE RN BETWEEN #{start} AND
+		#{end}
+	</select>
 
 	<select id="selectTotalCount" resultType="Integer">
 		SELECT COUNT(*)
-		TOTAL_COUNT FROM BOARD	
+		TOTAL_COUNT FROM BOARD
 		where category_id = #{categoryId}
 	</select>
+
+	<select id="searchTotalCountByTitle" resultType="Integer">
+		SELECT COUNT(*)
+		TOTAL_COUNT FROM BOARD
+		where category_id = #{categoryId} and BOARD_TITLE LIKE '%${boardTitle}%'
+	</select>
 	
+	<select id="searchTotalCountByContent" resultType="Integer">
+		SELECT COUNT(*)
+		TOTAL_COUNT FROM BOARD
+		where category_id = #{categoryId} and BOARD_TITLE LIKE '%${boardContent}%'
+	</select>
+
 	<update id="recommendIncrease">
 		update board set recommend =
-		recommend + 1 where board_id = #{boardId}
+		recommend + 1 where
+		board_id = #{boardId}
 	</update>
-	
+
 </mapper>

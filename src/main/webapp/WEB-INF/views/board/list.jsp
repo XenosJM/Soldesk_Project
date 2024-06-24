@@ -136,14 +136,14 @@ ul li a {
 			<input type="submit" value = "등록">
 		</form>
 
-		<form class="search-container" method="get" action="search">
-			<select name="searchOption" id="searchOption">
-				<option value="title">제목</option>
-				<option value="content">내용</option>
-			</select>
-			<input type="text" name="search" id="searchKey" placeholder="검색어를 입력하세요">
-			<input type="submit" value="검색">
-		</form>
+		<form class="search-container" method="get" action="search" id="searchForm">
+            <select name="searchOption" id="searchOption">
+                <option value="title">제목</option>
+                <option value="content">내용</option>
+            </select>
+            <input type="text" name="search" id="searchKey" placeholder="검색어를 입력하세요">
+            <input type="submit" value="검색">
+        </form>
 
 		<table>
 			<thead>
@@ -182,6 +182,18 @@ ul li a {
 			</c:if>
 		</ul>
 	</div>
-	
+	 <script>
+        document.getElementById("searchForm").addEventListener("submit", function(event) {
+            var urlParams = new URLSearchParams(window.location.search);
+            var categoryId = urlParams.get('categoryId');
+            if (categoryId) {
+                var hiddenInput = document.createElement("input");
+                hiddenInput.type = "hidden";
+                hiddenInput.name = "categoryId";
+                hiddenInput.value = categoryId;
+                this.appendChild(hiddenInput);
+            }
+        });
+    </script>
 </body>
 </html>

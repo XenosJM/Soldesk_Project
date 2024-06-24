@@ -2,6 +2,7 @@ package com.soldesk.ex01.service;
 
 import java.util.List;
 
+import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -21,7 +22,7 @@ import lombok.extern.log4j.Log4j;
 public class BoardServiceImple implements BoardService {
 
 	@Autowired
-	BoardMapper board2Mapper;
+	BoardMapper boardMapper;
 
 	@Autowired
 	AttachMapper attachMapper;
@@ -35,7 +36,7 @@ public class BoardServiceImple implements BoardService {
 	@Override
 	public int insertBoard(BoardVO vo) {
 		log.info("service : insertBoard()");
-		int result = board2Mapper.insertBoard(vo);
+		int result = boardMapper.insertBoard(vo);
 		log.info("board2Mapper.insert 결과 : " + result);
 		// result = attachMapper.insert(vo.getAttachVO());
 		AttachVO[] attach = vo.getAttachVO();
@@ -50,7 +51,7 @@ public class BoardServiceImple implements BoardService {
 	@Override
 	public int updateBoard(BoardVO vo) {
 		log.info("service : board updateBoard()");
-		int result = board2Mapper.updateBoard(vo);
+		int result = boardMapper.updateBoard(vo);
 		AttachVO[] attach = vo.getAttachVO();
 		log.info(attach);
 		if (attach != null) {
@@ -68,28 +69,16 @@ public class BoardServiceImple implements BoardService {
 	@Override
 	public List<BoardVO> selectList() {
 		log.info("service : board selectList()");
-		List<BoardVO> list = board2Mapper.selectList();
+		List<BoardVO> list = boardMapper.selectList();
 		return list;
 	}
 
-	@Override
-	public List<BoardVO> selectByTitle(String title) {
-		log.info("service : board selectByTitle()");
-		List<BoardVO> list = board2Mapper.selectByTitle(title);
-		return list;
-	}
 
-	@Override
-	public List<BoardVO> selectByContent(String content) {
-		log.info("service : board selectByContent()");
-		List<BoardVO> list = board2Mapper.selectByContent(content);
-		return list;
-	}
 
 	@Override
 	public List<BoardVO> selectByMember(int member_id) {
 		log.info("service : board selectByMember()");
-		List<BoardVO> list = board2Mapper.selectByMember(member_id);
+		List<BoardVO> list = boardMapper.selectByMember(member_id);
 		return list;
 	}
 
@@ -103,13 +92,13 @@ public class BoardServiceImple implements BoardService {
 		}
 		result = replyMapper.deleteReplyByBoard(boardId);
 		result = attachMapper.delete(boardId);
-		result = board2Mapper.deleteBoard(boardId);
+		result = boardMapper.deleteBoard(boardId);
 		return result;
 	}
 
 	@Override
 	public BoardVO selectDetail(int boardId) {
-		BoardVO vo = board2Mapper.selectDetail(boardId);
+		BoardVO vo = boardMapper.selectDetail(boardId);
 		if (attachMapper.selectByBoardId(boardId) != null) {
 			vo.setAttachVO(attachMapper.selectByBoardId(boardId));
 		}
@@ -119,19 +108,40 @@ public class BoardServiceImple implements BoardService {
 	@Override
 	public List<BoardVO> getPagingBoards(Pagination pagination/* int categoryId, int start, int end */) {
 		log.info("getPagingBoards");
-		List<BoardVO> list = board2Mapper.selectListByPagination(/* categoryId,start,end */pagination);
+		List<BoardVO> list = boardMapper.selectListByPagination(/* categoryId,start,end */pagination);
+		return list;
+	}
+	
+	@Override
+	public List<BoardVO> selectByTitle(String title,int categoryId, Pagination pagination) {
+		log.info("service : board selectByTitle()");
+		List<BoardVO> list = boardMapper.selectByTitle(title,categoryId,pagination);
+		return list;
+	}
+
+	@Override
+	public List<BoardVO> selectByContent(String content,int categoryId, Pagination pagination) {
+		log.info("service : board selectByContent()");
+		List<BoardVO> list = boardMapper.selectByContent(content,categoryId,pagination);
 		return list;
 	}
 
 	@Override
 	public int getTotalCount(int categoryId) {
 		log.info("getTotalCount()");
-		return board2Mapper.selectTotalCount(categoryId);
+		return boardMapper.selectTotalCount(categoryId);
 	}
 
 	@Override
 	public int recommendIncrease(int boardId) {
-		return board2Mapper.recommendIncrease(boardId);
+		return boardMapper.recommendIncrease(boardId);
+	}
+	
+	public int searchTotalCountByTitle(int categoryId, String title) {
+		return boardMapper.searchTotalCountByTitle(categoryId, title);
+	}
+	public int searchTotalCountByContent(int categoryId,String content) {
+		return boardMapper.searchTotalCountByContent(categoryId, content);				
 	}
 
 }
