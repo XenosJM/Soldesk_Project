@@ -234,13 +234,13 @@ public class HomeController {
 		log.info("joinMember()");
 	}
 
-	@GetMapping("member/detail")
-	public void detailGet(Model model, HttpServletRequest req) {
-		log.info("detailGet()");
-		MemberVO memberVO = memberService.getMemberById(req.getUserPrincipal().getName());
-		log.info(memberVO);
-		model.addAttribute("memberVO", memberVO);
-	}
+//	@GetMapping("member/detail")
+//	public void detailGet(Model model, HttpServletRequest req) {
+//		log.info("detailGet()");
+//		MemberVO memberVO = memberService.getMemberById(req.getUserPrincipal().getName());
+//		log.info(memberVO);
+//		model.addAttribute("memberVO", memberVO);
+//	}
 
 	@GetMapping("member/update")
 	public void updateGet() {

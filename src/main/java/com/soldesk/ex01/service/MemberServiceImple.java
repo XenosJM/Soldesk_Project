@@ -35,12 +35,6 @@ public class MemberServiceImple implements MemberService{
 	
 	@Autowired
 	private MemberMapper memberMapper;
-	
-	@Autowired
-	private FriendMapper friend;
-	
-	@Autowired
-    private AuthenticationManager authenticationManager;
 
     @Autowired
     private JwtTokenProvider tokenProvider;
@@ -168,6 +162,21 @@ public class MemberServiceImple implements MemberService{
 	public int updateEmail(MemberVO memberVO) {
 		log.info("updateEamil");
 		int result = memberMapper.updateEmail(memberVO);
+		return result;
+	}
+
+	@Override
+	public int checkPassword(MemberVO memberVO) {
+		log.info("checkPW");
+		int result = 0; 
+		MemberVO checkVO = memberMapper.memberCheck(memberVO.getMemberId());
+		String password = encoder.encode(checkVO.getMemberPassword());
+		
+		if(checkVO != null && encoder.matches(password, memberVO.getMemberPassword())) {
+			result = 1;
+		} else {
+			result = 0;
+		}
 		return result;
 	}
 

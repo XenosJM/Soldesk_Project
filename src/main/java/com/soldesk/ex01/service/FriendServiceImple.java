@@ -23,24 +23,13 @@ public class FriendServiceImple implements FriendService {
 	@Transactional
 	@Override
 	public int insertRequest(RequestVO requestVO) {
-		log.info("insertRequest()");
-		ReceiveVO receiveVO = new ReceiveVO();
-		receiveVO.setMemberId(requestVO.getReceiverId());
-		receiveVO.setRequesterId(requestVO.getMemberId());
-		
+		log.info("insertRequest()");		
 		int result = 0;
 		if(friendMapper.selectRequestById(requestVO.getMemberId()) != null) {
-			result = 2; // request ¿äÃ»¸ñ·Ï¿¡ ÇüÀç ¿äÃ»ÇÑ Á¤º¸´Ù ÀÖ´Ù¸é
+			result = 2; // request ìš”ì²­ëª©ë¡ì— í˜„ì¬ ìš”ì²­í•œ ì •ë³´ë‹¤ ìˆë‹¤ë©´
 			return result;
 		} else {
-			int req = friendMapper.insertRequest(requestVO);
-			int rec = friendMapper.insertReceive(receiveVO);
-			
-			if(req == rec) {
-				result = 1;
-			} else {
-				result = 0;
-			}
+			result = friendMapper.insertRequest(requestVO);
 		}
 		return result;
 	}

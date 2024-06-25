@@ -19,12 +19,12 @@ import org.springframework.web.socket.server.standard.ServletServerContainerFact
 import com.soldesk.ex01.handler.PrivateChatHandler;
 
 
-// servlet-context.xml�� ���� 
-@Configuration // Spring Container���� �����ϴ� ���� Ŭ����
-@EnableWebMvc // Spring MVC ��� ���
-//@EnableWebSocket // ������ Ȱ��ȭ
-@EnableScheduling // �����ٸ� ��� ���
-@ComponentScan(basePackages = {"com.soldesk.ex01"}) // component scan ����
+//servlet-context.xml과 동일 
+@Configuration // Spring Container에서 관리하는 설정 클래스
+@EnableWebMvc // Spring MVC 기능 사용
+//@EnableWebSocket // 웹소켓 활성화
+@EnableScheduling // 스케줄링 기능 사용
+@ComponentScan(basePackages = {"com.soldesk.ex01"}) // component scan 설정
 public class ServletConfig implements WebMvcConfigurer, WebSocketConfigurer {
 
    // ViewResolver ���� �޼���
@@ -87,16 +87,6 @@ public class ServletConfig implements WebMvcConfigurer, WebSocketConfigurer {
 		
 		return container;	
 	}
-	
-	// cross origin ����
-	@Override
-    public void addCorsMappings(CorsRegistry registry) {
-        registry.addMapping("/**")
-                .allowedOrigins("http://192.168.0.144:3000")
-                .allowedMethods("GET", "POST", "PUT", "DELETE", "HEAD", "OPTIONS")
-                .allowedHeaders("*")
-                .allowCredentials(true);
-    }
 	
 	
 } // end ServletConfig

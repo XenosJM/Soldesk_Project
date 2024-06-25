@@ -60,21 +60,21 @@ public class BoardController {
 
 	
 
+//	@PostMapping("/regist")
+//	public String registerPost(BoardVO vo, RedirectAttributes reAttr) {
+//		int result = board2Service.insertBoard(vo);
+//		return "redirect:/board/list?categoryId="+vo.getCategoryId();
+//	}
+	
 	@PostMapping("/regist")
-	public String registerPost(BoardVO vo, RedirectAttributes reAttr) {
+	public ResponseEntity<Integer> registerPost(@RequestBody BoardVO vo) {
+		log.info("board controller : registerPost()");
+		log.info("board controller : Board2VO =" + vo);
 		int result = board2Service.insertBoard(vo);
-		return "redirect:/board/list?categoryId="+vo.getCategoryId();
+
+		return new ResponseEntity<Integer>(result,HttpStatus.OK);
 	}
 	
-//	@PostMapping("/regist")
-//	public ResponseEntity<Integer> registerPost(@RequestBody Board2VO vo) {
-//		log.info("board controller : registerPost()");
-//		log.info("board controller : Board2VO =" + vo);
-//		int result = board2Service.insertBoard(vo);
-//
-//		return new ResponseEntity<Integer>(result,HttpStatus.OK);
-//	}
-//	
 	@PostMapping("/recommend")
 	public ResponseEntity<Integer> recommend(Integer boardId) {
 		log.info("board controller : recommend()");

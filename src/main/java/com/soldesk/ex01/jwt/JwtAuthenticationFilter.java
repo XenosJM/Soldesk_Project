@@ -54,10 +54,13 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     // HTTP 요청에서 Authorization 헤더에서 JWT를 추출하는 메서드
     private String getJwtFromRequest(HttpServletRequest request) {
+    	log.info("토큰 체크중");
         String bearerToken = request.getHeader("Authorization");
         if (StringUtils.hasText(bearerToken) && bearerToken.startsWith("Bearer ")) {
+        	log.info("토큰 확인 완료");
             return bearerToken.split(" ")[1].trim(); // "Bearer " 이후의 JWT 문자열 반환
         }
+        log.info("토큰 없음");
         return null; // JWT가 없으면 null 반환
     }
 }
