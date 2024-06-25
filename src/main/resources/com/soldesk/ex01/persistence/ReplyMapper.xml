@@ -7,15 +7,12 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		id="ReplyResultMap">
 		<id property="replyId" column="REPLY_ID" />
 		<result property="boardId" column="BOARD_ID" />
-		<result property="categoryId" column="CATEGORY_ID" />
 		<result property="memberId" column="MEMBER_ID" />
 		<result property="replyContent" column="REPLY_CONTENT" />
 		<result property="replyRegistDate" column="REPLY_REGISTDATE" />
 	</resultMap>
 	<insert id="insertReply">
-		INSERT INTO REPLY VALUES (REPLY_SEQ.NEXTVAL,#{boardId}, #{categoryId} <!-- 
-			1234 -->
-		,#{memberId},
+		INSERT INTO REPLY VALUES (REPLY_SEQ.NEXTVAL,#{boardId},#{memberId},
 		#{replyContent},SYSDATE)
 	</insert>
 	<select id="selectReplyMemberList" resultMap="ReplyResultMap">
