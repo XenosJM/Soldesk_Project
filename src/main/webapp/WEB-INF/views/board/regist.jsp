@@ -103,6 +103,7 @@
 
 					formData.append('file', file);
 				}
+				$("input[name^='attachVO']").remove();
 				console.log("FormData created:", formData);
 				$.ajax({
 					url : '../board/attach',

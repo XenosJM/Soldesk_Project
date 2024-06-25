@@ -20,7 +20,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		INSERT INTO ATTACH
 		VALUES
 		(ATTACH_SEQ.NEXTVAL, (SELECT
-		MAX(BOARD_ID) FROM BOARD2), #{attachPath},
+		MAX(BOARD_ID) FROM BOARD), #{attachPath},
 		#{attachRealName}, #{attachChgName},
 		#{attachExtension},sysdate)
 	</insert>

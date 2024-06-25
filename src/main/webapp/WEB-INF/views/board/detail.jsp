@@ -55,7 +55,7 @@
 	<form id="deleteForm" action="delete" method="POST">
 		<input type="hidden" name="boardId" value="${board2VO.boardId }">
 		<button type="submit">글 삭제</button>
-		<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
+		<!--  <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>-->
 	</form>
 
 
@@ -79,7 +79,7 @@
 
 	<script type="text/javascript">
 		$(document).ready(function() {
-			const token = $("meta[name='_csrf']").attr("content");
+		/* 	const token = $("meta[name='_csrf']").attr("content");
 			const header = $("meta[name='_csrf_header']").attr("content");
 			const name = $("#userName").val();
 			let memberId = $("#memberId").val(); // 작성자 데이터
@@ -87,7 +87,7 @@
 				beforeSend: function(xhr) {
 					xhr.setRequestHeader(header, token);
 					}
-			});
+			}); */
 			
 /* 			let aaa = new XMLHttpRequest();
 			aaa.open('GET', '/util/memberId', true);
@@ -158,8 +158,7 @@
 					}
 				function getAllRereply(replyId) {
 					let url = '../rereply/' + replyId;
-					$.getJSON(
-							url,function(data) {
+					$.getJSON(url,function(data) {
 								let list = '';
 								$(data).each(function() {
 									let rereplyRegistDate = new Date(this.rereplyRegistDate);

@@ -13,7 +13,7 @@
 	<h2>글 수정 페이지</h2>
 	<form id = boardForm action="update" method="POST">
 		<div>
-		<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
+		<!-- <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/> -->
 			<p>번호 :</p>
 			<input type="text" name="boardId" value="${board2VO.boardId }"
 				readonly>
@@ -42,7 +42,7 @@
 	
 	<script>
 		$(document).ready(function(){
-			const token = $("meta[name='_csrf']").attr("content");
+			/* const token = $("meta[name='_csrf']").attr("content");
         	const header = $("meta[name='_csrf_header']").attr("content");
         	const name = $("#userName").val();
         	
@@ -50,7 +50,7 @@
                 beforeSend: function(xhr) {
                     xhr.setRequestHeader(header, token);
                 }
-            });
+            }); */
 			var blockedExtensions = /\.(exe|sh|php|jsp|aspx|zip|alz)$/i;
 			
 			$('#fileChange').click(function() {
@@ -94,8 +94,8 @@
 
 								formData.append('file', file);
 							}
-							
 							$("input[name^='attachVO']").remove();
+							
 
 							console.log("FormData created:", formData);
 							$.ajax({
