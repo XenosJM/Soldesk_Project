@@ -49,13 +49,13 @@ public class MemberController {
 		return new ResponseEntity<Integer>(result,HttpStatus.OK);
 	}
 	
-//	@GetMapping("/detail/{memberId}")
-//	public ResponseEntity<MemberVO> detailGet(@PathVariable("memberId") String memberId) {
-//		log.info("detailGet()");
-//		MemberVO memberVO = member.getMemberById(memberId);
-////		log.info(memberVO);
-//		return new ResponseEntity<MemberVO>(memberVO, HttpStatus.OK);
-//	}
+	@GetMapping("/detail/{memberId}")
+	public ResponseEntity<MemberVO> detailGet(@PathVariable("memberId") String memberId) {
+		log.info("detailGet()");
+		MemberVO memberVO = member.getMemberById(memberId);
+//		log.info(memberVO);
+		return new ResponseEntity<MemberVO>(memberVO, HttpStatus.OK);
+	}
 //	@PostMapping("/modify")
 //	public ResponseEntity<Integer> memberUpdate(@RequestBody Map<String, String> res) {
 //		log.info("memberUpdate()");
