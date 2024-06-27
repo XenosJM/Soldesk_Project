@@ -2,7 +2,6 @@ package com.soldesk.ex01.service;
 
 import java.util.List;
 
-import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
@@ -102,7 +101,7 @@ public class FriendServiceImple implements FriendService {
 	}
 	@PreAuthorize("isAuthenticated() and (#memberId == principal.username)")
 	@Override
-	public int friendStateChange(@Param("memberId") String memberId,@Param("friendState") String friendState) {
+	public int friendStateChange(String memberId, String friendState) {
 		log.info("friendStateChange()");
 		int result = friendMapper.friendStateChange(memberId, friendState);
 		return result;

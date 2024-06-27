@@ -148,29 +148,7 @@ public class BoardController {
 	}
 
 	
-	@GetMapping(value = "/download", produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
-	@ResponseBody
-	public ResponseEntity<Resource> download(int attachId) throws IOException {
-		log.info("download()");
-
-		AttachVO attachVO = attachService.getAttachById(attachId);
-		String attachPath = attachVO.getAttachPath();
-		String attachChgName = attachVO.getAttachChgName();
-		String attachExtension = attachVO.getAttachExtension();
-		String attachRealName = attachVO.getAttachRealName();
-
-
-		String resourcePath = uploadPath + File.separator + attachPath + File.separator + attachChgName;
-
-		Resource resource = new FileSystemResource(resourcePath);
-
-		HttpHeaders headers = new HttpHeaders();
-		String attachName = new String(attachRealName.getBytes("UTF-8"), "ISO-8859-1");
-		headers.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + attachName + "." + attachExtension);
-
-
-		return new ResponseEntity<Resource>(resource, headers, HttpStatus.OK);
-	} // end download()
+	
 
 	@InitBinder
     public void initBinder(WebDataBinder binder) {

@@ -166,6 +166,17 @@ public class UtilRESTController {
     public String getCurrentMemberId(Authentication authentication) {
         return authentication.getName();
     }
+	
+	@PostMapping("/modifyPw")
+	public ResponseEntity<Integer> modifyPw(@RequestBody Map<String, String> map){
+		MemberVO memberVO = new MemberVO();
+		memberVO.setMemberId(map.get("memberId"));
+//		log.info(memberVO.getManagerId());
+		memberVO.setMemberPassword(map.get("memberPassword"));
+//		log.info(memberVO.getMemberPassword());
+		int result = utilService.updatePassword(memberVO);
+		return new ResponseEntity<Integer>(result, HttpStatus.OK);
+	}
 }
 
 

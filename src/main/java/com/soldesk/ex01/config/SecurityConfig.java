@@ -39,11 +39,12 @@ import com.soldesk.ex01.jwt.JwtAuthenticationFilter;
 import com.soldesk.ex01.service.UserDetailServiceImple;
 
 import lombok.extern.log4j.Log4j;
+import lombok.extern.slf4j.Slf4j;
 
 @Configuration
 @EnableWebSecurity
 //@EnableGlobalMethodSecurity(prePostEnabled = true) // 메소드 수준 보안 설정을 활성화
-@Log4j
+@Slf4j
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	
 	private final String Hierarchy = "ROLE_HEAD_MANAGER > ROLE_MANAGER\n" +
@@ -66,7 +67,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 		httpSecurity
 			.authorizeRequests()  // 요청에 권한 부여
 				.antMatchers("/", "/member/regist", "/member/findIdPw", "/login/check", "/board/list", "/board/detail", "/board/search", "/util/**").permitAll()  // 루트 URL에 대한 모든 사용자 접근
-				.antMatchers("/member/**", "/friend/**", "/reply/**", "/rereply/**", "/attach/**", "/board/**").hasRole("MEMBER, MANAGER, HEAD_MANAGER")  // 루트 URL에 대한 MEMBER 역할을 가진 사용자만 접근 가능
+				.antMatchers("/member/**", "/friend/**", "/reply/**", "/rereply/**", "/attach/**", "/board/**").hasAnyRole("MEMBER", "MANAGER", "HEAD_MANAGER")  // 루트 URL에 대한 MEMBER 역할을 가진 사용자만 접근 가능
 				.antMatchers("/ROLE/**").hasRole("HEAD_MANAGER")
 				
 				.anyRequest().authenticated() // 이외에 URL은 사용자 인증을 수행해야 함
@@ -119,22 +120,22 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 				
 	}
 	
-	// 역할 계층 구조를 정의하는 RoleHierarchyImpl 빈 설정
-	@Bean
-	public RoleHierarchyImpl roleHierarchy() {
-		log.info("권한 계층구조 설정");
-		RoleHierarchyImpl roleHierarchy = new RoleHierarchyImpl();
-		// 역할 계층 구조 설정: ROLE_ADMIN > ROLE_STAFF > ROLE_USER > ROLE_GUEST
-		roleHierarchy.setHierarchy(Hierarchy);
-        return roleHierarchy;
-    } 
-	// 역할 계층을 평가하는 RoleHierarchyVoter 빈 설정
-    @Bean
-    public RoleHierarchyVoter roleHierarchyVoter() {
-    	log.info("계층 평가 빈");
-    	// RoleHierarchyVoter는 RoleHierarchyImpl을 참조하여 역할 계층을 평가함
-        return new RoleHierarchyVoter(roleHierarchy());
-    }
+//	// 역할 계층 구조를 정의하는 RoleHierarchyImpl 빈 설정
+//	@Bean
+//	public RoleHierarchyImpl roleHierarchy() {
+//		log.info("권한 계층구조 설정");
+//		RoleHierarchyImpl roleHierarchy = new RoleHierarchyImpl();
+//		// 역할 계층 구조 설정: ROLE_ADMIN > ROLE_STAFF > ROLE_USER > ROLE_GUEST
+//		roleHierarchy.setHierarchy(Hierarchy);
+//        return roleHierarchy;
+//    } 
+//	// 역할 계층을 평가하는 RoleHierarchyVoter 빈 설정
+//    @Bean
+//    public RoleHierarchyVoter roleHierarchyVoter() {
+//    	log.info("계층 평가 빈");
+//    	// RoleHierarchyVoter는 RoleHierarchyImpl을 참조하여 역할 계층을 평가함
+//        return new RoleHierarchyVoter(roleHierarchy());
+//    }
 	
 	@Bean
     @Override
@@ -254,9 +255,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 			@Override
 			public void handle(HttpServletRequest request, HttpServletResponse response,
 					AccessDeniedException accessDeniedException) throws IOException, ServletException {
-				log.info(accessDeniedException);
+//				log.info(accessDeniedException);
 				log.info(request.getRequestURI());
-				response.sendRedirect("/ex01/error/403");
+				String username = (request.getUserPrincipal() != null) ? request.getUserPrincipal().getName() : "Anonymous";
+		        log.error("Access denied for user: {} - Reason: {}", username, accessDeniedException.getMessage());
+		        response.sendError(HttpServletResponse.SC_FORBIDDEN, "Access Denied");
+//				response.sendRedirect("/ex01/error/403");
 			}
 	    };
 	}
