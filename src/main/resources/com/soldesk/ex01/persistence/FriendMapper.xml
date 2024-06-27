@@ -111,10 +111,10 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	
     <!-- 친구 상태 변경 -->
     <update id="friendStateChange">
-        UPDATE FRIEND 
-		SET FRIEND_STATE = #{friendState} 
-		WHERE FRIEND_MEMBER_ID = #{memberId} OR MEMBER_ID = #{memberId}
-    </update>
+	    UPDATE FRIEND 
+	    SET FRIEND_STATE = #{friendState} 
+	    WHERE FRIEND_MEMBER_ID = #{memberId} OR MEMBER_ID = #{memberId}
+	</update>
 
     <!-- 친구 삭제 -->
     <delete id="deleteFriend">

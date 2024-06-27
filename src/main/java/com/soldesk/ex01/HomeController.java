@@ -1,5 +1,7 @@
 package com.soldesk.ex01;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -11,7 +13,11 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.FileSystemResource;
+import org.springframework.core.io.Resource;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -29,6 +35,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.soldesk.ex01.domain.AttachVO;
 import com.soldesk.ex01.domain.BoardVO;
 
 import com.soldesk.ex01.domain.FriendVO;
@@ -53,6 +60,9 @@ public class HomeController {
 
 	@Autowired
 	private MemberService memberService;
+	
+	@Autowired
+	private String uploadPath;
 
 	@Autowired
 	private BoardService boardService;
@@ -93,6 +103,31 @@ public class HomeController {
 //			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 //		}
 //	}
+	
+	@GetMapping(value = "board/download", produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
+	@ResponseBody
+	public ResponseEntity<Resource> download(int attachId) throws IOException {
+		log.info("download()");
+
+		AttachVO attachVO = attachService.getAttachById(attachId);
+		String attachPath = attachVO.getAttachPath();
+		String attachChgName = attachVO.getAttachChgName();
+		String attachExtension = attachVO.getAttachExtension();
+		String attachRealName = attachVO.getAttachRealName();
+		
+		
+		
+		String resourcePath = uploadPath + File.separator + attachPath + File.separator + attachChgName;
+
+		Resource resource = new FileSystemResource(resourcePath);
+
+		HttpHeaders headers = new HttpHeaders();
+		String attachName = new String(attachRealName.getBytes("UTF-8"), "ISO-8859-1");
+		headers.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + attachName + "." + attachExtension);
+
+
+		return new ResponseEntity<Resource>(resource, headers, HttpStatus.OK);
+	} // end download()
 	
 	@GetMapping("board/detail")
 	public void boardDetail(Model model, Integer boardId) {

@@ -93,13 +93,13 @@ public class BoardController {
 //		return "redirect:/board/detail?boardId="+vo.getBoardId();
 //	}
 	
-	@PostMapping("/update")
-	public ResponseEntity<Integer> updatePost(@RequestBody BoardVO vo) {
-		log.info("board controller : updatePost()");
-		log.info(vo);
-		int result = board2Service.updateBoard(vo);
-		return new ResponseEntity<>(result,HttpStatus.OK);
-	}
+//	@PostMapping("/update")
+//	public ResponseEntity<Integer> updatePost(@RequestBody BoardVO vo) {
+//		log.info("board controller : updatePost()");
+//		log.info(vo);
+//		int result = board2Service.updateBoard(vo);
+//		return new ResponseEntity<>(result,HttpStatus.OK);
+//	}
 	
 	
 
