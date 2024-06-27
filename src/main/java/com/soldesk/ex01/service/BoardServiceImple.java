@@ -4,7 +4,9 @@ import java.util.List;
 
 import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.soldesk.ex01.domain.AttachVO;
 import com.soldesk.ex01.domain.BoardVO;
@@ -33,6 +35,8 @@ public class BoardServiceImple implements BoardService {
 	@Autowired
 	RereplyMapper rereplyMapper;
 
+	@Transactional
+	@PreAuthorize("isAuthenticated() and ((#vo.memberId == principal.username)")
 	@Override
 	public int insertBoard(BoardVO vo) {
 		log.info("service : insertBoard()");
@@ -47,7 +51,9 @@ public class BoardServiceImple implements BoardService {
 		}
 		return result;
 	}
-
+	
+	@Transactional
+	@PreAuthorize("isAuthenticated() and ((#vo.memberId == principal.username)")
 	@Override
 	public int updateBoard(BoardVO vo) {
 		log.info("service : board updateBoard()");
@@ -82,6 +88,8 @@ public class BoardServiceImple implements BoardService {
 		return list;
 	}
 
+	@Transactional
+	@PreAuthorize("isAuthenticated() or hasRole('ROLE_MANAGER') or hasRole('ROLE_HEAD_MANAGER'))")
 	@Override
 	public int deleteBoard(int boardId) {
 		log.info("service : board deleteBoard()");
@@ -96,6 +104,7 @@ public class BoardServiceImple implements BoardService {
 		return result;
 	}
 
+	
 	@Override
 	public BoardVO selectDetail(int boardId) {
 		BoardVO vo = boardMapper.selectDetail(boardId);
@@ -132,6 +141,7 @@ public class BoardServiceImple implements BoardService {
 		return boardMapper.selectTotalCount(categoryId);
 	}
 
+	@Transactional
 	@Override
 	public int recommendIncrease(int boardId) {
 		return boardMapper.recommendIncrease(boardId);

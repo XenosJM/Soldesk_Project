@@ -3,7 +3,9 @@ package com.soldesk.ex01.service;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.soldesk.ex01.domain.ReplyVO;
 import com.soldesk.ex01.persistence.BoardMapper;
@@ -25,6 +27,8 @@ public class ReplyServiceImple implements ReplyService {
 	@Autowired
 	BoardMapper boardMapper;
 	
+	@Transactional
+	@PreAuthorize("isAuthenticated() and ((#vo.memberId == principal.username)")
 	@Override
 	public int insertReply(ReplyVO vo) {
 		log.info("service : insertReply()");
@@ -33,6 +37,7 @@ public class ReplyServiceImple implements ReplyService {
 		return result;
 	}
 
+	
 	@Override
 	public List<ReplyVO> selectReplyMemberList(String memberId) {
 		log.info("service : selectReplyMemberList()");
@@ -54,6 +59,8 @@ public class ReplyServiceImple implements ReplyService {
 		return list;
 	}
 
+	@Transactional
+	@PreAuthorize("isAuthenticated()")
 	@Override
 	public int updateReply(int replyId, String replyContent) {
 		log.info("service : updateReply()");
@@ -64,6 +71,8 @@ public class ReplyServiceImple implements ReplyService {
 		return result;
 	}
 
+	@Transactional
+	@PreAuthorize("isAuthenticated() or hasRole('ROLE_MANAGER') or hasRole('ROLE_HEAD_MANAGER'))")
 	@Override
 	public int deleteReply(int replyId) {
 		log.info("service : deleteReply()");
@@ -77,6 +86,8 @@ public class ReplyServiceImple implements ReplyService {
 		return result;
 	}
 	
+	@Transactional
+	@PreAuthorize("isAuthenticated() or hasRole('ROLE_MANAGER') or hasRole('ROLE_HEAD_MANAGER'))")
 	@Override
 	public int deleteReplyByBoard(int boardId) {
 		log.info("service : deleteReplyByBoard");
