@@ -57,14 +57,6 @@ public class FriendController {
 		return new ResponseEntity<Integer>(result, HttpStatus.OK);
 	}
 	
-//	@PostMapping("/requestChange/{requestId}")
-//    public ResponseEntity<Integer> requestStateChange(@PathVariable("requestId") int requestId, @RequestParam("requestState") String requestState){
-//	    log.info("requestStateChange()");
-//	    log.info(requestState);
-//		int result = friendService.requestStateChange(requestId, requestState);
-//		return new ResponseEntity<Integer>(result, HttpStatus.OK);
-//	}
-	
 	@PostMapping("/cancel/{requestId}")
 	public ResponseEntity<Integer> cancelRequest(@PathVariable("requestId") int requestId){
 		log.info("cancelRequest()");

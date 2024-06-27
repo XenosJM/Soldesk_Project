@@ -266,19 +266,19 @@ public class HomeController {
 		log.info("getFriednList");
 	}
 	
-	@GetMapping("/login")
-	public void login(HttpServletRequest req) {
-		log.info("login");
-	}
+//	@GetMapping("/login")
+//	public void login(HttpServletRequest req) {
+//		log.info("login");
+//	}
 	
-	@PostMapping("/logout")
-    public String logout(HttpServletRequest request, HttpServletResponse response) {
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        if (auth != null) {
-            new SecurityContextLogoutHandler().logout(request, response, auth);
-        }
-        return "redirect:/login?logout";
-    }
+//	@PostMapping("/logout")
+//    public String logout(HttpServletRequest request, HttpServletResponse response) {
+//        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+//        if (auth != null) {
+//            new SecurityContextLogoutHandler().logout(request, response, auth);
+//        }
+//        return "redirect:/login?logout";
+//    }
 	
 	@GetMapping("/error/403")
 	public void accessDeny() {

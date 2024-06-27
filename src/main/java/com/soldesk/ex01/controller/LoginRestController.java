@@ -35,6 +35,6 @@ public class LoginRestController {
 		// 헤더에 JWT 토큰 추가 예시
         HttpHeaders headers = new HttpHeaders();
         headers.add("Authorization", "Bearer " + jwtToken);
-		return new ResponseEntity<>(jwtToken, HttpStatus.OK);
+		return new ResponseEntity<>("success", HttpStatus.OK);
 	}
 }

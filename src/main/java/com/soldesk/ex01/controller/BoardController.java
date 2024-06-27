@@ -85,13 +85,13 @@ public class BoardController {
 
 	
 	
-	@PostMapping("/update")
-	public String updatePost(BoardVO vo, RedirectAttributes reAttr) {
-		log.info("board controller : updatePost()");
-		log.info(vo);
-		int result = board2Service.updateBoard(vo);
-		return "redirect:/board/detail?boardId="+vo.getBoardId();
-	}
+//	@PostMapping("/update")
+//	public String updatePost(BoardVO vo, RedirectAttributes reAttr) {
+//		log.info("board controller : updatePost()");
+//		log.info(vo);
+//		int result = board2Service.updateBoard(vo);
+//		return "redirect:/board/detail?boardId="+vo.getBoardId();
+//	}
 	
 	@PostMapping("/update")
 	public ResponseEntity<Integer> updatePost(@RequestBody BoardVO vo) {
