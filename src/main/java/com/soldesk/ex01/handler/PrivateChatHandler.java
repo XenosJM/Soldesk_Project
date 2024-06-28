@@ -15,7 +15,7 @@ public class PrivateChatHandler extends TextWebSocketHandler {
 	@Override
 	public void afterConnectionEstablished(WebSocketSession session) {
 //		log.info(session.getPrincipal().getName() + "���� ����Ǿ����ϴ�.");
-		log.info("����Ȯ��");
+		log.info("연결 개시");
 	}
 	
 	@Override
@@ -30,11 +30,16 @@ public class PrivateChatHandler extends TextWebSocketHandler {
 	
 	@Override
 	public void afterConnectionClosed(WebSocketSession session, CloseStatus status) {
-		log.info("��������");
+		log.info("연결 종료");
 	}
 }
 
-
+/* 
+ * 리액트쪽이랑 커뮤니케이션 더 활발하게 할것.
+ * 프레임워크는 구조를 강제해두었다.
+ * 
+ * 
+ */
 
 
 

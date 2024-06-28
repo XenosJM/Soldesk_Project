@@ -21,6 +21,7 @@ import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import com.soldesk.ex01.service.UserDetailServiceImple;
 import com.soldesk.ex01.util.AuthCodeGenerator;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
@@ -46,9 +47,9 @@ public class RootConfig {
 		config.setUsername("sdp");
 		config.setPassword("asdf");	
       // aws 오라클 연결 설정
-//      config.setJdbcUrl("jdbc:oracle:thin:@teamproject.c1asumy42bvk.ap-northeast-2.rds.amazonaws.com:1521:database"); // DB 연결 url
-//      config.setUsername("soldeskTeam"); // DB 사용자 아이디
-//      config.setPassword("soldeskProject"); // DB 사용자 비밀번호
+//      config.setJdbcUrl("jdbc:oracle:thin:@sdp.c1asumy42bvk.ap-northeast-2.rds.amazonaws.com:1521:DATABASE"); // DB 연결 url
+//      config.setUsername("admin"); // DB 사용자 아이디
+//      config.setPassword("soldeskProject!"); // DB 사용자 비밀번호
       
       config.setMaximumPoolSize(10); // 최대 풀(Pool) 크기 설정
       config.setConnectionTimeout(30000); // Connection 타임 아웃 설정(30초)
@@ -115,8 +116,9 @@ public class RootConfig {
    // JWT 액세스 토큰 만료 기간 설정
    @Bean
    public Duration accessTokenExpiration() {
-       return Duration.ofMinutes(10); // 10분
+       return Duration.ofMinutes(30); // 30분
    }
+   
 
 //   // JWT 리프레시 토큰 만료 기간 설정
 //   @Bean
