@@ -25,7 +25,7 @@ public class ReceiveRestController {
 	@Autowired
 	private ReceiveService receive;
 	
-	@PostMapping("/receive")
+	@PostMapping("/insert")
 	public ResponseEntity<Integer> receiveRequest(@RequestBody ReceiveVO receiveVO ){
 		log.info("receiveRequest()");
 		int result = receive.insertReceive(receiveVO);

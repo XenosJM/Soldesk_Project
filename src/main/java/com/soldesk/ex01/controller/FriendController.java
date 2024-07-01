@@ -31,33 +31,33 @@ import lombok.extern.log4j.Log4j;
 public class FriendController {
 	
 	@Autowired
-	private FriendService friendService;
+	private FriendService friend;
 	
 	@PostMapping("/insert")
 	public ResponseEntity<Integer> insertFriend(@RequestBody FriendVO friendVO ){
 		log.info("insertFriend()");
-		int result = friendService.insertFriend(friendVO);
+		int result = friend.insertFriend(friendVO);
 		return new ResponseEntity<Integer>(result, HttpStatus.OK);
 	}
 	
 	@GetMapping("/getFriend/{memberId}")
 	public ResponseEntity<List<FriendVO>> getFriendList(@PathVariable("memberId") String memberId){
 		log.info("getFriendList()");
-		List<FriendVO> friendList = friendService.friendList(memberId);
+		List<FriendVO> friendList = friend.friendList(memberId);
 		return new ResponseEntity<List<FriendVO>>(friendList, HttpStatus.OK);
 	}
 	
 	@PostMapping("/friendState")
 	public ResponseEntity<Integer> friendStateChange(@RequestParam("memberId") String memberId, @RequestParam("friendState") String friendState){
 		log.info("friendStateChange()");
-		int result = friendService.friendStateChange(memberId, friendState);
+		int result = friend.friendStateChange(memberId, friendState);
 		return new ResponseEntity<Integer>(result, HttpStatus.OK);
 	}
 	
 	@PostMapping("/delete/{friendshipId}")
 	public ResponseEntity<Integer> deleteFriend(@PathVariable("friendshipId") int friendshipId){
 		log.info("deleteFriend()");
-		int result = friendService.deleteFriend(friendshipId);
+		int result = friend.deleteFriend(friendshipId);
 		return new ResponseEntity<Integer>(result, HttpStatus.OK);
 	}
 }
