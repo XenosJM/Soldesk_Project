@@ -19,6 +19,8 @@ import com.soldesk.ex01.domain.ReceiveVO;
 import com.soldesk.ex01.domain.RequestVO;
 import com.soldesk.ex01.persistence.AttachMapper;
 import com.soldesk.ex01.persistence.FriendMapper;
+import com.soldesk.ex01.persistence.ReceiveMapper;
+import com.soldesk.ex01.persistence.RequestMapper;
 
 import lombok.extern.log4j.Log4j;
 
@@ -34,6 +36,12 @@ public class SchedulerCollection {
 	
 	@Autowired
 	private FriendMapper friend;
+	
+	@Autowired
+	private RequestMapper request;
+	
+	@Autowired
+	private ReceiveMapper receive;
 	
 
 //	@Scheduled(fixedRate = 5000)
@@ -107,25 +115,25 @@ public class SchedulerCollection {
 		LocalDate endDate = LocalDate.parse(nowDate, formatter);
 		
 		List<RequestVO> allRequestList = new ArrayList<>();
-		allRequestList = friend.allSendList();
+		allRequestList = request.allSendList();
 
 		for(RequestVO item : allRequestList) {
 			startDate = item.getRequestSendDate();
 			long daysBetween = ChronoUnit.DAYS.between(startDate, endDate);
 			// requestState가 대기중(null)이면서 7일이 지난 요청에대해
 			if(item.getRequestState() == null && daysBetween >= 7) {
-				friend.cancelRequest(item.getRequestId());
+				request.cancelRequest(item.getRequestId());
 			}
 		} // end forEach
 		
 		List<ReceiveVO> allReceiveList = new ArrayList<>();
-		allReceiveList = friend.allReceiveList();
+		allReceiveList = receive.allReceiveList();
 
 		for(ReceiveVO item : allReceiveList) {
 			startDate = item.getReceiveDate();
 			long daysBetween = ChronoUnit.DAYS.between(startDate, endDate);
 			if(item.getReceiveState() == null && daysBetween >= 7) {
-				friend.rejectRequest(item.getReceiveId());
+				receive.rejectRequest(item.getReceiveId());
 			}
 		} // end forEach
 	} // end removeOldRequest()
@@ -133,15 +141,15 @@ public class SchedulerCollection {
 	@Scheduled(cron = "0 0 * * * ?")
 	public void changedStateRemove() {
 		
-		List<RequestVO> allRequestList = friend.allSendList();
-		List<ReceiveVO> allReceiveList = friend.allReceiveList();
+		List<RequestVO> allRequestList = request.allSendList();
+		List<ReceiveVO> allReceiveList = receive.allReceiveList();
 		
 		for(RequestVO item : allRequestList) {
 			String reject = "reject";
 			String accept = "accept";
 			// requestState가 대기중이 아니면서 reject 또는 accept인 경우
 			if(item.getRequestState() != null && (item.getRequestState().equals(reject) || item.getRequestState().equals(accept))) {
-				friend.cancelRequest(item.getRequestId());
+				request.cancelRequest(item.getRequestId());
 			}
 		} // end forEach
 
@@ -149,7 +157,7 @@ public class SchedulerCollection {
 			String reject = "reject";
 			String accept = "accept";
 			if(item.getReceiveState() != null && (item.getReceiveState().equals(reject) || item.getReceiveState().equals(accept))) {
-				friend.rejectRequest(item.getReceiveId());
+				receive.rejectRequest(item.getReceiveId());
 			}
 		} // end forEach
 	}

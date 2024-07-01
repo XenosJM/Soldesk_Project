@@ -21,69 +21,7 @@ public class FriendServiceImple implements FriendService {
 	@Autowired
 	private FriendMapper friendMapper;
 	
-	@Transactional
-	@PreAuthorize("isAuthenticated() and (#requestVO.memberId == principal.username)")
-	@Override
-	public int insertRequest(RequestVO requestVO) {
-		log.info("insertRequest()");		
-		int result = 0;
-		if(friendMapper.selectRequestById(requestVO.getMemberId()) != null) {
-			result = 2; // request 요청목록에 현재 요청한 정보가 있다면
-			return result;
-		} else {
-			result = friendMapper.insertRequest(requestVO);
-		}
-		return result;
-	}
-
-	@PreAuthorize("isAuthenticated() and (#memberId == principal.username)")
-	@Override
-	public List<RequestVO> sendList(String memberId) {
-		log.info("sendList");
-		return friendMapper.sendListRequest(memberId);
-	}
-	@PreAuthorize("isAuthenticated()")
-	@Override
-	public int requestStateChange(int requestId, String requestState) {
-		log.info("requestStateChange()");
-		log.info(requestState);
-		int result = friendMapper.requestStateChange(requestId, requestState);
-		return result;
-	}
-	@PreAuthorize("isAuthenticated()")
-	@Override
-	public int cancelRequest(int requestId) {
-		log.info("cancleRequest()");
-		int result = friendMapper.cancelRequest(requestId);
-		return result;
-	}
-	@PreAuthorize("isAuthenticated() and (#receiveVO.memberId == principal.username)")
-	@Override
-	public int insertReceive(ReceiveVO receiveVO) {
-		log.info("insertReceive()");
-		int result = friendMapper.insertReceive(receiveVO);
-		return result;
-	}
-	@PreAuthorize("isAuthenticated() and (#memberId == principal.username)")
-	@Override
-	public List<ReceiveVO> receiveList(String memberId) {
-		log.info("receiveList()");
-		return friendMapper.receiveListRequest(memberId);
-	}
-	@PreAuthorize("isAuthenticated()")
-	@Override
-	public int receiveStateChange(int receiveId, String receiveState) {
-		log.info("receiveStateChange()");
-		int result= friendMapper.receiveStateChange(receiveId, receiveState);
-		return result;
-	}
-	@PreAuthorize("isAuthenticated()")
-	@Override
-	public int rejectRequest(int receiveId) {
-		log.info("rejectRequest()");
-		int result = friendMapper.rejectRequest(receiveId);
-		return result;
-	}
+	
 	@PreAuthorize("isAuthenticated() and (#friendVO.memberId == principal.username)")
 	@Override
 	public int insertFriend(FriendVO friendVO) {
