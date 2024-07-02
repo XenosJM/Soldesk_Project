@@ -1,5 +1,6 @@
 package com.soldesk.ex01.domain;
 
+import java.io.Serializable;
 import java.util.Arrays;
 import java.util.Date;
 
@@ -14,7 +15,12 @@ import lombok.ToString;
 @Getter
 @Setter
 @ToString
-public class MemberVO {
+public class MemberVO implements Serializable{
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	
 	private String memberId;
 	private String memberPassword;
 	private int roleId;
@@ -23,32 +29,32 @@ public class MemberVO {
 	private Date memberRegistDate;
 	private String memberPropertyAsString;
 	
-	// ¹è¿­ÀÎ memberPropertyÀÇ °ªÀ» °¡Á®¿Ã¶§ »ç¿ë
+	// ë°°ì—´ì¸ memberPropertyì˜ ê°’ì„ ê°€ì ¸ì˜¬ë•Œ ì‚¬ìš©
 	public String getMemberPropertyAsString() {
         return Arrays.toString(memberProperty);
     }
 	
-	// memberPropertyÀÇ °ªÀ» ¹®ÀÚ¿­·Î º¯È¯ÇÑµÚ ÀúÀåÇÑ °ªÀ¸·Î DB¿¡´Â ÀÌ º¯¼ö°ªÀÌ µé¾î°¨
-	public void setMemberPropertyAsString(String memberPropertyAsString) {
-		// ¹®ÀÚ¿­ property°¡ ³Î°ªÀÌ ¾Æ´Ï°í ºñ¾îÀÖÁö ¾Ê´Ù¸é ½ÇÇà.
-	    if (memberPropertyAsString != null && !memberPropertyAsString.isEmpty()) {
-	        // ´ë°ıÈ£ Á¦°Å,  "\\[|\\]" = [ ¶Ç´Â ]¸¦ Ã£¾Æ¼­ °ø¹éÀ¸·Î ÀüÈ¯(Á¦°Å)
-	        memberPropertyAsString = memberPropertyAsString.replaceAll("\\[|\\]", "");
-	        
-	        if(memberPropertyAsString.isEmpty()) {
-	        	this.memberProperty = new Integer[0];
-	        	return;
-	        }
-	        // , ·Î ºĞ¸®ÇÏ¿© ¹®ÀÚ¿­ ¹è¿­·Î º¯È¯ÇÏ¿© ¹®ÀÚ¿­ ¹è¿­ º¯¼ö¿¡ ÀúÀå
-	        String[] propertyString = memberPropertyAsString.split(",");
-	        // ¹®ÀÚ¿­ ¹è¿­ÀÎ propertyStringÀ» int·Î ÆÄ½Ì
-	        this.memberProperty = new Integer[propertyString.length];
-	        for (int i = 0; i < propertyString.length; i++) {
-	        	// trim()À¸·Î °ø¹é Á¦°Å ÈÄ º¯È¯
-	        	this.memberProperty[i] = Integer.parseInt(propertyString[i].trim());
-	        }
-	    } else {
-	    	this.memberProperty = new Integer[0];
-	    }
-	} // end setMemberPropertyAsString()
+	// memberPropertyì˜ ê°’ì„ ë¬¸ìì—´ë¡œ ë³€í™˜í•œë’¤ ì €ì¥í•œ ê°’ìœ¼ë¡œ DBì—ëŠ” ì´ ë³€ìˆ˜ê°’ì´ ë“¤ì–´ê°
+		public void setMemberPropertyAsString(String memberPropertyAsString) {
+			// ë¬¸ìì—´ propertyê°€ ë„ê°’ì´ ì•„ë‹ˆê³  ë¹„ì–´ìˆì§€ ì•Šë‹¤ë©´ ì‹¤í–‰.
+		    if (memberPropertyAsString != null && !memberPropertyAsString.isEmpty()) {
+		        // ëŒ€ê´„í˜¸ ì œê±°,  "\\[|\\]" = [ ë˜ëŠ” ]ë¥¼ ì°¾ì•„ì„œ ê³µë°±ìœ¼ë¡œ ì „í™˜(ì œê±°)
+		        memberPropertyAsString = memberPropertyAsString.replaceAll("\\[|\\]", "");
+		        
+		        if(memberPropertyAsString.isEmpty()) {
+		        	this.memberProperty = new Integer[0];
+		        	return;
+		        }
+		        // , ë¡œ ë¶„ë¦¬í•˜ì—¬ ë¬¸ìì—´ ë°°ì—´ë¡œ ë³€í™˜í•˜ì—¬ ë¬¸ìì—´ ë°°ì—´ ë³€ìˆ˜ì— ì €ì¥
+		        String[] propertyString = memberPropertyAsString.split(",");
+		        // ë¬¸ìì—´ ë°°ì—´ì¸ propertyStringì„ intë¡œ íŒŒì‹±
+		        this.memberProperty = new Integer[propertyString.length];
+		        for (int i = 0; i < propertyString.length; i++) {
+		        	// trim()ìœ¼ë¡œ ê³µë°± ì œê±° í›„ ë³€í™˜
+		        	this.memberProperty[i] = Integer.parseInt(propertyString[i].trim());
+		        }
+		    } else {
+		    	this.memberProperty = new Integer[0];
+		    }
+		} // end setMemberPropertyAsString()
 } // end MemberVO

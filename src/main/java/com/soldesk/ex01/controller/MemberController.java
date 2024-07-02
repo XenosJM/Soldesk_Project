@@ -9,6 +9,7 @@ import javax.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -33,77 +34,68 @@ public class MemberController {
 	@Autowired
 	private MemberService member;
 	
-	// TODO ½ÃÅ¥¸®Æ¼Àû¿ë½Ã check ¿Å±æ°Í
+	// TODO ï¿½ï¿½Å¥ï¿½ï¿½Æ¼ï¿½ï¿½ï¿½ï¿½ï¿½ check ï¿½Å±ï¿½ï¿½
 	
 	@PostMapping("/regist")
-	public ResponseEntity<Integer> joinMember(@RequestBody Map<String, String> res) {
+	public ResponseEntity<Integer> joinMember(@RequestBody Map<String, String> map) {
 		log.info("registerPOST()");
 		MemberVO memberVO = new MemberVO();
-		memberVO.setMemberId(res.get("memberId"));
-		memberVO.setMemberPassword(res.get("memberPassword"));
-		memberVO.setMemberEmail(res.get("memberEmail"));
+		memberVO.setMemberId(map.get("memberId"));
+		memberVO.setMemberPassword(map.get("memberPassword"));
+		memberVO.setMemberEmail(map.get("memberEmail"));
 		log.info("memberVO = " + memberVO.toString());
 		int result = member.createMember(memberVO);
-		log.info(result + "Çà µî·Ï");
+		log.info(result + "ï¿½ï¿½ ï¿½ï¿½ï¿½");
 		return new ResponseEntity<Integer>(result,HttpStatus.OK);
 	}
 	
-//	@GetMapping("/detail/{memberId}")
-//	public ResponseEntity<MemberVO> detailGet(@PathVariable("memberId") String memberId) {
-//		log.info("detailGet()");
-//		MemberVO memberVO = memberService.getMemberById(memberId);
-////		log.info(memberVO);
-//		return new ResponseEntity<MemberVO>(memberVO, HttpStatus.OK);
+	@GetMapping("/detail/{memberId}")
+	public ResponseEntity<MemberVO> detailGet(@PathVariable("memberId") String memberId) {
+		log.info("detailGet()");
+		MemberVO memberVO = member.getMemberById(memberId);
+//		log.info(memberVO);
+		return new ResponseEntity<MemberVO>(memberVO, HttpStatus.OK);
+	}
+//	@PostMapping("/modify")
+//	public ResponseEntity<Integer> memberUpdate(@RequestBody Map<String, String> res) {
+//		log.info("memberUpdate()");
+//		int result = 0;
+//		MemberVO compareVO = member.getMemberById(res.get("memberId"));
+//		if(compareVO != null) {
+//			MemberVO memberVO = new MemberVO();
+//			memberVO.setMemberId(res.get("memberId"));
+//			memberVO.setMemberPassword(res.get("memberPassword"));
+//			memberVO.setMemberEmail(res.get("memberEmail"));
+//			if(memberVO.getMemberPassword() == null) {
+//				// ï¿½ï¿½Ð¹ï¿½È£ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ß´Ù¸ï¿½
+//				memberVO.setMemberPassword(compareVO.getMemberPassword());
+//			}
+//			if(memberVO.getMemberEmail() == null) {
+//				// ï¿½Ì¸ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ß´Ù¸ï¿½
+//				memberVO.setMemberEmail(compareVO.getMemberEmail());
+//			}
+//			log.info("memberVO = " + memberVO.toString());
+//			result = member.updateMember(memberVO);
+//			log.info(result + "ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½");
+//		} else {
+//			result = 0;
+//		}
+//		return new ResponseEntity<Integer>(result, HttpStatus.OK);
 //	}
 	
-	@PostMapping("/modify")
-	public ResponseEntity<Integer> memberUpdate(@RequestBody Map<String, String> res) {
-		log.info("memberUpdate()");
-		int result = 0;
-		MemberVO compareVO = member.getMemberById(res.get("memberId"));
-		if(compareVO != null) {
-			MemberVO memberVO = new MemberVO();
-			memberVO.setMemberId(res.get("memberId"));
-			memberVO.setMemberPassword(res.get("memberPassword"));
-			memberVO.setMemberEmail(res.get("memberEmail"));
-			if(memberVO.getMemberPassword() == null) {
-				// ºñ¹Ð¹øÈ£¸¦ º¯°æ¾ÈÇß´Ù¸é
-				memberVO.setMemberPassword(compareVO.getMemberPassword());
-			}
-			if(memberVO.getMemberEmail() == null) {
-				// ÀÌ¸ÞÀÏÀ» º¯°æ¾ÈÇß´Ù¸é
-				memberVO.setMemberEmail(compareVO.getMemberEmail());
-			}
-			log.info("memberVO = " + memberVO.toString());
-			result = member.updateMember(memberVO);
-			log.info(result + "Çà ¼öÁ¤");
-		} else {
-			result = 0;
-		}
-		return new ResponseEntity<Integer>(result, HttpStatus.OK);
-	}
-	
 	@PostMapping("/delete")
-	public ResponseEntity<Integer> deletePost(@RequestBody Map<String, String> res) {
+	public ResponseEntity<Integer> deletePost(@RequestBody Map<String, String> map) {
 		log.info("delete()");
-		// È¸¿ø Å»Åðµµ »èÁ¦¸¦ ¹Ù·Î ÇÒÁö ¾Æ´Ï¸é ÄÃ·³À» ¸¸µé¾î¼­ Å»ÅðÇß´Ù°í ¾÷µ¥ÀÌÆ®ÈÄ¿¡ ½ºÄÉÁì·¯·Î ºñ±³ÇØ¼­ ÀÌ ÄÃ·³¿¡ °ªÀÌ ÀÖÀ¸¸é Áö¿ì°Ô ÇÒÁö °í¹ÎÇØº¼°Í.
-		int result = member.deleteMember(res.get("memberId"));	
-		log.info(res.get("memberId"));
-		log.info(result + "Çà »èÁ¦");
+		// È¸ï¿½ï¿½ Å»ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ù·ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Æ´Ï¸ï¿½ ï¿½Ã·ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½î¼­ Å»ï¿½ï¿½ï¿½ß´Ù°ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ®ï¿½Ä¿ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ì·¯ï¿½ï¿½ ï¿½ï¿½ï¿½Ø¼ï¿½ ï¿½ï¿½ ï¿½Ã·ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½Øºï¿½ï¿½ï¿½.
+		int result = member.deleteMember(map.get("memberId"));	
+		log.info(map.get("memberId"));
+		log.info(result + "ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½");
 		return new ResponseEntity<Integer>(result, HttpStatus.OK);
 	}
-	
-	@PostMapping("/check")
-	public ResponseEntity<Integer> memberCheck(@RequestBody Map<String, String> res, HttpServletRequest req) {
-		log.info("memberCheck()");
-		HttpSession session = req.getSession();
-		int result = member.memberCheck(res, session);
-		return new ResponseEntity<Integer>(result, HttpStatus.OK);
-	}
-	
+
 	@PostMapping("/deleteProperty")
 	public ResponseEntity<Integer> removeProperty(@RequestBody MemberVO delVO) {
-		// ¸®½ºÆ®·Î ¹ÞÀº ¸ñ·ÏÀ» ³Ñ°ÜÁØ´Ù.
+		// ï¿½ï¿½ï¿½ï¿½Æ®ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ñ°ï¿½ï¿½Ø´ï¿½.
 		MemberVO memberVO = new MemberVO();
 		memberVO.setMemberId(delVO.getMemberId());
 		log.info(memberVO.getMemberId());
@@ -122,25 +114,34 @@ public class MemberController {
 	}
 	
 	@PostMapping("/modifyPw")
-	public ResponseEntity<Integer> modifyPw(@RequestBody Map<String, String> res){
+	public ResponseEntity<Integer> modifyPw(@RequestBody Map<String, String> map){
 		MemberVO memberVO = new MemberVO();
-		memberVO.setMemberId(res.get("memberId"));
+		memberVO.setMemberId(map.get("memberId"));
 //		log.info(memberVO.getManagerId());
-		memberVO.setMemberPassword(res.get("memberPassword"));
+		memberVO.setMemberPassword(map.get("memberPassword"));
 //		log.info(memberVO.getMemberPassword());
 		int result = member.updatePassword(memberVO);
 		return new ResponseEntity<Integer>(result, HttpStatus.OK);
 	}
 	
 	@PostMapping("/modifyEmail")
-	public ResponseEntity<Integer> modifyEmail(@RequestBody Map<String, String> res){
+	public ResponseEntity<Integer> modifyEmail(@RequestBody Map<String, String> map){
 		MemberVO memberVO = new MemberVO();
-		memberVO.setMemberId(res.get("memberId"));
+		memberVO.setMemberId(map.get("memberId"));
 //		log.info(memberVO.getManagerId());
-		memberVO.setMemberEmail(res.get("memberEmail"));
+		memberVO.setMemberEmail(map.get("memberEmail"));
 //		log.info(memberVO.getMemberPassword());
 		int result = member.updateEmail(memberVO);
 		return new ResponseEntity<Integer>(result, HttpStatus.OK);
+	}
+	
+	@PostMapping("/check")
+	public ResponseEntity<Integer> memberCheck(@RequestBody Map<String, String> map){
+		MemberVO memberVO = new MemberVO();
+		memberVO.setMemberId(map.get("memberId"));
+		memberVO.setMemberPassword(map.get("memberPassword"));
+		int result = member.checkPassword(memberVO);
+		return new ResponseEntity<>(result, HttpStatus.OK);
 	}
 	
 	

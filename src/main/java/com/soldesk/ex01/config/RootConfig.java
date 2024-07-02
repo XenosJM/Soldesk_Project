@@ -1,7 +1,9 @@
 package com.soldesk.ex01.config;
 
+import java.time.Duration;
 import java.util.Properties;
 
+import javax.crypto.SecretKey;
 import javax.sql.DataSource;
 
 import org.apache.ibatis.session.SqlSessionFactory;
@@ -19,71 +21,66 @@ import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import com.soldesk.ex01.service.UserDetailServiceImple;
 import com.soldesk.ex01.util.AuthCodeGenerator;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 
-// root-context.xml°ú µ¿ÀÏ
+import io.jsonwebtoken.io.Decoders;
+import io.jsonwebtoken.security.Keys;
+
+// root-context.xmlê³¼ ë™ì¼
 @Configuration
-@ComponentScan(basePackages = {"com.soldesk.ex01.service"})
-@ComponentScan(basePackages = {"com.soldesk.ex01.aspect"})
+@ComponentScan(basePackages = {"com.soldesk.ex01.service", "com.soldesk.ex01.aspect", "com.soldesk.ex01.jwt"})
 @EnableAspectJAutoProxy
 @MapperScan(basePackages = {"com.soldesk.ex01.persistence"})
-@EnableTransactionManagement // Æ®·£Àè¼Ç °ü¸® È°¼ºÈ­
+@EnableTransactionManagement // íŠ¸ëœì­ì…˜ ê´€ë¦¬ í™œì„±í™”
 public class RootConfig {
-   
-	// ¿À¶óÅ¬ ¼³Á¤
-	private static final String JDBC_DRIVER = "oracle.jdbc.OracleDriver";
-	private static final String JDBC_URL =  "jdbc:oracle:thin:@192.168.0.161:1521:xe";
-	private static final String JDBC_USER = "sdp";
-	private static final String JDBC_PW = "asdf";
-	// ¸ŞÀÏ ¼³Á¤
-	private static final String MAIL_HOST = "smtp.gmail.com";
-	private static final int MAIL_PORT = 587;
-	private static final String MAIL_USER = "wjdalsqaaz123@gmail.com";
-	private static final String MAIL_PW = "lmob akef narj lhcu";
+
 	
-	
-   @Bean // ½ºÇÁ¸µ beanÀ¸·Î ¼³Á¤
-   public DataSource dataSource() { // DataSource °´Ã¼ ¸®ÅÏ ¸Ş¼­µå
-      HikariConfig config = new HikariConfig(); // ¼³Á¤ °´Ã¼
-      config.setDriverClassName(JDBC_DRIVER); // jdbc µå¶óÀÌ¹ö Á¤º¸
-      // TODO Áı¿¡¼­ ÇÒ¶§´Â url ¼³Á¤ ¹Ù²ã¾ßÇÔ.
-//    config.setJdbcUrl("jdbc:oracle:thin:@localhost:1521:xe"); // DB ¿¬°á url
-      config.setJdbcUrl(JDBC_URL); // DB ¿¬°á url
-      config.setUsername(JDBC_USER); // DB »ç¿ëÀÚ ¾ÆÀÌµğ
-      config.setPassword(JDBC_PW); // DB »ç¿ëÀÚ ºñ¹Ğ¹øÈ£
+   @Bean // ìŠ¤í”„ë§ beanìœ¼ë¡œ ì„¤ì •
+   public DataSource dataSource() { // DataSource ê°ì²´ ë¦¬í„´ ë©”ì„œë“œ
+      HikariConfig config = new HikariConfig(); // ì„¤ì • ê°ì²´
+      config.setDriverClassName("oracle.jdbc.OracleDriver"); // jdbc ë“œë¼ì´ë²„ ì •ë³´
+      // ê¸°ì¡´ ì˜¤ë¼í´ ì—°ê²° ì„¤ì •
+//		config.setJdbcUrl("jdbc:oracle:thin:@192.168.0.161:1521:xe");
+//		config.setUsername("sdp");
+//		config.setPassword("asdf");	
+      // aws ì˜¤ë¼í´ ì—°ê²° ì„¤ì •
+      config.setJdbcUrl("jdbc:oracle:thin:@sdp.c1asumy42bvk.ap-northeast-2.rds.amazonaws.com:1521:DATABASE"); // DB ì—°ê²° url
+      config.setUsername("admin"); // DB ì‚¬ìš©ì ì•„ì´ë””
+      config.setPassword("soldeskProject!"); // DB ì‚¬ìš©ì ë¹„ë°€ë²ˆí˜¸
       
-      config.setMaximumPoolSize(10); // ÃÖ´ë Ç®(Pool) Å©±â ¼³Á¤
-      config.setConnectionTimeout(30000); // Connection Å¸ÀÓ ¾Æ¿ô ¼³Á¤(30ÃÊ)
-      HikariDataSource ds = new HikariDataSource(config); // config °´Ã¼¸¦ ÂüÁ¶ÇÏ¿© DataSource °´Ã¼ »ı¼º
-      return ds; // ds °´Ã¼ ¸®ÅÏ
+      config.setMaximumPoolSize(10); // ìµœëŒ€ í’€(Pool) í¬ê¸° ì„¤ì •
+      config.setConnectionTimeout(30000); // Connection íƒ€ì„ ì•„ì›ƒ ì„¤ì •(30ì´ˆ)
+      HikariDataSource ds = new HikariDataSource(config); // config ê°ì²´ë¥¼ ì°¸ì¡°í•˜ì—¬ DataSource ê°ì²´ ìƒì„±
+      return ds; // ds ê°ì²´ ë¦¬í„´
    }
    
-   // ÀÌ¸ŞÀÏ ÀÎÁõ, ¾ÆÀÌµğ ¹× ºñ¹Ğ¹øÈ£ º¯°æ¿ë ÀÎÁõ ¹øÈ£ »ı¼º±â
+   // ì´ë©”ì¼ ì¸ì¦, ì•„ì´ë”” ë° ë¹„ë°€ë²ˆí˜¸ ë³€ê²½ìš© ì¸ì¦ ë²ˆí˜¸ ìƒì„±ê¸°
    @Bean
    public AuthCodeGenerator authCodeGenerator() {
        return new AuthCodeGenerator();
    }
    
    @Bean
-   public JavaMailSender mailSender() { // ÀÌ¸ŞÀÏ È®ÀÎ ¶Ç´Â ¾ÆÀÌµğ ºñ¹Ğ¹øÈ£ Ã£±â½Ã ÀÌ¿ëÇÒ °´Ã¼ ¸®ÅÏ ¸Ş¼­µå
-	   JavaMailSenderImpl mailSender = new JavaMailSenderImpl(); // °´Ã¼ »ı¼º
-	   mailSender.setHost(MAIL_HOST); // ÀÌ¸ŞÀÏ Àü¼Û¿¡ »ç¿ëµÉ smtp È£½ºÆ® ¼³Á¤
-	   mailSender.setPort(MAIL_PORT); // Æ÷Æ® ¼³Á¤
-	   mailSender.setUsername(MAIL_USER); // »ç¿ëµÉ ÀÌ¸ŞÀÏ
-	   mailSender.setPassword(MAIL_PW); // »ı¼ºÇÑ ¾Û ºñ¹Ğ¹øÈ£ ÀÔ·Â.
+   public JavaMailSender mailSender() { // ì´ë©”ì¼ í™•ì¸ ë˜ëŠ” ì•„ì´ë”” ë¹„ë°€ë²ˆí˜¸ ì°¾ê¸°ì‹œ ì´ìš©í•  ê°ì²´ ë¦¬í„´ ë©”ì„œë“œ
+	   JavaMailSenderImpl mailSender = new JavaMailSenderImpl(); // ê°ì²´ ìƒì„±
+	   mailSender.setHost("smtp.gmail.com"); // ì´ë©”ì¼ ì „ì†¡ì— ì‚¬ìš©ë  smtp í˜¸ìŠ¤íŠ¸ ì„¤ì •
+	   mailSender.setPort(587); // í¬íŠ¸ ì„¤ì •
+	   mailSender.setUsername("wjdalsqaaz123@gmail.com"); // ì‚¬ìš©ë  ì´ë©”ì¼
+	   mailSender.setPassword("lmob akef narj lhcu"); // ìƒì„±í•œ ì•± ë¹„ë°€ë²ˆí˜¸ ì…ë ¥.
 	   
-	   Properties javaMailProperties = new Properties(); // JavaMail ¼Ó¼º ¼³Á¤À» À§ÇÑ °´Ã¼ »ı¼º
-	   javaMailProperties.put("mail.tranport.protocl", "smtp"); // smtp¸¦ ÇÁ·ÎÅäÄİ·Î »ç¿ë
-	   javaMailProperties.put("mail.smtp.auth", "true"); // smtp ¼­¹ö¿¡ ÀÎÁõ ÇÊ¿ä
-	   javaMailProperties.put("mail.smtp.socketFactory.class", "javax.net.ssl.SSLSocketFactory"); // SSL ¼ÒÄÏ ÆÑÅä¸® Å¬·¡½º »ç¿ë
-	   javaMailProperties.put("mail.smtp.starttls.enable", "true"); // STARTTLS(TLS¸¦ ½ÃÀÛÇÏ´Â ¸í·É)¸¦ »ç¿ëÇÏ¿© ¾ÏÈ£È­µÈ Åë½ÅÀ» È°¼ºÈ­
-	   javaMailProperties.put("mail.debug", "true"); // µğ¹ö±ë Ãâ·Â
-	   javaMailProperties.put("mail.smtp.ssl.trust", "smtp.naver.com"); //smtp ¼­¹öÀÇ ssl ÀÎÁõ¼­¸¦ ½Å·Ú
-	   javaMailProperties.put("mail.smtp.ssl.protocols", "TLSv1.2"); //»ç¿ëÇÒ ssl ÇÁ·ÎÅäÄİ ¹öÀü
+	   Properties javaMailProperties = new Properties(); // JavaMail ì†ì„± ì„¤ì •ì„ ìœ„í•œ ê°ì²´ ìƒì„±
+	   javaMailProperties.put("mail.tranport.protocl", "smtp"); // smtpë¥¼ í”„ë¡œí† ì½œë¡œ ì‚¬ìš©
+	   javaMailProperties.put("mail.smtp.auth", "true"); // smtp ì„œë²„ì— ì¸ì¦ í•„ìš”
+	   javaMailProperties.put("mail.smtp.socketFactory.class", "javax.net.ssl.SSLSocketFactory"); // SSL ì†Œì¼“ íŒ©í† ë¦¬ í´ë˜ìŠ¤ ì‚¬ìš©
+	   javaMailProperties.put("mail.smtp.starttls.enable", "true"); // STARTTLS(TLSë¥¼ ì‹œì‘í•˜ëŠ” ëª…ë ¹)ë¥¼ ì‚¬ìš©í•˜ì—¬ ì•”í˜¸í™”ëœ í†µì‹ ì„ í™œì„±í™”
+	   javaMailProperties.put("mail.debug", "true"); // ë””ë²„ê¹… ì¶œë ¥
+	   javaMailProperties.put("mail.smtp.ssl.trust", "smtp.naver.com"); //smtp ì„œë²„ì˜ ssl ì¸ì¦ì„œë¥¼ ì‹ ë¢°
+	   javaMailProperties.put("mail.smtp.ssl.protocols", "TLSv1.2"); //ì‚¬ìš©í•  ssl í”„ë¡œí† ì½œ ë²„ì „
 	   
-	   mailSender.setJavaMailProperties(javaMailProperties); // ÀÌ¸ŞÀÏÀ» º¸³¾ °´Ã¼¿¡ properties ¼¼ÆÃ	   
+	   mailSender.setJavaMailProperties(javaMailProperties); // ì´ë©”ì¼ì„ ë³´ë‚¼ ê°ì²´ì— properties ì„¸íŒ…	   
 	   return mailSender;
    }
    
@@ -94,17 +91,38 @@ public class RootConfig {
       return (SqlSessionFactory) sqlSessionFactoryBean.getObject();
    }
    
-   // Æ®·£Àè¼Ç ¸Å´ÏÀú °´Ã¼¸¦ ºóÀ¸·Î µî·Ï
+   // íŠ¸ëœì­ì…˜ ë§¤ë‹ˆì € ê°ì²´ë¥¼ ë¹ˆìœ¼ë¡œ ë“±ë¡
    @Bean
    public PlatformTransactionManager transactionManager() {
       return new DataSourceTransactionManager(dataSource());
    }
    
-   // Jackson ¿¡ java ³¯Â¥ °´Ã¼ ¼³Á¤ Ãß°¡
+   // Jackson ì— java ë‚ ì§œ ê°ì²´ ì„¤ì • ì¶”ê°€
    @Bean
    public Jackson2ObjectMapperBuilder jackson2ObjectMapperBuilder() {
        Jackson2ObjectMapperBuilder builder = new Jackson2ObjectMapperBuilder();
        builder.modules(new JavaTimeModule());
        return builder;
    }
+   
+   // JWT ì‹œí¬ë¦¿í‚¤ ì„¤ì •
+   @Bean
+   public SecretKey secretKey() {
+       String secret = "7IKs7Jqp7J6QIOyduOymneydtCDrkJjslrQg7J6I64qUIO2MgO2UhOuhnOygne2KuCDsoJHqt7wg7Yag7YGw7J6F64uI64ukLg=="; // base64 ì¸ì½”ë”©ëœ ë¬¸ìì—´
+       byte[] keyByte = Decoders.BASE64.decode(secret);
+       return Keys.hmacShaKeyFor(keyByte);
+   }
+
+   // JWT ì•¡ì„¸ìŠ¤ í† í° ë§Œë£Œ ê¸°ê°„ ì„¤ì •
+   @Bean
+   public Duration accessTokenExpiration() {
+       return Duration.ofMinutes(30); // 30ë¶„
+   }
+   
+
+//   // JWT ë¦¬í”„ë ˆì‹œ í† í° ë§Œë£Œ ê¸°ê°„ ì„¤ì •
+//   @Bean
+//   public Duration refreshTokenExpiration() {
+//       return Duration.ofHours(12); // 12ì‹œê°„
+//   }
 } // end RootConfig

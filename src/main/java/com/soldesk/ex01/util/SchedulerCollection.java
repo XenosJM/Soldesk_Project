@@ -19,6 +19,8 @@ import com.soldesk.ex01.domain.ReceiveVO;
 import com.soldesk.ex01.domain.RequestVO;
 import com.soldesk.ex01.persistence.AttachMapper;
 import com.soldesk.ex01.persistence.FriendMapper;
+import com.soldesk.ex01.persistence.ReceiveMapper;
+import com.soldesk.ex01.persistence.RequestMapper;
 
 import lombok.extern.log4j.Log4j;
 
@@ -35,6 +37,12 @@ public class SchedulerCollection {
 	@Autowired
 	private FriendMapper friend;
 	
+	@Autowired
+	private RequestMapper request;
+	
+	@Autowired
+	private ReceiveMapper receive;
+	
 
 //	@Scheduled(fixedRate = 5000)
 //	public void scheduletest() {
@@ -45,21 +53,21 @@ public class SchedulerCollection {
 //			return;
 //		}
 //
-//		// ÆÄÀÏ Á¤º¸¿¡¼­ ÆÄÀÏ ÀÌ¸§¸¸ ÃßÃâÇÏ¿© List<String>À¸·Î º¯°æ
-//		List<String> savedList = attachList.stream() // µ¥ÀÌÅÍ Ã³¸® ±â´É »ç¿ëÀ» À§ÇÑ stream º¯°æ
-//				.map(this::toChgName) // attach¸¦ attach.getAttachChgName()À¸·Î º¯°æ
-//				.collect(Collectors.toList()); // streamÀ» list·Î º¯°æ
+//		// ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ì¸ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï¿ï¿½ List<String>ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
+//		List<String> savedList = attachList.stream() // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ Ã³ï¿½ï¿½ ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ stream ï¿½ï¿½ï¿½ï¿½
+//				.map(this::toChgName) // attachï¿½ï¿½ attach.getAttachChgName()ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
+//				.collect(Collectors.toList()); // streamï¿½ï¿½ listï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
 //		log.info(savedList);
-//		// ÇöÀç ³¯Â¥¿¡¼­ 1ÀÏ Àü ¾÷·Îµå Æú´õ °æ·Î »ı¼º
+//		// ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Â¥ï¿½ï¿½ï¿½ï¿½ 1ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½Îµï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
 //		File targetDir = Paths.get(uploadPath, attachList.get(0).getAttachPath()).toFile();
 //
-//		// ¾÷·Îµå Æú´õ¿¡ ÀúÀåµÈ ÆÄÀÏ ¸ñ·Ï Áß
-//		// savedList¿¡ ÆÄÀÏ ÀÌ¸§ÀÌ ¾ø´Â °æ¿ì¸¸ Á¶È¸
+//		// ï¿½ï¿½ï¿½Îµï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ ï¿½ï¿½
+//		// savedListï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ì¸ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ì¸¸ ï¿½ï¿½È¸
 //		File[] removeFiles = targetDir.listFiles(file -> savedList.contains(file.getName()) == false);
 //		log.info(removeFiles);
 //		for (File file : removeFiles) {
 //			log.warn(file.getAbsolutePath());
-//			file.delete(); // ÆÄÀÏ »èÁ¦
+//			file.delete(); // ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
 //		}
 //
 //	}
@@ -73,65 +81,101 @@ public class SchedulerCollection {
 //			return;
 //		}
 //
-//		// ÆÄÀÏ Á¤º¸¿¡¼­ ÆÄÀÏ ÀÌ¸§¸¸ ÃßÃâÇÏ¿© List<String>À¸·Î º¯°æ
-//		List<String> savedList = attachList.stream() // µ¥ÀÌÅÍ Ã³¸® ±â´É »ç¿ëÀ» À§ÇÑ stream º¯°æ
-//				.map(this::toChgName) // attach¸¦ attach.getAttachChgName()À¸·Î º¯°æ
-//				.collect(Collectors.toList()); // streamÀ» list·Î º¯°æ
+//		// ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ì¸ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï¿ï¿½ List<String>ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
+//		List<String> savedList = attachList.stream() // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ Ã³ï¿½ï¿½ ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ stream ï¿½ï¿½ï¿½ï¿½
+//				.map(this::toChgName) // attachï¿½ï¿½ attach.getAttachChgName()ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
+//				.collect(Collectors.toList()); // streamï¿½ï¿½ listï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
 //		log.info(savedList);
-//		// ÇöÀç ³¯Â¥¿¡¼­ 1ÀÏ Àü ¾÷·Îµå Æú´õ °æ·Î »ı¼º
+//		// ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Â¥ï¿½ï¿½ï¿½ï¿½ 1ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½Îµï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
 //		File targetDir = Paths.get(uploadPath, attachList.get(0).getAttachPath()).toFile();
 //
-//		// ¾÷·Îµå Æú´õ¿¡ ÀúÀåµÈ ÆÄÀÏ ¸ñ·Ï Áß
-//		// savedList¿¡ ÆÄÀÏ ÀÌ¸§ÀÌ ¾ø´Â °æ¿ì¸¸ Á¶È¸
+//		// ï¿½ï¿½ï¿½Îµï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ ï¿½ï¿½
+//		// savedListï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ì¸ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ì¸¸ ï¿½ï¿½È¸
 //		File[] removeFiles = targetDir.listFiles(file -> savedList.contains(file.getName()) == false);
 //		log.info(removeFiles);
 //		for (File file : removeFiles) {
 //			log.warn(file.getAbsolutePath());
-//			file.delete(); // ÆÄÀÏ »èÁ¦
+//			file.delete(); // ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
 //		}
 //	}
 
-	// attach¸¦ Àü´Ş¹Ş¾Æ ÆÄÀÏ ÀÌ¸§ ¸®ÅÏ
+	// attachï¿½ï¿½ ï¿½ï¿½ï¿½Ş¹Ş¾ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ì¸ï¿½ ï¿½ï¿½ï¿½ï¿½
 	private String toChgName(AttachVO attach) {
 		return attach.getAttachChgName();
 	}
-//	cron = "0 0 4 1/1 * ?"
-	// 7ÀÏÀÌ»ó ´ë±âÁßÀÎ ¿äÃ»°Ç°ú ¿äÃ»¹ŞÀº °ÇÀÌ ³²¾ÆÀÖÀ»½Ã µÑ´Ù Á¦°Å
-	@Scheduled(cron = "0 0 4 1/1 * ?")
+	
+	//cron = "0 0 4 1/1 * ?"
+	@Scheduled(cron = "0 0 4 * * ?")
 	public void removeOldRequestAndReceive() {
 		log.info("removeOldRequestAndReceive()");
-		List<RequestVO> allRequestList = new ArrayList<>();
-		allRequestList = friend.allSendList();
-		// ³¯Â¥ Çü½Ä Æ÷¸Ë
+		
 		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yy/MM/dd");
-		// ÇöÀç ³¯Â¥¸¦ Æ÷¸ËÇÏ¿© ¹®ÀÚ¿­·Î ÀúÀå
 		String nowDate = LocalDate.now().format(formatter);
-		// ¿äÃ»°ú ¿äÃ»¹ŞÀ½ ³¯Â¥ ¼±¾ğ
 		LocalDate startDate;
-		// Æ÷¸ËµÈ ÇöÀç ³¯Â¥¸¦ ÆÄ½ÌÇÏ¿© ÀúÀå
 		LocalDate endDate = LocalDate.parse(nowDate, formatter);
 		
+		List<RequestVO> allRequestList = new ArrayList<>();
+		allRequestList = request.allSendList();
+
 		for(RequestVO item : allRequestList) {
 			startDate = item.getRequestSendDate();
-			// ³¯Â¥ °è»ê
 			long daysBetween = ChronoUnit.DAYS.between(startDate, endDate);
-			// requestState°¡ ´ë±âÁß(null)ÀÌ¸é¼­ 7ÀÏÀÌ Áö³­ ¿äÃ»¿¡´ëÇØ
+			// requestStateê°€ ëŒ€ê¸°ì¤‘(null)ì´ë©´ì„œ 7ì¼ì´ ì§€ë‚œ ìš”ì²­ì—ëŒ€í•´
 			if(item.getRequestState() == null && daysBetween >= 7) {
-				friend.cancelRequest(item.getRequestId());
+				request.cancelRequest(item.getRequestId());
 			}
 		} // end forEach
 		
 		List<ReceiveVO> allReceiveList = new ArrayList<>();
-		allReceiveList = friend.allReceiveList();
-		
+		allReceiveList = receive.allReceiveList();
+
 		for(ReceiveVO item : allReceiveList) {
 			startDate = item.getReceiveDate();
 			long daysBetween = ChronoUnit.DAYS.between(startDate, endDate);
 			if(item.getReceiveState() == null && daysBetween >= 7) {
-				friend.rejectRequest(item.getReceiveId());
+				receive.rejectRequest(item.getReceiveId());
 			}
 		} // end forEach
 	} // end removeOldRequest()
+	
+	@Scheduled(cron = "0 0 * * * ?")
+	public void changedStateRemove() {
+		
+		List<RequestVO> allRequestList = request.allSendList();
+		List<ReceiveVO> allReceiveList = receive.allReceiveList();
+		
+		for(RequestVO item : allRequestList) {
+			String reject = "reject";
+			String accept = "accept";
+			// requestStateê°€ ëŒ€ê¸°ì¤‘ì´ ì•„ë‹ˆë©´ì„œ reject ë˜ëŠ” acceptì¸ ê²½ìš°
+			if(item.getRequestState() != null && (item.getRequestState().equals(reject) || item.getRequestState().equals(accept))) {
+				request.cancelRequest(item.getRequestId());
+			}
+		} // end forEach
+
+		for(ReceiveVO item : allReceiveList) {
+			String reject = "reject";
+			String accept = "accept";
+			if(item.getReceiveState() != null && (item.getReceiveState().equals(reject) || item.getReceiveState().equals(accept))) {
+				receive.rejectRequest(item.getReceiveId());
+			}
+		} // end forEach
+	}
+
+	@Scheduled(cron = "0 0 3 * * ?")
+	public void removeNomoreFriend() {
+		List<FriendVO> allFriendList = new ArrayList<>();
+		allFriendList = friend.allFriend();
+
+		// aì™€ bê°€ ì¹œêµ¬ì¸ ìƒí™©ì—ì„œ dbì—ëŠ” a bë°ì´í„°, b a ë°ì´í„°ê°€ ë“¤ì–´ê°€ìˆë‹¤. 
+		// ì´ë¥¼ ë¹„êµí•´ì„œ í•œìª½ì´ë¼ë„ ì¹œêµ¬ì‚­ì œë¥¼ í†µí•´ 
+		for(FriendVO item : allFriendList) {
+			if(item.getFriendState() == "delete") {
+				friend.deleteFriend(item.getFriendshipId());
+			}
+		}
+
+	} // end removeNomoreFriend()
 
 } // end SchedulerCollection
 

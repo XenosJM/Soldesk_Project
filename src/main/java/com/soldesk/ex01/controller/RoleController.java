@@ -30,20 +30,20 @@ public class RoleController {
 	public ResponseEntity<Integer> createManager(@RequestBody RoleVO managerVO) {
 		log.info("registManager()");
 		int result = roleService.createManager(managerVO);
-		log.info(result + "Çà »ğÀÔ");
+		log.info(result + "í–‰ ì‚½ì…");
 		return new ResponseEntity<Integer>(result, HttpStatus.OK);
 	}	
 	
-	// TODO ºñµ¿±â·Î select¸¦ ´©¸£¸é div¸¦ Ãß°¡ÇØ ¸ğµç ¸â¹ö ¸®½ºÆ®¸¦ °¡Á®¿À°í input °Ë»ö Ã¢À» Ãß°¡ÇÏ¿©
-	// °Ë»öÃ¢¿¡ °Ë»ö¾î¸¦ ÀÔ·ÂÇÒ¶§¸¶´Ù ±×¿¡ ¸Â´Â ÀÌ¿ëÀÚ°¡ ¶ß°í ¼±ÅÃµÈ ¸â¹ö¿¡°Ô °ü¸®ÀÚ ±ÇÇÑÀ» ÁÖ°Å³ª Ãë¼Ò½ÃÅ³¼öÀÖ´Ù.
-	// ±ÇÇÑ ÁÖ±â¸¦ Å¬¸¯ÇßÀ»°æ¿ì °Ô½ÃÆÇ ¸ñ·Ï(Ä«Å×°í¸®)ÀÌ ¶ß°í ÀÌ¸¦ ¼±ÅÃÇÏ¸é ±ÇÇÑÁÖ±â ÄÁÆßÃ¢À» ¶ç¿ö Ã¼Å©ÇÑ´Ù.  
+	// TODO ë¹„ë™ê¸°ë¡œ selectë¥¼ ëˆ„ë¥´ë©´ divë¥¼ ì¶”ê°€í•´ ëª¨ë“  ë©¤ë²„ ë¦¬ìŠ¤íŠ¸ë¥¼ ê°€ì ¸ì˜¤ê³  input ê²€ìƒ‰ ì°½ì„ ì¶”ê°€í•˜ì—¬
+	// ê²€ìƒ‰ì°½ì— ê²€ìƒ‰ì–´ë¥¼ ì…ë ¥í• ë•Œë§ˆë‹¤ ê·¸ì— ë§ëŠ” ì´ìš©ìê°€ ëœ¨ê³  ì„ íƒëœ ë©¤ë²„ì—ê²Œ ê´€ë¦¬ì ê¶Œí•œì„ ì£¼ê±°ë‚˜ ì·¨ì†Œì‹œí‚¬ìˆ˜ìˆë‹¤.
+	// ê¶Œí•œ ì£¼ê¸°ë¥¼ í´ë¦­í–ˆì„ê²½ìš° ê²Œì‹œíŒ ëª©ë¡(ì¹´í…Œê³ ë¦¬)ì´ ëœ¨ê³  ì´ë¥¼ ì„ íƒí•˜ë©´ ê¶Œí•œì£¼ê¸° ì»¨íŒì°½ì„ ë„ì›Œ ì²´í¬í•œë‹¤.  
 	
 
 	@PostMapping("/delete")
 	public ResponseEntity<Integer> deleteManager(int managerId) {
 		log.info("deleteManager()");
 		int result = roleService.deleteManager(managerId);
-		log.info(result + "Çà »èÁ¦");
+		log.info(result + "í–‰ ì‚­ì œ");
 		return new ResponseEntity<Integer>(result, HttpStatus.OK);
 	}
 	

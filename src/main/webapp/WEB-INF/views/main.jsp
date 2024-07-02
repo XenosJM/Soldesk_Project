@@ -167,11 +167,33 @@
     <div class="vertical-header">
         <div class="logo">
         </div>
-        <div class="login-container" id="loginContainer"></div>
+        <div class="login-container" id="loginContainer">
+        	<sec:authorize access="isAuthenticated()">
+		        <h2>로그인된 사용자 정보</h2>
+		        <p>아이디: <sec:authentication property="name"/></p>
+		        <button id="detail">내 정보 보기</button>
+                <button id="friendList">친구목록보기</button>
+                <button id="checkout" >로그아웃</button>
+				<form id="logoutForm" name="logoutForm" method="post" action="logout" style="display: none;">
+				    <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
+				</form>
+		    </sec:authorize>
+		    
+		    <sec:authorize access="!isAuthenticated()">
+		        <h2>로그인되지 않은 사용자</h2>
+		        <input type="text" id="memberId" name="memberId" placeholder="아이디">
+                <input type="password" id="memberPassword" name="memberPassword" placeholder="비밀번호"><br>
+		        <button id="check">로그인</button>
+                <button id="joinMember">회원가입</button>
+                <button id="findIdPw">ID/PW찾기</button>
+		    </sec:authorize>
+        </div>
 
         <nav>
             <ul>
-                <li><a href="/ex01/board/list">전체게시판</a></li>
+                <li><a href="/ex01/board/list?categoryId=0">전체게시판</a></li>
+                <li><a href="/ex01/board/list?categoryId=1">릾1999</a></li>
+                <li><a href="/ex01/board/list?categoryId=2">붕스</a></li>
             </ul>
         </nav>
     </div>
@@ -186,8 +208,7 @@
 	</div>
     <script type="text/javascript">
         $(function () {
-        	let memberId = '${sessionScope.memberId}';
-        	const token = $("meta[name='_csrf']").attr("content");
+        	/* const token = $("meta[name='_csrf']").attr("content");
         	const header = $("meta[name='_csrf_header']").attr("content");
         	const name = $("#userName").val();
         	
@@ -195,9 +216,9 @@
                 beforeSend: function(xhr) {
                     xhr.setRequestHeader(header, token);
                 }
-            });
+            }); */
         	
-            if (${empty sessionScope.memberId}) {
+            /* if (${empty sessionScope.memberId}) {
                 $('#loginContainer').html(
                     '<h2>로그인</h2>'
                     + '<input type="text" id="memberId" name="memberId" placeholder="아이디">'
@@ -213,7 +234,7 @@
                     + '<button id="checkout">로그아웃</button>'
                     + '<button id="friendList">친구목록보기</button>'
                 );
-            }
+            } */
 
             $(document).on('click', '#check', function (event) {
             	event.preventDefault();
@@ -221,7 +242,7 @@
                 let memberPassword = $('#memberPassword').val();
                 $.ajax({
                     type: 'POST',
-                    url: 'member/check',
+                    url: 'login/check',
                     contentType: 'application/json; charset=UTF-8',
                     data: JSON.stringify({
                         memberId: memberId,
@@ -242,6 +263,11 @@
                     }
                 }); // end ajax
             });
+            
+            /* $(document).on('click', '#check', function (event) {
+            	event.preventDefault();
+            	window.location.href = "login";
+            }); */
 
             $(document).on('click', '#joinMember', function () {
                 window.location.href = "member/regist";
@@ -255,8 +281,9 @@
 				window.location.href = "member/detail";	
             });
 
-            $(document).on('click', '#checkout', function () {
-                window.location.href = "member/checkout";
+            $(document).on('click', '#checkout', function (event) {
+            	 event.preventDefault();
+            	$('#logoutForm').submit();
             });
 
          	// 움직이기 가능

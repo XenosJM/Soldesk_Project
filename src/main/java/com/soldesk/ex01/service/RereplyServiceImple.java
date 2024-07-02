@@ -3,7 +3,9 @@ package com.soldesk.ex01.service;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.soldesk.ex01.domain.RereplyVO;
 import com.soldesk.ex01.persistence.RereplyMapper;
@@ -17,6 +19,8 @@ public class RereplyServiceImple implements RereplyService {
 	@Autowired
 	RereplyMapper rereplymapper;
 	
+	@Transactional
+	@PreAuthorize("isAuthenticated() and ((#vo.memberId == principal.username)")
 	@Override
 	public int insertRereply(RereplyVO vo) {
 		log.info("rereply service : insertRereply()");
@@ -31,6 +35,8 @@ public class RereplyServiceImple implements RereplyService {
 		return list;
 	}
 
+	@Transactional
+	@PreAuthorize("isAuthenticated() and ((#vo.memberId == principal.username)")
 	@Override
 	public int updateRereply(int rereplyId, String rereplyContent) {
 		log.info("rereply service : updateRereply()");
@@ -46,6 +52,8 @@ public class RereplyServiceImple implements RereplyService {
 		return result;
 	}
 
+	@Transactional
+	@PreAuthorize("isAuthenticated() or hasRole('ROLE_MANAGER') or hasRole('ROLE_HEAD_MANAGER'))")
 	@Override
 	public int deleteRereply(int rereplyId) {
 		log.info("rereply service : deleteRereply()");
@@ -53,6 +61,8 @@ public class RereplyServiceImple implements RereplyService {
 		return result;
 	}
 
+	@Transactional
+	@PreAuthorize("isAuthenticated() or hasRole('ROLE_MANAGER') or hasRole('ROLE_HEAD_MANAGER'))")
 	@Override
 	public int deleteRereplyToReply(int replyId) {
 		log.info("rereply service : deleteRereplyToReply()");

@@ -2,10 +2,12 @@
 	pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
+
 <!DOCTYPE html>
 <html>
 <head>
 <meta charset="UTF-8">
+
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>게시판 메인 페이지</title>
 <style>
@@ -129,17 +131,19 @@ ul li a {
 		<h1>게시판</h1>
 		
 		<!-- 등록 버튼 추가 -->
-		<input type="hidden" name = "categoryId" value='0'>
-		<a href="regist" class="register-button">등록</a>
-
-		<form class="search-container" method="get" action="search">
-			<select name="searchOption" id="searchOption">
-				<option value="title">제목</option>
-				<option value="content">내용</option>
-			</select>
-			<input type="text" name="search" id="searchKey" placeholder="검색어를 입력하세요">
-			<input type="submit" value="검색">
+		<form method="get" action=regist>
+			<input type="hidden" name = "categoryId" value='${param.categoryId}'>
+			<input type="submit" value = "등록">
 		</form>
+
+		<form class="search-container" method="get" action="search" id="searchForm">
+            <select name="searchOption" id="searchOption">
+                <option value="title">제목</option>
+                <option value="content">내용</option>
+            </select>
+            <input type="text" name="search" id="searchKey" placeholder="검색어를 입력하세요">
+            <input type="submit" value="검색">
+        </form>
 
 		<table>
 			<thead>
@@ -167,16 +171,29 @@ ul li a {
 		</table>
 		<ul>
 			<c:if test="${pageMaker.isPrev()}">
-				<li><a href="list?pageNum=${pageMaker.startNum - 1}">이전</a></li>
+				<li><a href='list?pageNum=${pageMaker.startNum - 1}&categoryId=${param.categoryId}'>이전</a></li>
 			</c:if>
 			<c:forEach begin="${pageMaker.startNum}" end="${pageMaker.endNum}"
 				var="num">
-				<li><a href="list?pageNum=${num}">${num}</a></li>
+				<li><a href='list?pageNum=${num}&categoryId=${param.categoryId}'>${num}</a></li>
 			</c:forEach>
 			<c:if test="${pageMaker.isNext()}">
-				<li><a href="list?pageNum=${pageMaker.endNum + 1}">다음</a></li>
+				<li><a href='list?pageNum=${pageMaker.endNum + 1}&categoryId=${param.categoryId}'>다음</a></li>
 			</c:if>
 		</ul>
 	</div>
+	 <script>
+        document.getElementById("searchForm").addEventListener("submit", function(event) {
+            var urlParams = new URLSearchParams(window.location.search);
+            var categoryId = urlParams.get('categoryId');
+            if (categoryId) {
+                var hiddenInput = document.createElement("input");
+                hiddenInput.type = "hidden";
+                hiddenInput.name = "categoryId";
+                hiddenInput.value = categoryId;
+                this.appendChild(hiddenInput);
+            }
+        });
+    </script>
 </body>
 </html>

@@ -8,21 +8,21 @@ import org.springframework.stereotype.Component;
 
 import lombok.extern.log4j.Log4j;
 
-// ¸ğµç ¸Ş¼­µå¿¡ ·Î±ë Àû¿ë
+// ëª¨ë“  ë©”ì„œë“œì— ë¡œê¹… ì ìš©
 @Aspect
 @Component
 @Log4j
 public class LoggingAspect {
-   //   * PointcutÀ» ÁöÁ¤ÇÏ´Â ¹æ¹ı2
+   //   * Pointcutì„ ì§€ì •í•˜ëŠ” ë°©ë²•2
    // @Before, @afterReturning, @afterThrowing, @after 
    
     @Before("execution(* com.soldesk.ex01.controller.*.*(..))")
-    // com.mokcoding.ex03 ÆĞÅ°Áö¿¡ Æ÷ÇÔµÈ ¸ğµç Å¬·¡½ºÀÇ ¸ğµç ¸Ş¼­µå
+    // com.mokcoding.ex03 íŒ¨í‚¤ì§€ì— í¬í•¨ëœ ëª¨ë“  í´ë˜ìŠ¤ì˜ ëª¨ë“  ë©”ì„œë“œ
     public void beforeAdvice(JoinPoint joinPoint) {
-       // JoinPoint : Advice°¡ Àû¿ëµÈ ¸Ş¼­µå¿¡ ´ëÇÑ Á¤º¸
-        String methodName = joinPoint.getSignature().getName(); // ¸Ş¼­µå ÀÌ¸§
+       // JoinPoint : Adviceê°€ ì ìš©ëœ ë©”ì„œë“œì— ëŒ€í•œ ì •ë³´
+        String methodName = joinPoint.getSignature().getName(); // ë©”ì„œë“œ ì´ë¦„
         String className = joinPoint.getTarget()
-              .getClass().getSimpleName(); // Å¬·¡½º ÀÌ¸§
+              .getClass().getSimpleName(); // í´ë˜ìŠ¤ ì´ë¦„
         log.info("before : " + className + "." + methodName + "()");
     } // beforeAdvice()
 

@@ -1,19 +1,33 @@
 package com.soldesk.ex01;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.FileSystemResource;
+import org.springframework.core.io.Resource;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -21,12 +35,12 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.soldesk.ex01.domain.Board2VO;
+import com.soldesk.ex01.domain.AttachVO;
 import com.soldesk.ex01.domain.BoardVO;
+
 import com.soldesk.ex01.domain.FriendVO;
 import com.soldesk.ex01.domain.MemberVO;
 import com.soldesk.ex01.service.AttachService;
-import com.soldesk.ex01.service.Board2Service;
 import com.soldesk.ex01.service.BoardService;
 import com.soldesk.ex01.service.FriendService;
 import com.soldesk.ex01.service.MemberService;
@@ -42,13 +56,16 @@ import lombok.extern.log4j.Log4j;
 @Log4j
 public class HomeController {
 
-//	private static final Logger logger = LoggerFactory.getLogger(HomeController.class); // ∑“∫π log4j∏¶ æ»æµ∞ÊøÏ ªÁøÎ«œ¥¬ logging πÊπ˝
+//	private static final Logger logger = LoggerFactory.getLogger(HomeController.class); // 
 
 	@Autowired
 	private MemberService memberService;
+	
+	@Autowired
+	private String uploadPath;
 
 	@Autowired
-	private Board2Service board2Service;
+	private BoardService boardService;
 	
 	@Autowired
 	private FriendService friendService;
@@ -76,21 +93,46 @@ public class HomeController {
 	}
 
 //	@GetMapping("board/detail")
-//	@ResponseBody // JSON µ•¿Ã≈Õ π›»Ø¿ª ¿ß«— æÓ≥Î≈◊¿Ãº« √ﬂ∞°
+//	@ResponseBody 
 //	public ResponseEntity<BoardVO> boardDetail(@RequestParam Integer boardId) {
 //		log.info("board controller : detail()");
 //		BoardVO boardVO = boardService.selectDetail(boardId);
 //		if (boardVO != null) {
 //			return new ResponseEntity<>(boardVO, HttpStatus.OK);
 //		} else {
-//			return new ResponseEntity<>(HttpStatus.NOT_FOUND); // «ÿ¥Á ∞‘Ω√π∞¿Ã æ¯¿ª ∞ÊøÏ 404 ¿¿¥‰ π›»Ø
+//			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 //		}
 //	}
+	
+	@GetMapping(value = "board/download", produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
+	@ResponseBody
+	public ResponseEntity<Resource> download(int attachId) throws IOException {
+		log.info("download()");
+
+		AttachVO attachVO = attachService.getAttachById(attachId);
+		String attachPath = attachVO.getAttachPath();
+		String attachChgName = attachVO.getAttachChgName();
+		String attachExtension = attachVO.getAttachExtension();
+		String attachRealName = attachVO.getAttachRealName();
+		
+		
+		
+		String resourcePath = uploadPath + File.separator + attachPath + File.separator + attachChgName;
+
+		Resource resource = new FileSystemResource(resourcePath);
+
+		HttpHeaders headers = new HttpHeaders();
+		String attachName = new String(attachRealName.getBytes("UTF-8"), "ISO-8859-1");
+		headers.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + attachName + "." + attachExtension);
+
+
+		return new ResponseEntity<Resource>(resource, headers, HttpStatus.OK);
+	} // end download()
 	
 	@GetMapping("board/detail")
 	public void boardDetail(Model model, Integer boardId) {
 		log.info("board controller : detail()");
-		Board2VO board2VO = board2Service.selectDetail(boardId);
+		BoardVO board2VO = boardService.selectDetail(boardId);
 		model.addAttribute("board2VO", board2VO);
 	}
 
@@ -99,14 +141,9 @@ public class HomeController {
 		log.info("board controller : registerGet()");
 	}
 	
-//	@GetMapping("board/detail")
-//	public ResponseEntity<Board2VO> boardDetail(Integer boardId) {
-//		log.info("board controller : detail()");
-//		Board2VO board2VO = board2Service.selectDetail(boardId);
-//		return new ResponseEntity<>(board2VO,HttpStatus.OK);
-//	}
+
 	
-	//¿Ã∞‘ ≥ª∞° æµ∞≈¿” 
+
 //	@GetMapping("board/list")
 //	public void boardList(Model model) {
 //		log.info("board controller : list()");
@@ -115,41 +152,42 @@ public class HomeController {
 //		model.addAttribute("boardList", boardList);
 //	}
 	
-	//¿Ã∞‘ ≥ª∞° æ≤¥¯∞≈∏¶ ∆‰¿Ã¬° √≥∏Æ «—∞≈¿”
-	@GetMapping("board/list")
-	public void list(Model model, Pagination pagination) {
-		log.info("list()");
-		log.info("pagination = "+pagination);
-		List<Board2VO> boardList = board2Service.getPagingBoards(pagination);
-		
-		PageMaker pageMaker = new PageMaker();
-		pageMaker.setPagination(pagination);
-		pageMaker.setTotalCount(board2Service.getTotalCount());
-		
-		model.addAttribute("pageMaker", pageMaker);
-		model.addAttribute("boardList", boardList);
-	}
 	
-	//∆‰¿Ã¬° «—∞… ∫Òµø±‚ «—∞≈¿”
-//	@GetMapping("/list")
-//	public ResponseEntity<Map<String, Object>> list(Pagination pagination) {
-//	    log.info("list()");
-//	    log.info("pagination = " + pagination);
+	@GetMapping("board/list")
+	public void list(Model model, Pagination pagination, @RequestParam int categoryId) {
+			log.info("list()");
+			log.info("pagination = "+pagination);
+			List<BoardVO> boardList = boardService.getPagingBoards(pagination);
+			
+			PageMaker pageMaker = new PageMaker();
+			pageMaker.setPagination(pagination);
+			pageMaker.setTotalCount(boardService.getTotalCount(categoryId));
+			
+			model.addAttribute("pageMaker", pageMaker);
+			model.addAttribute("boardList", boardList);
+		}
+	
+	
+	
+
+//	@GetMapping("board/list")
+//	   public ResponseEntity<Map<String, Object>> list(Pagination pagination	) {
+//	       log.info("list()");
+//	       log.info("pagination = " + pagination);
 //
-//	    List<BoardVO> boardList = boardService.getPagingBoards(pagination);
+//	       List<Board2VO> boardList = board2Service.getPagingBoards(pagination);
 //
-//	    PageMaker pageMaker = new PageMaker();
-//	    pageMaker.setPagination(pagination);
-//	    pageMaker.setTotalCount(boardService.getTotalCount());
+//	       PageMaker pageMaker = new PageMaker();
+//	       pageMaker.setPagination(pagination);
+//	       pageMaker.setTotalCount(board2Service.getTotalCount(pagination.getCategoryId()));
+//	       
+//	       Map<String, Object> response = new HashMap<>();
+//	       response.put("pageMaker", pageMaker);
+//	       response.put("boardList", boardList);
 //
-//	    // µ•¿Ã≈Õ∏¶ ¥„¿ª Map ª˝º∫
-//	    Map<String, Object> response = new HashMap<>();
-//	    response.put("pageMaker", pageMaker);
-//	    response.put("boardList", boardList);
-//
-//	    // ResponseEntityø° Map¿ª ¥„æ∆º≠ π›»Ø
-//	    return ResponseEntity.ok(response);
-//	}
+//	       
+//	       return new ResponseEntity<>(response,HttpStatus.OK);
+//	   }
 	
 //	@GetMapping("board/list")
 //	public ResponseEntity<List<Board2VO>> boardList(Model model) {
@@ -163,26 +201,58 @@ public class HomeController {
 	@GetMapping("board/update")
 	public void boardUpdate(Model model, Integer boardId) {
 		log.info("board controller : updateGet()");
-		Board2VO board2VO = board2Service.selectDetail(boardId);
-		board2VO.setAttachVO(attachService.getAttachByBoardId(boardId));
-		model.addAttribute("board2VO", board2VO);
+		BoardVO boardVO = boardService.selectDetail(boardId);
+		boardVO.setAttachVO(attachService.getAttachByBoardId(boardId));
+		model.addAttribute("board2VO", boardVO);
 	}
 	
 	@GetMapping("board/search")
-	public void boardSearch(Model model, @RequestParam String searchOption, @RequestParam String search) {
+	public void boardSearch(Model model, @ModelAttribute Pagination pagination, @RequestParam String searchOption, @RequestParam String search, @RequestParam int categoryId) {
 	    log.info("board controller: search()");
-	    List<Board2VO> boardList;
+	    List<BoardVO> boardList;
+	    PageMaker pageMaker = new PageMaker();
+		pageMaker.setPagination(pagination);
 	    if ("title".equals(searchOption)) {
-	        boardList = board2Service.selectByTitle(search);
+	        boardList = boardService.selectByTitle(search,categoryId, pagination);
+	        pageMaker.setTotalCount(boardService.searchTotalCountByTitle(categoryId, search));
+	        
+	        
 	    } else if ("content".equals(searchOption)) {
-	        boardList = board2Service.selectByContent(search);
+	        boardList = boardService.selectByContent(search,categoryId,pagination);
+	        pageMaker.setTotalCount(boardService.searchTotalCountByTitle(categoryId, search));
+	        
 	    } else {
-	    	boardList = new ArrayList<Board2VO>();
-	    }
-	    model.addAttribute("boardList", boardList);
-	    
-	    
+	    	boardList = new ArrayList<BoardVO>();
+	    }	
+		
+	    model.addAttribute("pageMaker", pageMaker);
+		model.addAttribute("boardList", boardList);
 	}
+	
+	
+	//ÎπÑÎèôÍ∏∞Ïö© search ÎèôÍ∏∞ÏóêÏÑ† Ïûò Îê¨ÏúºÎãà ÏïàÎêòÎ©¥ ÎßêÏîÄÌïòÏÑ∏Ïöî
+//	@GetMapping("board/search")
+//	public ResponseEntity<Map<String, Object>> boardSearch(@ModelAttribute Pagination pagination, @RequestParam String searchOption, @RequestParam String search, @RequestParam int categoryId) {
+//	    log.info("board controller: search()");
+//	    List<BoardVO> boardList;
+//	    PageMaker pageMaker = new PageMaker();
+//		pageMaker.setPagination(pagination);
+//	    if ("title".equals(searchOption)) {
+//	        boardList = boardService.selectByTitle(search,categoryId, pagination);
+//	        pageMaker.setTotalCount(boardService.searchTotalCountByTitle(categoryId, search));
+//	    } else if ("content".equals(searchOption)) {
+//	        boardList = boardService.selectByContent(search,categoryId,pagination);
+//	        pageMaker.setTotalCount(boardService.searchTotalCountByTitle(categoryId, search));
+//	    } else {
+//	    	boardList = new ArrayList<BoardVO>();
+//	    }	
+//		
+//	    Map<String, Object> response = new HashMap<>();
+//		response.put("pageMaker", pageMaker);
+//		response.put("boardList", boardList);
+//
+//		return new ResponseEntity<>(response, HttpStatus.OK);
+//	}
 	
 //	@GetMapping("board/update")
 //	public ResponseEntity<Board2VO> boardUpdate(Integer boardId) {
@@ -199,16 +269,13 @@ public class HomeController {
 		log.info("joinMember()");
 	}
 
-	@GetMapping("member/detail")
-	public void detailGet(Model model, HttpServletRequest req) {
-		log.info("detailGet()");
-		MemberVO memberVO = new MemberVO();
-		HttpSession session = req.getSession();
-		String memberId = (String) session.getAttribute("memberId");
-		memberVO = memberService.getMemberById(memberId);
-		log.info(memberVO);
-		model.addAttribute("memberVO", memberVO);
-	}
+//	@GetMapping("member/detail")
+//	public void detailGet(Model model, HttpServletRequest req) {
+//		log.info("detailGet()");
+//		MemberVO memberVO = memberService.getMemberById(req.getUserPrincipal().getName());
+//		log.info(memberVO);
+//		model.addAttribute("memberVO", memberVO);
+//	}
 
 	@GetMapping("member/update")
 	public void updateGet() {
@@ -220,14 +287,6 @@ public class HomeController {
 		log.info("findIdPw()");
 	}
 
-	@GetMapping("member/checkout")
-	public String memberCheckout(HttpServletRequest req) {
-		log.info("memberCheckout()");
-		HttpSession session = req.getSession();
-		session.removeAttribute("memberId");
-
-		return "redirect:/";
-	}
 	
 //	@GetMapping("member/friendList")
 //	public void getFriendList(Model model, HttpServletRequest req) throws JsonProcessingException {
@@ -239,8 +298,26 @@ public class HomeController {
 //	}
 	@GetMapping("member/friendList")
 	public void getFriendList() {
-		
+		log.info("getFriednList");
 	}
-
+	
+//	@GetMapping("/login")
+//	public void login(HttpServletRequest req) {
+//		log.info("login");
+//	}
+	
+//	@PostMapping("/logout")
+//    public String logout(HttpServletRequest request, HttpServletResponse response) {
+//        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+//        if (auth != null) {
+//            new SecurityContextLogoutHandler().logout(request, response, auth);
+//        }
+//        return "redirect:/login?logout";
+//    }
+	
+	@GetMapping("/error/403")
+	public void accessDeny() {
+		log.info("accessDeny");
+	}
 	
 }

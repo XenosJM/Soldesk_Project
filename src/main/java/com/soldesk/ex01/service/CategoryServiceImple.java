@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.soldesk.ex01.domain.CategoryVO;
 import com.soldesk.ex01.persistence.CategoryMapper;
@@ -16,6 +17,8 @@ public class CategoryServiceImple implements CategoryService {
 
 	@Autowired
 	CategoryMapper categoryMapper;
+	
+	@Transactional
 	@Override
 	public int insertCategory(CategoryVO vo) {
 		log.info("service : insertCategory()");
@@ -37,6 +40,7 @@ public class CategoryServiceImple implements CategoryService {
 		return list;
 	}
 
+	@Transactional
 	@Override
 	public int updateCategoryTitle(CategoryVO vo) {
 		log.info("service : updateCategoryTitle()");
@@ -44,6 +48,7 @@ public class CategoryServiceImple implements CategoryService {
 		return result;
 	}
 
+	@Transactional
 	@Override
 	public int deleteCategory(int categoryId) {
 		log.info("service : deleteCategory()");

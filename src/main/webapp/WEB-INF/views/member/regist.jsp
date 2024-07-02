@@ -654,31 +654,6 @@ body {
 			authCodeSend($('#memberEmail').val());
 		}); // end btnSendCode
 		
-		/* function authCodeSend(memberEmail){
-			
-			$.ajax({
-				type : "GET",
-				url : "../util/authCodeSend/",
-				data : {memberEmail : memberEmail},
-				success : function(response){
-					if(response.result === 1){
-						alert("작성하신 이메일로 확인 코드가 발송되었습니다.");
-						$('#emailAuthMsg').html("<input id='authCode' type='number' placeholder='코드를 입력해 주세요.'><button id='btnCodeCheck'>인증확인</button><br><span id='checkAuthMsg'></span>"
-								+ 
-						);
-						checkAuthCode = response.authCode;
-						let codeTime = function(){
-							checkAuthCode = null;
-							alert('코드 인증시간이 만료되었습니다.')
-						}
-						setTimer(codeTime, 60000);
-						// console.log(checkAuthCode);
-					} else{
-						alert("잠시후 다시 눌러주세요.");
-					}
-				}
-			}); // end ajax
-		} // end authCodeSend() */
 		let countdown;
 		let timerInterval;
 		let sendMailFlag = true;
@@ -791,7 +766,7 @@ body {
 	  					success : function(result){
 	  						if(result === 1){
 				  				alert($('#memberId').val() + "님의 회원가입을 환영합니다.");
-				  				window.location.href = 'http://192.168.0.120:8080/ex01/';
+				  				window.location.href = 'http://192.168.0.120:9090/ex01/';
 	  						} else {
 	  							alert('서버에 문제가 있는거 같습니다 잠시후 다시 시도해주세요');
 	  						}

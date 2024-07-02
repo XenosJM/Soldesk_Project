@@ -2,10 +2,13 @@
 	pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
+
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
+
 <meta charset="UTF-8">
+<script src="https://code.jquery.com/jquery-3.7.1.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>검색결과</title>
 <style>
@@ -110,15 +113,15 @@ ul li a {
 		<div class="logo">
 			<a href="/ex01/">검색결과</a>
 		</div>
-		
+
 
 		<form class="search-container" method="get" action="search">
 			<select name="searchOption" id="searchOption">
 				<option value="title">제목</option>
 				<option value="content">내용</option>
-			</select>
-			<input type="text" name="search" id="searchKey" placeholder="검색어를 입력하세요">
-			<input type="submit" value="검색">
+			</select> <input type="text" name="search" id="searchKey"
+				placeholder="검색어를 입력하세요"> <input type="submit" value="검색">
+			<input type="hidden" name="categoryId" value='${param.categoryId}'>
 		</form>
 
 		<table>
@@ -143,3 +146,22 @@ ul li a {
 				</c:forEach>
 			</tbody>
 		</table>
+
+		<ul>
+			<c:if test="${pageMaker.prev}">
+				<li><a
+					href="search?pageNum=${pageMaker.startNum - 1}&categoryId=${param.categoryId}&searchOption=${param.searchOption}&search=${param.search}">이전</a></li>
+			</c:if>
+			<c:forEach var="num" begin="${pageMaker.startNum}"
+				end="${pageMaker.endNum}">
+				<li><a
+					href="search?pageNum=${num}&categoryId=${param.categoryId}&searchOption=${param.searchOption}&search=${param.search}">${num}</a></li>
+			</c:forEach>
+			<c:if test="${pageMaker.next}">
+				<li><a
+					href="search?pageNum=${pageMaker.endNum + 1}&categoryId=${param.categoryId}&searchOption=${param.searchOption}&search=${param.search}">다음</a></li>
+			</c:if>
+		</ul>
+	</div>
+
+</body>
