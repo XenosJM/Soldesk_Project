@@ -78,15 +78,6 @@ public class ServletConfig implements WebMvcConfigurer, WebSocketConfigurer {
 		return new PrivateChatHandler();
 	}
 	
-	// �� ���� ���� �����̳� ���� �� ����
-	@Bean
-    public ServletServerContainerFactoryBean createWebSocketContainer() {
-		ServletServerContainerFactoryBean container = new ServletServerContainerFactoryBean();
-		container.setMaxTextMessageBufferSize(8192);
-		container.setMaxBinaryMessageBufferSize(8192);
-		
-		return container;	
-	}
 	
 	
 } // end ServletConfig

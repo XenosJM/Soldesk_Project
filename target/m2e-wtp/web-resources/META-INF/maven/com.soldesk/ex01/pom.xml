@@ -152,13 +152,6 @@
          	<version>2.1.0</version>
       	</dependency>
 		
-		<!-- Jackson -->
-		<dependency>
-			<groupId>com.fasterxml.jackson.core</groupId>
-			<artifactId>jackson-databind</artifactId>
-			<version>2.12.5</version>
-		</dependency>
-		
 		<!-- lombok -->
 		<dependency>
 			<groupId>org.projectlombok</groupId>
@@ -240,24 +233,28 @@
 		
 		<!-- 웹소켓 모듈 주입 -->
 		<dependency>
-	        <groupId>org.springframework</groupId>
-	        <artifactId>spring-websocket</artifactId>
-	        <version>${org.springframework-version}</version>
-	    </dependency>
-	    
-	    <dependency>
-		    <groupId>javax.websocket</groupId>
-		    <artifactId>javax.websocket-api</artifactId>
-		    <version>1.1</version>
-		    <scope>provided</scope>
+		    <groupId>org.springframework</groupId>
+		    <artifactId>spring-websocket</artifactId>
+		    <version>5.2.2.RELEASE</version>
+		</dependency>
+		
+		<dependency>
+		    <groupId>org.springframework</groupId>
+		    <artifactId>spring-messaging</artifactId>
+		    <version>5.2.2.RELEASE</version>
 		</dependency>
 	    
 		<!-- 웹소켓의 json 통신을 위한 jackson 라이브러리 모듈 -->
-	    <!-- https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-core -->
-		<dependency>
+	    <dependency>
 		    <groupId>com.fasterxml.jackson.core</groupId>
 		    <artifactId>jackson-core</artifactId>
-		    <version>2.12.3</version>
+		    <version>2.10.2</version>
+		</dependency>
+		
+		<dependency>
+		    <groupId>com.fasterxml.jackson.core</groupId>
+		    <artifactId>jackson-databind</artifactId> 
+		    <version>2.10.2</version>
 		</dependency>
 		<!-- 자바 LocalDate타입을 잭슨이 처리할수 있도록 하는 모듈-->
 		<dependency>
