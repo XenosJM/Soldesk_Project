@@ -22,11 +22,10 @@
 				maxlength="20" required>
 		</div>
 			<input type="hidden" name = "categoryId" value = "${param.categoryId}"></input>
-			 <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/> 
+			 <!-- <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/> --> 
 		<div>
 			<p>작성자 :</p>
-			<input type="text" name="memberId" maxlength="10"
-				value='${pageContext.request.userPrincipal.name}' readonly required>
+			<input type="text" name="memberId" maxlength="10" value = "test" readonly required><!-- value='${pageContext.request.userPrincipal.name}' readonly required--> 
 		</div>
 		<div>
 			<p>내용 :</p>
@@ -49,7 +48,7 @@
 
 	<script>
 		$(document).ready(function() {
- 			const token = $("meta[name='_csrf']").attr("content");
+ 			/* const token = $("meta[name='_csrf']").attr("content");
         	const header = $("meta[name='_csrf_header']").attr("content");
         	const name = $("#userName").val();
         	
@@ -57,7 +56,7 @@
                 beforeSend: function(xhr) {
                     xhr.setRequestHeader(header, token);
                 }
-            });
+            }); */
 
 			// 차단할 확장자 정규식 (exe, sh, php, jsp, aspx, zip, alz)
 			var blockedExtensions = /\.(exe|sh|php|jsp|aspx|zip|alz)$/i;

@@ -28,7 +28,7 @@ public class ReplyServiceImple implements ReplyService {
 	BoardMapper boardMapper;
 	
 	@Transactional
-	@PreAuthorize("isAuthenticated() and ((#vo.memberId == principal.username)")
+	@PreAuthorize("isAuthenticated() and (#vo.memberId == principal.username)")
 	@Override
 	public int insertReply(ReplyVO vo) {
 		log.info("service : insertReply()");
@@ -72,7 +72,7 @@ public class ReplyServiceImple implements ReplyService {
 	}
 
 	@Transactional
-	@PreAuthorize("isAuthenticated() or hasRole('ROLE_MANAGER') or hasRole('ROLE_HEAD_MANAGER'))")
+	@PreAuthorize("isAuthenticated() or hasRole('ROLE_MANAGER') or hasRole('ROLE_HEAD_MANAGER')")
 	@Override
 	public int deleteReply(int replyId) {
 		log.info("service : deleteReply()");
@@ -87,7 +87,7 @@ public class ReplyServiceImple implements ReplyService {
 	}
 	
 	@Transactional
-	@PreAuthorize("isAuthenticated() or hasRole('ROLE_MANAGER') or hasRole('ROLE_HEAD_MANAGER'))")
+	@PreAuthorize("isAuthenticated() or hasRole('ROLE_MANAGER') or hasRole('ROLE_HEAD_MANAGER')")
 	@Override
 	public int deleteReplyByBoard(int boardId) {
 		log.info("service : deleteReplyByBoard");

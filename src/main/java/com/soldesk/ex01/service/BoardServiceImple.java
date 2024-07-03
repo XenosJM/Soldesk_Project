@@ -141,11 +141,7 @@ public class BoardServiceImple implements BoardService {
 		return boardMapper.selectTotalCount(categoryId);
 	}
 
-	@Transactional
-	@Override
-	public int recommendIncrease(int boardId) {
-		return boardMapper.recommendIncrease(boardId);
-	}
+
 	
 	public int searchTotalCountByTitle(int categoryId, String title) {
 		return boardMapper.searchTotalCountByTitle(categoryId, title);

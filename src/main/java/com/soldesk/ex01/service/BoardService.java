@@ -20,5 +20,4 @@ public interface BoardService {
 	int getTotalCount(int categoryId);
 	int searchTotalCountByTitle(@Param("categoryId")int categoryId, @Param("boardTitle")String title);
 	int searchTotalCountByContent(@Param("categoryId")int categoryId, @Param("boardContent")String content);
-	int recommendIncrease(int boardId);
 }

@@ -20,7 +20,7 @@ public class RereplyServiceImple implements RereplyService {
 	RereplyMapper rereplymapper;
 	
 	@Transactional
-	@PreAuthorize("isAuthenticated() and ((#vo.memberId == principal.username)")
+	@PreAuthorize("isAuthenticated() and (#vo.memberId == principal.username)")
 	@Override
 	public int insertRereply(RereplyVO vo) {
 		log.info("rereply service : insertRereply()");
@@ -36,7 +36,7 @@ public class RereplyServiceImple implements RereplyService {
 	}
 
 	@Transactional
-	@PreAuthorize("isAuthenticated() and ((#vo.memberId == principal.username)")
+	@PreAuthorize("isAuthenticated() and (#vo.memberId == principal.username)")
 	@Override
 	public int updateRereply(int rereplyId, String rereplyContent) {
 		log.info("rereply service : updateRereply()");
@@ -53,7 +53,7 @@ public class RereplyServiceImple implements RereplyService {
 	}
 
 	@Transactional
-	@PreAuthorize("isAuthenticated() or hasRole('ROLE_MANAGER') or hasRole('ROLE_HEAD_MANAGER'))")
+	@PreAuthorize("isAuthenticated() or hasRole('ROLE_MANAGER') or hasRole('ROLE_HEAD_MANAGER')")
 	@Override
 	public int deleteRereply(int rereplyId) {
 		log.info("rereply service : deleteRereply()");
@@ -62,7 +62,7 @@ public class RereplyServiceImple implements RereplyService {
 	}
 
 	@Transactional
-	@PreAuthorize("isAuthenticated() or hasRole('ROLE_MANAGER') or hasRole('ROLE_HEAD_MANAGER'))")
+	@PreAuthorize("isAuthenticated() or hasRole('ROLE_MANAGER') or hasRole('ROLE_HEAD_MANAGER')")
 	@Override
 	public int deleteRereplyToReply(int replyId) {
 		log.info("rereply service : deleteRereplyToReply()");

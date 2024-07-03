@@ -47,6 +47,13 @@
             </p>
         </c:if>
     </c:forEach>
+    
+    <div>
+    	<button id="recommend">추천</button>
+    	<p>${board2VO.recommend }</p>
+    	<button id="decommend">비추천</button>
+    	<p>${board2VO.decommend }</p>
+	</div>
 
 
 	<button onclick="location.href='list?categoryId=${board2VO.categoryId}'">글 목록</button>
@@ -101,8 +108,39 @@
 			};
 
 			aaa.send(); */
+			
 
 			getAllReply(); // 함수 호출
+			$('#recommend').click(function(){
+				let boardId = $('#boardId').val();
+				$.ajax({
+					type : 'post',
+					url : '../board/recommend',
+					data : {boardId : boardId},
+					success:function(result){
+						if(result == 1){
+							alert("추천성공");
+							location.reload();
+						}
+					}
+				});
+			});
+			
+			$('#decommend').click(function(){
+				let boardId = $('#boardId').val();
+				$.ajax({
+					type : 'post',
+					url : '../board/decommend',
+					data : {boardId : boardId},
+					success:function(result){
+						if(result == 1){
+							alert("추천성공");
+							location.reload();
+						}
+					}
+				});
+			});
+			
 			$('#btnAdd').click(function() {
 				let boardId = $('#boardId').val(); // 게시판 번호 데이터
 				let replyContent = $('#replyContent').val(); // 댓글 내용
