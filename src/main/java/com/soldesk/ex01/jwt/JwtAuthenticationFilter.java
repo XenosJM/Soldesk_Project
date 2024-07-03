@@ -28,21 +28,39 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             throws ServletException, IOException {
         try {
             // HTTP 요청에서 JWT 추출
-            String jwt = getJwtFromRequest(request);
-            log.info("jwt 체킹");
-            
+        	log.info("jwt 토큰들 확인시작");
+        	
+        	// 액세스 토큰 가져오기
+        	String accessToken = getAccessTokenFromRequest(request);
+        	// 리프레시 토큰 가져오기
+        	String refreshToken = getRefreshTokenFromRequest(request);
+        	
+            // 액세스 토큰이 존재하며 검증 통과시 true
+            Boolean accessCheck = (accessToken != null && tokenProvider.validateToken(accessToken));
+            log.info(accessCheck); 
+            // 리프레시 토큰이 존재하며 검증에 통과시 true
+            Boolean refreshCheck = (refreshToken != null && tokenProvider.validateToken(refreshToken));
+            log.info(refreshCheck); 
             // 추출된 JWT가 유효하면
-            if (jwt != null && tokenProvider.validateToken(jwt)) {
-            	log.info("jwt 체크 통과");
+            if (accessCheck) {
+            	log.info("액세스토큰 검증 통과");
 
                 // jwt를 이용해 Authentication 객체 생성
-                Authentication authentication = tokenProvider.getAuthentication(jwt);
+                Authentication auth = tokenProvider.getAuthentication(accessToken);
 
                 // SecurityContext에 인증 객체 설정
-                SecurityContextHolder.getContext().setAuthentication(authentication);
-                log.info("현재 사용자: {}" + authentication.getName());
-                log.info("사용자의 권한: {}" + authentication.getAuthorities());
+                SecurityContextHolder.getContext().setAuthentication(auth);
+                log.info("현재 사용자: {}" + auth.getName());
+                log.info("사용자의 권한: {}" + auth.getAuthorities());
+            } else if(refreshCheck) {
+            	log.info("액세스토큰 검증 실패, 리프레시 토큰 검증 성공");
+            	// 이부분 변경 해야함 
+            	String memberId = tokenProvider.getUsernameFromToken(refreshToken);
+            	
+            	accessToken = tokenProvider.generateAccessTokenFromRefreshToken(memberId, refreshToken);
+            	log.info(accessToken);
             }
+            log.info("jwt 확인 종료");
         } catch (Exception e) {
             // 예외 발생 시 로깅
             log.error("Could not set user authentication in security context", e);
@@ -52,8 +70,16 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         filterChain.doFilter(request, response);
     }
 
-    // HTTP 요청에서 Authorization 헤더에서 JWT를 추출하는 메서드
-    private String getJwtFromRequest(HttpServletRequest request) {
+    private String getRefreshTokenFromRequest(HttpServletRequest request) {
+    	log.info("리프레시 토큰 체크중");
+    	// 액세스 토큰을 검증시도, 실패시 리프레시 토큰 검증 시도, 실패시 재 로그인
+    	// ㄴ 리프레시 토큰 검증 시도 성공시 액세스토큰 재발급
+    	String refreshToken = request.getHeader("Refresh-Token");
+		return refreshToken;
+	}
+
+	// HTTP 요청에서 Authorization 헤더에서 JWT를 추출하는 메서드
+    private String getAccessTokenFromRequest(HttpServletRequest request) {
     	log.info("토큰 체크중");
         String bearerToken = request.getHeader("Authorization");
         if (StringUtils.hasText(bearerToken) && bearerToken.startsWith("Bearer ")) {

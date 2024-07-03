@@ -120,9 +120,9 @@ public class RootConfig {
    }
    
 
-//   // JWT 리프레시 토큰 만료 기간 설정
-//   @Bean
-//   public Duration refreshTokenExpiration() {
-//       return Duration.ofHours(12); // 12시간
-//   }
+   // JWT 리프레시 토큰 만료 기간 설정
+   @Bean
+   public Duration refreshTokenExpiration() {
+       return Duration.ofHours(1); // 12시간
+   }
 } // end RootConfig

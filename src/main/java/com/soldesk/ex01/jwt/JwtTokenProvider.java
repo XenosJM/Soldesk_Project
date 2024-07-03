@@ -10,6 +10,7 @@ import java.util.stream.Collectors;
 import javax.crypto.SecretKey;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.authentication.AuthenticationCredentialsNotFoundException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -39,7 +40,12 @@ public class JwtTokenProvider {
     private SecretKey key;
     
     @Autowired
+    @Qualifier("accessTokenExpiration")
     private Duration accessTokenLife;
+    
+    @Autowired
+    @Qualifier("refreshTokenExpiration")
+    private Duration refreshTokenLife;
     
     @Autowired
     private MemberMapper member;
@@ -52,33 +58,28 @@ public class JwtTokenProvider {
      * @param auth 인증 객체
      * @return 생성된 액세스 토큰
      */
-    public JwtTokenDTO createAccessToken(Authentication auth) {
+    public String createAccessToken(String memberId) {
     	log.info("액세스 토큰 발급");
         Date now = new Date();
         Date expiryDate = new Date(now.getTime() + accessTokenLife.toMillis()); // 현재 시간으로부터 유효기간 후의 시간 설정
         
-        String authrities = auth.getAuthorities().stream()
-        		.map(GrantedAuthority::getAuthority)
-        		.collect(Collectors.joining(","));
         	
         // JWT accessToken 생성
         String accessToken = Jwts.builder()
-                .subject(auth.getName()) // 토큰의 주제 설정 (여기서는 사용자 ID)
-                .issuedAt(now) // 토큰 발급 시간 설정
-                .claim(AUTHORITIES_KEY, authrities) // 토큰의 권한 설정
-                .expiration(expiryDate) // 토큰 만료 시간 설정
-                .signWith(key, Jwts.SIG.HS512) // 서명 알고리즘과 시크릿 키로 토큰 서명
-                .compact(); // JWT 문자열로 변환하여 반환
+            .subject(memberId) // 토큰의 주제 설정 (여기서는 사용자 ID)
+            .issuedAt(now) // 토큰 발급 시간 설정
+            .claim(AUTHORITIES_KEY, getAuth(memberId)) // 토큰의 권한 설정
+            .expiration(expiryDate) // 토큰 만료 시간 설정
+            .signWith(key, Jwts.SIG.HS512) // 서명 알고리즘과 시크릿 키로 토큰 서명
+            .compact(); // JWT 문자열로 변환하여 반환
         
-        return JwtTokenDTO.builder()
-        		.grantType(BEARER_TYPE)
-        		.accessToken(accessToken)
-        		.accessTokenExpiresIn(expiryDate)
-        		.build();
+        return accessToken;
+      
         		
     }
-    
+    // 토큰권한 체크
     public Authentication getAuthentication(String token) {
+    	log.info("토큰 권한 정보 확인");
     	// 토큰의 복호화
     	Claims claims = parseClaims(token);
     	
@@ -100,7 +101,7 @@ public class JwtTokenProvider {
         return parseClaims(token).getSubject(); // 토큰에서 추출한 클레임 중 사용자 이름 반환
     }
 
-    // 토큰에서 모든 클레임을 추출하는 메서드 // TODO 예외상황도 생각해볼것
+    // 토큰에서 모든 클레임을 추출하는 메서드
     private Claims parseClaims(String token) {
         // 토큰을 복호화 파싱하고, 서명 검증 후 클레임 추출
         Claims claims = Jwts.parser().verifyWith((SecretKey) key).build().parseSignedClaims(token).getPayload();
@@ -148,28 +149,38 @@ public class JwtTokenProvider {
      * @param auth 인증 객체
      * @return 생성된 리프레시 토큰
      */
-//    public String createRefreshToken(String memberId) {
-//        Date now = new Date();
-//        Date expiryDate = new Date(now.getTime() + refreshTokenLife.toMillis()); // 현재 시간으로부터 유효기간 후의 시간 설정
-//        
-//        // JWT 생성
-//        return Jwts.builder()
-//            .subject(memberId) // 토큰의 주제 설정 (여기서는 사용자 ID)
-//            .issuedAt(now) // 토큰 발급 시간 설정
-//            .expiration(expiryDate) // 토큰 만료 시간 설정
-//            .signWith(secretKey) // 서명 알고리즘과 시크릿 키로 토큰 서명
-//            .compact(); // JWT 문자열로 변환하여 반환
-//    }
+    public String createRefreshToken(String memberId) {
+    	log.info("리프레시 토큰 발급");
+        Date now = new Date();
+        Date expiryDate = new Date(now.getTime() + refreshTokenLife.toMillis()); // 현재 시간으로부터 유효기간 후의 시간 설정
+        
+        // JWT 생성
+        String refreshToken =  Jwts.builder()
+            .subject(memberId) // 토큰의 주제 설정 (여기서는 사용자 ID)
+            .issuedAt(now) // 토큰 발급 시간 설정
+            .expiration(expiryDate) // 토큰 만료 시간 설정
+            .signWith(key, Jwts.SIG.HS512) // 서명 알고리즘과 시크릿 키로 토큰 서명
+            .compact(); // JWT 문자열로 변환하여 반환
+        
+        return refreshToken;
+    }
     
     /**
      * 리프레시 토큰을 사용하여 새로운 액세스 토큰을 생성합니다.
      * @param refreshToken 리프레시 토큰
      * @return 새로 생성된 액세스 토큰
      */
-//    public String generateAccessTokenFromRefreshToken(String refreshToken) {
-//        String username = getUsernameFromToken(refreshToken); // 리프레시 토큰에서 사용자 이름 추출
-//        
-//        // 새로운 액세스 토큰 생성
-//        return createAccessToken(username);
-//    }
+    public String generateAccessTokenFromRefreshToken(String memberId, String refreshToken) {
+    	// 리프레시 토큰에 권한 정보를 저장시켜놓으면 재발급 시키기 매우 쉬워지지만 두개로 나눈 의미가 없어진다.
+    	
+    	// db에 저장된 리프레시 토큰
+    	String checkToken = member.checkToken(memberId);
+    	// 전달받은 토큰과 저장된 토큰 비교
+    	
+		if(refreshToken.equals(checkToken) && validateToken(refreshToken)) {
+			return createAccessToken(memberId); // 통과시 액세스 토큰 재 발급
+		}
+		
+		return null;
+    }
 }

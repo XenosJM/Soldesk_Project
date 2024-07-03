@@ -19,8 +19,8 @@ import com.soldesk.ex01.domain.MemberVO;
 
 import lombok.extern.log4j.Log4j;
 
-@RunWith(SpringJUnit4ClassRunner.class) // Junit class Å×½ºÆ® ¿¬°á
-@ContextConfiguration(classes = {RootConfig.class}) // ¼³Á¤ ÆÄÀÏ ¿¬°á
+@RunWith(SpringJUnit4ClassRunner.class) // Junit class ï¿½×½ï¿½Æ® ï¿½ï¿½ï¿½ï¿½
+@ContextConfiguration(classes = {RootConfig.class}) // ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
 @Log4j
 public class MemberMapperTest {
 	
@@ -41,13 +41,13 @@ public class MemberMapperTest {
 	private void testMemberDelete() {
 		log.info("testMemberDelete()");
 		int result = memberMapper.delete("wjdals99");
-		log.info(result + "Çà »èÁ¦");
+		log.info(result + "ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½");
 	}
 
 	private void testMemberManagerUpdate() {
-		MemberVO vo = new MemberVO("wjdals99", null, 2, null, null, null, null);
+		MemberVO vo = new MemberVO("wjdals99", null, 2, null, null, null, null, null);
 		int result = memberMapper.updateManager(vo);
-		log.info(result + "Çà ¼öÁ¤");
+		log.info(result + "ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½");
 		
 	}
 
@@ -56,7 +56,7 @@ public class MemberMapperTest {
 		vo.setMemberId("wjdals99");
 		vo.setMemberProperty(new Integer[] {34, 25, 22});
 		int result = memberMapper.updateProperty(vo);
-		log.info(result + "Çà ¼öÁ¤");
+		log.info(result + "ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½");
 	}
 
 	private void testMemberUpdate() {
@@ -66,7 +66,7 @@ public class MemberMapperTest {
 		vo.setMemberPassword("456456");
 		vo.setMemberEmail("test@test.com");
 		int result = memberMapper.update(vo);
-		log.info(result + "Çà ¼öÁ¤");
+		log.info(result + "ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½");
 	}
 
 	private void testMemberByMemberId() {
@@ -93,7 +93,7 @@ public class MemberMapperTest {
 		vo.setMemberPassword(endcodePw);
 //		vo.setMemberPropertyAsString(Arrays.toString(vo.getMemberProperty()));
 		int result = memberMapper.insert(vo);
-		log.info(result + "Çà »ðÀÔ");
+		log.info(result + "ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½");
 	}
 	
 }

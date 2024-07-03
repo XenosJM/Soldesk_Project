@@ -28,7 +28,7 @@ public interface MemberService {
 	// ȸ�� ���� ����(Ż��)
 	int deleteMember(String memberId);
 	// �α���
-	JwtTokenDTO memberCheck(Map<String, String> map, HttpServletResponse res);
+	String memberCheck(Map<String, String> map, HttpServletResponse res);
 	
 	// 회원 비밀번호 체크
 	int checkPassword(MemberVO memberVO);

@@ -11,12 +11,13 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		<result property="memberEmail" column="MEMBER_EMAIL" />
 		<result property="memberRegistDate" column="MEMBER_REGISTDATE" />
 		<result property="memberPropertyAsString" column="MEMBER_PROPERTY" />
+		<result property="refreshToken" column="REFRESH_TOKEN" />
 	</resultMap>
 
 	<!-- 회원 가입 -->
 	<insert id="insert">
 		INSERT INTO MEMBER (MEMBER_ID, MEMBER_PASSWORD, ROLE_ID, MEMBER_EMAIL, MEMBER_PROPERTY, MEMBER_REGISTDATE)
-		VALUES (#{memberId}, #{memberPassword}, 0, #{memberEmail}, null, SYSDATE)
+		VALUES (#{memberId}, #{memberPassword}, 0, #{memberEmail}, null, SYSDATE, null)
 	</insert>
 	<!-- 회원 자기정보 보기 -->
 	<select id="selectByMemberId" resultMap="memberResultMap"> SELECT * FROM MEMBER	WHERE MEMBER_ID = #{memberId} </select>
@@ -28,6 +29,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	<select id="checkId" resultType="String"> SELECT MEMBER_ID FROM MEMBER WHERE MEMBER_ID = #{memberId} </select>
 	<!-- 체크 이메일 -->
 	<select id="checkEmail" resultType="String"> SELECT MEMBER_ID FROM MEMBER WHERE MEMBER_EMAIL = #{memberEmail} </select>
+	<!-- 자동로그인 refreshToken 확인용 -->
+	<select id="checkToken" resultType="String"> SELECT REFRESH_TOKEN FROM MEMBER WHERE MEMBER_ID = #{memberId} </select>
 	<!-- 로그인시 권한 설정 위한 이름 가져오는 join 사용 쿼리 -->
 	<select id="memberRole" resultType="String"> 
 	    SELECT r.ROLE_NAME
@@ -38,6 +41,15 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
 	<!-- 이메일을 이용해 아이디 찾기 -->
 	<!-- <select id="findId" resultMap="memberResultMap"> SELECT MEMBER_ID FROM MEMBER WHERE MEMBER_EMAIL = #{memberEmail} </select> -->
+	
+	<!-- 리프레시 토큰 저장(업데이트) -->
+	<update id="updateRefreshToken" >
+		UPDATE MEMBER SET
+		REFRESH_TOKEN = #{refreshToken}
+		WHERE MEMBER_ID = #{memberId}
+		
+	</update>
+	
 	<!-- 회원 정보 수정 -->
 	<update id="update">
 		UPDATE MEMBER SET

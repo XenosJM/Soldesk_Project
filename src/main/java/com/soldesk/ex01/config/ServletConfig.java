@@ -25,7 +25,7 @@ import com.soldesk.ex01.handler.PrivateChatHandler;
 //@EnableWebSocket // 웹소켓 활성화
 @EnableScheduling // 스케줄링 기능 사용
 @ComponentScan(basePackages = {"com.soldesk.ex01"}) // component scan 설정
-public class ServletConfig implements WebMvcConfigurer, WebSocketConfigurer {
+public class ServletConfig implements WebMvcConfigurer {
 
    // ViewResolver ���� �޼���
    @Override
@@ -65,13 +65,6 @@ public class ServletConfig implements WebMvcConfigurer, WebSocketConfigurer {
       return resolver;
    }
    
-   // �� ���� ���� ����
-	@Override
-	public void registerWebSocketHandlers(WebSocketHandlerRegistry registry) {
-		registry.addHandler(privateChatHandler(), "/private") // ���� ȣ��
-	    		.setAllowedOrigins("*"); // �㰡�� �����ο����� ���Ḹ ��� ����� �׽�Ʈ�� ��� ���
-		
-	}
 	// �� ���� ���ῡ �ʿ��� �� ����
 	@Bean
 	public PrivateChatHandler privateChatHandler() {

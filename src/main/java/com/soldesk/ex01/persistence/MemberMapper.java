@@ -22,5 +22,7 @@ public interface MemberMapper {
 	String checkEmail(String memberEmail);
 	MemberVO findId(String memberEmail);
 	String memberRole(String memberId);
+	String checkToken(String memberId);
+	int updateRefreshToken(MemberVO memberVO);
 	
 }

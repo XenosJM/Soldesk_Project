@@ -6,6 +6,7 @@ public class JwtTokenDTO {
     private String grantType;
     private String accessToken;
     private Date accessTokenExpiresIn;
+    private Date refreshTokenExpiresIn;
 
     private JwtTokenDTO() {}
 

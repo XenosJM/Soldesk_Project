@@ -30,11 +30,21 @@ public class LoginRestController {
 	public ResponseEntity<String> memberCheck(@RequestBody Map<String, String> map, HttpServletResponse res) {
 		log.info("memberCheck()");
 		// TODO 로그인 단에서 리절트가 빈값이면 로그인 실패로 처리하도록 할 것.
-		JwtTokenDTO token = member.memberCheck(map, res);
-		String jwtToken = token.getAccessToken(); 
-		// 헤더에 JWT 토큰 추가 예시
-        HttpHeaders headers = new HttpHeaders();
-        headers.add("Authorization", "Bearer " + jwtToken);
-		return new ResponseEntity<>("success", HttpStatus.OK);
+		HttpHeaders header = new HttpHeaders();
+		String result = member.memberCheck(map, res);
+		log.info(result);
+		if(result.contains("success")) {
+			String accessToken = res.getHeader("Authorization");
+			// 헤더에 JWT 토큰 추가 예시
+			header.add("Authorization", "Bearer " + accessToken);
+			if(res.getHeader("Refresh-Token") != null) {
+				String refreshToken = res.getHeader("Refresh-Token");
+				header.add("Refresh-Token", refreshToken);
+			}
+			
+		} else {
+			
+		}
+		return new ResponseEntity<>(result, HttpStatus.OK);
 	}
 }

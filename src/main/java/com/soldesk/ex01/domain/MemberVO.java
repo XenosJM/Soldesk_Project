@@ -27,6 +27,7 @@ public class MemberVO implements Serializable{
 	private String memberEmail;
 	private Integer[] memberProperty;
 	private Date memberRegistDate;
+	private String refreshToken;
 	private String memberPropertyAsString;
 	
 	// 배열인 memberProperty의 값을 가져올때 사용
