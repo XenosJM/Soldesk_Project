@@ -71,7 +71,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     }
 
     private String getRefreshTokenFromRequest(HttpServletRequest request) {
-    	log.info("리프레시 토큰 체크중");
+    	log.info("리프레시 토큰 가져오기");
     	// 액세스 토큰을 검증시도, 실패시 리프레시 토큰 검증 시도, 실패시 재 로그인
     	// ㄴ 리프레시 토큰 검증 시도 성공시 액세스토큰 재발급
     	String refreshToken = request.getHeader("Refresh-Token");
@@ -80,7 +80,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
 	// HTTP 요청에서 Authorization 헤더에서 JWT를 추출하는 메서드
     private String getAccessTokenFromRequest(HttpServletRequest request) {
-    	log.info("토큰 체크중");
+    	log.info("액세스 토큰 가져오기");
         String bearerToken = request.getHeader("Authorization");
         if (StringUtils.hasText(bearerToken) && bearerToken.startsWith("Bearer ")) {
         	log.info("토큰 확인 완료");

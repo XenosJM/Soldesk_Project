@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.soldesk.ex01.persistence.ChatGroupMapper">
+	
+	<resultMap type="com.soldesk.ex01.domain.ChatGroupVO" id="chatGroupResultMap">
+		<id property="chatGroupId" column="CHAT_GROUP_ID" />
+		<result property="chatGroupTitle" column="CHAT_GROUP_TITLE" />
+		<result property="chatMember" column="CHAT_MEMBER" />
+	</resultMap>
+
+
+</mapper>
