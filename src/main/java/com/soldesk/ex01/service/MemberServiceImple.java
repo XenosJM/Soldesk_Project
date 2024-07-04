@@ -128,9 +128,6 @@ public class MemberServiceImple implements MemberService{
 	    // 인코딩되어 저장된 비밀번호와 입력받은 비밀번호가 일치하는지 확인
 	    if (memberVO != null && encoder.matches(map.get("memberPassword"), memberVO.getMemberPassword())) {
 	        log.info("비밀번호 검증 성공");
-	        Authentication auth = new UsernamePasswordAuthenticationToken(
-	                memberVO.getMemberId(), memberVO.getMemberPassword());
-	        log.info("단순 정보 토큰 생성");
 	        String accessToken = tokenProvider.createAccessToken(map.get("memberId"));
 	        // JWT 액세스 토큰을 Authorization 헤더에 추가
 	        response.setHeader("Authorization", "Bearer " + accessToken);
