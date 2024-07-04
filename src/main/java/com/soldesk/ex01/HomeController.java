@@ -40,10 +40,12 @@ import com.soldesk.ex01.domain.BoardVO;
 
 import com.soldesk.ex01.domain.FriendVO;
 import com.soldesk.ex01.domain.MemberVO;
+import com.soldesk.ex01.domain.RecommendVO;
 import com.soldesk.ex01.service.AttachService;
 import com.soldesk.ex01.service.BoardService;
 import com.soldesk.ex01.service.FriendService;
 import com.soldesk.ex01.service.MemberService;
+import com.soldesk.ex01.service.RecommendService;
 import com.soldesk.ex01.util.PageMaker;
 import com.soldesk.ex01.util.Pagination;
 
@@ -72,6 +74,9 @@ public class HomeController {
 	
 	@Autowired
 	private AttachService attachService;
+	
+	@Autowired
+	private RecommendService recommendService;
 	
 	
 	
@@ -132,8 +137,11 @@ public class HomeController {
 	@GetMapping("board/detail")
 	public void boardDetail(Model model, Integer boardId) {
 		log.info("board controller : detail()");
-		BoardVO board2VO = boardService.selectDetail(boardId);
-		model.addAttribute("board2VO", board2VO);
+		BoardVO boardVO = boardService.selectDetail(boardId);
+		RecommendVO recommendVO = recommendService.selectRecommend(boardId);
+		
+		model.addAttribute("boardVO", boardVO);
+		model.addAttribute("recommendVO",recommendVO);
 	}
 
 	@GetMapping("board/regist")
@@ -147,7 +155,7 @@ public class HomeController {
 //	@GetMapping("board/list")
 //	public void boardList(Model model) {
 //		log.info("board controller : list()");
-//		List<Board2VO> boardList = board2Service.selectList();
+//		List<Board2VO> boardList = boardService.selectList();
 //
 //		model.addAttribute("boardList", boardList);
 //	}
@@ -175,11 +183,11 @@ public class HomeController {
 //	       log.info("list()");
 //	       log.info("pagination = " + pagination);
 //
-//	       List<Board2VO> boardList = board2Service.getPagingBoards(pagination);
+//	       List<BoardVO> boardList = boardService.getPagingBoards(pagination);
 //
 //	       PageMaker pageMaker = new PageMaker();
 //	       pageMaker.setPagination(pagination);
-//	       pageMaker.setTotalCount(board2Service.getTotalCount(pagination.getCategoryId()));
+//	       pageMaker.setTotalCount(boardService.getTotalCount(pagination.getCategoryId()));
 //	       
 //	       Map<String, Object> response = new HashMap<>();
 //	       response.put("pageMaker", pageMaker);
@@ -189,13 +197,6 @@ public class HomeController {
 //	       return new ResponseEntity<>(response,HttpStatus.OK);
 //	   }
 	
-//	@GetMapping("board/list")
-//	public ResponseEntity<List<Board2VO>> boardList(Model model) {
-//		log.info("board controller : list()");
-//		List<Board2VO> boardList = board2Service.selectList();
-//
-//		return new ResponseEntity<>(boardList, HttpStatus.OK);
-//	}
 
 
 	@GetMapping("board/update")
@@ -255,10 +256,10 @@ public class HomeController {
 //	}
 	
 //	@GetMapping("board/update")
-//	public ResponseEntity<Board2VO> boardUpdate(Integer boardId) {
+//	public ResponseEntity<BoardVO> boardUpdate(Integer boardId) {
 //		log.info("board controller : updateGet()");
-//		Board2VO board2VO = board2Service.selectDetail(boardId);
-//		board2VO.setAttachVO(attachService.getAttachByBoardId(boardId));
+//		BoardVO boardVO = boardService.selectDetail(boardId);
+//		boardVO.setAttachVO(attachService.getAttachByBoardId(boardId));
 //		return new ResponseEntity<>(board2VO,HttpStatus.OK);
 //	}
 //	

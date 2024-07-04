@@ -5,7 +5,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.soldesk.ex01.domain.RecommendVO;
@@ -27,14 +29,14 @@ public class RecommendController {
 	
 	@PostMapping("/recommend")
 	@ResponseBody
-	public ResponseEntity<Integer> increaseRecommend(int boardId){
+	public ResponseEntity<Integer> increaseRecommend(@RequestParam("boardId") int boardId){
 		int result = recommendService.increaseRecommend(boardId);
 		return new ResponseEntity<>(result,HttpStatus.OK);
 	}
 	
 	@PostMapping("/decommend")
 	@ResponseBody
-	public ResponseEntity<Integer> increaseDecommend(int boardId){
+	public ResponseEntity<Integer> increaseDecommend(@RequestParam("boardId")int boardId){
 		int result = recommendService.increaseDecommend(boardId);
 		return new ResponseEntity<>(result,HttpStatus.OK);
 	}

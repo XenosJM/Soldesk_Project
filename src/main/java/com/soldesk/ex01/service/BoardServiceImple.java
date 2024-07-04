@@ -10,9 +10,11 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.soldesk.ex01.domain.AttachVO;
 import com.soldesk.ex01.domain.BoardVO;
+import com.soldesk.ex01.domain.RecommendVO;
 import com.soldesk.ex01.domain.ReplyVO;
 import com.soldesk.ex01.persistence.AttachMapper;
 import com.soldesk.ex01.persistence.BoardMapper;
+import com.soldesk.ex01.persistence.RecommendMapper;
 import com.soldesk.ex01.persistence.ReplyMapper;
 import com.soldesk.ex01.persistence.RereplyMapper;
 import com.soldesk.ex01.util.Pagination;
@@ -34,6 +36,9 @@ public class BoardServiceImple implements BoardService {
 
 	@Autowired
 	RereplyMapper rereplyMapper;
+	
+	@Autowired
+	RecommendMapper recommendMapper;
 
 	@Transactional
 	@PreAuthorize("isAuthenticated() and ((#vo.memberId == principal.username)")
@@ -42,6 +47,7 @@ public class BoardServiceImple implements BoardService {
 		log.info("service : insertBoard()");
 		int result = boardMapper.insertBoard(vo);
 		log.info("board2Mapper.insert 결과 : " + result);
+		result = recommendMapper.insertRecommend(new RecommendVO());
 		// result = attachMapper.insert(vo.getAttachVO());
 		AttachVO[] attach = vo.getAttachVO();
 		if (attach != null) {
@@ -100,6 +106,7 @@ public class BoardServiceImple implements BoardService {
 		}
 		result = replyMapper.deleteReplyByBoard(boardId);
 		result = attachMapper.delete(boardId);
+		result = recommendMapper.deleteRecommend(boardId);
 		result = boardMapper.deleteBoard(boardId);
 		return result;
 	}
@@ -108,6 +115,7 @@ public class BoardServiceImple implements BoardService {
 	@Override
 	public BoardVO selectDetail(int boardId) {
 		BoardVO vo = boardMapper.selectDetail(boardId);
+		vo.setRecomenndVO(recommendMapper.selectRecommend(boardId));
 		if (attachMapper.selectByBoardId(boardId) != null) {
 			vo.setAttachVO(attachMapper.selectByBoardId(boardId));
 		}

@@ -37,7 +37,7 @@ import com.soldesk.ex01.domain.BoardVO;
 
 import com.soldesk.ex01.service.AttachService;
 import com.soldesk.ex01.service.BoardService;
-
+import com.soldesk.ex01.service.RecommendService;
 import com.soldesk.ex01.util.FileUploadUtil;
 
 import lombok.extern.log4j.Log4j;
@@ -52,7 +52,6 @@ public class BoardController {
 
 	@Autowired
 	private AttachService attachService;
-
 
 
 	@Autowired

@@ -22,8 +22,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		INSERT INTO BOARD VALUES
 		(BOARD_SEQ.NEXTVAL, #{categoryId},
 		#{memberId}, #{boardTitle}, #{boardContent}, SYSDATE,
-		0,
-		BOARD_SEQ.CURRVAL,)
+		0, BOARD_SEQ.CURRVAL)
 	</insert>
 
 

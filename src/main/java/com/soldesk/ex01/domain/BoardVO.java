@@ -29,4 +29,8 @@ public class BoardVO {
 	@Setter
 	@Getter
 	private AttachVO[] attachVO; 
+	
+	@Setter
+	@Getter
+	private RecommendVO recomenndVO;
 }

@@ -18,26 +18,26 @@
 <body>
 	<h2>글 보기</h2>
 	<div>
-		<p>글 번호 : ${board2VO.boardId }</p>
+		<p>글 번호 : ${boardVO.boardId }</p>
 		
 	</div>
 	<div>
 		<p>제목 :</p>
-		<p>${board2VO.boardTitle }</p>
+		<p>${boardVO.boardTitle }</p>
 	</div>
 	<div>
-		<p>작성자 : ${board2VO.memberId }</p>
+		<p>작성자 : ${boardVO.memberId }</p>
 		<!-- boardDateCreated 데이터 포멧 변경 -->
-		<fmt:formatDate value="${board2VO.boardRegistDate }"
+		<fmt:formatDate value="${boardVO.boardRegistDate }"
 			pattern="yyyy-MM-dd HH:mm:ss" var="boardRegistDate" />
 		<p>작성일 : ${boardRegistDate }</p>
 	</div>
 	<div>
-		<textarea rows="20" cols="120" readonly>${board2VO.boardContent }</textarea>
+		<textarea rows="20" cols="120" readonly>${boardVO.boardContent }</textarea>
 	</div>
 
-	<input type="hidden" id="boardId" value="${board2VO.boardId}">
-    <c:forEach var="attach" items="${board2VO.attachVO}">
+	<input type="hidden" id="boardId" value="${boardVO.boardId}">
+    <c:forEach var="attach" items="${boardVO.attachVO}">
         <c:if test="${not empty attach}">
             <p>
                 첨부 파일 : 
@@ -50,17 +50,18 @@
     
     <div>
     	<button id="recommend">추천</button>
-    	<p>${board2VO.recommend }</p>
+    	<p>${recommendVO.recommend }</p>
     	<button id="decommend">비추천</button>
-    	<p>${board2VO.decommend }</p>
+    	<p>${recommendVO.decommend }</p>
+    
 	</div>
 
 
-	<button onclick="location.href='list?categoryId=${board2VO.categoryId}'">글 목록</button>
-	<button onclick="location.href='update?boardId=${board2VO.boardId}'">글
+	<button onclick="location.href='list?categoryId=${boardVO.categoryId}'">글 목록</button>
+	<button onclick="location.href='update?boardId=${boardVO.boardId}'">글
 		수정</button>
 	<form id="deleteForm" action="delete" method="POST">
-		<input type="hidden" name="boardId" value="${board2VO.boardId }">
+		<input type="hidden" name="boardId" value="${boardVO.boardId }">
 		<button type="submit">글 삭제</button>
 		<!--  <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>-->
 	</form>
@@ -115,7 +116,7 @@
 				let boardId = $('#boardId').val();
 				$.ajax({
 					type : 'post',
-					url : '../board/recommend',
+					url : '../recommend/recommend',
 					data : {boardId : boardId},
 					success:function(result){
 						if(result == 1){
@@ -130,11 +131,11 @@
 				let boardId = $('#boardId').val();
 				$.ajax({
 					type : 'post',
-					url : '../board/decommend',
+					url : '../recommend/decommend',
 					data : {boardId : boardId},
 					success:function(result){
 						if(result == 1){
-							alert("추천성공");
+							alert("비추천성공");
 							location.reload();
 						}
 					}
