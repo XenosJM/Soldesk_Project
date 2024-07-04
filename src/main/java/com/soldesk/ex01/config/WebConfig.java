@@ -14,7 +14,7 @@ public class WebConfig extends AbstractAnnotationConfigDispatcherServletInitiali
    protected Class<?>[] getRootConfigClasses() {
       
 	   // RootConfig 클래스, Security 클래스 리턴
-		return new Class[] { RootConfig.class/* , SecurityConfig.class */};  
+		return new Class[] { RootConfig.class, SecurityConfig.class };  
    }
 
    // servlet application context(Servlet WebApplicationContext)에 적용하는 설정 클래스 지정 메서드
