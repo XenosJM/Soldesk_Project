@@ -109,8 +109,8 @@ public class RootConfig {
    @Bean
    public SecretKey secretKey() {
        String secret = "7IKs7Jqp7J6QIOyduOymneydtCDrkJjslrQg7J6I64qUIO2MgO2UhOuhnOygne2KuCDsoJHqt7wg7Yag7YGw7J6F64uI64ukLg=="; // base64 인코딩된 문자열
-       byte[] keyByte = Decoders.BASE64.decode(secret);
-       return Keys.hmacShaKeyFor(keyByte);
+       byte[] keyByte = Decoders.BASE64.decode(secret); // Base64 문자열을 디코딩하여 바이트 배열로 변환
+       return Keys.hmacShaKeyFor(keyByte); // 디코딩된 바이트 배열을 사용하여 HMAC-SHA 키 생성
    }
 
    // JWT 액세스 토큰 만료 기간 설정
@@ -123,6 +123,6 @@ public class RootConfig {
    // JWT 리프레시 토큰 만료 기간 설정
    @Bean
    public Duration refreshTokenExpiration() {
-       return Duration.ofHours(1); // 12시간
+       return Duration.ofDays(7); // 1주일
    }
 } // end RootConfig

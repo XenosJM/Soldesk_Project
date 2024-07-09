@@ -3,3 +3,40 @@
 PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
+<mapper namespace="com.soldesk.ex01.persistence.ChatMapper">
+	
+	<resultMap type="com.soldesk.ex01.domain.ChatVO" id="chatResultMap">
+		<id property="chatId" column="CHAT_ID"/>
+		<result property="memberId" column="MEMBER_ID"/>
+		<result property="chatContent" column="CHAT_CONTENT"/>
+		<result property="chatDate" column="CHAT_DATE"/>
+		<result property="chatGroupId" column="CHAT_GROUP_ID"/>
+		<result property="chatMemberId" column="CHAT_MEMBER_ID"/>
+	</resultMap>
+	
+	<insert id="insertChat">
+		INSERT INTO CHAT(CHAT_ID, MEMBER_ID, CHAT_CONTENT, CHAT_DATE, CHAT_GROUP_ID, CHAT_MEMBER_ID)
+		VALUES (CHAT_SEQ.NEXTVAL, #{memberId}, #{chatContent}, SYSDATE, #{chatGroupId}, #{chatMemberId})
+	</insert>
+	
+	<!-- 개인 채팅 내역 가져올때 사용 -->
+	<select id="selectPrivateChat" resultMap="chatResultMap">
+        SELECT * FROM CHAT WHERE CHAT_GROUP_ID = 0 AND MEMBER_ID = #{memberId} AND CHAT_MEMBER_ID = #{chatMemberId}
+    </select>
+    
+    <!-- 그룹 채팅 내역 가져오기 -->
+    <select id="selectGroupChat" resultMap="chatResultMap">
+    	SELECT * FROM CHAT WHERE CHAT_GROUP_ID = #{chatGroupId}
+    </select>
+    
+    <!-- 채팅방에서 삭제하는 쿼리, 프론트단에서 5분 경과시 삭제 못하도록 하기. -->
+    <update id="updateChat">
+    	UPDATE CHAT SET CHAT_CONTENT = '삭제된 메시지입니다.' WHERE CHAT_ID = #{chatId} AND CHAT_GROUP_ID = #{chatGroupId}
+    </update>
+    
+    <!-- 스케쥴링용, 입력된 날짜를 기준으로 3일이 지난 개인 채팅들(chatGroupId = 0인 데이터들)을 모두 삭제, 채팅방에 아무도 없을시 삭제 -->
+    <delete id="deleteChat">
+    	DELETE FROM CHAT WHERE CHAT_GROUP_ID = #{chatGroupId}
+    </delete>
+	
+</mapper>

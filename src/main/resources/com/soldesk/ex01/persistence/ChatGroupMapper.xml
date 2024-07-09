@@ -11,5 +11,34 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		<result property="chatMember" column="CHAT_MEMBER" />
 	</resultMap>
 
-
+	<insert id="insertChatGroup">
+		INSERT INTO CHATGROUP(CHAT_GROUP_ID, CHAT_GROUP_TITLE, CHAT_MEMBER)
+		VALUES (CHATGROUP_SEQ.NEXTVAL, #{chatGroupTitle}, #{chatMember})
+	</insert>
+	
+	<!-- <select id="selectChatGroup" resultMap="chatGroupResultMap">
+		SELECT * FROM CHATGROUP WHERE CHAT_MEMBER LIKE '%#{memberId}%'
+	</select> -->
+	
+	<select id="selectChatGroup" resultMap="chatGroupResultMap">
+	    SELECT * FROM CHATGROUP WHERE CHAT_MEMBER LIKE '%' || #{memberId} || '%'
+	</select>
+	
+	
+	<update id="updateChatGroupTitle">
+		UPDATE CHATGROUP SET
+		CHAT_GROUP_TITLE = #{chatGroupTitle}
+		WHERE CHAT_GROUP_ID = #{chatGroupId}
+	</update>
+	
+	<update id="exitChatGroup">
+		UPDATE CHATGROUP SET
+		CHAT_MEMBER = #{chatMember}
+		WHERE CHAT_GROUP_ID = #{chatGroupId}
+	</update>
+	
+	<delete id="deleteChatGroup">
+		DELETE FROM CHATGROUP WHERE CHAT_GROUP_ID = #{chatGroupId}
+	</delete>
+	
 </mapper>

@@ -189,10 +189,17 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         // 허용할 HTTP 메서드를 설정
         corsConfig.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "HEAD", "OPTIONS"));
         // 허용할 HTTP 헤더를 설정합니다.
-        corsConfig.setAllowedHeaders(List.of("Authorization", "Cache-Control", "Content-Type"));
+        corsConfig.setAllowedHeaders(List.of("Authorization", "Cache-Control", "Content-Type", "Refresh-Token"));
         // 자격 증명을 포함한 요청을 허용.
         corsConfig.setAllowCredentials(true);
-
+        // 리액트쪽에서 토큰을 받아 로컬스토리지에 저장 할수 있도록 명시
+        // 다만 헤더를 노출시켜 토큰을 사용할수있게 접근하는것은 문제가 있을수 밖에 없을것 같아
+        // 찾아보니 HttpOnly 쿠키를 쓰면 된다고 하지만 그럴 경우 리액트에서 가져다 사용할수가 없다.
+        // 다른 방법을 찾아본 결과 https 얘기가 나와 찾아보니 인증서를 발급 받는 형태라 발급 받은 인증서를
+        // 서버에 어떻게 세팅하는지 세팅법 정도만 배우고 적용은 못함.
+        // 실제 서비스 환경에서는 다른 방법을 쓰도록 알아봐야함.
+        corsConfig.addExposedHeader("Authorization");
+        corsConfig.addExposedHeader("Refresh-Token");
         // 새로운 URL 기반 CORS 설정 소스를 생성.
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         // 모든 경로에 대해 CORS 설정을 적용합니다.
