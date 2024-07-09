@@ -1,9 +1,12 @@
 package com.soldesk.ex01.controller;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -30,7 +33,6 @@ public class CategoryController {
 		categoryVO.setCategoryTitle(categoryTitle);
 		log.info("category controller : CategorydVO ="+categoryVO);
 		int result = categoryService.insertCategory(categoryVO);
-		log.info(result+"Çà »ðÀÔ");
 		return new ResponseEntity<Integer>(result, HttpStatus.OK);
 	}
 	
@@ -43,7 +45,19 @@ public class CategoryController {
 		categoryVO.setCategoryId(categoryId);
 		categoryVO.setCategoryTitle(categoryTitle);
 		int result = categoryService.updateCategoryTitle(categoryVO);
-		log.info(result+"Çà ¼öÁ¤");
+		log.info(result+"ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½");
 		return new ResponseEntity<Integer>(result, HttpStatus.OK);
+	}
+	
+	@GetMapping("/list")
+	public ResponseEntity<List<CategoryVO>> selectCategoryList(){
+		List<CategoryVO> list = categoryService.selectCategoryList();
+		return new ResponseEntity<>(list,HttpStatus.OK);
+	}
+	
+	@GetMapping("/detail")
+	public ResponseEntity<CategoryVO> selectCategoryDetail(int categoryId){
+		CategoryVO vo = categoryService.selectCategory(categoryId);
+		return new ResponseEntity<>(vo,HttpStatus.OK);
 	}
 }

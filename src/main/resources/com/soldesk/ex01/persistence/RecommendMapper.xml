@@ -5,7 +5,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
 <mapper namespace="com.soldesk.ex01.persistence.RecommendMapper">
 	<resultMap type = "com.soldesk.ex01.domain.RecommendVO" id = "recommendResultMap">
-	<id property="boardId" column="BOARD_ID"/>
+	<id property="recommendId" column="RECOMMEND_ID"/>
+	<result property="boardId" column="BOARD_ID"/>
 	<result property = "recommend" column="RECOMMEND"/>
 	<result property = "decommend" column="DECOMMEND"/>
 	</resultMap>

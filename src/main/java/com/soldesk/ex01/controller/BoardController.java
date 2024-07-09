@@ -55,13 +55,13 @@ public class BoardController {
 
 
 	@Autowired
-	private BoardService board2Service;
+	private BoardService boardService;
 
 	
 
 	@PostMapping("/regist")
 	public String registerPost(BoardVO vo, RedirectAttributes reAttr) {
-		int result = board2Service.insertBoard(vo);
+		int result = boardService.insertBoard(vo);
 		return "redirect:/board/list?categoryId="+vo.getCategoryId();
 	}
 	
@@ -69,7 +69,7 @@ public class BoardController {
 //	public ResponseEntity<Integer> registerPost(@RequestBody BoardVO vo) {
 //		log.info("board controller : registerPost()");
 //		log.info("board controller : Board2VO =" + vo);
-//		int result = board2Service.insertBoard(vo);
+//		int result = boardService.insertBoard(vo);
 //
 //		return new ResponseEntity<Integer>(result,HttpStatus.OK);
 //	}
@@ -81,7 +81,7 @@ public class BoardController {
 	public String updatePost(BoardVO vo, RedirectAttributes reAttr) {
 		log.info("board controller : updatePost()");
 		log.info(vo);
-		int result = board2Service.updateBoard(vo);
+		int result = boardService.updateBoard(vo);
 		return "redirect:/board/detail?boardId="+vo.getBoardId();
 	}
 	
@@ -89,7 +89,7 @@ public class BoardController {
 //	public ResponseEntity<Integer> updatePost(@RequestBody BoardVO vo) {
 //		log.info("board controller : updatePost()");
 //		log.info(vo);
-//		int result = board2Service.updateBoard(vo);
+//		int result = boardService.updateBoard(vo);
 //		return new ResponseEntity<>(result,HttpStatus.OK);
 //	}
 	
@@ -98,8 +98,8 @@ public class BoardController {
 	@PostMapping("/delete")
 	public String delete(Integer boardId, RedirectAttributes reAttr) {
 		log.info("board controller : deletePost()");
-		int categoryId = board2Service.selectDetail(boardId).getCategoryId();
-		int result = board2Service.deleteBoard(boardId);
+		int categoryId = boardService.selectDetail(boardId).getCategoryId();
+		int result = boardService.deleteBoard(boardId);
 		return "redirect:/board/list?categoryId="+categoryId;
 	}
 

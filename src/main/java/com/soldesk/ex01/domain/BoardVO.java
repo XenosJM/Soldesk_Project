@@ -32,5 +32,5 @@ public class BoardVO {
 	
 	@Setter
 	@Getter
-	private RecommendVO recomenndVO;
+	private RecommendVO recommendVO;
 }

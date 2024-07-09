@@ -14,7 +14,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		<result property="boardRegistDate" column="BOARD_REGISTDATE" />
 		<result property="boardReplyCount" column="BOARD_REPLY_COUNT" />
 		<result property="attachId" column="ATTACH_ID" />
-		
+
 	</resultMap>
 
 	<insert id="insertBoard">
@@ -22,7 +22,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		INSERT INTO BOARD VALUES
 		(BOARD_SEQ.NEXTVAL, #{categoryId},
 		#{memberId}, #{boardTitle}, #{boardContent}, SYSDATE,
-		0, BOARD_SEQ.CURRVAL)
+		0,
+		BOARD_SEQ.CURRVAL)
 	</insert>
 
 
@@ -76,66 +77,54 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
 	<select id="selectListByPagination" resultMap="boardResultMap">
 		SELECT * FROM (
-		SELECT ROW_NUMBER() OVER (ORDER BY BOARD_ID DESC) AS RN,
-		BOARD.*
-		FROM
-		BOARD
-		where CATEGORY_ID = #{categoryId}
+		SELECT ROW_NUMBER() OVER (ORDER BY BOARD_ID DESC) AS RN, BOARD.*
+		FROM BOARD
+		 <where>
+            CATEGORY_ID = #{categoryId}
+            <choose>
+            <when test="type == 'title'">
+				and BOARD_TITLE LIKE '%${keyword}%'
+			</when>
+			<when test="type == 'content'">
+				and BOARD_CONTENT LIKE '%${keyword}%'
+			</when>
+			</choose>
+         </where>
 		)
-		WHERE RN BETWEEN #{start} AND
-		#{end}
+		WHERE RN BETWEEN #{start} AND #{end}
 	</select>
 
-	<select id="selectByTitle" resultMap="boardResultMap">
-		SELECT * FROM (
-		SELECT
-		ROW_NUMBER() OVER (ORDER BY BOARD_ID DESC) AS RN,
-		BOARD.*
-		FROM
-		BOARD
-		where CATEGORY_ID = #{categoryId} and BOARD_TITLE LIKE
-		'%${boardTitle}%'
-		order by
-		BOARD_ID desc
-		)
-		WHERE RN BETWEEN
-		#{pagination.start} AND #{pagination.end}
-	</select>
-
-	<select id="selectByContent" resultMap="boardResultMap">
-
-		SELECT * FROM (
-		SELECT
-		ROW_NUMBER() OVER (ORDER BY BOARD_ID DESC) AS RN,
-		BOARD.*
-		FROM
-		BOARD
-		where CATEGORY_ID = #{categoryId} and BOARD_CONTENT LIKE
-		'%${boardContent}%'
-		order by
-		BOARD_ID desc
-		)
-		WHERE RN BETWEEN #{pagination.start} AND
-		#{pagination.end}
-	</select>
+	<!-- <select id="selectByTitle" resultMap="boardResultMap"> SELECT * FROM 
+		( SELECT ROW_NUMBER() OVER (ORDER BY BOARD_ID DESC) AS RN, BOARD.* FROM BOARD 
+		where CATEGORY_ID = #{categoryId} and BOARD_TITLE LIKE '%${boardTitle}%' 
+		order by BOARD_ID desc ) WHERE RN BETWEEN #{pagination.start} AND #{pagination.end} 
+		</select> <select id="selectByContent" resultMap="boardResultMap"> SELECT 
+		* FROM ( SELECT ROW_NUMBER() OVER (ORDER BY BOARD_ID DESC) AS RN, BOARD.* 
+		FROM BOARD where CATEGORY_ID = #{categoryId} and BOARD_CONTENT LIKE '%${boardContent}%' 
+		order by BOARD_ID desc ) WHERE RN BETWEEN #{pagination.start} AND #{pagination.end} 
+		</select> -->
 
 	<select id="selectTotalCount" resultType="Integer">
 		SELECT COUNT(*)
 		TOTAL_COUNT FROM BOARD
-		where category_id = #{categoryId}
+		 <where>
+            CATEGORY_ID = #{categoryId}
+            <choose>
+            <when test="type == 'title'">
+				and BOARD_TITLE LIKE '%${keyword}%'
+			</when>
+			<when test="type == 'content'">
+				and BOARD_CONTENT LIKE '%${keyword}%'
+			</when>
+			</choose>
+         </where>
 	</select>
 
-	<select id="searchTotalCountByTitle" resultType="Integer">
-		SELECT COUNT(*)
-		TOTAL_COUNT FROM BOARD
-		where category_id = #{categoryId} and BOARD_TITLE LIKE '%${boardTitle}%'
-	</select>
-	
-	<select id="searchTotalCountByContent" resultType="Integer">
-		SELECT COUNT(*)
-		TOTAL_COUNT FROM BOARD
-		where category_id = #{categoryId} and BOARD_Content LIKE '%${boardContent}%'
-	</select>
+	<!-- <select id="searchTotalCountByTitle" resultType="Integer"> SELECT COUNT(*) 
+		TOTAL_COUNT FROM BOARD where category_id = #{categoryId} and BOARD_TITLE 
+		LIKE '%${boardTitle}%' </select> <select id="searchTotalCountByContent" resultType="Integer"> 
+		SELECT COUNT(*) TOTAL_COUNT FROM BOARD where category_id = #{categoryId} 
+		and BOARD_Content LIKE '%${boardContent}%' </select> -->
 
 
 
