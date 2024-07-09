@@ -28,6 +28,7 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -99,7 +100,7 @@ public class HomeController {
 
 //	@GetMapping("board/detail")
 //	@ResponseBody 
-//	public ResponseEntity<BoardVO> boardDetail(@RequestParam Integer boardId) {
+//	public ResponseEntity<BoardVO> boardDetail(@RequestParam Integer boardId,@RequestBody Pagination pagination) {
 //		log.info("board controller : detail()");
 //		BoardVO boardVO = boardService.selectDetail(boardId);
 //		if (boardVO != null) {
@@ -147,18 +148,7 @@ public class HomeController {
 	@GetMapping("board/regist")
 	public void boardRegister() {
 		log.info("board controller : registerGet()");
-	}
-	
-
-	
-
-//	@GetMapping("board/list")
-//	public void boardList(Model model) {
-//		log.info("board controller : list()");
-//		List<Board2VO> boardList = boardService.selectList();
-//
-//		model.addAttribute("boardList", boardList);
-//	}
+	} 
 	
 	
 	@GetMapping("board/list")
@@ -166,10 +156,11 @@ public class HomeController {
 			log.info("list()");
 			log.info("pagination = "+pagination);
 			List<BoardVO> boardList = boardService.getPagingBoards(pagination);
-			
+			log.info("boardlist = "+boardList);
 			PageMaker pageMaker = new PageMaker();
 			pageMaker.setPagination(pagination);
-			pageMaker.setTotalCount(boardService.getTotalCount(categoryId));
+			pageMaker.setTotalCount(boardService.getTotalCount(pagination));
+			log.info(pageMaker);
 			
 			model.addAttribute("pageMaker", pageMaker);
 			model.addAttribute("boardList", boardList);
@@ -179,7 +170,7 @@ public class HomeController {
 	
 
 //	@GetMapping("board/list")
-//	   public ResponseEntity<Map<String, Object>> list(Pagination pagination	) {
+//	   public ResponseEntity<Map<String, Object>> list(Pagination pagination) {
 //	       log.info("list()");
 //	       log.info("pagination = " + pagination);
 //
@@ -187,7 +178,7 @@ public class HomeController {
 //
 //	       PageMaker pageMaker = new PageMaker();
 //	       pageMaker.setPagination(pagination);
-//	       pageMaker.setTotalCount(boardService.getTotalCount(pagination.getCategoryId()));
+//	       pageMaker.setTotalCount(boardService.getTotalCount(pagination));
 //	       
 //	       Map<String, Object> response = new HashMap<>();
 //	       response.put("pageMaker", pageMaker);
@@ -207,28 +198,37 @@ public class HomeController {
 		model.addAttribute("board2VO", boardVO);
 	}
 	
-	@GetMapping("board/search")
-	public void boardSearch(Model model, @ModelAttribute Pagination pagination, @RequestParam String searchOption, @RequestParam String search, @RequestParam int categoryId) {
-	    log.info("board controller: search()");
-	    List<BoardVO> boardList;
-	    PageMaker pageMaker = new PageMaker();
-		pageMaker.setPagination(pagination);
-	    if ("title".equals(searchOption)) {
-	        boardList = boardService.selectByTitle(search,categoryId, pagination);
-	        pageMaker.setTotalCount(boardService.searchTotalCountByTitle(categoryId, search));
-	        
-	        
-	    } else if ("content".equals(searchOption)) {
-	        boardList = boardService.selectByContent(search,categoryId,pagination);
-	        pageMaker.setTotalCount(boardService.searchTotalCountByTitle(categoryId, search));
-	        
-	    } else {
-	    	boardList = new ArrayList<BoardVO>();
-	    }	
-		
-	    model.addAttribute("pageMaker", pageMaker);
-		model.addAttribute("boardList", boardList);
-	}
+//	@GetMapping("board/update")
+//	@ResponseBody
+//	public ResponseEntity<BoardVO> boardUpdate(Integer boardId,@RequestBody Pagination pagination) {
+//		log.info("board controller : updateGet()");
+//		BoardVO boardVO = boardService.selectDetail(boardId);
+//		boardVO.setAttachVO(attachService.getAttachByBoardId(boardId));
+//		return new ResponseEntity<>(boardVO,HttpStatus.OK);
+//	}
+	
+//	@GetMapping("board/search")
+//	public void boardSearch(Model model, @ModelAttribute Pagination pagination, @RequestParam String searchOption, @RequestParam String search, @RequestParam int categoryId) {
+//	    log.info("board controller: search()");
+//	    List<BoardVO> boardList;
+//	    PageMaker pageMaker = new PageMaker();
+//		pageMaker.setPagination(pagination);
+//	    if ("title".equals(searchOption)) {
+//	        boardList = boardService.selectByTitle(search,categoryId, pagination);
+//	        pageMaker.setTotalCount(boardService.searchTotalCountByTitle(categoryId, search));
+//	        
+//	        
+//	    } else if ("content".equals(searchOption)) {
+//	        boardList = boardService.selectByContent(search,categoryId,pagination);
+//	        pageMaker.setTotalCount(boardService.searchTotalCountByTitle(categoryId, search));
+//	        
+//	    } else {
+//	    	boardList = new ArrayList<BoardVO>();
+//	    }	
+//		
+//	    model.addAttribute("pageMaker", pageMaker);
+//		model.addAttribute("boardList", boardList);
+//	}
 	
 	
 	//비동기용 search 동기에선 잘 됬으니 안되면 말씀하세요
@@ -255,14 +255,8 @@ public class HomeController {
 //		return new ResponseEntity<>(response, HttpStatus.OK);
 //	}
 	
-//	@GetMapping("board/update")
-//	public ResponseEntity<BoardVO> boardUpdate(Integer boardId) {
-//		log.info("board controller : updateGet()");
-//		BoardVO boardVO = boardService.selectDetail(boardId);
-//		boardVO.setAttachVO(attachService.getAttachByBoardId(boardId));
-//		return new ResponseEntity<>(board2VO,HttpStatus.OK);
-//	}
-//	
+
+	
 	
 
 	@GetMapping("member/regist")

@@ -48,6 +48,7 @@ public class BoardServiceImple implements BoardService {
 		int result = boardMapper.insertBoard(vo);
 		log.info("board2Mapper.insert 결과 : " + result);
 		result = recommendMapper.insertRecommend(new RecommendVO());
+		
 		// result = attachMapper.insert(vo.getAttachVO());
 		AttachVO[] attach = vo.getAttachVO();
 		if (attach != null) {
@@ -116,6 +117,7 @@ public class BoardServiceImple implements BoardService {
 	public BoardVO selectDetail(int boardId) {
 		BoardVO vo = boardMapper.selectDetail(boardId);
 		vo.setRecomenndVO(recommendMapper.selectRecommend(boardId));
+		log.info(vo);
 		if (attachMapper.selectByBoardId(boardId) != null) {
 			vo.setAttachVO(attachMapper.selectByBoardId(boardId));
 		}
@@ -144,9 +146,9 @@ public class BoardServiceImple implements BoardService {
 	}
 
 	@Override
-	public int getTotalCount(int categoryId) {
+	public int getTotalCount(Pagination pagination) {
 		log.info("getTotalCount()");
-		return boardMapper.selectTotalCount(categoryId);
+		return boardMapper.selectTotalCount(pagination);
 	}
 
 

@@ -30,7 +30,6 @@ public class CategoryController {
 		categoryVO.setCategoryTitle(categoryTitle);
 		log.info("category controller : CategorydVO ="+categoryVO);
 		int result = categoryService.insertCategory(categoryVO);
-		log.info(result+"Çà »ðÀÔ");
 		return new ResponseEntity<Integer>(result, HttpStatus.OK);
 	}
 	
@@ -43,7 +42,7 @@ public class CategoryController {
 		categoryVO.setCategoryId(categoryId);
 		categoryVO.setCategoryTitle(categoryTitle);
 		int result = categoryService.updateCategoryTitle(categoryVO);
-		log.info(result+"Çà ¼öÁ¤");
+		log.info(result+"ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½");
 		return new ResponseEntity<Integer>(result, HttpStatus.OK);
 	}
 }
