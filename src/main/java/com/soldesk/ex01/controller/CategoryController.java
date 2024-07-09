@@ -1,9 +1,12 @@
 package com.soldesk.ex01.controller;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -44,5 +47,17 @@ public class CategoryController {
 		int result = categoryService.updateCategoryTitle(categoryVO);
 		log.info(result+"�� ����");
 		return new ResponseEntity<Integer>(result, HttpStatus.OK);
+	}
+	
+	@GetMapping("/list")
+	public ResponseEntity<List<CategoryVO>> selectCategoryList(){
+		List<CategoryVO> list = categoryService.selectCategoryList();
+		return new ResponseEntity<>(list,HttpStatus.OK);
+	}
+	
+	@GetMapping("/detail")
+	public ResponseEntity<CategoryVO> selectCategoryDetail(int categoryId){
+		CategoryVO vo = categoryService.selectCategory(categoryId);
+		return new ResponseEntity<>(vo,HttpStatus.OK);
 	}
 }

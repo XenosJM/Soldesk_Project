@@ -50,9 +50,9 @@
     
     <div>
     	<button id="recommend">추천</button>
-    	<p>${recommendVO.recommend }</p>
+    	<p>${boardVO.recommendVO.recommend }</p>
     	<button id="decommend">비추천</button>
-    	<p>${recommendVO.decommend }</p>
+    	<p>${boardVO.recommendVO.decommend }</p>
     
 	</div>
 

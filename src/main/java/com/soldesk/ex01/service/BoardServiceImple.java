@@ -116,7 +116,9 @@ public class BoardServiceImple implements BoardService {
 	@Override
 	public BoardVO selectDetail(int boardId) {
 		BoardVO vo = boardMapper.selectDetail(boardId);
-		vo.setRecomenndVO(recommendMapper.selectRecommend(boardId));
+		RecommendVO revo = recommendMapper.selectRecommend(boardId);
+		log.info(revo);
+		vo.setRecommendVO(revo);
 		log.info(vo);
 		if (attachMapper.selectByBoardId(boardId) != null) {
 			vo.setAttachVO(attachMapper.selectByBoardId(boardId));

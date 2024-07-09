@@ -98,17 +98,7 @@ public class HomeController {
 		return "main";
 	}
 
-//	@GetMapping("board/detail")
-//	@ResponseBody 
-//	public ResponseEntity<BoardVO> boardDetail(@RequestParam Integer boardId,@RequestBody Pagination pagination) {
-//		log.info("board controller : detail()");
-//		BoardVO boardVO = boardService.selectDetail(boardId);
-//		if (boardVO != null) {
-//			return new ResponseEntity<>(boardVO, HttpStatus.OK);
-//		} else {
-//			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-//		}
-//	}
+
 	
 	@GetMapping(value = "board/download", produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
 	@ResponseBody
@@ -139,11 +129,24 @@ public class HomeController {
 	public void boardDetail(Model model, Integer boardId) {
 		log.info("board controller : detail()");
 		BoardVO boardVO = boardService.selectDetail(boardId);
-		RecommendVO recommendVO = recommendService.selectRecommend(boardId);
+		log.info(boardVO);
+		//RecommendVO recommendVO = recommendService.selectRecommend(boardId);
 		
 		model.addAttribute("boardVO", boardVO);
-		model.addAttribute("recommendVO",recommendVO);
+		//model.addAttribute("recommendVO",recommendVO);
 	}
+	
+//	@GetMapping("board/detail")
+//	@ResponseBody 
+//	public ResponseEntity<BoardVO> boardDetail(@RequestParam Integer boardId) {
+//		log.info("board controller : detail()");
+//		BoardVO boardVO = boardService.selectDetail(boardId);
+//		if (boardVO != null) {
+//			return new ResponseEntity<>(boardVO, HttpStatus.OK);
+//		} else {
+//			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+//		}
+//	}
 
 	@GetMapping("board/regist")
 	public void boardRegister() {
