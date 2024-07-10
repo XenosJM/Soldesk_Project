@@ -20,15 +20,9 @@ public class RecommendServiceImple implements RecommendService{
 		return recommendMapper.insertRecommend(vo);
 	}
 
-	@Override
-	public int increaseRecommend(int boardId) {
-		return recommendMapper.increaseRecommend(boardId);
-	}
 
-	@Override
-	public int increaseDecommend(int boardId) {
-		return recommendMapper.increaseDecommend(boardId);
-	}
+
+
 
 	@Override
 	public int deleteRecommend(int boardId) {
@@ -39,5 +33,18 @@ public class RecommendServiceImple implements RecommendService{
 	public RecommendVO selectRecommend(int boardId) {
 		return recommendMapper.selectRecommend(boardId);
 	}
+	
+	public int updateRecommendMember(RecommendVO vo){
+		String recommendMember = vo.getRecommendMemberAsString();
+		return recommendMapper.updateRecommendMember(vo.getBoardId(), recommendMember);
+	}
+
+	@Override
+	public boolean checkRecommend(int boardId, String meberId) {
+		RecommendVO vo = recommendMapper.selectRecommend(boardId);
+		boolean result = vo.getRecommendMemberString().contains(meberId);
+		return result;
+	}
+
 
 }

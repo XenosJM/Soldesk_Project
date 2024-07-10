@@ -161,5 +161,10 @@ public class BoardServiceImple implements BoardService {
 	public int searchTotalCountByContent(int categoryId,String content) {
 		return boardMapper.searchTotalCountByContent(categoryId, content);				
 	}
+	
+	@Override
+	public int increaseRecommend(int boardId) {
+		return boardMapper.increaseRecommend(boardId);
+	}
 
 }

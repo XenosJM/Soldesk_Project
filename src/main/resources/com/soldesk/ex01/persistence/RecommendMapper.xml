@@ -6,21 +6,20 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 <mapper namespace="com.soldesk.ex01.persistence.RecommendMapper">
 	<resultMap type = "com.soldesk.ex01.domain.RecommendVO" id = "recommendResultMap">
 	<id property="recommendId" column="RECOMMEND_ID"/>
-	<result property="boardId" column="BOARD_ID"/>
-	<result property = "recommend" column="RECOMMEND"/>
-	<result property = "decommend" column="DECOMMEND"/>
+	<result property="boardId" column="BOARD_ID"/>	
+	<result property = "recommendMemberString" column = "RECOMMEND_MEMBER"/>
 	</resultMap>
 	
 	<insert id ="insertRecommend">
-		INSERT INTO RECOMMEND VALUES(RECOMMEND_SEQ.NEXTVAL,BOARD_SEQ.CURRVAL,0,0)
+		INSERT INTO RECOMMEND VALUES(RECOMMEND_SEQ.NEXTVAL,BOARD_SEQ.CURRVAL, null)
 	</insert>
 	
-	<update id = "increaseRecommend">
-		UPDATE RECOMMEND SET RECOMMEND = RECOMMEND + 1 WHERE BOARD_ID = #{boardId}
-	</update>
 	
-	<update id = "increaseDecommend">
-		UPDATE RECOMMEND SET DECOMMEND = DECOMMEND + 1 WHERE BOARD_ID = #{boardId}
+	
+
+	
+	<update id = "updateRecommendMember">
+		UPDATE RECOMMEND SET RECOMMEND_MEMBER = #{recommendMember} WHERE BOARD_ID = #{boardId}
 	</update>
 	
 	<delete id = "deleteRecommend">
