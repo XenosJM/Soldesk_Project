@@ -22,7 +22,6 @@ import com.soldesk.ex01.handler.PrivateChatHandler;
 //servlet-context.xml과 동일 
 @Configuration // Spring Container에서 관리하는 설정 클래스
 @EnableWebMvc // Spring MVC 기능 사용
-//@EnableWebSocket // 웹소켓 활성화
 @EnableScheduling // 스케줄링 기능 사용
 @ComponentScan(basePackages = {"com.soldesk.ex01"}) // component scan 설정
 public class ServletConfig implements WebMvcConfigurer {

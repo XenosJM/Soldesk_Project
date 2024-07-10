@@ -96,7 +96,7 @@ public class BoardServiceImple implements BoardService {
 	}
 
 	@Transactional
-	@PreAuthorize("isAuthenticated() or hasRole('ROLE_MANAGER') or hasRole('ROLE_HEAD_MANAGER')")
+	@PreAuthorize("isAuthenticated() and ((#vo.memberId == principal.username) or hasRole('ROLE_MANAGER'))")
 	@Override
 	public int deleteBoard(int boardId) {
 		log.info("service : board deleteBoard()");

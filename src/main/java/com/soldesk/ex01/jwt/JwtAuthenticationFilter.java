@@ -55,10 +55,10 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 response.setHeader("accessToken", accessToken);
             } else if(refreshCheck) {
             	log.info("액세스토큰 검증 실패, 리프레시 토큰 검증 성공");
-            	// 이부분 변경 해야함 
             	String memberId = tokenProvider.getUsernameFromToken(refreshToken);
-            	
+            	log.info("만료된 액세스 토큰의 아이디 : " + memberId);
             	accessToken = tokenProvider.generateAccessTokenFromRefreshToken(memberId, refreshToken);
+            	log.info("새로 발급받은 액세스 토큰 : " + accessToken);
             	
             	Authentication auth = tokenProvider.getAuthentication(accessToken);
             	SecurityContextHolder.getContext().setAuthentication(auth);

@@ -46,7 +46,8 @@ public class LoginServiceImple implements LoginService {
 	        	String refreshToken = tokenProvider.createRefreshToken(map.get("memberId"));
 	        	// JWT 리프레시 토큰을 따로 정의한 헤더에 추가
 	        	memberVO.setRefreshToken(refreshToken);
-	        	member.updateRefreshToken(memberVO);
+	        	int result = member.updateRefreshToken(memberVO);
+	        	log.info("자동 로그인 리프레시 토큰 업데이트 결과 : " + result);
 	        	response.setHeader("Refresh-Token", refreshToken );
 	        	
 	        }

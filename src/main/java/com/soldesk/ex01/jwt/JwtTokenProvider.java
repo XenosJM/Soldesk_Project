@@ -20,6 +20,7 @@ import org.springframework.stereotype.Component;
 
 import com.soldesk.ex01.domain.JwtTokenDTO;
 import com.soldesk.ex01.domain.MemberCustomDTO;
+import com.soldesk.ex01.domain.MemberVO;
 import com.soldesk.ex01.persistence.MemberMapper;
 
 import io.jsonwebtoken.Claims;
@@ -34,7 +35,6 @@ import lombok.extern.log4j.Log4j;
 public class JwtTokenProvider {
 
 	private static final String AUTHORITIES_KEY = "auth";
-	private static final String BEARER_TYPE = "Bearer";
 	
     @Autowired
     private SecretKey key;
@@ -87,8 +87,9 @@ public class JwtTokenProvider {
     		throw new RuntimeException("권한 정보가 없는 토큰입니다.");
     	}
     	
+    	MemberVO memberVO = member.selectByMemberId(claims.getSubject());
     	// UserDetails 객체를 만들어서 Authentication 리턴
-       MemberCustomDTO principal = new MemberCustomDTO(claims.getSubject(), "", getAuth(claims.getSubject()));
+    	MemberCustomDTO principal = new MemberCustomDTO(memberVO, getAuth(claims.getSubject()));
 
         return new UsernamePasswordAuthenticationToken(principal, "", getAuth(claims.getSubject()));
     	
@@ -171,12 +172,14 @@ public class JwtTokenProvider {
      * @return 새로 생성된 액세스 토큰
      */
     public String generateAccessTokenFromRefreshToken(String memberId, String refreshToken) {
+    	log.info("리프레시 토큰을 이용한 액세스토큰 재 발급 시작");
     	// 리프레시 토큰에 권한 정보를 저장시켜놓으면 재발급 시키기 매우 쉬워지지만 두개로 나눈 의미가 없어진다.
     	
     	// db에 저장된 리프레시 토큰
     	String checkToken = member.checkToken(memberId);
-    	// 전달받은 토큰과 저장된 토큰 비교
+    	log.info("DB에 저장된 토큰 : " + checkToken);
     	
+    	// 전달받은 토큰과 저장된 토큰이 같은지 비교하고 만료된지 아닌지 체크
 		if(refreshToken.equals(checkToken) && validateToken(refreshToken)) {
 			return createAccessToken(memberId); // 통과시 액세스 토큰 재 발급
 		}
