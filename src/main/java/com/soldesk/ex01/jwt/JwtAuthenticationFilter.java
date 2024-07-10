@@ -37,10 +37,10 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         	
             // 액세스 토큰이 존재하며 검증 통과시 true
             Boolean accessCheck = (accessToken != null && tokenProvider.validateToken(accessToken));
-            log.info(accessCheck); 
+            log.info("액세스 체크 : " + accessCheck); 
             // 리프레시 토큰이 존재하며 검증에 통과시 true
             Boolean refreshCheck = (refreshToken != null && tokenProvider.validateToken(refreshToken));
-            log.info(refreshCheck); 
+            log.info("리프레시 체크 : " + refreshCheck); 
             // 추출된 JWT가 유효하면
             if (accessCheck) {
             	log.info("액세스토큰 검증 통과");
@@ -52,13 +52,21 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 SecurityContextHolder.getContext().setAuthentication(auth);
                 log.info("현재 사용자: {}" + auth.getName());
                 log.info("사용자의 권한: {}" + auth.getAuthorities());
+                response.setHeader("accessToken", accessToken);
             } else if(refreshCheck) {
             	log.info("액세스토큰 검증 실패, 리프레시 토큰 검증 성공");
             	// 이부분 변경 해야함 
             	String memberId = tokenProvider.getUsernameFromToken(refreshToken);
             	
             	accessToken = tokenProvider.generateAccessTokenFromRefreshToken(memberId, refreshToken);
+            	
+            	Authentication auth = tokenProvider.getAuthentication(accessToken);
+            	SecurityContextHolder.getContext().setAuthentication(auth);
+            	log.info("현재 사용자: {}" + auth.getName());
+                log.info("사용자의 권한: {}" + auth.getAuthorities());
+            	
             	log.info(accessToken);
+            	response.setHeader("Authorization", "Bearer " + accessToken);
             }
             log.info("jwt 확인 종료");
         } catch (Exception e) {

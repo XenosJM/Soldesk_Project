@@ -35,9 +35,6 @@ public class MemberServiceImple implements MemberService{
 	
 	@Autowired
 	private MemberMapper memberMapper;
-
-    @Autowired
-    private JwtTokenProvider tokenProvider;
 	
 	private PasswordEncoder encoder = new BCryptPasswordEncoder();
 	
@@ -121,31 +118,6 @@ public class MemberServiceImple implements MemberService{
 	}
 
 	
-	public String memberCheck(Map<String, String> map, HttpServletResponse response) {
-	    log.info("memberCheck()");
-
-	    MemberVO memberVO = memberMapper.memberCheck(map.get("memberId"));
-	    // 인코딩되어 저장된 비밀번호와 입력받은 비밀번호가 일치하는지 확인
-	    if (memberVO != null && encoder.matches(map.get("memberPassword"), memberVO.getMemberPassword())) {
-	        log.info("비밀번호 검증 성공");
-	        String accessToken = tokenProvider.createAccessToken(map.get("memberId"));
-	        // JWT 액세스 토큰을 Authorization 헤더에 추가
-	        response.setHeader("Authorization", "Bearer " + accessToken);
-	        // 자동 로그인(30일 또는 7일 등) 설정시 true를 전달
-	        if(map.get("rememberMe").contains("true")) {
-	        	String refreshToken = tokenProvider.createRefreshToken(map.get("memberId"));
-	        	// JWT 리프레시 토큰을 따로 정의한 헤더에 추가
-	        	memberVO.setRefreshToken(refreshToken);
-	        	memberMapper.updateRefreshToken(memberVO);
-	        	response.setHeader("Refresh-Token", refreshToken );
-	        	
-	        }
-
-	        return "success";
-	    } else {
-	        return "fail";
-	    }
-	}
 	
 	@Transactional
 	@PreAuthorize("isAuthenticated() and (#memberVO.memberId == principal.username)")

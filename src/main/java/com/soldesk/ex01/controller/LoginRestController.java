@@ -13,8 +13,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.soldesk.ex01.domain.JwtTokenDTO;
-import com.soldesk.ex01.service.MemberService;
+import com.soldesk.ex01.service.LoginService;
 
 import lombok.extern.log4j.Log4j;
 
@@ -24,14 +23,14 @@ import lombok.extern.log4j.Log4j;
 public class LoginRestController {
 	
 	@Autowired
-	private MemberService member;
+	private LoginService login;
 	
 	@PostMapping("/check")
 	public ResponseEntity<String> memberCheck(@RequestBody Map<String, String> map, HttpServletResponse res) {
 		log.info("memberCheck()");
 		// TODO 로그인 단에서 리절트가 빈값이면 로그인 실패로 처리하도록 할 것.
 		HttpHeaders header = new HttpHeaders();
-		String result = member.memberCheck(map, res);
+		String result = login.memberCheckin(map, res);
 		log.info(result);
 		if(result.contains("success")) {
 			String accessToken = res.getHeader("Authorization");

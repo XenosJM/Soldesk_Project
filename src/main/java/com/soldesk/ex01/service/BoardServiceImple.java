@@ -41,7 +41,7 @@ public class BoardServiceImple implements BoardService {
 	RecommendMapper recommendMapper;
 
 	@Transactional
-	@PreAuthorize("isAuthenticated() and ((#vo.memberId == principal.username)")
+	@PreAuthorize("isAuthenticated() and (#vo.memberId == principal.username)")
 	@Override
 	public int insertBoard(BoardVO vo) {
 		log.info("service : insertBoard()");
@@ -60,7 +60,7 @@ public class BoardServiceImple implements BoardService {
 	}
 	
 	@Transactional
-	@PreAuthorize("isAuthenticated() and ((#vo.memberId == principal.username)")
+	@PreAuthorize("isAuthenticated() and (#vo.memberId == principal.username)")
 	@Override
 	public int updateBoard(BoardVO vo) {
 		log.info("service : board updateBoard()");
@@ -96,7 +96,7 @@ public class BoardServiceImple implements BoardService {
 	}
 
 	@Transactional
-	@PreAuthorize("isAuthenticated() or hasRole('ROLE_MANAGER') or hasRole('ROLE_HEAD_MANAGER'))")
+	@PreAuthorize("isAuthenticated() or hasRole('ROLE_MANAGER') or hasRole('ROLE_HEAD_MANAGER')")
 	@Override
 	public int deleteBoard(int boardId) {
 		log.info("service : board deleteBoard()");

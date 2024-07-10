@@ -44,7 +44,7 @@ import lombok.extern.slf4j.Slf4j;
 
 @Configuration
 @EnableWebSecurity
-//@EnableGlobalMethodSecurity(prePostEnabled = true) // 메소드 수준 보안 설정을 활성화
+@EnableGlobalMethodSecurity(prePostEnabled = true) // 메소드 수준 보안 설정을 활성화
 @Slf4j
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	

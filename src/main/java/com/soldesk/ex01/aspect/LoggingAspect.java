@@ -16,7 +16,7 @@ public class LoggingAspect {
    //   * Pointcut을 지정하는 방법2
    // @Before, @afterReturning, @afterThrowing, @after 
    
-    @Before("execution(* com.soldesk.ex01.controller.*.*(..)) || execution(* com.soldesk.ex01.persistence.*.*(..))")
+    @Before("execution(* com.soldesk.ex01.controller.*.*(..))")
     // execution에 설정한 패키지에 포함된 모든 클래스의 모든 메서드
     public void beforeAdvice(JoinPoint joinPoint) {
        // JoinPoint : Advice가 적용된 메서드에 대한 정보
@@ -26,7 +26,7 @@ public class LoggingAspect {
         log.info("before : " + className + "." + methodName + "()");
     } // beforeAdvice()
 
-    @After("execution(* com.soldesk.ex01.controller.*.*(..)) || execution(* com.soldesk.ex01.persistence.*.*(..))")
+    @After("execution(* com.soldesk.ex01.controller.*.*(..))")
     public void afterAdvice(JoinPoint joinPoint) {
         String methodName = joinPoint.getSignature().getName();
         String className = joinPoint.getTarget().getClass().getSimpleName();
