@@ -96,7 +96,7 @@ public class BoardServiceImple implements BoardService {
 	}
 
 	@Transactional
-	@PreAuthorize("isAuthenticated() or hasRole('ROLE_MANAGER') or hasRole('ROLE_HEAD_MANAGER')")
+	@PreAuthorize("isAuthenticated() or hasRole('ROLE_MANAGER') or hasRole('ROLE_HEAD_MANAGER'))")
 	@Override
 	public int deleteBoard(int boardId) {
 		log.info("service : board deleteBoard()");
@@ -160,6 +160,11 @@ public class BoardServiceImple implements BoardService {
 	}
 	public int searchTotalCountByContent(int categoryId,String content) {
 		return boardMapper.searchTotalCountByContent(categoryId, content);				
+	}
+	
+	@Override
+	public int increaseRecommend(int boardId) {
+		return boardMapper.increaseRecommend(boardId);
 	}
 
 }

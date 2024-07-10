@@ -13,7 +13,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		<result property="boardContent" column="BOARD_CONTENT" />
 		<result property="boardRegistDate" column="BOARD_REGISTDATE" />
 		<result property="boardReplyCount" column="BOARD_REPLY_COUNT" />
-		<result property="attachId" column="ATTACH_ID" />
+		<result property="recommend" column="RECOMMEND" />
 
 	</resultMap>
 
@@ -22,8 +22,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		INSERT INTO BOARD VALUES
 		(BOARD_SEQ.NEXTVAL, #{categoryId},
 		#{memberId}, #{boardTitle}, #{boardContent}, SYSDATE,
-		0,
-		BOARD_SEQ.CURRVAL)
+		0, 0)
 	</insert>
 
 
@@ -73,6 +72,10 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	<update id="decreaseReplyCount">
 		update board set board_reply_count =
 		board_reply_count - 1 where board_id = #{boardId}
+	</update>
+	
+	<update id = "increaseRecommend">
+		UPDATE BOARD SET RECOMMEND = RECOMMEND + 1 WHERE BOARD_ID = #{boardId}
 	</update>
 
 	<select id="selectListByPagination" resultMap="boardResultMap">

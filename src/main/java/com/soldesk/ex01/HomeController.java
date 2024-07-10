@@ -3,6 +3,7 @@ package com.soldesk.ex01;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -159,11 +160,14 @@ public class HomeController {
 			log.info("list()");
 			log.info("pagination = "+pagination);
 			List<BoardVO> boardList = boardService.getPagingBoards(pagination);
-			log.info("boardlist = "+boardList);
+			
 			PageMaker pageMaker = new PageMaker();
 			pageMaker.setPagination(pagination);
 			pageMaker.setTotalCount(boardService.getTotalCount(pagination));
-			log.info(pageMaker);
+			
+			String test = "[test,test2,test3]";
+			String[] strArray = test.replaceAll("\\[|\\]", "").split(", ");
+			System.out.println("strarray = "+Arrays.toString(strArray));
 			
 			model.addAttribute("pageMaker", pageMaker);
 			model.addAttribute("boardList", boardList);

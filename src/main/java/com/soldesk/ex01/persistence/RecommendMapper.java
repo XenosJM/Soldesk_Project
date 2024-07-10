@@ -11,5 +11,6 @@ public interface RecommendMapper {
 	int increaseDecommend(int boardId);
 	int deleteRecommend(int boardId);
 	RecommendVO selectRecommend(int boardId);
+	int updateRecommendMember(int boardId, String recommendMember);
 	
 }

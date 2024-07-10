@@ -20,4 +20,5 @@ public interface BoardService {
 	int getTotalCount(Pagination pagination);
 	int searchTotalCountByTitle(@Param("categoryId")int categoryId, @Param("boardTitle")String title);
 	int searchTotalCountByContent(@Param("categoryId")int categoryId, @Param("boardContent")String content);
+	int increaseRecommend(int boardId);
 }

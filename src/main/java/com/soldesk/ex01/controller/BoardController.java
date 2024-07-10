@@ -34,7 +34,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import com.soldesk.ex01.domain.AttachVO;
 import com.soldesk.ex01.domain.BoardVO;
-
+import com.soldesk.ex01.domain.RecommendVO;
 import com.soldesk.ex01.service.AttachService;
 import com.soldesk.ex01.service.BoardService;
 import com.soldesk.ex01.service.RecommendService;
@@ -56,6 +56,9 @@ public class BoardController {
 
 	@Autowired
 	private BoardService boardService;
+	
+	@Autowired
+	private RecommendService recommendService;
 
 	
 
@@ -74,7 +77,32 @@ public class BoardController {
 //		return new ResponseEntity<Integer>(result,HttpStatus.OK);
 //	}
 	
-
+	@PostMapping("/recommend")
+	@ResponseBody
+	public ResponseEntity<Integer> increaseRecommend(@RequestParam("boardId") int boardId,@RequestParam("memberId")String memberId){
+		int result;
+		if(recommendService.checkRecommend(boardId, memberId)) {
+			result = 0;
+		}else {
+			RecommendVO vo = recommendService.selectRecommend(boardId);
+			if(vo.getRecommendMemberString()==null && vo.getRecommendMemberString().isEmpty()) {
+				String[] recommendMember= {memberId};
+				vo.setRecommendMember(recommendMember);
+				recommendService.updateRecommendMember(vo);
+			}else {
+				String[] oldRecommendMember = vo.getRecommendMemberString().replaceAll("\\[|\\]", "").split(", ");
+				String[] newRecommendMember = new String[oldRecommendMember.length+1];
+				for(int i = 0;i<oldRecommendMember.length;i++) {
+					newRecommendMember[i]=oldRecommendMember[i];
+				}
+				newRecommendMember[oldRecommendMember.length] = memberId;
+				vo.setRecommendMember(newRecommendMember);
+				recommendService.updateRecommendMember(vo);
+			}
+			result = boardService.increaseRecommend(boardId);
+		}
+		return new ResponseEntity<>(result,HttpStatus.OK);
+	}
 	
 	
 	@PostMapping("/update")

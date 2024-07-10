@@ -24,7 +24,7 @@ public class BoardVO {
 	private String boardContent;
 	private Date boardRegistDate;
 	private int boardReplyCount;
-	private int attachId;
+	private int recommend;
 	
 	@Setter
 	@Getter

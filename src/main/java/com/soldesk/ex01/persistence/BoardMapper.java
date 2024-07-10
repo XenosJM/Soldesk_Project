@@ -25,4 +25,5 @@ public interface BoardMapper {
 	int decreaseReplyCount(int boardId);
 	int searchTotalCountByTitle(@Param("categoryId")int categoryId, @Param("boardTitle")String title);
 	int searchTotalCountByContent(@Param("categoryId")int categoryId, @Param("boardContent")String content);
+	int increaseRecommend(int boardId);
 }
