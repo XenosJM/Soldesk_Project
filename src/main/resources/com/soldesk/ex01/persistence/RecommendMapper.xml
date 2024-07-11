@@ -9,18 +9,13 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	<result property="boardId" column="BOARD_ID"/>	
 	<result property = "recommendMemberString" column = "RECOMMEND_MEMBER"/>
 	</resultMap>
+	<update id = "updateRecommendMember"  parameterType="com.soldesk.ex01.domain.RecommendVO">
+		UPDATE RECOMMEND SET RECOMMEND_MEMBER = #{recommendMemberString} WHERE BOARD_ID = #{boardId}
+	</update>
 	
 	<insert id ="insertRecommend">
 		INSERT INTO RECOMMEND VALUES(RECOMMEND_SEQ.NEXTVAL,BOARD_SEQ.CURRVAL, null)
 	</insert>
-	
-	
-	
-
-	
-	<update id = "updateRecommendMember">
-		UPDATE RECOMMEND SET RECOMMEND_MEMBER = #{recommendMember} WHERE BOARD_ID = #{boardId}
-	</update>
 	
 	<delete id = "deleteRecommend">
 		DELETE RECOMMEND WHERE BOARD_ID = #{boardId}

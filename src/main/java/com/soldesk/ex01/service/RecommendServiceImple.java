@@ -10,19 +10,15 @@ import lombok.extern.log4j.Log4j;
 
 @Service
 @Log4j
-public class RecommendServiceImple implements RecommendService{
+public class RecommendServiceImple implements RecommendService {
 
 	@Autowired
 	RecommendMapper recommendMapper;
-	
+
 	@Override
 	public int insertRecommend(RecommendVO vo) {
 		return recommendMapper.insertRecommend(vo);
 	}
-
-
-
-
 
 	@Override
 	public int deleteRecommend(int boardId) {
@@ -33,18 +29,23 @@ public class RecommendServiceImple implements RecommendService{
 	public RecommendVO selectRecommend(int boardId) {
 		return recommendMapper.selectRecommend(boardId);
 	}
-	
-	public int updateRecommendMember(RecommendVO vo){
-		String recommendMember = vo.getRecommendMemberAsString();
-		return recommendMapper.updateRecommendMember(vo.getBoardId(), recommendMember);
+
+	public int updateRecommendMember(RecommendVO vo) {
+		vo.setRecommendMemberString(vo.getRecommendMemberAsString());
+		int result = recommendMapper.updateRecommendMember(vo);
+		return result;
 	}
 
 	@Override
 	public boolean checkRecommend(int boardId, String meberId) {
 		RecommendVO vo = recommendMapper.selectRecommend(boardId);
-		boolean result = vo.getRecommendMemberString().contains(meberId);
+		boolean result;
+		if (vo.getRecommendMemberString() != null) {
+			result = vo.getRecommendMemberString().contains(meberId);
+		} else {
+			result = false;
+		}
 		return result;
 	}
-
 
 }

@@ -79,21 +79,7 @@ public class BoardServiceImple implements BoardService {
 		return result;
 	}
 
-	@Override
-	public List<BoardVO> selectList() {
-		log.info("service : board selectList()");
-		List<BoardVO> list = boardMapper.selectList();
-		return list;
-	}
 
-
-
-	@Override
-	public List<BoardVO> selectByMember(int member_id) {
-		log.info("service : board selectByMember()");
-		List<BoardVO> list = boardMapper.selectByMember(member_id);
-		return list;
-	}
 
 	@Transactional
 	@PreAuthorize("isAuthenticated() and ((#vo.memberId == principal.username) or hasRole('ROLE_MANAGER'))")
@@ -133,33 +119,12 @@ public class BoardServiceImple implements BoardService {
 		return list;
 	}
 	
-	@Override
-	public List<BoardVO> selectByTitle(String title,int categoryId, Pagination pagination) {
-		log.info("service : board selectByTitle()");
-		List<BoardVO> list = boardMapper.selectByTitle(title,categoryId,pagination);
-		return list;
-	}
 
-	@Override
-	public List<BoardVO> selectByContent(String content,int categoryId, Pagination pagination) {
-		log.info("service : board selectByContent()");
-		List<BoardVO> list = boardMapper.selectByContent(content,categoryId,pagination);
-		return list;
-	}
 
 	@Override
 	public int getTotalCount(Pagination pagination) {
 		log.info("getTotalCount()");
 		return boardMapper.selectTotalCount(pagination);
-	}
-
-
-	
-	public int searchTotalCountByTitle(int categoryId, String title) {
-		return boardMapper.searchTotalCountByTitle(categoryId, title);
-	}
-	public int searchTotalCountByContent(int categoryId,String content) {
-		return boardMapper.searchTotalCountByContent(categoryId, content);				
 	}
 	
 	@Override
@@ -167,4 +132,11 @@ public class BoardServiceImple implements BoardService {
 		return boardMapper.increaseRecommend(boardId);
 	}
 
+	public List<BoardVO> selectListByRecommend(Pagination pagination){
+		return boardMapper.selectListByRecommend(pagination);
+	}
+	
+	public int selectTotalCountByRecommend(Pagination pagination) {
+		return boardMapper.selectTotalCountByRecommend(pagination);
+	}
 }

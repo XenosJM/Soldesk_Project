@@ -20,7 +20,7 @@ import lombok.extern.log4j.Log4j;
 @RestController
 @RequestMapping(value="/category")
 @Log4j
-public class CategoryController {
+public class CategoryRestController {
 	
 	@Autowired
 	private CategoryService categoryService;

@@ -50,9 +50,8 @@
     
     <div>
     	<button id="recommend">추천</button>
-    	<p>${boardVO.recommendVO.recommend }</p>
-    	<button id="decommend">비추천</button>
-    	<p>${boardVO.recommendVO.decommend }</p>
+    	<p>${boardVO.recommend }</p>
+    	
     
 	</div>
 
@@ -114,10 +113,18 @@
 			getAllReply(); // 함수 호출
 			$('#recommend').click(function(){
 				let boardId = $('#boardId').val();
+				let memberId = $('#memberId').val();
+				let obj = {
+						'boardId' : boardId,
+						'memberId' : memberId
+				}
 				$.ajax({
 					type : 'post',
-					url : '../recommend/recommend',
-					data : {boardId : boardId},
+					url : '../board/recommend',
+					data : {
+						'boardId' : boardId,
+						'memberId' : memberId
+					},
 					success:function(result){
 						if(result == 1){
 							alert("추천성공");
@@ -127,20 +134,7 @@
 				});
 			});
 			
-			$('#decommend').click(function(){
-				let boardId = $('#boardId').val();
-				$.ajax({
-					type : 'post',
-					url : '../recommend/decommend',
-					data : {boardId : boardId},
-					success:function(result){
-						if(result == 1){
-							alert("비추천성공");
-							location.reload();
-						}
-					}
-				});
-			});
+			
 			
 			$('#btnAdd').click(function() {
 				let boardId = $('#boardId').val(); // 게시판 번호 데이터

@@ -86,7 +86,7 @@ public class BoardController {
 			result = 0;
 		}else {
 			RecommendVO vo = recommendService.selectRecommend(boardId);
-			if(vo.getRecommendMemberString()==null && vo.getRecommendMemberString().isEmpty()) {
+			if(vo.getRecommendMemberString()==null || vo.getRecommendMemberString().isEmpty()) {
 				String[] recommendMember= {memberId};
 				vo.setRecommendMember(recommendMember);
 				recommendService.updateRecommendMember(vo);
