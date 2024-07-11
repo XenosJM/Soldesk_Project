@@ -185,7 +185,7 @@ public class HomeController {
 //	   }
 
 	@GetMapping("board/recommendlist")
-	public ResponseEntity<Map<String, Object>> list(Pagination pagination) {
+	public ResponseEntity<Map<String, Object>>recommendList(Pagination pagination) {
 		List<BoardVO> boardList = boardService.selectListByRecommend(pagination);
 		PageMaker pageMaker = new PageMaker();
 		pageMaker.setPagination(pagination);
@@ -195,7 +195,6 @@ public class HomeController {
 		response.put("boardList", boardList);
 
 		return new ResponseEntity<>(response, HttpStatus.OK);
-
 	}
 
 	@GetMapping("board/update")
