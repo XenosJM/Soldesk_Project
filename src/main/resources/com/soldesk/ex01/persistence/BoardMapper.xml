@@ -16,6 +16,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		<result property="recommend" column="RECOMMEND" />
 
 	</resultMap>
+	
+	<select id="selectDetail" resultMap="boardResultMap">
+		<!-- 게시글 상세보기 -->
+		SELECT * FROM BOARD WHERE BOARD_ID = #{boardId}
+	</select>
 
 	<insert id="insertBoard">
 		<!-- 게시글 등록 -->
@@ -80,7 +85,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 			FROM BOARD
 			WHERE CATEGORY_ID = #{categoryId} and RECOMMEND >= 5
 		)
-		WHERE RN BETWENN #{start} AND #{end}
+		WHERE RN BETWEEN #{start} AND #{end}
 	</select>
 
 	
@@ -104,7 +109,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	<select id="selectTotalCountByRecommend" resultType="Integer">
 		SELECT COUNT(*)
 		TOTAL_COUNT FROM BOARD
-		CATEGORY_ID = #{categoryId} and RECOMMEND>=5
+		WHERE CATEGORY_ID = #{categoryId} and RECOMMEND >= 5
             
 	</select>
 
