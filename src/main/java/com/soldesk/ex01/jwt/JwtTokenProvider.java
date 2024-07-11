@@ -181,6 +181,7 @@ public class JwtTokenProvider {
     	
     	// 전달받은 토큰과 저장된 토큰이 같은지 비교하고 만료된지 아닌지 체크
 		if(refreshToken.equals(checkToken) && validateToken(refreshToken)) {
+			log.info("토큰 재 검증 및 같은 토큰인지 확인");
 			return createAccessToken(memberId); // 통과시 액세스 토큰 재 발급
 		}
 		

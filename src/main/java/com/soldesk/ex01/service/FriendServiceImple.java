@@ -29,6 +29,7 @@ public class FriendServiceImple implements FriendService {
 		int result = friendMapper.insertFriend(friendVO);
 		return result;
 	}
+	
 	@PreAuthorize("isAuthenticated() and (#memberId == principal.username)")
 	@Override
 	public List<FriendVO> friendList(String memberId) {
@@ -37,6 +38,7 @@ public class FriendServiceImple implements FriendService {
 		log.info(list);
 		return list;
 	}
+	
 	@PreAuthorize("isAuthenticated() and (#memberId == principal.username)")
 	@Override
 	public int friendStateChange(String memberId, String friendState) {
@@ -44,6 +46,7 @@ public class FriendServiceImple implements FriendService {
 		int result = friendMapper.friendStateChange(memberId, friendState);
 		return result;
 	}
+	
 	@PreAuthorize("isAuthenticated()")
 	@Override
 	public int deleteFriend(int friendshipId) {

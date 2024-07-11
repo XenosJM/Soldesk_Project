@@ -67,7 +67,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 		// 권한 설정 및 로그인 로그아웃 관련
 		httpSecurity
 			.authorizeRequests()  // 요청에 권한 부여
-				.antMatchers("/", "/member/regist", "/member/findIdPw", "/login/check", "/board/list", "/board/detail", "/board/search", "/util/**").permitAll()  // 루트 URL에 대한 모든 사용자 접근
+				.antMatchers("/", "/member/regist", "/member/findIdPw", "/login/check", "/board/list", "/board/detail", "/board/search", "/util/**", "/ws/**","/reply/{boardId}","/rereply/{boardId}").permitAll()  // 루트 URL에 대한 모든 사용자 접근
 				.antMatchers("/member/**", "/friend/**", "/reply/**", "/rereply/**", "/attach/**", "/board/**").hasAnyRole("MEMBER", "MANAGER", "HEAD_MANAGER")  // 루트 URL에 대한 MEMBER 역할을 가진 사용자만 접근 가능
 				.antMatchers("/ROLE/**").hasRole("HEAD_MANAGER")
 				
@@ -110,7 +110,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 					.block(true)
 					.and();
 		
-//		httpSecurity.cors().configurationSource(corsConfigSource());
+		httpSecurity.cors().configurationSource(corsConfigSource());
 		// 필터 관련 설정
 		httpSecurity
 		  	.addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class)  // JwtAuthenticationFilter 추가

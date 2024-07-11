@@ -16,24 +16,24 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		VALUES (CHATGROUP_SEQ.NEXTVAL, #{chatGroupTitle}, #{chatMember})
 	</insert>
 	
-	<!-- <select id="selectChatGroup" resultMap="chatGroupResultMap">
-		SELECT * FROM CHATGROUP WHERE CHAT_MEMBER LIKE '%#{memberId}%'
-	</select> -->
+	<select id="selectGroupById" resultMap="chatGroupResultMap">
+		SELECT * FROM CHATGROUP WHERE CHAT_GROUP_ID = #{chatGroupId}
+	</select>
 	
 	<select id="selectChatGroup" resultMap="chatGroupResultMap">
 	    SELECT * FROM CHATGROUP WHERE CHAT_MEMBER LIKE '%' || #{memberId} || '%'
 	</select>
 	
+	<!-- 채팅방 나가기 -->
+	<update id="updateChatMember">
+		UPDATE CHATGROUP SET
+		CHAT_MEMBER = #{chatMember}
+		WHERE CHAT_GROUP_ID = #{chatGroupId}
+	</update>
 	
 	<update id="updateChatGroupTitle">
 		UPDATE CHATGROUP SET
 		CHAT_GROUP_TITLE = #{chatGroupTitle}
-		WHERE CHAT_GROUP_ID = #{chatGroupId}
-	</update>
-	
-	<update id="exitChatGroup">
-		UPDATE CHATGROUP SET
-		CHAT_MEMBER = #{chatMember}
 		WHERE CHAT_GROUP_ID = #{chatGroupId}
 	</update>
 	

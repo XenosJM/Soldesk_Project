@@ -1,5 +1,7 @@
 package com.soldesk.ex01.controller;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletResponse;
@@ -8,11 +10,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.soldesk.ex01.domain.FriendVO;
+import com.soldesk.ex01.service.FriendService;
 import com.soldesk.ex01.service.LoginService;
 
 import lombok.extern.log4j.Log4j;
@@ -25,13 +30,19 @@ public class LoginRestController {
 	@Autowired
 	private LoginService login;
 	
+	@Autowired
+	private FriendService friend;
+	
+	@Autowired
+	private SimpMessagingTemplate msgTemp;
+	
 	@PostMapping("/check")
 	public ResponseEntity<String> memberCheck(@RequestBody Map<String, String> map, HttpServletResponse res) {
 		log.info("memberCheck()");
-		// TODO 로그인 단에서 리절트가 빈값이면 로그인 실패로 처리하도록 할 것.
 		HttpHeaders header = new HttpHeaders();
 		String result = login.memberCheckin(map, res);
 		log.info(result);
+		
 		if(result.contains("success")) {
 			String accessToken = res.getHeader("Authorization");
 			// 헤더에 JWT 토큰 추가 예시
@@ -40,10 +51,20 @@ public class LoginRestController {
 				String refreshToken = res.getHeader("Refresh-Token");
 				header.add("Refresh-Token", refreshToken);
 			}
+		// 멤버 아이디 선언
+		String memberId = map.get("memberId");
+		// 로그인 상태를 알릴 친구목록
+		List<FriendVO> friendList = friend.friendList(memberId);
+		// 친구목록에 존재하는 친구들에게 메시지 전송
+		for(FriendVO friendVO : friendList) {
+			msgTemp.convertAndSendToUser(friendVO.getFriendMemberId(), "/friend/sendState", memberId + "님이 로그인 하셨습니다.");
+		}
 			
 		} else {
 			
 		}
 		return new ResponseEntity<>(result, HttpStatus.OK);
 	}
+	
+
 }

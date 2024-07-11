@@ -30,12 +30,12 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </select>
     
     <!-- 채팅방에서 삭제하는 쿼리, 프론트단에서 5분 경과시 삭제 못하도록 하기. -->
-    <update id="updateChat">
+    <update id="deleteChat">
     	UPDATE CHAT SET CHAT_CONTENT = '삭제된 메시지입니다.' WHERE CHAT_ID = #{chatId} AND CHAT_GROUP_ID = #{chatGroupId}
     </update>
     
     <!-- 스케쥴링용, 입력된 날짜를 기준으로 3일이 지난 개인 채팅들(chatGroupId = 0인 데이터들)을 모두 삭제, 채팅방에 아무도 없을시 삭제 -->
-    <delete id="deleteChat">
+    <delete id="removeChat">
     	DELETE FROM CHAT WHERE CHAT_GROUP_ID = #{chatGroupId}
     </delete>
 	

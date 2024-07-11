@@ -1,28 +1,36 @@
 package com.soldesk.ex01.controller;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.MessageMapping;
+import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PostMapping;
+
+import com.soldesk.ex01.domain.ChatGroupVO;
+import com.soldesk.ex01.domain.ChatVO;
 
 import lombok.extern.log4j.Log4j;
 
 @Controller
 @Log4j
 public class WebSocketController {
+    
 	
-	// 친구 상태 변화 감지 소켓 연결용 메서드
-	// 로그인 성공시 로그인 되었다는 정보(예시 : "로그인" 또는 "login" 등)를 
-	// 로그인하며 연결된 소켓인 이 경로로 보내기
-	@MessageMapping("/sendState")
-	@SendTo("/topic/friendState")
-	public String friendState(String memberState) {
-		String msg = "msg";
-		return msg;
-	}
 	
+    // 친구 상태 변화 감지 소켓 연결용 메서드
+    @MessageMapping("/sendState")
+    @SendTo("/friend/sendState")
+    public String friendState(@Payload String msg) {
+        return msg;
+    }
+    
+    // TODO 개인 메시지 또는 채팅방 메서드 만들어야함
+    
+    // 채팅 메시지 전송 메서드
+    @MessageMapping("/chat")
+    @SendTo("/topic/messages")
+    public ChatVO send(ChatVO message) {
+        return message;
+    }
 }
-
-
-
-
-

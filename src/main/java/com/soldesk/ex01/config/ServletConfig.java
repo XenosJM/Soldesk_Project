@@ -63,13 +63,6 @@ public class ServletConfig implements WebMvcConfigurer {
       
       return resolver;
    }
-   
-	// �� ���� ���ῡ �ʿ��� �� ����
-	@Bean
-	public PrivateChatHandler privateChatHandler() {
-		return new PrivateChatHandler();
-	}
-	
 	
 	
 } // end ServletConfig

@@ -34,7 +34,8 @@ public class ChatMapperTest {
 	}
 
 	private void testUpdateChat() {
-		int result = chat.updateChat(1, 0);
+		ChatVO chatVO = new ChatVO();
+		int result = chat.deleteChat(chatVO);
 		log.info(result);
 		
 	}
@@ -47,10 +48,10 @@ public class ChatMapperTest {
 	}
 
 	private void testChatSelect(String memberId, String chatMemberId) {
-		
-		for(ChatVO chatVO : chat.selectPrivateChat(memberId, chatMemberId)) {
+		ChatVO chatVO = new ChatVO();
+		for(ChatVO VO : chat.selectPrivateChat(chatVO)) {
 			
-			log.info(chatVO);
+			log.info(VO);
 		}
 	}
 

@@ -317,6 +317,11 @@ public class HomeController {
 //        return "redirect:/login?logout";
 //    }
 	
+	@GetMapping("login/checkout")
+	public void checkout() {
+		log.info("checkout");
+	}
+	
 	@GetMapping("/error/403")
 	public void accessDeny() {
 		log.info("accessDeny");

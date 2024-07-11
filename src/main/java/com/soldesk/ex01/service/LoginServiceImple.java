@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import com.soldesk.ex01.domain.MemberVO;
 import com.soldesk.ex01.handler.FriendLoginCheckHandler;
 import com.soldesk.ex01.jwt.JwtTokenProvider;
+import com.soldesk.ex01.persistence.FriendMapper;
 import com.soldesk.ex01.persistence.MemberMapper;
 
 import lombok.extern.log4j.Log4j;
@@ -22,11 +23,12 @@ public class LoginServiceImple implements LoginService {
 	
 	@Autowired
 	private MemberMapper member;
+	
+	@Autowired
+	private FriendMapper friend;
 
     @Autowired
     private JwtTokenProvider tokenProvider;
-        
-    private FriendLoginCheckHandler loginCheck;
     
     private PasswordEncoder encoder = new BCryptPasswordEncoder();
 	
@@ -41,6 +43,9 @@ public class LoginServiceImple implements LoginService {
 	        String accessToken = tokenProvider.createAccessToken(map.get("memberId"));
 	        // JWT 액세스 토큰을 Authorization 헤더에 추가
 	        response.setHeader("Authorization", "Bearer " + accessToken);
+        	// 로그인 성공시 로그인 상태 업데이트
+	        friend.friendStateChange(map.get("memberId"), "online");
+	        
 	        // 자동 로그인(30일 또는 7일 등) 설정시 true를 전달
 	        if(map.get("rememberMe").contains("true")) {
 	        	String refreshToken = tokenProvider.createRefreshToken(map.get("memberId"));
@@ -49,21 +54,23 @@ public class LoginServiceImple implements LoginService {
 	        	int result = member.updateRefreshToken(memberVO);
 	        	log.info("자동 로그인 리프레시 토큰 업데이트 결과 : " + result);
 	        	response.setHeader("Refresh-Token", refreshToken );
+	        	// 로그인 성공시 로그인 상태 업데이트
+	        	friend.friendStateChange(map.get("memberId"), "online");
 	        	
 	        }
-//	        loginCheck.onLogin(map.get("memberId"));
+	        
 
 	        return "success";
 	    } else {
 	        return "fail";
 	    }
 	}
+	
+	// TODO 자동 로그인시 리프레시 토큰을 검증하고 로그인 되었다고 알려주는 로직 짤것
 
-	@Override
-	public String memberCheckout(String memberId) {
-		// TODO Auto-generated method stub
-		// 웹 소켓의 연결이 끊어지면 로그아웃 처리 되도록 진행할것 로그아웃 처리되면서 logout 알림 뜨게 만들기.
-		
-		return null;
-	}
+//	@Override
+//	public String memberCheckout(String memberId) {
+//		
+//		return null;
+//	}
 }
