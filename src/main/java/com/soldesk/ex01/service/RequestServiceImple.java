@@ -25,7 +25,7 @@ public class RequestServiceImple implements RequestService {
 	public int insertRequest(RequestVO requestVO) {
 		log.info("insertRequest()");		
 		int result = 0;
-		if(request.selectRequestById(requestVO.getMemberId()) != null) {
+		if(request.selectRequestByMemberId(requestVO.getMemberId()) != null) {
 			result = 2; // request 요청목록에 현재 요청한 정보가 있다면
 			return result;
 		} else {
@@ -54,6 +54,18 @@ public class RequestServiceImple implements RequestService {
 		log.info("cancleRequest()");
 		int result = request.cancelRequest(requestId);
 		return result;
+	}
+
+	@Override
+	public RequestVO getRequestByReceiverId(String receiverId) {
+		RequestVO requestVO = request.selectByReceiverId(receiverId);
+		return requestVO;
+	}
+
+	@Override
+	public RequestVO getByRequestId(int requestId) {
+		RequestVO requestVO = request.selectByRequestId(requestId);
+		return requestVO;
 	}
 
 }

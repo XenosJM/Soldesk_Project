@@ -25,8 +25,18 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         SELECT * FROM REQUEST WHERE MEMBER_ID = #{memberId}
     </select>
     
+    <!-- 친구요청 보낸 사용자가 requestId값을 알게 하기위한 쿼리 -->
+    <select id="selectByReceiverId" resultType="requestResultMap">
+    	SELECT * FROM REQUEST WHERE RECEIVER_ID = #{receiverId}
+    </select>
+    
+    <!-- 친구요청 보낸 사용자가 requesterId값을 알게 하기위한 쿼리 -->
+    <select id="selectByRequestId" resultType="requestResultMap">
+    	SELECT * FROM REQUEST WHERE REQUEST_ID = #{requestId}
+    </select>
+    
     <!-- 친구 요청 존재여부 조회 -->
-    <select id="selectRequestById" resultType="String">
+    <select id="selectRequestByMemberId" resultType="String">
         SELECT RECEIVER_ID FROM REQUEST WHERE MEMBER_ID = #{memberId}
     </select>
     

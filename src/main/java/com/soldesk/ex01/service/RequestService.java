@@ -8,6 +8,8 @@ public interface RequestService {
 
 	int insertRequest(RequestVO requestVO);
 	List<RequestVO> sendList(String memberId);
+	RequestVO getRequestByReceiverId(String receiverId);
+	RequestVO getByRequestId(int requestId);
 	int requestStateChange(int requestId, String requestState);
 	int cancelRequest(int requestId);
 

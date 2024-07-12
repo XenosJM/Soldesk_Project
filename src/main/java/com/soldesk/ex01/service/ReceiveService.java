@@ -8,6 +8,8 @@ public interface ReceiveService {
 
 	int insertReceive(ReceiveVO receiveVO);
 	List<ReceiveVO> receiveList(String memberId);
+	ReceiveVO getByRequesterId(String requesterid);
+	ReceiveVO getByReceiveId(int receiveId);
 	int receiveStateChange(int receiveId, String receiveState);
 	int rejectRequest(int receiveId);
 

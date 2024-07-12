@@ -22,7 +22,7 @@ public class FriendServiceImple implements FriendService {
 	private FriendMapper friendMapper;
 	
 	
-	@PreAuthorize("isAuthenticated() and (#friendVO.memberId == principal.username)")
+	@PreAuthorize("isAuthenticated() and (#friendVO.memberId == principal.username) or (#friendVO.friendMemberId == principal.username)")
 	@Override
 	public int insertFriend(FriendVO friendVO) {
 		log.info("insertFriend()");

@@ -185,13 +185,15 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         CorsConfiguration corsConfig = new CorsConfiguration();
 
         // 오리진 패턴을 설정. 여기서는 특정 IP와 포트를 가진 도메인을 허용.
-        corsConfig.setAllowedOrigins(List.of("http://192.168.0.144:3000"));
+//        corsConfig.setAllowedOrigins(List.of("http://192.168.0.144:3000"));
+        corsConfig.setAllowedOrigins(List.of("*"));
         // 허용할 HTTP 메서드를 설정
         corsConfig.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "HEAD", "OPTIONS"));
         // 허용할 HTTP 헤더를 설정합니다.
-        corsConfig.setAllowedHeaders(List.of("Authorization", "Cache-Control", "Content-Type", "Refresh-Token"));
+//        corsConfig.setAllowedHeaders(List.of("Authorization", "Cache-Control", "Content-Type", "Refresh-Token"));
+        corsConfig.setAllowedHeaders(List.of("*"));
         // 자격 증명을 포함한 요청을 허용.
-        corsConfig.setAllowCredentials(true);
+//        corsConfig.setAllowCredentials(true);
         // 리액트쪽에서 토큰을 받아 로컬스토리지에 저장 할수 있도록 명시
         // 다만 헤더를 노출시켜 토큰을 사용할수있게 접근하는것은 문제가 있을수 밖에 없을것 같아
         // 찾아보니 HttpOnly 쿠키를 쓰면 된다고 하지만 그럴 경우 리액트에서 가져다 사용할수가 없다.
