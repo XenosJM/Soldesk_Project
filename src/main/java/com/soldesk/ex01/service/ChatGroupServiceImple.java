@@ -42,7 +42,7 @@ public class ChatGroupServiceImple implements ChatGroupService {
 	public int inviteMember(int chatGroupId, String memberId) {
 		ChatGroupVO groupVO = group.selectGroupById(chatGroupId);
 		List<String> list = new ArrayList<String>();
-		for(String item : groupVO.getChatMember().split(",")) {
+		for(String item : groupVO.getChatMemberAsString().split(",")) {
 			list.add(item);
 		}
 		list.add(memberId);

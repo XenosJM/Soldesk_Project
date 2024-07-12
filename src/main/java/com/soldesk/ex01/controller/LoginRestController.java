@@ -11,6 +11,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -66,5 +67,15 @@ public class LoginRestController {
 		return new ResponseEntity<>(result, HttpStatus.OK);
 	}
 	
+	@PostMapping("/checkout")
+	public ResponseEntity<String> checkout(String memberId) {
+		log.info("checkout");
+		List<FriendVO> friendList = friend.friendList(memberId);
+		
+		for(FriendVO friendVO : friendList) {
+			msgTemp.convertAndSendToUser(friendVO.getFriendMemberId(), "/friend/sendState", memberId + "님이 로그아웃 하셨습니다.");
+		}
+		return new ResponseEntity<>("success", HttpStatus.OK);
+	}
 
 }

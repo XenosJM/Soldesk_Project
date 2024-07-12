@@ -55,9 +55,9 @@ public class CategoryRestController {
 		return new ResponseEntity<>(list,HttpStatus.OK);
 	}
 	
-	@GetMapping("/detail")
-	public ResponseEntity<CategoryVO> selectCategoryDetail(int categoryId){
-		CategoryVO vo = categoryService.selectCategory(categoryId);
-		return new ResponseEntity<>(vo,HttpStatus.OK);
-	}
+//	@GetMapping("/detail")
+//	public ResponseEntity<CategoryVO> selectCategoryDetail(int categoryId){
+//		CategoryVO vo = categoryService.selectCategory(categoryId);
+//		return new ResponseEntity<>(vo,HttpStatus.OK);
+//	}
 }

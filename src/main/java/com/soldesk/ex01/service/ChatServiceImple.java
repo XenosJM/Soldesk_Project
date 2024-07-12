@@ -43,7 +43,7 @@ public class ChatServiceImple implements ChatService {
 		ChatGroupVO groupVO = group.selectGroupById(chatGroupId);
 		ChatGroupVO changeVO = new ChatGroupVO();
 		List<String> list = new ArrayList<String>();
-		for(String item : groupVO.getChatMember().split(",")) {
+		for(String item : groupVO.getChatMemberAsString().split(",")) {
 			list.add(item);
 		}
 		list.remove(memberId);
