@@ -83,7 +83,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		SELECT * FROM (
 			SELECT ROW_NUMBER() OVER (ORDER BY BOARD_ID DESC) AS RN, BOARD.*
 			FROM BOARD
-			WHERE CATEGORY_ID = #{categoryId} and RECOMMEND >= 5
+			WHERE CATEGORY_ID = #{categoryId} and RECOMMEND >= #{recommendCut}
 		)
 		WHERE RN BETWEEN #{start} AND #{end}
 	</select>
@@ -109,7 +109,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	<select id="selectTotalCountByRecommend" resultType="Integer">
 		SELECT COUNT(*)
 		TOTAL_COUNT FROM BOARD
-		WHERE CATEGORY_ID = #{categoryId} and RECOMMEND >= 5
+		WHERE CATEGORY_ID = #{categoryId} and RECOMMEND >= #{recommendCut}
             
 	</select>
 
