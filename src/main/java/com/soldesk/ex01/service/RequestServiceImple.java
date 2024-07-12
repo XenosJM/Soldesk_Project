@@ -24,8 +24,8 @@ public class RequestServiceImple implements RequestService {
 	@Override
 	public int insertRequest(RequestVO requestVO) {
 		log.info("insertRequest()");		
-		int result = 0;
-		if(request.selectRequestByMemberId(requestVO.getMemberId()) != null) {
+		int result = request.selectRequestByReceiverId(requestVO.getReceiverId());
+		if(result >= 1) {
 			result = 2; // request 요청목록에 현재 요청한 정보가 있다면
 			return result;
 		} else {

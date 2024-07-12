@@ -21,12 +21,12 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </insert>
 	
 	<!-- 친구요청 받은 사용자가 receiveId값을 알게 하기위한 쿼리 -->
-	<select id="selectByRequesterId" resultType="receiveResultMap">
+	<select id="selectByRequesterId" resultMap="receiveResultMap">
 		SELECT * FROM RECEIVE WHERE REQUESTER_ID = #{requesterId}
 	</select>
 	
 	<!-- 친구요청 받은 사용자가 receiverId값을 알게 하기위한 쿼리 -->
-	<select id="selectByReceiveId" resultType="receiveResultMap">
+	<select id="selectByReceiveId" resultMap="receiveResultMap">
 		SELECT * FROM RECEIVE WHERE RECEIVE_ID = #{receiveId}
 	</select>
 	

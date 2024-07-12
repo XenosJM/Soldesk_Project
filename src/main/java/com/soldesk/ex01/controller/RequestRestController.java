@@ -49,17 +49,25 @@ public class RequestRestController {
 	public ResponseEntity<Integer> requestStateChange(@RequestBody RequestVO requestVO /* @PathVariable ("requestId") int requestId, @RequestParam("requestState") String requestState */){
 		log.info("requestStateChange()");
 		log.info(requestVO);
+			
 		int result = request.requestStateChange(requestVO.getRequestId(), requestVO.getRequestState());
+		
+		if(result == 1) {
+			RequestVO checkVO = request.getByRequestId(requestVO.getRequestId());
+			log.info(checkVO);
+			result = receive.getByRequesterId(checkVO.getMemberId()).getReceiveId();
+		}
+		
 		return new ResponseEntity<Integer>(result, HttpStatus.OK);
 	}
 	
 	@PostMapping("/cancel/{requestId}")
 	public ResponseEntity<Integer> cancelRequest(@PathVariable("requestId") int requestId){
 		log.info("cancelRequest()");
+		RequestVO requestVO = request.getByRequestId(requestId);
 		int result = request.cancelRequest(requestId);
 		
 		if(result == 1) {
-			RequestVO requestVO = request.getByRequestId(requestId);
 			ReceiveVO receiveVO = receive.getByRequesterId(requestVO.getMemberId());
 			
 			result = receiveVO.getReceiveId();

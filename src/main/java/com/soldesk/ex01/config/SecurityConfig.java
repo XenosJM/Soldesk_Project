@@ -55,12 +55,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	@Autowired
 	private UserDetailServiceImple userDetail;
 	
-//	private final JwtTokenProvider jwtTokenProvider;
-//	
-//	public  SerurityConfig(JwtTokenProvider jwtTokenProvider) {
-//		this.jwtTokenProvider = jwtTokenProvider;
-//	}
-	
 	@Override
 	protected void configure(HttpSecurity httpSecurity) throws Exception {
 		log.info("http 시큐리티 설정");
@@ -68,7 +62,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 		httpSecurity
 			.authorizeRequests()  // 요청에 권한 부여
 				.antMatchers("/", "/member/regist", "/member/findIdPw", "/login/check", "/board/list", "/board/detail", "/board/search", "/util/**","/reply/{boardId}","/rereply/{boardId}","/category/list","/category/detail","/board/recommendlist" ).permitAll()  // 루트 URL에 대한 모든 사용자 접근
-				.antMatchers("/member/**", "/friend/**", "/reply/**", "/rereply/**", "/attach/**", "/board/**").hasAnyRole("MEMBER", "MANAGER", "HEAD_MANAGER")  // 루트 URL에 대한 MEMBER 역할을 가진 사용자만 접근 가능
+				// TODO 웹소켓 엔드포인트도 추가해야하면 할것
+				.antMatchers("/member/**", "/friend/**", "/reply/**", "/rereply/**", "/attach/**", "/board/**","/request/**","/receive/**").hasAnyRole("MEMBER", "MANAGER", "HEAD_MANAGER")  // 루트 URL에 대한 MEMBER 역할을 가진 사용자만 접근 가능
 				.antMatchers("/ROLE/**").hasRole("HEAD_MANAGER")
 				
 				.anyRequest().authenticated() // 이외에 URL은 사용자 인증을 수행해야 함
@@ -185,15 +180,15 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         CorsConfiguration corsConfig = new CorsConfiguration();
 
         // 오리진 패턴을 설정. 여기서는 특정 IP와 포트를 가진 도메인을 허용.
-//        corsConfig.setAllowedOrigins(List.of("http://192.168.0.144:3000"));
-        corsConfig.setAllowedOrigins(List.of("*"));
+        corsConfig.setAllowedOrigins(List.of("http://192.168.0.144:3000"));
+//        corsConfig.setAllowedOrigins(List.of("*"));
         // 허용할 HTTP 메서드를 설정
         corsConfig.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "HEAD", "OPTIONS"));
         // 허용할 HTTP 헤더를 설정합니다.
-//        corsConfig.setAllowedHeaders(List.of("Authorization", "Cache-Control", "Content-Type", "Refresh-Token"));
-        corsConfig.setAllowedHeaders(List.of("*"));
+        corsConfig.setAllowedHeaders(List.of("Authorization", "Cache-Control", "Content-Type", "Refresh-Token"));
+//        corsConfig.setAllowedHeaders(List.of("*"));
         // 자격 증명을 포함한 요청을 허용.
-//        corsConfig.setAllowCredentials(true);
+        corsConfig.setAllowCredentials(true);
         // 리액트쪽에서 토큰을 받아 로컬스토리지에 저장 할수 있도록 명시
         // 다만 헤더를 노출시켜 토큰을 사용할수있게 접근하는것은 문제가 있을수 밖에 없을것 같아
         // 찾아보니 HttpOnly 쿠키를 쓰면 된다고 하지만 그럴 경우 리액트에서 가져다 사용할수가 없다.

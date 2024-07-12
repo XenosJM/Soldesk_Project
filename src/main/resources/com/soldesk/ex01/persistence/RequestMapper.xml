@@ -26,19 +26,21 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </select>
     
     <!-- 친구요청 보낸 사용자가 requestId값을 알게 하기위한 쿼리 -->
-    <select id="selectByReceiverId" resultType="requestResultMap">
+    <select id="selectByReceiverId" resultMap="requestResultMap">
     	SELECT * FROM REQUEST WHERE RECEIVER_ID = #{receiverId}
     </select>
     
     <!-- 친구요청 보낸 사용자가 requesterId값을 알게 하기위한 쿼리 -->
-    <select id="selectByRequestId" resultType="requestResultMap">
+    <select id="selectByRequestId" resultMap="requestResultMap">
     	SELECT * FROM REQUEST WHERE REQUEST_ID = #{requestId}
     </select>
     
-    <!-- 친구 요청 존재여부 조회 -->
-    <select id="selectRequestByMemberId" resultType="String">
-        SELECT RECEIVER_ID FROM REQUEST WHERE MEMBER_ID = #{memberId}
-    </select>
+   <!-- 친구 요청 존재여부 조회 -->
+	<select id="selectRequestByReceiverId" resultType="Integer">
+	    SELECT COUNT(RECEIVER_ID)
+	    FROM REQUEST
+	    WHERE RECEIVER_ID = #{receiverId}
+	</select>
     
     <!-- 스케쥴링으로 기준 시간이 지난 요청 삭제 -->
     <select id="allSendList" resultMap="requestResultMap">

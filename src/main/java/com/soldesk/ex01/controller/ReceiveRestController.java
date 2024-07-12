@@ -49,17 +49,26 @@ public class ReceiveRestController {
 	public ResponseEntity<Integer> receiveStateChange(@RequestBody ReceiveVO receiveVO/*@PathVariable("receiveId") int receiveId, @RequestParam("receiveState") String receiveState*/){
 		log.info("receiveStateChange()");
 		log.info(receiveVO);
+		
 		int result = receive.receiveStateChange(receiveVO.getReceiveId(), receiveVO.getReceiveState());
+		
+		if(result == 1) {
+			
+			ReceiveVO checkVO = receive.getByReceiveId(receiveVO.getReceiveId());
+			result = request.getRequestByReceiverId(checkVO.getMemberId()).getRequestId();
+			
+		}
+		
 		return new ResponseEntity<Integer>(result, HttpStatus.OK);
 	}
 	
 	@PostMapping("/reject/{receiveId}")
 	public ResponseEntity<Integer> rejentRequest(@PathVariable("receiveId") int receiveId){
 		log.info("rejentRequest()");
+		ReceiveVO receiveVO = receive.getByReceiveId(receiveId);
 		int result = receive.rejectRequest(receiveId);
 		// 거절이 성공적일 경우
 		if(result == 1) {
-			ReceiveVO receiveVO = receive.getByReceiveId(receiveId);
 			RequestVO requestVO = request.getRequestByReceiverId(receiveVO.getMemberId());
 			// 해당 보낸 요청의 requestId 값을 리턴
 			result = requestVO.getRequestId();

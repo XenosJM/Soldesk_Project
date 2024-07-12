@@ -12,7 +12,7 @@ public interface RequestMapper {
 
 	int insertRequest(RequestVO requestVO);
 	List<RequestVO> sendListRequest(String memberId);
-	String selectRequestByMemberId(String memberId);
+	int selectRequestByReceiverId(String receiverId);
 	RequestVO selectByReceiverId(String receiverId);
 	RequestVO selectByRequestId(int requestId);
 	List<RequestVO> allSendList();
