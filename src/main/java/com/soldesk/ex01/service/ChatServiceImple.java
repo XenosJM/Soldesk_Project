@@ -50,7 +50,7 @@ public class ChatServiceImple implements ChatService {
 		
 		changeVO.setChatMember((String[]) list.toArray());
 		changeVO.setChatGroupId(chatGroupId);
-		changeVO.setGroupTitle(groupVO.getGroupTitle());
+		changeVO.setChatGroupTitle(groupVO.getChatGroupTitle());
 		
 		return group.updateChatMember(groupVO);
 	}

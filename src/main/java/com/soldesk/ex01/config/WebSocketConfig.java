@@ -1,10 +1,13 @@
 package com.soldesk.ex01.config;
 
 import org.springframework.context.annotation.Configuration;
+import org.springframework.messaging.simp.config.ChannelRegistration;
 import org.springframework.messaging.simp.config.MessageBrokerRegistry;
 import org.springframework.web.socket.config.annotation.EnableWebSocketMessageBroker;
 import org.springframework.web.socket.config.annotation.StompEndpointRegistry;
 import org.springframework.web.socket.config.annotation.WebSocketMessageBrokerConfigurer;
+
+import com.soldesk.ex01.jwt.JwtWebSocketInterceptor;
 
 @Configuration
 @EnableWebSocketMessageBroker
@@ -22,7 +25,7 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
 	    registry.setApplicationDestinationPrefixes("/app");
 	    
 	    // 특정 사용자에게 메시지 전송할때 사용할 설정
-	    registry.setUserDestinationPrefix("/member");
+	    registry.setUserDestinationPrefix("/private");
 	}
 
 	
@@ -36,5 +39,10 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
 //	    		왜인지는 모르겠으나 withSockJs()를 사용하면 확인이 안됨
 //	    		.withSockJS();
 	}
+	
+	@Override
+    public void configureClientInboundChannel(ChannelRegistration registration) {
+        registration.interceptors(new JwtWebSocketInterceptor());
+    }
 
 }

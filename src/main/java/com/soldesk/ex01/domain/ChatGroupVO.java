@@ -19,7 +19,7 @@ import lombok.ToString;
 public class ChatGroupVO {
 	
 	private int chatGroupId;
-	private String groupTitle;
+	private String chatGroupTitle;
 	private String[] chatMember;
 	private String chatMemberAsString;
 	

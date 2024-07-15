@@ -180,7 +180,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         CorsConfiguration corsConfig = new CorsConfiguration();
 
         // 오리진 패턴을 설정. 여기서는 특정 IP와 포트를 가진 도메인을 허용.
-        corsConfig.setAllowedOrigins(List.of("http://192.168.0.144:3000"));
+        corsConfig.setAllowedOrigins(List.of("http://192.168.0.147:3000"));
 //        corsConfig.setAllowedOrigins(List.of("*"));
         // 허용할 HTTP 메서드를 설정
         corsConfig.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "HEAD", "OPTIONS"));

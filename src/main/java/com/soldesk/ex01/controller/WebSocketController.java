@@ -33,10 +33,17 @@ public class WebSocketController {
     }
 
     // 채팅 메시지 전송 메서드
-    @MessageMapping("/private/{memberId}")
+    @MessageMapping("/private/{memberId}/{friendMemberid}")
     @SendTo("/topic/private/{memberId}")
-    public String send(@Payload String msg, @PathVariable String memberId) {
+    public String privateChat(@Payload String msg, @PathVariable String memberId) {
         return msg;
+    }
+    
+    // 그룹 채팅 전송 메서드
+    @MessageMapping("/group/{groupId}/{memberId}")
+    @SendTo("/topic/group/{groupId}")
+    public String groupChat(@Payload String msg, @PathVariable int groupId) {
+    	return msg;
     }
 
     // 로그인 상태를 알릴 친구들에게 메시지 전송 
@@ -44,7 +51,7 @@ public class WebSocketController {
 //    구독이 성공적으로 이루어지면 바로 클라이언트에서  /app/loginAlarm 엔드포인트로 요청
 //    loginAlarm가 요청이 되어 실행되면 해당 메서드는 로그인한 유저의 친구들에게 로그인 상태를 알림. /friend 주제로 구독한 클라이언트들에게 메시지를 전송
     @MessageMapping("/loginAlarm")
-    public void notifyLogin(@Payload String memberId) {
+    public void loginAlarm(@Payload String memberId) {
         // 친구목록 조회
         List<FriendVO> friendList = friendService.friendList(memberId);
         
