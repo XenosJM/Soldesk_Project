@@ -8,6 +8,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.soldesk.ex01.domain.RereplyVO;
+import com.soldesk.ex01.persistence.BoardMapper;
+import com.soldesk.ex01.persistence.ReplyMapper;
 import com.soldesk.ex01.persistence.RereplyMapper;
 
 import lombok.extern.log4j.Log4j;
@@ -17,21 +19,28 @@ import lombok.extern.log4j.Log4j;
 public class RereplyServiceImple implements RereplyService {
 	
 	@Autowired
-	RereplyMapper rereplymapper;
+	RereplyMapper rereplyMapper;
+	
+	@Autowired
+	ReplyMapper replyMapper;
+	
+	@Autowired
+	BoardMapper boardMapper;
 	
 	@Transactional
 	@PreAuthorize("isAuthenticated() and (#vo.memberId == principal.username)")
 	@Override
 	public int insertRereply(RereplyVO vo) {
 		log.info("rereply service : insertRereply()");
-		int result = rereplymapper.insertRereply(vo);
+		int result = rereplyMapper.insertRereply(vo);
+		boardMapper.increaseReplyCount(replyMapper.findReply(vo.getReplyId()).getBoardId());
 		return result;
 	}
 
 	@Override
 	public List<RereplyVO> selectRereply(int replyId) {
 		log.info("rereply service : selectRereply()");
-		List<RereplyVO> list = rereplymapper.selectRereply(replyId);
+		List<RereplyVO> list = rereplyMapper.selectRereply(replyId);
 		return list;
 	}
 
@@ -47,7 +56,7 @@ public class RereplyServiceImple implements RereplyService {
 		vo.setRereplyContent(rereplyContent);
 		log.info("1");
 		System.out.println(vo);
-		int result = rereplymapper.updateRereply(vo);
+		int result = rereplyMapper.updateRereply(vo);
 		log.info("service result : "+result);
 		return result;
 	}
@@ -57,7 +66,8 @@ public class RereplyServiceImple implements RereplyService {
 	@Override
 	public int deleteRereply(int rereplyId) {
 		log.info("rereply service : deleteRereply()");
-		int result = rereplymapper.deleteRereply(rereplyId);
+		int result = rereplyMapper.deleteRereply(rereplyId);
+		boardMapper.decreaseReplyCount(replyMapper.findReply(rereplyMapper.findRereply(rereplyId).getReplyId()).getBoardId());
 		return result;
 	}
 
@@ -66,8 +76,13 @@ public class RereplyServiceImple implements RereplyService {
 	@Override
 	public int deleteRereplyToReply(int replyId) {
 		log.info("rereply service : deleteRereplyToReply()");
-		int result = rereplymapper.deleteRereplyToReply(replyId);
+		int result = rereplyMapper.deleteRereplyToReply(replyId);
 		return result;
+	}
+
+	@Override
+	public RereplyVO findRereply(int rereplyId) {
+		return rereplyMapper.findRereply(rereplyId);
 	}
 
 }

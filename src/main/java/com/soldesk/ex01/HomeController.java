@@ -63,16 +63,11 @@ public class HomeController {
 //	private static final Logger logger = LoggerFactory.getLogger(HomeController.class); // 
 
 	@Autowired
-	private MemberService memberService;
-
-	@Autowired
 	private String uploadPath;
 
 	@Autowired
 	private BoardService boardService;
 
-	@Autowired
-	private FriendService friendService;
 
 	@Autowired
 	private AttachService attachService;

@@ -32,6 +32,7 @@ public class RereplyRESTController {
 	public ResponseEntity<Integer> createRereply(@RequestBody RereplyVO rereplyvo){
 		log.info("reply controller : createRereply()");
 		int result = rereplyService.insertRereply(rereplyvo);
+		log.info(rereplyvo);
 		return new ResponseEntity<Integer>(result,HttpStatus.OK);
 	}
 	

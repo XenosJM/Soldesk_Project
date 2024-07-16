@@ -131,6 +131,8 @@ public class BoardController {
 		int result = boardService.deleteBoard(boardId);
 		return "redirect:/board/list?categoryId="+categoryId;
 	}
+	
+	
 
 	@GetMapping("/registAttach")
 	public void registerGET() {

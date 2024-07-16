@@ -11,4 +11,5 @@ public interface RereplyService {
 	int updateRereply(int rereplyID, String rereplyContent);
 	int deleteRereply(int rereplyId);
 	int deleteRereplyToReply(int replyId);
+	RereplyVO findRereply(int rereplyId);
 }
