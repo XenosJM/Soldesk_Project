@@ -1,5 +1,6 @@
 package com.soldesk.ex01.config;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.messaging.simp.config.ChannelRegistration;
 import org.springframework.messaging.simp.config.MessageBrokerRegistry;
@@ -7,11 +8,19 @@ import org.springframework.web.socket.config.annotation.EnableWebSocketMessageBr
 import org.springframework.web.socket.config.annotation.StompEndpointRegistry;
 import org.springframework.web.socket.config.annotation.WebSocketMessageBrokerConfigurer;
 
-import com.soldesk.ex01.jwt.JwtWebSocketInterceptor;
+import com.soldesk.ex01.jwt.JwtHandshakeInterceptor;
+import com.soldesk.ex01.jwt.JwtChannelInterceptor;
 
 @Configuration
 @EnableWebSocketMessageBroker
 public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
+	
+	@Autowired
+	private JwtHandshakeInterceptor handshakeInterceptor;
+	
+	@Autowired
+	private JwtChannelInterceptor channelInterceptor;
+	
 	
 	
 	@Override
@@ -34,7 +43,8 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
 	    // 클라이언트는 "/ws" 엔드포인트를 통해 WebSocket 연결을 시도
 	    registry.addEndpoint("/ws/init")
 //	    		.setAllowedOrigins("http://192.168.0.144:3000")
-	    		.setAllowedOrigins("*");
+	    		.setAllowedOrigins("*")
+	    		.addInterceptors(handshakeInterceptor);
 //	            브라우저가 WebSocket을 지원하지 않을 때 대체 가능한 방법을 제공할 SockJs 사용
 //	    		왜인지는 모르겠으나 withSockJs()를 사용하면 확인이 안됨
 //	    		.withSockJS();
@@ -42,7 +52,8 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
 	
 	@Override
     public void configureClientInboundChannel(ChannelRegistration registration) {
-        registration.interceptors(new JwtWebSocketInterceptor());
+        registration.interceptors(channelInterceptor);
     }
+	
 
 }

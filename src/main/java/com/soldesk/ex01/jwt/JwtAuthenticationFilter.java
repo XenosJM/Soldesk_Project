@@ -37,10 +37,10 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         	
             // 액세스 토큰이 존재하며 검증 통과시 true
             Boolean accessCheck = (accessToken != null && tokenProvider.validateToken(accessToken));
-            log.info("액세스 체크 : " + accessCheck); 
+//          log.info("액세스 체크 : " + accessCheck); 
             // 리프레시 토큰이 존재하며 검증에 통과시 true
             Boolean refreshCheck = (refreshToken != null && tokenProvider.validateToken(refreshToken));
-            log.info("리프레시 체크 : " + refreshCheck); 
+//          log.info("리프레시 체크 : " + refreshCheck); 
             // 추출된 JWT가 유효하면
             if (accessCheck) {
             	log.info("액세스토큰 검증 통과");
@@ -50,22 +50,22 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
                 // SecurityContext에 인증 객체 설정
                 SecurityContextHolder.getContext().setAuthentication(auth);
-                log.info("현재 사용자: {}" + auth.getName());
-                log.info("사용자의 권한: {}" + auth.getAuthorities());
-                response.setHeader("accessToken", accessToken);
+//              log.info("현재 사용자: {}" + auth.getName());
+//              log.info("사용자의 권한: {}" + auth.getAuthorities());
+                response.setHeader("Authorization", "Bearer " + accessToken);
             } else if(refreshCheck) {
             	log.info("액세스토큰 검증 실패, 리프레시 토큰 검증 성공");
             	String memberId = tokenProvider.getUsernameFromToken(refreshToken);
-            	log.info("만료된 액세스 토큰의 아이디 : " + memberId);
+//            	log.info("만료된 액세스 토큰의 아이디 : " + memberId);
             	accessToken = tokenProvider.generateAccessTokenFromRefreshToken(memberId, refreshToken);
-            	log.info("새로 발급받은 액세스 토큰 : " + accessToken);
+//            	log.info("새로 발급받은 액세스 토큰 : " + accessToken);
             	
             	Authentication auth = tokenProvider.getAuthentication(accessToken);
             	SecurityContextHolder.getContext().setAuthentication(auth);
-            	log.info("현재 사용자: {}" + auth.getName());
-                log.info("사용자의 권한: {}" + auth.getAuthorities());
+//            	log.info("현재 사용자: {}" + auth.getName());
+//              log.info("사용자의 권한: {}" + auth.getAuthorities());
             	
-            	log.info(accessToken);
+//            	log.info(accessToken);
             	response.setHeader("Authorization", "Bearer " + accessToken);
             }
             log.info("jwt 확인 종료");

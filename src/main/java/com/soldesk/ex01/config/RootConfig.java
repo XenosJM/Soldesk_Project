@@ -13,11 +13,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.EnableAspectJAutoProxy;
-import org.springframework.data.redis.connection.RedisConnectionFactory;
-import org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory;
-import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.data.redis.serializer.GenericJackson2JsonRedisSerializer;
-import org.springframework.data.redis.serializer.StringRedisSerializer;
 import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -62,30 +57,7 @@ public class RootConfig {
       return ds; // ds 객체 리턴
    }
    
-   
    //TODO 추후 채팅방 기록 내역을 redis 통해서 하도록 바꿔볼것
-//   @Bean
-//   public RedisConnectionFactory redisConnectionFactory() {
-//       // LettuceConnectionFactory를 사용하여 Redis 서버에 연결
-//	   // localhost 부분은 추후 aws나 그쪽으로 변경 가능
-//       return new LettuceConnectionFactory("localhost", 6379);
-//   }
-//   
-//   @Bean
-//   public RedisTemplate<String, Object> redisTemplate() {
-//       // RedisTemplate 객체 생성
-//       RedisTemplate<String, Object> template = new RedisTemplate<>();
-//       // 위에서 정의한 RedisConnectionFactory 빈 설정 적용
-//       template.setConnectionFactory(redisConnectionFactory());
-//       // Key Serializer로 StringRedisSerializer 사용 (String을 Redis의 Key로 변환)
-//       template.setKeySerializer(new StringRedisSerializer());
-//       // Value Serializer로 GenericJackson2JsonRedisSerializer 사용
-//       // (Java 객체를 JSON 형식으로 직렬화하여 Redis의 Value로 저장)
-//       template.setValueSerializer(new GenericJackson2JsonRedisSerializer());
-//       // 설정이 적용된 RedisTemplate 객체 반환
-//       return template;
-//   }
-
    
    // 이메일 인증, 아이디 및 비밀번호 변경용 인증 번호 생성기
    @Bean
