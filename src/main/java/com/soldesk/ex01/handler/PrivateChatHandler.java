@@ -22,16 +22,16 @@ public class PrivateChatHandler extends TextWebSocketHandler {
 	
 	@Override
 	protected void handleTextMessage(WebSocketSession session, TextMessage msg) throws IOException {
-//		String userName = session.getPrincipal().getName();
-//		String newMsg = userName + ":" + msg.getPayload();
+		String userName = session.getPrincipal().getName();
+		String newMsg = userName + ":" + msg.getPayload();
 		
 		String payload = msg.getPayload();
         log.info("payload {}" + payload);
         TextMessage textMessage = new TextMessage("Welcome chatting sever~^^");
         session.sendMessage(textMessage);
 		
-//		session.sendMessage(new TextMessage(newMsg));
-//		session.sendMessage(new TextMessage(msg.getPayload()));
+		session.sendMessage(new TextMessage(newMsg));
+		session.sendMessage(new TextMessage(msg.getPayload()));
 	}
 	
 	@Override

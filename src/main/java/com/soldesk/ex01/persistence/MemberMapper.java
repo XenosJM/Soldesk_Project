@@ -24,5 +24,6 @@ public interface MemberMapper {
 	String memberRole(String memberId);
 	String checkToken(String memberId);
 	int updateRefreshToken(MemberVO memberVO);
+	int updateRole(MemberVO memberVO);
 	
 }

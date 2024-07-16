@@ -16,7 +16,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
 	<!-- 회원 가입 -->
 	<insert id="insert">
-		INSERT INTO MEMBER (MEMBER_ID, MEMBER_PASSWORD, ROLE_ID, MEMBER_EMAIL, MEMBER_PROPERTY, MEMBER_REGISTDATE)
+		INSERT INTO MEMBER (MEMBER_ID, MEMBER_PASSWORD, ROLE_ID, MEMBER_EMAIL, MEMBER_PROPERTY, MEMBER_REGISTDATE, REFRESH_TOKEN)
 		VALUES (#{memberId}, #{memberPassword}, 0, #{memberEmail}, null, SYSDATE, null)
 	</insert>
 	<!-- 회원 자기정보 보기 -->

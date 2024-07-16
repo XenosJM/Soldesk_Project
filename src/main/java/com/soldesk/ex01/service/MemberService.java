@@ -29,7 +29,8 @@ public interface MemberService {
 	int deleteMember(String memberId);	
 	// 회원 비밀번호 체크
 	int checkPassword(MemberVO memberVO);
-	// TODO ȸ�� ģ�� ���� -> ģ�� ���񽺿���
+	// 회원 관리자 변경
+	int memberRoleUpdate(MemberVO memberVO);
 	
 	// ģ�� ��û(���)
 	

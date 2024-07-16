@@ -9,9 +9,11 @@ import org.springframework.messaging.support.ChannelInterceptor;
 import org.springframework.messaging.support.MessageHeaderAccessor;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.stereotype.Component;
 
 import lombok.extern.log4j.Log4j;
 
+@Component
 @Log4j
 public class JwtChannelInterceptor implements ChannelInterceptor {
 	
@@ -27,8 +29,13 @@ public class JwtChannelInterceptor implements ChannelInterceptor {
         assert headerAccessor != null;
         
         if (headerAccessor.getCommand() == StompCommand.CONNECT) { // 연결 시에한 header 확인
-            String bearerToken = String.valueOf(headerAccessor.getHeader("Authorization"));
-            String accessToken = bearerToken.split(" ")[1].trim();
+        	String bearerToken = headerAccessor.getFirstNativeHeader("Authorization");
+            if (bearerToken == null || !bearerToken.startsWith("Bearer ")) {
+                log.warn("Authorization 헤더가 없거나 잘못되었습니다.");
+                return null;
+            }
+
+            String accessToken = bearerToken.substring(7).trim();
             
             boolean checkAccess = tokenProvider.validateToken(accessToken);
             
@@ -44,11 +51,12 @@ public class JwtChannelInterceptor implements ChannelInterceptor {
 	            headerAccessor.setHeader("Authorization", "Bearer " + accessToken);
             	
             	return msg;
-            }
-            // 검증 실패시
-            headerAccessor.getSessionAttributes().put("Authorization", "Authentication failed");
+            } else {
+            	// 검증 실패시
+            	headerAccessor.getSessionAttributes().put("Authorization", "Authentication failed");
 //            headerAccessor.addNativeHeader("User", String.valueOf(memberId));
-            return null;
+            	return null;
+            }
         }
         return msg;
     }

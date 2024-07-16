@@ -58,9 +58,10 @@ public class LoginServiceImple implements LoginService {
 	        	friend.friendStateChange(map.get("memberId"), "online");
 	        	
 	        }
+	        String memberRole = member.memberRole(memberVO.getMemberId());
 	        
 
-	        return "success";
+	        return memberRole;
 	    } else {
 	        return "fail";
 	    }

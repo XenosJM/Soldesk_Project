@@ -154,4 +154,12 @@ public class MemberServiceImple implements MemberService{
 		return result;
 	}
 
+	@Transactional
+	@PreAuthorize("isAuthenticated() and hasRole('ROLE_HEAD_MANAGER')")
+	@Override
+	public int memberRoleUpdate(MemberVO memberVO) {
+		int result = memberMapper.updateRole(memberVO);
+		return result;
+	}
+
 }

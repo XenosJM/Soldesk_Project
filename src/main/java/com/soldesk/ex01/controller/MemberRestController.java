@@ -144,6 +144,12 @@ public class MemberRestController {
 		return new ResponseEntity<>(result, HttpStatus.OK);
 	}
 	
+	@PostMapping("/updateRole")
+	public ResponseEntity<Integer> updateRole(@RequestBody MemberVO memberVO){
+		int result = member.memberRoleUpdate(memberVO);
+		return new ResponseEntity<Integer>(result, HttpStatus.OK);
+	}
+	
 	
 	
 }
