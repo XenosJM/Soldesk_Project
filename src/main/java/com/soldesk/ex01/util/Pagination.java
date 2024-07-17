@@ -11,12 +11,15 @@ import lombok.ToString;
 public class Pagination {
 	private int pageNum; // 현재 페이지 번호
 	private int pageSize; // 현재 페이지 사이즈
+	private int categoryId;
+	private int recommendCut;
 	private String type; // 검색 항목
 	private String keyword; // 검색 키워드 
-
+	
 	public Pagination() {
 		this.pageNum = 1; // 기본 페이지 번호 설정
 		this.pageSize = 5; // 기본 페이지 사이즈 설정
+		this.recommendCut = 5;
 	}
 
 	public Pagination(int page, int pageSize) {
@@ -24,7 +27,7 @@ public class Pagination {
 		this.pageSize = pageSize;
 	}
 
-	// 선택된 페이지의 시작 글 일련번호(rn) - #{start}
+	// 선택된 페이지의 시작 글 일련번호(rn) - #{start}, getter로 매핑해서 사용
 	public int getStart() {
 		return (this.pageNum - 1) * this.pageSize + 1;
 	}

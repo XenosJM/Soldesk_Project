@@ -3,10 +3,12 @@ package com.soldesk.ex01.service;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.soldesk.ex01.domain.ReplyVO;
-import com.soldesk.ex01.persistence.Board2Mapper;
+import com.soldesk.ex01.persistence.BoardMapper;
 import com.soldesk.ex01.persistence.ReplyMapper;
 import com.soldesk.ex01.persistence.RereplyMapper;
 
@@ -23,16 +25,19 @@ public class ReplyServiceImple implements ReplyService {
 	RereplyMapper rereplyMapper;
 	
 	@Autowired
-	Board2Mapper board2Mapper;
+	BoardMapper boardMapper;
 	
+	@Transactional
+	@PreAuthorize("isAuthenticated() and (#vo.memberId == principal.username)")
 	@Override
 	public int insertReply(ReplyVO vo) {
 		log.info("service : insertReply()");
 		int result = replyMapper.insertReply(vo);
-		result = board2Mapper.insertReplyCount(vo.getBoardId());
+		result = boardMapper.increaseReplyCount(vo.getBoardId());
 		return result;
 	}
 
+	
 	@Override
 	public List<ReplyVO> selectReplyMemberList(String memberId) {
 		log.info("service : selectReplyMemberList()");
@@ -54,6 +59,8 @@ public class ReplyServiceImple implements ReplyService {
 		return list;
 	}
 
+	@Transactional
+	@PreAuthorize("isAuthenticated()")
 	@Override
 	public int updateReply(int replyId, String replyContent) {
 		log.info("service : updateReply()");
@@ -64,6 +71,8 @@ public class ReplyServiceImple implements ReplyService {
 		return result;
 	}
 
+	@Transactional
+	@PreAuthorize("isAuthenticated() or hasRole('ROLE_MANAGER') or hasRole('ROLE_HEAD_MANAGER')")
 	@Override
 	public int deleteReply(int replyId) {
 		log.info("service : deleteReply()");
@@ -71,17 +80,19 @@ public class ReplyServiceImple implements ReplyService {
 		log.info(vo);
 		int result = replyMapper.deleteReply(replyId);
 		
-		result = board2Mapper.deleteReplyCount(vo.getBoardId());
+		result = boardMapper.decreaseReplyCount(vo.getBoardId());
 		
-		log.info("replycount-1 °á°ú : "+result);
+		log.info("replycount-1 ï¿½ï¿½ï¿½ : "+result);
 		return result;
 	}
 	
+	@Transactional
+	@PreAuthorize("isAuthenticated() or hasRole('ROLE_MANAGER') or hasRole('ROLE_HEAD_MANAGER')")
 	@Override
 	public int deleteReplyByBoard(int boardId) {
 		log.info("service : deleteReplyByBoard");
 		int	result = replyMapper.deleteReplyByBoard(boardId);
-		log.info("reply »èÁ¦ °á°ú : " + result);
+		log.info("reply ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ : " + result);
 
 		return result;
 	}

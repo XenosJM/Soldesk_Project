@@ -5,85 +5,6 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
 <mapper namespace="com.soldesk.ex01.persistence.FriendMapper">
 
-	<resultMap type="com.soldesk.ex01.domain.RequestVO"
-		id="requestResultMap">
-		<id property="requestId" column="REQUEST_ID" />
-		<result property="memberId" column="MEMBER_ID" />
-		<result property="receiverId" column="RECEIVER_ID" />
-		<result property="requestState" column="REQUEST_STATE" />
-		<result property="requestSendDate" column="REQUEST_SENDDATE" />
-	</resultMap>
-	
-	 <!-- 친구 요청 삽입 -->
-    <insert id="insertRequest">
-        INSERT INTO REQUEST (REQUEST_ID, MEMBER_ID, RECEIVER_ID, REQUEST_STATE, REQUEST_SENDDATE)
-        VALUES (REQUEST_SEQ.NEXTVAL, #{memberId}, #{receiverId}, null, SYSDATE)
-    </insert>
-
-    <!-- 특정 회원이 보낸 친구 요청 목록 조회 -->
-    <select id="sendListRequest" resultMap="requestResultMap">
-        SELECT * FROM REQUEST WHERE MEMBER_ID = #{memberId}
-    </select>
-    
-    <!-- 친구 요청 존재여부 조회 -->
-    <select id="selectRequestById" resultType="String">
-        SELECT RECEIVER_ID FROM REQUEST WHERE MEMBER_ID = #{memberId}
-    </select>
-    
-    <!-- 스케쥴링으로 기준 시간이 지난 요청 삭제 -->
-    <select id="allSendList" resultMap="requestResultMap">
-        SELECT REQUEST_ID, REQUEST_STATE, REQUEST_SENDDATE FROM REQUEST
-    </select>
-
-    <!-- 친구 요청 상태 변경 -->
-    <update id="requestStateChange">
-        UPDATE REQUEST SET 
-        REQUEST_STATE = #{requestState}
-        WHERE REQUEST_ID = #{requestId}
-    </update>
-
-    <!-- 친구 요청 취소 -->
-    <delete id="cancelRequest">
-        DELETE FROM REQUEST WHERE REQUEST_ID = #{requestId}
-    </delete>
-	
-	<resultMap type="com.soldesk.ex01.domain.ReceiveVO"
-		id="receiveResultMap">
-		<id property="receiveId" column="RECEIVE_ID" />
-		<result property="memberId" column="MEMBER_ID" />
-		<result property="requesterId" column="REQUESTER_ID" />
-		<result property="receiveState" column="RECEIVE_STATE" />
-		<result property="receiveDate" column="RECEIVE_DATE" />
-	</resultMap>
-	
-	    <!-- 친구 요청 수신 삽입 -->
-    <insert id="insertReceive">
-        INSERT INTO RECEIVE (RECEIVE_ID, MEMBER_ID, REQUESTER_ID, RECEIVE_STATE, RECEIVE_DATE)
-        VALUES (RECEIVE_SEQ.NEXTVAL, #{memberId}, #{requesterId}, null, SYSDATE)
-    </insert>
-
-    <!-- 특정 회원이 받은 친구 요청 목록 조회 -->
-    <select id="receiveListRequest" resultMap="receiveResultMap">
-        SELECT * FROM RECEIVE WHERE MEMBER_ID = #{memberId}
-    </select>
-    
-    <!-- 스케쥴링으로 기준 시간이 지난 요청 삭제 -->
-    <select id="allReceiveList" resultMap="receiveResultMap">
-        SELECT RECEIVE_ID, RECEIVE_STATE, RECEIVE_DATE FROM RECEIVE
-    </select>
-
-    <!-- 친구 요청 수신 상태 변경 -->
-    <update id="receiveStateChange">
-        UPDATE RECEIVE SET 
-        RECEIVE_STATE = #{receiveState} 
-        WHERE RECEIVE_ID = #{receiveId}
-    </update>
-
-    <!-- 친구 요청 거절 -->
-    <delete id="rejectRequest">
-        DELETE FROM RECEIVE WHERE RECEIVE_ID = #{receiveId}
-    </delete>
-	
 	<resultMap type="com.soldesk.ex01.domain.FriendVO"
 		id="friendResultMap">
 		<id property="friendshipId" column="FRIENDSHIP_ID" />
@@ -111,8 +32,10 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	
     <!-- 친구 상태 변경 -->
     <update id="friendStateChange">
-        UPDATE FRIEND SET FRIEND_STATE = #{friendState} WHERE FRIEND_MEMBER_ID = #{memberId}
-    </update>
+	    UPDATE FRIEND 
+	    SET FRIEND_STATE = #{friendState} 
+	    WHERE FRIEND_MEMBER_ID = #{memberId} OR MEMBER_ID = #{memberId}
+	</update>
 
     <!-- 친구 삭제 -->
     <delete id="deleteFriend">

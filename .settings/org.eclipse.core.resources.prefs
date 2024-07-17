@@ -1,4 +1,7 @@
 eclipse.preferences.version=1
+encoding//src/main/java/com/soldesk/ex01/HomeController.java=UTF-8
+encoding//src/main/java/com/soldesk/ex01/config/RootConfig.java=UTF-8
+encoding//src/main/java/com/soldesk/ex01/config/SecurityConfig.java=UTF-8
 encoding//src/main/java/com/soldesk/ex01/config/WebConfig.java=UTF-8
 encoding//src/main/webapp/WEB-INF/views/main.jsp=UTF-8
 encoding//src/main/webapp/WEB-INF/views/member/detail.jsp=UTF-8

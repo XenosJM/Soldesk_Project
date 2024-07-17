@@ -2,10 +2,12 @@
 	pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
+
 <!DOCTYPE html>
 <html>
 <head>
 <meta charset="UTF-8">
+<script src="https://code.jquery.com/jquery-3.7.1.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>게시판 메인 페이지</title>
 <style>
@@ -129,17 +131,22 @@ ul li a {
 		<h1>게시판</h1>
 		
 		<!-- 등록 버튼 추가 -->
-		<input type="hidden" name = "categoryId" value='0'>
-		<a href="regist" class="register-button">등록</a>
-
-		<form class="search-container" method="get" action="search">
-			<select name="searchOption" id="searchOption">
-				<option value="title">제목</option>
-				<option value="content">내용</option>
-			</select>
-			<input type="text" name="search" id="searchKey" placeholder="검색어를 입력하세요">
-			<input type="submit" value="검색">
+		<form method="get" action=regist>
+			<input type="hidden" name = "categoryId" value='${param.categoryId}'>
+			<input type="submit" value = "등록">
 		</form>
+
+		<form class="search-container" method="get" action="list" id="searchForm">
+			<input type="hidden" name = "categoryId" value='${param.categoryId}'>
+			<input type="hidden" name="pageNum">
+	    	<input type="hidden" name="pageSize">
+            <select name="type">
+                <option value="title">제목</option>
+                <option value="content">내용</option>
+            </select>
+            <input type="text" name="keyword" placeholder="검색어를 입력하세요">
+            <button>검색</button>
+        </form>
 
 		<table>
 			<thead>
@@ -167,16 +174,38 @@ ul li a {
 		</table>
 		<ul>
 			<c:if test="${pageMaker.isPrev()}">
-				<li><a href="list?pageNum=${pageMaker.startNum - 1}">이전</a></li>
+				<li><a href='list?pageNum=${pageMaker.startNum - 1}&categoryId=${param.categoryId}'>이전</a></li>
 			</c:if>
 			<c:forEach begin="${pageMaker.startNum}" end="${pageMaker.endNum}"
 				var="num">
-				<li><a href="list?pageNum=${num}">${num}</a></li>
+				<li><a href='list?pageNum=${num}&categoryId=${param.categoryId}'>${num}</a></li>
 			</c:forEach>
 			<c:if test="${pageMaker.isNext()}">
-				<li><a href="list?pageNum=${pageMaker.endNum + 1}">다음</a></li>
+				<li><a href='list?pageNum=${pageMaker.endNum + 1}&categoryId=${param.categoryId}'>다음</a></li>
 			</c:if>
 		</ul>
 	</div>
+	 <script>
+        $(document).ready(function(){
+        	$("#searchForm button").on("click",function(e){
+        		let searchForm = $('#searchForm');
+        		e.preventDefault();
+        		
+        		let keywordVal = searchForm.find("input[name = 'keyword']").val();
+        		console.log(keywordVal);
+        		if(keywordVal==''){
+        			alert("검색내용을 입력하세요")
+        			return;
+        		}
+        		
+        		let pageNum=1;
+        		let pageSize ="<c:out value='${pageMaker.pagination.pageSize }' />";
+        		
+        		searchForm.find("input[name='pageNum']").val(pageNum);
+        		searchForm.find("input[name='pageSize']").val(pageSize);
+				searchForm.submit(); // form 전송
+        	});
+        });
+    </script>
 </body>
 </html>

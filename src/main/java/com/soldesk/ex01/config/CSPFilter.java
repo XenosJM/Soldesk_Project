@@ -20,7 +20,7 @@ public class CSPFilter implements Filter {
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
             throws IOException, ServletException {
         HttpServletResponse httpResponse = (HttpServletResponse) response;
-        httpResponse.setHeader("Content-Security-Policy", "frame-ancestors 'self' localhost:8080/ex01/");
+        httpResponse.setHeader("Content-Security-Policy", "frame-ancestors 'self' localhost:9090/ex01/");
         chain.doFilter(request, response);
     }
 

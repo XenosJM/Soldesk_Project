@@ -1,35 +1,34 @@
 package com.soldesk.ex01;
 
-import java.util.ArrayList;
+import java.io.File;
+import java.io.IOException;
+import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.FileSystemResource;
+import org.springframework.core.io.Resource;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.soldesk.ex01.domain.Board2VO;
+import com.soldesk.ex01.domain.AttachVO;
 import com.soldesk.ex01.domain.BoardVO;
-import com.soldesk.ex01.domain.FriendVO;
-import com.soldesk.ex01.domain.MemberVO;
+
 import com.soldesk.ex01.service.AttachService;
-import com.soldesk.ex01.service.Board2Service;
 import com.soldesk.ex01.service.BoardService;
-import com.soldesk.ex01.service.FriendService;
-import com.soldesk.ex01.service.MemberService;
+import com.soldesk.ex01.service.RecommendService;
 import com.soldesk.ex01.util.PageMaker;
 import com.soldesk.ex01.util.Pagination;
 
@@ -42,22 +41,21 @@ import lombok.extern.log4j.Log4j;
 @Log4j
 public class HomeController {
 
-//	private static final Logger logger = LoggerFactory.getLogger(HomeController.class); // 롬복 log4j를 안쓸경우 사용하는 logging 방법
+//	private static final Logger logger = LoggerFactory.getLogger(HomeController.class); // 
 
 	@Autowired
-	private MemberService memberService;
+	private String uploadPath;
 
 	@Autowired
-	private Board2Service board2Service;
-	
-	@Autowired
-	private FriendService friendService;
-	
+	private BoardService boardService;
+
+
 	@Autowired
 	private AttachService attachService;
-	
-	
-	
+
+	@Autowired
+	private RecommendService recommendService;
+
 	/**
 	 * Simply selects the home view to render by returning its name.
 	 */
@@ -75,140 +73,137 @@ public class HomeController {
 		return "main";
 	}
 
+	@GetMapping(value = "board/download", produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
+	@ResponseBody
+	public ResponseEntity<Resource> download(int attachId) throws IOException {
+		log.info("download()");
+
+		AttachVO attachVO = attachService.getAttachById(attachId);
+		String attachPath = attachVO.getAttachPath();
+		String attachChgName = attachVO.getAttachChgName();
+		String attachExtension = attachVO.getAttachExtension();
+		String attachRealName = attachVO.getAttachRealName();
+
+		String resourcePath = uploadPath + File.separator + attachPath + File.separator + attachChgName;
+
+		Resource resource = new FileSystemResource(resourcePath);
+
+		HttpHeaders headers = new HttpHeaders();
+		String attachName = new String(attachRealName.getBytes("UTF-8"), "ISO-8859-1");
+		headers.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + attachName + "." + attachExtension);
+
+		return new ResponseEntity<Resource>(resource, headers, HttpStatus.OK);
+	} // end download()
+
+	@GetMapping("board/detail")
+	public void boardDetail(Model model, Integer boardId) {
+		log.info("board controller : detail()");
+		BoardVO boardVO = boardService.selectDetail(boardId);
+		log.info(boardVO);
+		// RecommendVO recommendVO = recommendService.selectRecommend(boardId);
+
+		model.addAttribute("boardVO", boardVO);
+		// model.addAttribute("recommendVO",recommendVO);
+	}
+
 //	@GetMapping("board/detail")
-//	@ResponseBody // JSON 데이터 반환을 위한 어노테이션 추가
+//	@ResponseBody 
 //	public ResponseEntity<BoardVO> boardDetail(@RequestParam Integer boardId) {
 //		log.info("board controller : detail()");
 //		BoardVO boardVO = boardService.selectDetail(boardId);
 //		if (boardVO != null) {
 //			return new ResponseEntity<>(boardVO, HttpStatus.OK);
 //		} else {
-//			return new ResponseEntity<>(HttpStatus.NOT_FOUND); // 해당 게시물이 없을 경우 404 응답 반환
+//			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 //		}
 //	}
-	
-	@GetMapping("board/detail")
-	public void boardDetail(Model model, Integer boardId) {
-		log.info("board controller : detail()");
-		Board2VO board2VO = board2Service.selectDetail(boardId);
-		model.addAttribute("board2VO", board2VO);
-	}
 
 	@GetMapping("board/regist")
 	public void boardRegister() {
 		log.info("board controller : registerGet()");
 	}
-	
-//	@GetMapping("board/detail")
-//	public ResponseEntity<Board2VO> boardDetail(Integer boardId) {
-//		log.info("board controller : detail()");
-//		Board2VO board2VO = board2Service.selectDetail(boardId);
-//		return new ResponseEntity<>(board2VO,HttpStatus.OK);
-//	}
-	
-	//이게 내가 쓸거임 
-//	@GetMapping("board/list")
-//	public void boardList(Model model) {
-//		log.info("board controller : list()");
-//		List<Board2VO> boardList = board2Service.selectList();
-//
-//		model.addAttribute("boardList", boardList);
-//	}
-	
-	//이게 내가 쓰던거를 페이징 처리 한거임
+
 	@GetMapping("board/list")
-	public void list(Model model, Pagination pagination) {
+	public void list(Model model, Pagination pagination, @RequestParam int categoryId) {
 		log.info("list()");
-		log.info("pagination = "+pagination);
-		List<Board2VO> boardList = board2Service.getPagingBoards(pagination);
-		
+		log.info("pagination = " + pagination);
+		List<BoardVO> boardList = boardService.getPagingBoards(pagination);
+
 		PageMaker pageMaker = new PageMaker();
 		pageMaker.setPagination(pagination);
-		pageMaker.setTotalCount(board2Service.getTotalCount());
-		
+		pageMaker.setTotalCount(boardService.getTotalCount(pagination));
+
+		String test = "[test,test2,test3]";
+		String[] strArray = test.replaceAll("\\[|\\]", "").split(", ");
+		System.out.println("strarray = " + Arrays.toString(strArray));
+
 		model.addAttribute("pageMaker", pageMaker);
 		model.addAttribute("boardList", boardList);
 	}
-	
-	//페이징 한걸 비동기 한거임
-//	@GetMapping("/list")
-//	public ResponseEntity<Map<String, Object>> list(Pagination pagination) {
-//	    log.info("list()");
-//	    log.info("pagination = " + pagination);
-//
-//	    List<BoardVO> boardList = boardService.getPagingBoards(pagination);
-//
-//	    PageMaker pageMaker = new PageMaker();
-//	    pageMaker.setPagination(pagination);
-//	    pageMaker.setTotalCount(boardService.getTotalCount());
-//
-//	    // 데이터를 담을 Map 생성
-//	    Map<String, Object> response = new HashMap<>();
-//	    response.put("pageMaker", pageMaker);
-//	    response.put("boardList", boardList);
-//
-//	    // ResponseEntity에 Map을 담아서 반환
-//	    return ResponseEntity.ok(response);
-//	}
-	
-//	@GetMapping("board/list")
-//	public ResponseEntity<List<Board2VO>> boardList(Model model) {
-//		log.info("board controller : list()");
-//		List<Board2VO> boardList = board2Service.selectList();
-//
-//		return new ResponseEntity<>(boardList, HttpStatus.OK);
-//	}
 
+//	@GetMapping("board/list")
+//	   public ResponseEntity<Map<String, Object>> list(Pagination pagination) {
+//	       log.info("list()");
+//	       log.info("pagination = " + pagination);
+//
+//	       List<BoardVO> boardList = boardService.getPagingBoards(pagination);
+//
+//	       PageMaker pageMaker = new PageMaker();
+//	       pageMaker.setPagination(pagination);
+//	       pageMaker.setTotalCount(boardService.getTotalCount(pagination));
+//	       
+//	       Map<String, Object> response = new HashMap<>();
+//	       response.put("pageMaker", pageMaker);
+//	       response.put("boardList", boardList);
+//
+//	       
+//	       return new ResponseEntity<>(response,HttpStatus.OK);
+//	   }
+
+	@GetMapping("board/recommendlist")
+	public ResponseEntity<Map<String, Object>>recommendList(Pagination pagination) {
+		List<BoardVO> boardList = boardService.selectListByRecommend(pagination);
+		PageMaker pageMaker = new PageMaker();
+		pageMaker.setPagination(pagination);
+		pageMaker.setTotalCount(boardService.selectTotalCountByRecommend(pagination));
+		Map<String, Object> response = new HashMap<>();
+		response.put("pageMaker", pageMaker);
+		response.put("boardList", boardList);
+
+		return new ResponseEntity<>(response, HttpStatus.OK);
+	}
 
 	@GetMapping("board/update")
 	public void boardUpdate(Model model, Integer boardId) {
 		log.info("board controller : updateGet()");
-		Board2VO board2VO = board2Service.selectDetail(boardId);
-		board2VO.setAttachVO(attachService.getAttachByBoardId(boardId));
-		model.addAttribute("board2VO", board2VO);
+		BoardVO boardVO = boardService.selectDetail(boardId);
+		boardVO.setAttachVO(attachService.getAttachByBoardId(boardId));
+		model.addAttribute("board2VO", boardVO);
 	}
-	
-	@GetMapping("board/search")
-	public void boardSearch(Model model, @RequestParam String searchOption, @RequestParam String search) {
-	    log.info("board controller: search()");
-	    List<Board2VO> boardList;
-	    if ("title".equals(searchOption)) {
-	        boardList = board2Service.selectByTitle(search);
-	    } else if ("content".equals(searchOption)) {
-	        boardList = board2Service.selectByContent(search);
-	    } else {
-	    	boardList = new ArrayList<Board2VO>();
-	    }
-	    model.addAttribute("boardList", boardList);
-	    
-	    
-	}
-	
+
 //	@GetMapping("board/update")
-//	public ResponseEntity<Board2VO> boardUpdate(Integer boardId) {
+//	@ResponseBody
+//	public ResponseEntity<BoardVO> boardUpdate(Integer boardId,@RequestBody Pagination pagination) {
 //		log.info("board controller : updateGet()");
-//		Board2VO board2VO = board2Service.selectDetail(boardId);
-//		board2VO.setAttachVO(attachService.getAttachByBoardId(boardId));
-//		return new ResponseEntity<>(board2VO,HttpStatus.OK);
+//		BoardVO boardVO = boardService.selectDetail(boardId);
+//		boardVO.setAttachVO(attachService.getAttachByBoardId(boardId));
+//		return new ResponseEntity<>(boardVO,HttpStatus.OK);
 //	}
-//	
-	
+
+
 
 	@GetMapping("member/regist")
 	public void joinMember() {
 		log.info("joinMember()");
 	}
 
-	@GetMapping("member/detail")
-	public void detailGet(Model model, HttpServletRequest req) {
-		log.info("detailGet()");
-		MemberVO memberVO = new MemberVO();
-		HttpSession session = req.getSession();
-		String memberId = (String) session.getAttribute("memberId");
-		memberVO = memberService.getMemberById(memberId);
-		log.info(memberVO);
-		model.addAttribute("memberVO", memberVO);
-	}
+//	@GetMapping("member/detail")
+//	public void detailGet(Model model, HttpServletRequest req) {
+//		log.info("detailGet()");
+//		MemberVO memberVO = memberService.getMemberById(req.getUserPrincipal().getName());
+//		log.info(memberVO);
+//		model.addAttribute("memberVO", memberVO);
+//	}
 
 	@GetMapping("member/update")
 	public void updateGet() {
@@ -220,15 +215,6 @@ public class HomeController {
 		log.info("findIdPw()");
 	}
 
-	@GetMapping("member/checkout")
-	public String memberCheckout(HttpServletRequest req) {
-		log.info("memberCheckout()");
-		HttpSession session = req.getSession();
-		session.removeAttribute("memberId");
-
-		return "redirect:/";
-	}
-	
 //	@GetMapping("member/friendList")
 //	public void getFriendList(Model model, HttpServletRequest req) throws JsonProcessingException {
 //		HttpSession session = req.getSession();
@@ -239,8 +225,26 @@ public class HomeController {
 //	}
 	@GetMapping("member/friendList")
 	public void getFriendList() {
-		
+		log.info("getFriednList");
 	}
 
+//	@GetMapping("/login")
+//	public void login(HttpServletRequest req) {
+//		log.info("login");
+//	}
+
+//	@PostMapping("/logout")
+//    public String logout(HttpServletRequest request, HttpServletResponse response) {
+//        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+//        if (auth != null) {
+//            new SecurityContextLogoutHandler().logout(request, response, auth);
+//        }
+//        return "redirect:/login?logout";
+//    }
 	
+	@GetMapping("/error/403")
+	public void accessDeny() {
+		log.info("accessDeny");
+	}
+
 }

@@ -31,113 +31,33 @@ import lombok.extern.log4j.Log4j;
 public class FriendController {
 	
 	@Autowired
-	private FriendService friendService;
-	
-	
-	@PostMapping("/send")
-	public ResponseEntity<Integer> sendRequest(@RequestBody RequestVO requestVO ){
-		log.info("sendRequest()");
-		int result = friendService.insertRequest(requestVO);
-		return new ResponseEntity<Integer>(result, HttpStatus.OK);
-	}
-	
-	@GetMapping("/getRequest/{memberId}")
-	public ResponseEntity<List<RequestVO>> getRequestList(@PathVariable("memberId") String memberId){
-		log.info("getRequestList()");
-		List<RequestVO> requestList = friendService.sendList(memberId);
-		log.info(requestList);
-		return new ResponseEntity<List<RequestVO>>(requestList, HttpStatus.OK);
-	}
-	
-	@PostMapping("/requestState")
-	public ResponseEntity<Integer> requestStateChange(@RequestBody RequestVO requestVO /* @PathVariable ("requestId") int requestId, @RequestParam("requestState") String requestState */){
-		log.info("requestStateChange()");
-		log.info(requestVO);
-		int result = friendService.requestStateChange(requestVO.getRequestId(), requestVO.getRequestState());
-		return new ResponseEntity<Integer>(result, HttpStatus.OK);
-	}
-	
-//	@PostMapping("/requestChange/{requestId}")
-//    public ResponseEntity<Integer> requestStateChange(@PathVariable("requestId") int requestId, @RequestParam("requestState") String requestState){
-//	    log.info("requestStateChange()");
-//	    log.info(requestState);
-//		int result = friendService.requestStateChange(requestId, requestState);
-//		return new ResponseEntity<Integer>(result, HttpStatus.OK);
-//	}
-	
-	@PostMapping("/cancel/{requestId}")
-	public ResponseEntity<Integer> cancelRequest(@PathVariable("requestId") int requestId){
-		log.info("cancelRequest()");
-		int result = friendService.cancelRequest(requestId);
-		return new ResponseEntity<Integer>(result, HttpStatus.OK);
-	}
-	
-	// ------------------------------------------- receive
-	
-	@PostMapping("/receive")
-	public ResponseEntity<Integer> receiveRequest(@RequestBody ReceiveVO receiveVO ){
-		log.info("receiveRequest()");
-		int result = friendService.insertReceive(receiveVO);
-		return new ResponseEntity<Integer>(result, HttpStatus.OK);
-	}
-	
-	@GetMapping("/getReceive/{memberId}")
-	public ResponseEntity<List<ReceiveVO>> getReceiveList(@PathVariable("memberId") String memberId){
-		log.info("getReceiveList()");
-		List<ReceiveVO> receiveList = friendService.receiveList(memberId);
-		log.info(receiveList);
-		return new ResponseEntity<List<ReceiveVO>>(receiveList, HttpStatus.OK);
-	}
-	
-	@PostMapping("/receiveState")
-	public ResponseEntity<Integer> receiveStateChange(@RequestBody ReceiveVO receiveVO/*@PathVariable("receiveId") int receiveId, @RequestParam("receiveState") String receiveState*/){
-		log.info("receiveStateChange()");
-		log.info(receiveVO);
-		int result = friendService.receiveStateChange(receiveVO.getReceiveId(), receiveVO.getReceiveState());
-		return new ResponseEntity<Integer>(result, HttpStatus.OK);
-	}
-	
-//	@PostMapping("/receiveChange/{receiveId}")
-//    public ResponseEntity<Integer> receiveStateChange(@PathVariable("receiveId") int receiveId, @RequestParam("receiveState") String receiveState){
-//	    log.info("requestStateChange()");
-//		int result = friendService.receiveStateChange(receiveId, receiveState);
-//		return new ResponseEntity<Integer>(result, HttpStatus.OK);
-//	}
-	
-	@PostMapping("/reject/{receiveId}")
-	public ResponseEntity<Integer> rejentRequest(@PathVariable("receiveId") int receiveId){
-		log.info("rejentRequest()");
-		int result = friendService.rejectRequest(receiveId);
-		return new ResponseEntity<Integer>(result, HttpStatus.OK);
-	}
-	
-	// ------------------------------------ friend
+	private FriendService friend;
 	
 	@PostMapping("/insert")
 	public ResponseEntity<Integer> insertFriend(@RequestBody FriendVO friendVO ){
 		log.info("insertFriend()");
-		int result = friendService.insertFriend(friendVO);
+		int result = friend.insertFriend(friendVO);
 		return new ResponseEntity<Integer>(result, HttpStatus.OK);
 	}
 	
 	@GetMapping("/getFriend/{memberId}")
 	public ResponseEntity<List<FriendVO>> getFriendList(@PathVariable("memberId") String memberId){
 		log.info("getFriendList()");
-		List<FriendVO> friendList = friendService.friendList(memberId);
+		List<FriendVO> friendList = friend.friendList(memberId);
 		return new ResponseEntity<List<FriendVO>>(friendList, HttpStatus.OK);
 	}
 	
 	@PostMapping("/friendState")
 	public ResponseEntity<Integer> friendStateChange(@RequestParam("memberId") String memberId, @RequestParam("friendState") String friendState){
 		log.info("friendStateChange()");
-		int result = friendService.friendStateChange(memberId, friendState);
+		int result = friend.friendStateChange(memberId, friendState);
 		return new ResponseEntity<Integer>(result, HttpStatus.OK);
 	}
 	
 	@PostMapping("/delete/{friendshipId}")
 	public ResponseEntity<Integer> deleteFriend(@PathVariable("friendshipId") int friendshipId){
 		log.info("deleteFriend()");
-		int result = friendService.deleteFriend(friendshipId);
+		int result = friend.deleteFriend(friendshipId);
 		return new ResponseEntity<Integer>(result, HttpStatus.OK);
 	}
 }

@@ -1,7 +1,9 @@
 package com.soldesk.ex01.config;
 
+import java.time.Duration;
 import java.util.Properties;
 
+import javax.crypto.SecretKey;
 import javax.sql.DataSource;
 
 import org.apache.ibatis.session.SqlSessionFactory;
@@ -19,75 +21,68 @@ import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import com.soldesk.ex01.service.UserDetailServiceImple;
 import com.soldesk.ex01.util.AuthCodeGenerator;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 
-// root-context.xml°ú µ¿ÀÏ
+import io.jsonwebtoken.io.Decoders;
+import io.jsonwebtoken.security.Keys;
+
+// root-context.xmlæ€¨ï¿½ ï¿½ë£ï¿½ì”ª
 @Configuration
-@ComponentScan(basePackages = {"com.soldesk.ex01.service"})
-@ComponentScan(basePackages = {"com.soldesk.ex01.aspect"})
+@ComponentScan(basePackages = {"com.soldesk.ex01.service", "com.soldesk.ex01.aspect", "com.soldesk.ex01.jwt"})
 @EnableAspectJAutoProxy
 @MapperScan(basePackages = {"com.soldesk.ex01.persistence"})
-@EnableTransactionManagement // Æ®·£Àè¼Ç °ü¸® È°¼ºÈ­
+@EnableTransactionManagement // ï¿½ë“ƒï¿½ì˜–ï¿½ì˜²ï¿½ë€¡ æ„¿ï¿½ç”±ï¿½ ï¿½ì†¢ï¿½ê½¦ï¿½ì†•
 public class RootConfig {
-   
-	// ¿À¶óÅ¬ ¼³Á¤
-	private static final String JDBC_DRIVER = "oracle.jdbc.OracleDriver";
-//	private static final String JDBC_URL =  "jdbc:oracle:thin:@192.168.0.161:1521:xe"; // ±âÁ¸
-//	private static final String JDBC_USER = "sdp"; // ±âÁ¸
-//	private static final String JDBC_PW = "asdf"; // ±âÁ¸
-	// ¾Æ¸¶Á¸ aws
-	private static final String JDBC_URL = "jdbc:oracle:thin:@awsdb.ch4u24ks029o.ap-southeast-2.rds.amazonaws.com:1521:tpdb";
-	private static final String JDBC_USER = "awsAdmin"; // ¾Æ¸¶Á¸ aws
-	private static final String JDBC_PW = "=q'?H6V2W#-3RJw"; // ¾Æ¸¶Á¸ aws
-	// ¸ŞÀÏ ¼³Á¤
-	private static final String MAIL_HOST = "smtp.gmail.com";
-	private static final int MAIL_PORT = 587;
-	private static final String MAIL_USER = "wjdalsqaaz123@gmail.com";
-	private static final String MAIL_PW = "lmob akef narj lhcu";
+
 	
-	
-   @Bean // ½ºÇÁ¸µ beanÀ¸·Î ¼³Á¤
-   public DataSource dataSource() { // DataSource °´Ã¼ ¸®ÅÏ ¸Ş¼­µå
-      HikariConfig config = new HikariConfig(); // ¼³Á¤ °´Ã¼
-      config.setDriverClassName(JDBC_DRIVER); // jdbc µå¶óÀÌ¹ö Á¤º¸
-      // TODO Áı¿¡¼­ ÇÒ¶§´Â url ¼³Á¤ ¹Ù²ã¾ßÇÔ.
-//    config.setJdbcUrl("jdbc:oracle:thin:@localhost:1521:xe"); // DB ¿¬°á url
-      config.setJdbcUrl(JDBC_URL); // DB ¿¬°á url
-      config.setUsername(JDBC_USER); // DB »ç¿ëÀÚ ¾ÆÀÌµğ
-      config.setPassword(JDBC_PW); // DB »ç¿ëÀÚ ºñ¹Ğ¹øÈ£
+   @Bean // ï¿½ë’ªï¿½ë´½ï§ï¿½ beanï¿½ì‘æ¿¡ï¿½ ï¿½ê½•ï¿½ì ™
+   public DataSource dataSource() { // DataSource åª›ì•¹ê»œ ç”±Ñ‹ê½© ï§ë¶¿ê½Œï¿½ë±¶
+      HikariConfig config = new HikariConfig(); // ï¿½ê½•ï¿½ì ™ åª›ì•¹ê»œ
+      config.setDriverClassName("oracle.jdbc.OracleDriver"); // jdbc ï¿½ë±¶ï¿½ì”ªï¿½ì” è¸°ï¿½ ï¿½ì ™è¹‚ï¿½
+      // æ¹²ê³—ã€ˆ ï¿½ì‚¤ï¿½ì”ªï¿½ê²¢ ï¿½ë¿°å¯ƒï¿½ ï¿½ê½•ï¿½ì ™
+//		config.setJdbcUrl("jdbc:oracle:thin:@192.168.0.161:1521:xe");
+//		config.setUsername("sdp");
+//		config.setPassword("asdf");	
+      // aws ï¿½ì‚¤ï¿½ì”ªï¿½ê²¢ ï¿½ë¿°å¯ƒï¿½ ï¿½ê½•ï¿½ì ™
+      config.setJdbcUrl("jdbc:oracle:thin:@sdp.c1asumy42bvk.ap-northeast-2.rds.amazonaws.com:1521:DATABASE"); // DB ï¿½ë¿°å¯ƒï¿½ url
+      config.setUsername("admin"); // DB ï¿½ê¶—ï¿½ìŠœï¿½ì˜„ ï¿½ë¸˜ï¿½ì” ï¿½ëµ’
+      config.setPassword("soldeskProject!"); // DB ï¿½ê¶—ï¿½ìŠœï¿½ì˜„ é®ê¾¨ï¿½è¸°ëŠìƒ‡
       
-      config.setMaximumPoolSize(10); // ÃÖ´ë Ç®(Pool) Å©±â ¼³Á¤
-      config.setConnectionTimeout(30000); // Connection Å¸ÀÓ ¾Æ¿ô ¼³Á¤(30ÃÊ)
-      HikariDataSource ds = new HikariDataSource(config); // config °´Ã¼¸¦ ÂüÁ¶ÇÏ¿© DataSource °´Ã¼ »ı¼º
-      return ds; // ds °´Ã¼ ¸®ÅÏ
+      config.setMaximumPoolSize(10); // ï§¤ì’•ï¿½ ï¿½ï¿½(Pool) ï¿½ê²•æ¹²ï¿½ ï¿½ê½•ï¿½ì ™
+      config.setConnectionTimeout(30000); // Connection ï¿½ï¿½ï¿½ì—« ï¿½ë¸˜ï¿½ì ï¿½ê½•ï¿½ì ™(30ç¥ï¿½)
+      HikariDataSource ds = new HikariDataSource(config); // config åª›ì•¹ê»œç‘œï¿½ ï§¡ëª„â€œï¿½ë¸¯ï¿½ë¿¬ DataSource åª›ì•¹ê»œ ï¿½ê¹®ï¿½ê½¦
+      return ds; // ds åª›ì•¹ê»œ ç”±Ñ‹ê½©
    }
    
-   // ÀÌ¸ŞÀÏ ÀÎÁõ, ¾ÆÀÌµğ ¹× ºñ¹Ğ¹øÈ£ º¯°æ¿ë ÀÎÁõ ¹øÈ£ »ı¼º±â
+   //TODO ç•°ë·€ì‘ ï§¢ê¾ªë˜¿è«›ï¿½ æ¹²ê³•ì¤‰ ï¿½ê¶¡ï¿½ë¿­ï¿½ì“£ redis ï¿½ë„»ï¿½ë¹ï¿½ê½Œ ï¿½ë¸¯ï¿½ë£„æ¿¡ï¿½ è«›ë¶½í“­è¹‚ì‡¨ì¾¬
+   
+   // ï¿½ì” ï§ë¶¿ì”ª ï¿½ì”¤ï§ï¿½, ï¿½ë¸˜ï¿½ì” ï¿½ëµ’ è«›ï¿½ é®ê¾¨ï¿½è¸°ëŠìƒ‡ è¹‚ï¿½å¯ƒìŒìŠœ ï¿½ì”¤ï§ï¿½ è¸°ëŠìƒ‡ ï¿½ê¹®ï¿½ê½¦æ¹²ï¿½
    @Bean
    public AuthCodeGenerator authCodeGenerator() {
        return new AuthCodeGenerator();
    }
    
    @Bean
-   public JavaMailSender mailSender() { // ÀÌ¸ŞÀÏ È®ÀÎ ¶Ç´Â ¾ÆÀÌµğ ºñ¹Ğ¹øÈ£ Ã£±â½Ã ÀÌ¿ëÇÒ °´Ã¼ ¸®ÅÏ ¸Ş¼­µå
-	   JavaMailSenderImpl mailSender = new JavaMailSenderImpl(); // °´Ã¼ »ı¼º
-	   mailSender.setHost(MAIL_HOST); // ÀÌ¸ŞÀÏ Àü¼Û¿¡ »ç¿ëµÉ smtp È£½ºÆ® ¼³Á¤
-	   mailSender.setPort(MAIL_PORT); // Æ÷Æ® ¼³Á¤
-	   mailSender.setUsername(MAIL_USER); // »ç¿ëµÉ ÀÌ¸ŞÀÏ
-	   mailSender.setPassword(MAIL_PW); // »ı¼ºÇÑ ¾Û ºñ¹Ğ¹øÈ£ ÀÔ·Â.
+   public JavaMailSender mailSender() { // ï¿½ì” ï§ë¶¿ì”ª ï¿½ì†—ï¿½ì”¤ ï¿½ì‚‰ï¿½ë’— ï¿½ë¸˜ï¿½ì” ï¿½ëµ’ é®ê¾¨ï¿½è¸°ëŠìƒ‡ ï§¡ì–˜ë¦°ï¿½ë–† ï¿½ì” ï¿½ìŠœï¿½ë¸· åª›ì•¹ê»œ ç”±Ñ‹ê½© ï§ë¶¿ê½Œï¿½ë±¶
+	   JavaMailSenderImpl mailSender = new JavaMailSenderImpl(); // åª›ì•¹ê»œ ï¿½ê¹®ï¿½ê½¦
+	   mailSender.setHost("smtp.gmail.com"); // ï¿½ì” ï§ë¶¿ì”ª ï¿½ìŸ¾ï¿½ë„šï¿½ë¿‰ ï¿½ê¶—ï¿½ìŠœï¿½ë§† smtp ï¿½ìƒ‡ï¿½ë’ªï¿½ë“ƒ ï¿½ê½•ï¿½ì ™
+	   mailSender.setPort(587); // ï¿½ë£·ï¿½ë“ƒ ï¿½ê½•ï¿½ì ™
+	   mailSender.setUsername("wjdalsqaaz123@gmail.com"); // ï¿½ê¶—ï¿½ìŠœï¿½ë§† ï¿½ì” ï§ë¶¿ì”ª
+	   mailSender.setPassword("lmob akef narj lhcu"); // ï¿½ê¹®ï¿½ê½¦ï¿½ë¸³ ï¿½ë¹‹ é®ê¾¨ï¿½è¸°ëŠìƒ‡ ï¿½ì—¯ï¿½ì °.
 	   
-	   Properties javaMailProperties = new Properties(); // JavaMail ¼Ó¼º ¼³Á¤À» À§ÇÑ °´Ã¼ »ı¼º
-	   javaMailProperties.put("mail.tranport.protocl", "smtp"); // smtp¸¦ ÇÁ·ÎÅäÄİ·Î »ç¿ë
-	   javaMailProperties.put("mail.smtp.auth", "true"); // smtp ¼­¹ö¿¡ ÀÎÁõ ÇÊ¿ä
-	   javaMailProperties.put("mail.smtp.socketFactory.class", "javax.net.ssl.SSLSocketFactory"); // SSL ¼ÒÄÏ ÆÑÅä¸® Å¬·¡½º »ç¿ë
-	   javaMailProperties.put("mail.smtp.starttls.enable", "true"); // STARTTLS(TLS¸¦ ½ÃÀÛÇÏ´Â ¸í·É)¸¦ »ç¿ëÇÏ¿© ¾ÏÈ£È­µÈ Åë½ÅÀ» È°¼ºÈ­
-	   javaMailProperties.put("mail.debug", "true"); // µğ¹ö±ë Ãâ·Â
-	   javaMailProperties.put("mail.smtp.ssl.trust", "smtp.naver.com"); //smtp ¼­¹öÀÇ ssl ÀÎÁõ¼­¸¦ ½Å·Ú
-	   javaMailProperties.put("mail.smtp.ssl.protocols", "TLSv1.2"); //»ç¿ëÇÒ ssl ÇÁ·ÎÅäÄİ ¹öÀü
+	   Properties javaMailProperties = new Properties(); // JavaMail ï¿½ëƒ½ï¿½ê½¦ ï¿½ê½•ï¿½ì ™ï¿½ì“£ ï¿½ìï¿½ë¸³ åª›ì•¹ê»œ ï¿½ê¹®ï¿½ê½¦
+	   javaMailProperties.put("mail.tranport.protocl", "smtp"); // smtpç‘œï¿½ ï¿½ë´½æ¿¡ì’—ë„—è‚„ì’•ì¤ˆ ï¿½ê¶—ï¿½ìŠœ
+	   javaMailProperties.put("mail.smtp.auth", "true"); // smtp ï¿½ê½Œè¸°ê¾©ë¿‰ ï¿½ì”¤ï§ï¿½ ï¿½ë¸˜ï¿½ìŠ‚
+	   javaMailProperties.put("mail.smtp.socketFactory.class", "javax.net.ssl.SSLSocketFactory"); // SSL ï¿½ëƒ¼è€³ï¿½ ï¿½ë™¥ï¿½ë„—ç”±ï¿½ ï¿½ê²¢ï¿½ì˜’ï¿½ë’ª ï¿½ê¶—ï¿½ìŠœ
+	   javaMailProperties.put("mail.smtp.starttls.enable", "true"); // STARTTLS(TLSç‘œï¿½ ï¿½ë–†ï¿½ì˜‰ï¿½ë¸¯ï¿½ë’— ï§ë‚…ì¡Š)ç‘œï¿½ ï¿½ê¶—ï¿½ìŠœï¿½ë¸¯ï¿½ë¿¬ ï¿½ë¸«ï¿½ìƒ‡ï¿½ì†•ï¿½ë§‚ ï¿½ë„»ï¿½ë–Šï¿½ì“£ ï¿½ì†¢ï¿½ê½¦ï¿½ì†•
+	   javaMailProperties.put("mail.debug", "true"); // ï¿½ëµ’è¸°ê¾§í‰­ ç•°ì’•ì °
+	   javaMailProperties.put("mail.smtp.ssl.trust", "smtp.naver.com"); //smtp ï¿½ê½Œè¸°ê¾©ì“½ ssl ï¿½ì”¤ï§ì•¹ê½Œç‘œï¿½ ï¿½ë–ŠçŒ¶ï¿½
+	   javaMailProperties.put("mail.smtp.ssl.protocols", "TLSv1.2"); //ï¿½ê¶—ï¿½ìŠœï¿½ë¸· ssl ï¿½ë´½æ¿¡ì’—ë„—è‚„ï¿½ è¸°ê¾©ìŸ¾
 	   
-	   mailSender.setJavaMailProperties(javaMailProperties); // ÀÌ¸ŞÀÏÀ» º¸³¾ °´Ã¼¿¡ properties ¼¼ÆÃ	   
+	   mailSender.setJavaMailProperties(javaMailProperties); // ï¿½ì” ï§ë¶¿ì”ªï¿½ì“£ è¹‚ëŒ€ê¶ª åª›ì•¹ê»œï¿½ë¿‰ properties ï¿½ê½­ï¿½ë˜¿	   
 	   return mailSender;
    }
    
@@ -98,17 +93,38 @@ public class RootConfig {
       return (SqlSessionFactory) sqlSessionFactoryBean.getObject();
    }
    
-   // Æ®·£Àè¼Ç ¸Å´ÏÀú °´Ã¼¸¦ ºóÀ¸·Î µî·Ï
+   // ï¿½ë“ƒï¿½ì˜–ï¿½ì˜²ï¿½ë€¡ ï§ã…»ë•²ï¿½ï¿½ åª›ì•¹ê»œç‘œï¿½ é®ë‰ì‘æ¿¡ï¿½ ï¿½ë²‘æ¿¡ï¿½
    @Bean
    public PlatformTransactionManager transactionManager() {
       return new DataSourceTransactionManager(dataSource());
    }
    
-   // Jackson ¿¡ java ³¯Â¥ °´Ã¼ ¼³Á¤ Ãß°¡
+   // Jackson ï¿½ë¿‰ java ï¿½ê¶‡ï§ï¿½ åª›ì•¹ê»œ ï¿½ê½•ï¿½ì ™ ç•°ë¶½ï¿½
    @Bean
    public Jackson2ObjectMapperBuilder jackson2ObjectMapperBuilder() {
        Jackson2ObjectMapperBuilder builder = new Jackson2ObjectMapperBuilder();
        builder.modules(new JavaTimeModule());
        return builder;
+   }
+   
+   // JWT ï¿½ë–†ï¿½ê²•ç”±ìš±ê¶ ï¿½ê½•ï¿½ì ™
+   @Bean
+   public SecretKey secretKey() {
+       String secret = "7IKs7Jqp7J6QIOyduOymneydtCDrkJjslrQg7J6I64qUIO2MgO2UhOuhnOygne2KuCDsoJHqt7wg7Yag7YGw7J6F64uI64ukLg=="; // base64 ï¿½ì”¤è‚„ë¶¾ëµ«ï¿½ë§‚ è‡¾ëª„ì˜„ï¿½ë¿´
+       byte[] keyByte = Decoders.BASE64.decode(secret); // Base64 è‡¾ëª„ì˜„ï¿½ë¿´ï¿½ì“£ ï¿½ëµ’è‚„ë¶¾ëµ«ï¿½ë¸¯ï¿½ë¿¬ è«›ë¶¿ì” ï¿½ë“ƒ è«›ê³—ë¿´æ¿¡ï¿½ è¹‚ï¿½ï¿½ì†š
+       return Keys.hmacShaKeyFor(keyByte); // ï¿½ëµ’è‚„ë¶¾ëµ«ï¿½ë§‚ è«›ë¶¿ì” ï¿½ë“ƒ è«›ê³—ë¿´ï¿½ì“£ ï¿½ê¶—ï¿½ìŠœï¿½ë¸¯ï¿½ë¿¬ HMAC-SHA ï¿½ê¶ ï¿½ê¹®ï¿½ê½¦
+   }
+
+   // JWT ï¿½ë¸¸ï¿½ê½­ï¿½ë’ª ï¿½ë„—ï¿½ê²™ ï§ëš®ì¦º æ¹²ê³Œì»™ ï¿½ê½•ï¿½ì ™
+   @Bean
+   public Duration accessTokenExpiration() {
+       return Duration.ofMinutes(30); // 30éºï¿½
+   }
+   
+
+   // JWT ç”±Ñ‹ë´½ï¿½ì …ï¿½ë–† ï¿½ë„—ï¿½ê²™ ï§ëš®ì¦º æ¹²ê³Œì»™ ï¿½ê½•ï¿½ì ™
+   @Bean
+   public Duration refreshTokenExpiration() {
+       return Duration.ofDays(7); // 1äºŒì‡±ì”ª
    }
 } // end RootConfig

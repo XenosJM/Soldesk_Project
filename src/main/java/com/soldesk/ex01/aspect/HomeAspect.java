@@ -8,40 +8,40 @@ import org.springframework.stereotype.Component;
 
 import lombok.extern.log4j.Log4j;
 
-@Component // Proxy °´Ã¼¿¡ ÁÖÀÔ(injection) ÇÏ±â À§ÇØ ¼±¾ğ
+@Component // Proxy ê°ì²´ì— ì£¼ì…(injection) í•˜ê¸° ìœ„í•´ ì„ ì–¸
 @Aspect
 @Log4j
 public class HomeAspect {
 	
 	// * Aspect
-	// - ÀÏ¹İÀûÀ¸·Î ¸Ş¼Òµå¿¡ Æ¯Á¤ ±â´ÉÀ» Àû¿ë½ÃÅ³ ¶§ »ç¿ë
+	// - ì¼ë°˜ì ìœ¼ë¡œ ë©”ì†Œë“œì— íŠ¹ì • ê¸°ëŠ¥ì„ ì ìš©ì‹œí‚¬ ë•Œ ì‚¬ìš©
 	
-	// * PointcutÀ» ÁöÁ¤ÇÏ´Â ¹æ¹ı1
-	// - @Pointcut ¾î³ëÅ×ÀÌ¼Ç ¾È¿¡¼­ ÁöÁ¤
-	// - µ¿ÀÏÇÑ PointcutÀÌ ¹İº¹µÇ´Â °ÍÀ» ÇÇÇÒ ¼ö ÀÖÀ½
-	// - ÇÑ ¹ø ÁöÁ¤ÇÑ PointcutÀ» ¿©·¯ advice ¸Ş¼Òµå¿¡¼­ ÂüÁ¶
+	// * Pointcutì„ ì§€ì •í•˜ëŠ” ë°©ë²•1
+	// - @Pointcut ì–´ë…¸í…Œì´ì…˜ ì•ˆì—ì„œ ì§€ì •
+	// - ë™ì¼í•œ Pointcutì´ ë°˜ë³µë˜ëŠ” ê²ƒì„ í”¼í•  ìˆ˜ ìˆìŒ
+	// - í•œ ë²ˆ ì§€ì •í•œ Pointcutì„ ì—¬ëŸ¬ advice ë©”ì†Œë“œì—ì„œ ì°¸ì¡°
 	
 //	@Pointcut("execution(* com.soldesk.ex01.HomeController.home(..))")
-//	// HomeControllerÀÇ home() ¸Ş¼­µå¿¡ Æ÷ÀÎÆ®ÄÆ ÁöÁ¤
-//	public void pcHome() {} // Æ÷ÀÎÆ®ÄÆ À§Ä¡ ÁöÁ¤
+//	// HomeControllerì˜ home() ë©”ì„œë“œì— í¬ì¸íŠ¸ì»· ì§€ì •
+//	public void pcHome() {} // í¬ì¸íŠ¸ì»· ìœ„ì¹˜ ì§€ì •
 //	
-//	@Around("pcHome()") // Æ÷ÀÎÆ®ÄÆ ¸Ş¼­µå¸¦ Àû¿ë
+//	@Around("pcHome()") // í¬ì¸íŠ¸ì»· ë©”ì„œë“œë¥¼ ì ìš©
 //	public Object homeAdvice(ProceedingJoinPoint jp) {
 //		// ProceedingJoinPoint :
-//		// Advice°¡ Àû¿ëµÈ ¸Ş¼­µå¸¦ È£ÃâÇÏ°í È£ÃâµÈ ¸Ş¼­µåÀÇ ½ÇÇàÀ»
-//		// °è¼Ó ÁøÇàÇÏ´Â ±â´ÉÀ» Á¦°ø
+//		// Adviceê°€ ì ìš©ëœ ë©”ì„œë“œë¥¼ í˜¸ì¶œí•˜ê³  í˜¸ì¶œëœ ë©”ì„œë“œì˜ ì‹¤í–‰ì„
+//		// ê³„ì† ì§„í–‰í•˜ëŠ” ê¸°ëŠ¥ì„ ì œê³µ
 //		
 //		Object result = null;
 //		
 //		log.info("===== homeAdvice");
 //		
 //		try {
-//			log.info("===== home() È£Ãâ Àü"); // @before
-//			result = jp.proceed(); // HomeController.home() ½ÇÇà
-//			log.info("===== home() ¸®ÅÏ ÈÄ"); // @afterReturning
+//			log.info("===== home() í˜¸ì¶œ ì „"); // @before
+//			result = jp.proceed(); // HomeController.home() ì‹¤í–‰
+//			log.info("===== home() ë¦¬í„´ í›„"); // @afterReturning
 //		} catch (Throwable e) {
 //			// @afterThrowing
-//			log.info("===== ¿¹¿Ü ¹ß»ı : " + e.getMessage());
+//			log.info("===== ì˜ˆì™¸ ë°œìƒ : " + e.getMessage());
 //		} finally {
 //			// @after
 //			log.info("===== finally");

@@ -9,6 +9,8 @@ import org.junit.runner.Request;
 import org.junit.runner.RunWith;
 import org.junit.runner.Runner;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
@@ -17,8 +19,8 @@ import com.soldesk.ex01.domain.MemberVO;
 
 import lombok.extern.log4j.Log4j;
 
-@RunWith(SpringJUnit4ClassRunner.class) // Junit class Å×½ºÆ® ¿¬°á
-@ContextConfiguration(classes = {RootConfig.class}) // ¼³Á¤ ÆÄÀÏ ¿¬°á
+@RunWith(SpringJUnit4ClassRunner.class) // Junit class ï¿½×½ï¿½Æ® ï¿½ï¿½ï¿½ï¿½
+@ContextConfiguration(classes = {RootConfig.class}) // ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
 @Log4j
 public class MemberMapperTest {
 	
@@ -27,9 +29,9 @@ public class MemberMapperTest {
 	
 	@Test
 	public void test() {
-//		testMemberInsert();
+		testMemberInsert();
 //		testMemberList();
-		testMemberByMemberId();
+//		testMemberByMemberId();
 //		testMemberUpdate();
 //		testMemberPropertyUpdate();
 //		testMemberManagerUpdate();
@@ -39,13 +41,13 @@ public class MemberMapperTest {
 	private void testMemberDelete() {
 		log.info("testMemberDelete()");
 		int result = memberMapper.delete("wjdals99");
-		log.info(result + "Çà »èÁ¦");
+		log.info(result + "ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½");
 	}
 
 	private void testMemberManagerUpdate() {
-		MemberVO vo = new MemberVO("wjdals99", null, 2, null, null, null, null);
+		MemberVO vo = new MemberVO("wjdals99", null, 2, null, null, null, null, null);
 		int result = memberMapper.updateManager(vo);
-		log.info(result + "Çà ¼öÁ¤");
+		log.info(result + "ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½");
 		
 	}
 
@@ -54,7 +56,7 @@ public class MemberMapperTest {
 		vo.setMemberId("wjdals99");
 		vo.setMemberProperty(new Integer[] {34, 25, 22});
 		int result = memberMapper.updateProperty(vo);
-		log.info(result + "Çà ¼öÁ¤");
+		log.info(result + "ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½");
 	}
 
 	private void testMemberUpdate() {
@@ -64,7 +66,7 @@ public class MemberMapperTest {
 		vo.setMemberPassword("456456");
 		vo.setMemberEmail("test@test.com");
 		int result = memberMapper.update(vo);
-		log.info(result + "Çà ¼öÁ¤");
+		log.info(result + "ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½");
 	}
 
 	private void testMemberByMemberId() {
@@ -82,10 +84,16 @@ public class MemberMapperTest {
 	}
 
 	private void testMemberInsert() {
-		MemberVO vo = new MemberVO("wjddk", "1q2w3e4r", 2, "wjdalsqaaz123@gmail.com", new Integer[] {1, 2}, new Date(), null) ;
-		 vo.setMemberPropertyAsString(Arrays.toString(vo.getMemberProperty()));
+		MemberVO vo = new MemberVO();
+		vo.setMemberId("test2");
+		vo.setMemberPassword("test");
+		vo.setMemberEmail("test");
+		PasswordEncoder encoder = new BCryptPasswordEncoder();
+		String endcodePw = encoder.encode(vo.getMemberPassword());
+		vo.setMemberPassword(endcodePw);
+//		vo.setMemberPropertyAsString(Arrays.toString(vo.getMemberProperty()));
 		int result = memberMapper.insert(vo);
-		log.info(result + "Çà »ðÀÔ");
+		log.info(result + "ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½");
 	}
 	
 }

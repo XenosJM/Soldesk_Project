@@ -1,8 +1,12 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
+<%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
+
+
 <!DOCTYPE html>
 <html>
 <head>
+ <sec:csrfMetaTags/>
 <meta charset="UTF-8">
 <title>board2 테스트</title>
 <script	src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
@@ -10,16 +14,18 @@
 <body>
 	<form action="regist" method="POST" id="boardForm"
 		enctype="multipart/form-data">
+	
 		<!-- input 태그의 name은 dto의 멤버 변수 이름과 동일하게 작성 -->
 		<div>
 			<p>제목 :</p>
 			<input type="text" name="boardTitle" placeholder="제목 입력"
 				maxlength="20" required>
 		</div>
+			<input type="hidden" name = "categoryId" value = "${param.categoryId}"></input>
+			 <!-- <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/> --> 
 		<div>
 			<p>작성자 :</p>
-			<input type="text" name="memberId" maxlength="10"
-				value='${sessionScope.memberId }' readonly required>
+			<input type="text" name="memberId" maxlength="10" value = "test" readonly required><!-- value='${pageContext.request.userPrincipal.name}' readonly required--> 
 		</div>
 		<div>
 			<p>내용 :</p>
@@ -42,6 +48,16 @@
 
 	<script>
 		$(document).ready(function() {
+ 			/* const token = $("meta[name='_csrf']").attr("content");
+        	const header = $("meta[name='_csrf_header']").attr("content");
+        	const name = $("#userName").val();
+        	
+        	$.ajaxSetup({
+                beforeSend: function(xhr) {
+                    xhr.setRequestHeader(header, token);
+                }
+            }); */
+
 			// 차단할 확장자 정규식 (exe, sh, php, jsp, aspx, zip, alz)
 			var blockedExtensions = /\.(exe|sh|php|jsp|aspx|zip|alz)$/i;
 
@@ -86,6 +102,7 @@
 
 					formData.append('file', file);
 				}
+				$("input[name^='attachVO']").remove();
 				console.log("FormData created:", formData);
 				$.ajax({
 					url : '../board/attach',

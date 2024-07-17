@@ -1,10 +1,13 @@
 package com.soldesk.ex01.service;
 
+import com.soldesk.ex01.domain.MemberVO;
+
 public interface UtilService {
 	
-	// È¸¿ø°¡ÀÔ½Ã ¾ÆÀÌµð Áßº¹ Ã¼Å©
+	// È¸ï¿½ï¿½ï¿½ï¿½ï¿½Ô½ï¿½ ï¿½ï¿½ï¿½Ìµï¿½ ï¿½ßºï¿½ Ã¼Å©
 	String checkId(String memberId);
-	// ¸ÞÀÏ Ã¼Å©
+	// ï¿½ï¿½ï¿½ï¿½ Ã¼Å©
 	String checkEmail(String memberEmail);
+	int updatePassword(MemberVO memberVO);
 	
 }

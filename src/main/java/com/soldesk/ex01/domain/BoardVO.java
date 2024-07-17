@@ -1,6 +1,7 @@
 package com.soldesk.ex01.domain;
 
 import java.util.Date;
+import java.util.List;
 
 import org.springframework.web.multipart.MultipartFile;
 
@@ -23,9 +24,13 @@ public class BoardVO {
 	private String boardContent;
 	private Date boardRegistDate;
 	private int boardReplyCount;
-	private String attachPath;
-	private String attachRealName;
-	private String attachChgName;
-	private String attachExtension;
-	private MultipartFile file;
+	private int recommend;
+	
+	@Setter
+	@Getter
+	private AttachVO[] attachVO; 
+	
+	@Setter
+	@Getter
+	private RecommendVO recommendVO;
 }

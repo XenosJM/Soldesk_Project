@@ -3,37 +3,38 @@ package com.soldesk.ex01.service;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import com.soldesk.ex01.domain.JwtTokenDTO;
 import com.soldesk.ex01.domain.MemberVO;
 
 public interface MemberService {
 	
-	// È¸¿ø °¡ÀÔ
+	// È¸ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
 	int createMember(MemberVO memberVO);
-	// È¸¿ø ÀÚ±â Á¤º¸ º¸±â
+	// È¸ï¿½ï¿½ ï¿½Ú±ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
 	MemberVO getMemberById(String memberId);
-	// È¸¿ø °Ë»ö
+	// È¸ï¿½ï¿½ ï¿½Ë»ï¿½
 	List<MemberVO> getAllMember();
-	// È¸¿ø Á¤º¸ ¼öÁ¤
-	int updateMember(MemberVO memberVO);
-	// È¸¿ø ºñ¹Ð¹øÈ£ ¼öÁ¤
+	// È¸ï¿½ï¿½ ï¿½ï¿½Ð¹ï¿½È£ ï¿½ï¿½ï¿½ï¿½
 	int updatePassword(MemberVO memberVO);
-	// È¸¿ø ÀÌ¸ÞÀÏ ¼öÁ¤
+	// È¸ï¿½ï¿½ ï¿½Ì¸ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
 	int updateEmail(MemberVO memberVO);
-	// È¸¿ø °ü¸®ÀÚ ±ÇÇÑ º¯°æ
+	// È¸ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
 	int updateMemberPermission(MemberVO memberVO);
-	// È¸¿ø º¸À¯ ¾ÆÀÌÅÛ º¯°æ
+	// È¸ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
 	int updateMemberProperty(MemberVO memberVO);
-	// È¸¿ø Á¤º¸ »èÁ¦(Å»Åð)
-	int deleteMember(String memberId);
-	// ·Î±×ÀÎ
-	int memberCheck(Map<String, String> res, HttpSession session);
-	// TODO È¸¿ø Ä£±¸ º¸±â -> Ä£±¸ ¼­ºñ½º¿¡¼­
+	// È¸ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½(Å»ï¿½ï¿½)
+	int deleteMember(String memberId);	
+	// íšŒì› ë¹„ë°€ë²ˆí˜¸ ì²´í¬
+	int checkPassword(MemberVO memberVO);
+	// íšŒì› ê´€ë¦¬ìž ë³€ê²½
+	int memberRoleUpdate(MemberVO memberVO);
 	
-	// Ä£±¸ ½ÅÃ»(µî·Ï)
+	// Ä£ï¿½ï¿½ ï¿½ï¿½Ã»(ï¿½ï¿½ï¿½)
 	
-	// Ä£±¸ 
-	// TODO È¸¿ø ÂÊÁö º¸³»±â -> ÂÊÁö¿ë ¼­ºñ½º¿¡¼­ 
+	// Ä£ï¿½ï¿½ 
+	// TODO È¸ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ -> ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ñ½º¿ï¿½ï¿½ï¿½ 
 	
 }

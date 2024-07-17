@@ -6,14 +6,25 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PostAuthorize;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.soldesk.ex01.domain.JwtTokenDTO;
 import com.soldesk.ex01.domain.MemberVO;
+import com.soldesk.ex01.jwt.JwtTokenProvider;
+import com.soldesk.ex01.persistence.FriendMapper;
 import com.soldesk.ex01.persistence.MemberMapper;
 
 import lombok.extern.log4j.Log4j;
@@ -23,21 +34,20 @@ import lombok.extern.log4j.Log4j;
 public class MemberServiceImple implements MemberService{
 	
 	@Autowired
-	public MemberMapper memberMapper;
+	private MemberMapper memberMapper;
 	
-//	@Autowired
-//	public PasswordEncoder encoder;
+	private PasswordEncoder encoder = new BCryptPasswordEncoder();
 	
 	@Transactional
 	@Override
 	public int createMember(MemberVO memberVO) {
 		log.info("createMember()");
-//		String encodedPassword = encoder.encode(memberVO.getMemberPassword());
-//		memberVO.setMemberPassword(encodedPassword);
-		int result = memberMapper.insert(memberVO);
-		return result;
+		String encodedPassword = encoder.encode(memberVO.getMemberPassword());
+		memberVO.setMemberPassword(encodedPassword);
+		return memberMapper.insert(memberVO);
 	}
-
+	
+	@PostAuthorize("isAuthenticated() and (#memberId == principal.username)")
 	@Override
 	public MemberVO getMemberById(String memberId) {
 		log.info("getMemberById()");
@@ -50,14 +60,17 @@ public class MemberServiceImple implements MemberService{
 		return memberMapper.selectIdList();
 	}
 
-	@Transactional
-	@Override
-	public int updateMember(MemberVO memberVO) {
-		log.info("updateMember()");
-		return memberMapper.update(memberVO);
-	}
+//	@Transactional
+//	@Override
+//	public int updateMember(MemberVO memberVO) {
+//		log.info("updateMember()");
+//		String encodedPassword = encoder.encode(memberVO.getMemberPassword());
+//		memberVO.setMemberPassword(encodedPassword);
+//		return memberMapper.update(memberVO);
+//	}
 
 	@Transactional
+	@PreAuthorize("isAuthenticated() and (#memberVO.memberId == principal.username)")
 	@Override
 	public int updateMemberPermission(MemberVO memberVO) {
 		log.info("updateMemberPermission()");
@@ -66,25 +79,26 @@ public class MemberServiceImple implements MemberService{
 	}
 
 	@Transactional
+	@PreAuthorize("isAuthenticated() and (#memberVO.memberId == principal.username)")
 	@Override
 	public int updateMemberProperty(MemberVO memberVO) {
 		log.info("updateMemberProperty()");
 		
-		// Àü´Þ¹ÞÀº »èÁ¦ÇÒ »óÇ° ¹è¿­ÀÇ °¢ °ª¿¡ Á¢±ÙÇÏ±âÀ§ÇÑ Array¹è¿­ ¼±¾ð
+		// ï¿½ï¿½ï¿½Þ¹ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Ç° ï¿½è¿­ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï±ï¿½ï¿½ï¿½ï¿½ï¿½ Arrayï¿½è¿­ ï¿½ï¿½ï¿½ï¿½
 		List<Integer> deletePropertyList = new ArrayList<>();
 		for(int deleteItem : memberVO.getMemberProperty()) {
 			deletePropertyList.add(deleteItem);
 		}
-		// ¿ø·¡ È¸¿øÀÇ »óÇ° ¹è¿­¿¡ Á¢±ÙÇÏ±âÀ§ÇÑ Array¹è¿­ ¼±¾ð
+		// ï¿½ï¿½ï¿½ï¿½ È¸ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Ç° ï¿½è¿­ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï±ï¿½ï¿½ï¿½ï¿½ï¿½ Arrayï¿½è¿­ ï¿½ï¿½ï¿½ï¿½
 		MemberVO checkVO = memberMapper.selectByMemberId(memberVO.getMemberId());
 		List<Integer> originalPropertyList = new ArrayList<>();
 		for(int originalItem : checkVO.getMemberProperty()) {
 			originalPropertyList.add(originalItem);
 		}
-		// Iterator¸¦ »ç¿ëÇÏ¿© ¿ø·¡ ¹è¿­¿¡¼­ »èÁ¦ÇÒ ¾ÆÀÌÅÛ°ú °°Àº ¾ÆÀÌÅÛ Á¦°Å
+		// Iteratorï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½Ï¿ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½è¿­ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Û°ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
 		Iterator<Integer> itr = originalPropertyList.iterator();
-		while (itr.hasNext()) { // itr¿¡ ´ÙÀ½ °ªÀÌ Á¸ÀçÇÏ¸é Âü
-	        Integer item = itr.next(); // ´ÙÀ½¿ä¼Ò °¡Á®¿À±â
+		while (itr.hasNext()) { // itrï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï¸ï¿½ ï¿½ï¿½
+	        Integer item = itr.next(); // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 	        if (deletePropertyList.contains(item)) {
 	            itr.remove();
 	        }
@@ -96,39 +110,55 @@ public class MemberServiceImple implements MemberService{
 	}
 
 	@Transactional
+	@PreAuthorize("isAuthenticated() and (#memberId == principal.username)")
 	@Override
 	public int deleteMember(String memberId) {
 		log.info("deleteMember()");
 		return memberMapper.delete(memberId);
 	}
 
-	@Override
-	public int memberCheck(Map<String, String> res, HttpSession session) {
-		log.info("memberCheck()");
-		String memberId = res.get("memberId");
-        String memberPassword = res.get("memberPassword");
-        MemberVO memberVO = memberMapper.memberCheck(memberId);
-
-        if (memberVO != null && memberPassword.equals(memberVO.getMemberPassword())) {
-            session.setAttribute("memberId", memberVO.getMemberId());
-            if (memberVO.getRoleId() != 0) {
-                session.setAttribute("managerId", memberVO.getRoleId());
-            }
-            return 1;
-        } else {
-            return 0;
-        }
-	}
-
+	
+	
+	@Transactional
+	@PreAuthorize("isAuthenticated() and (#memberVO.memberId == principal.username)")
 	@Override
 	public int updatePassword(MemberVO memberVO) {
+		log.info("updatePw");
+		String encodedPassword = encoder.encode(memberVO.getMemberPassword());
+		memberVO.setMemberPassword(encodedPassword);
 		int result = memberMapper.updatePassword(memberVO);
+		return result;
+	}
+	
+	@Transactional
+	@PreAuthorize("isAuthenticated() and (#memberVO.memberId == principal.username)")
+	@Override
+	public int updateEmail(MemberVO memberVO) {
+		log.info("updateEamil");
+		int result = memberMapper.updateEmail(memberVO);
 		return result;
 	}
 
 	@Override
-	public int updateEmail(MemberVO memberVO) {
-		int result = memberMapper.updateEmail(memberVO);
+	public int checkPassword(MemberVO memberVO) {
+		log.info("checkPW");
+		int result = 0; 
+		MemberVO checkVO = memberMapper.memberCheck(memberVO.getMemberId());
+		String password = encoder.encode(checkVO.getMemberPassword());
+		
+		if(checkVO != null && encoder.matches(password, memberVO.getMemberPassword())) {
+			result = 1;
+		} else {
+			result = 0;
+		}
+		return result;
+	}
+
+	@Transactional
+	@PreAuthorize("isAuthenticated() and hasRole('ROLE_HEAD_MANAGER')")
+	@Override
+	public int memberRoleUpdate(MemberVO memberVO) {
+		int result = memberMapper.updateRole(memberVO);
 		return result;
 	}
 
