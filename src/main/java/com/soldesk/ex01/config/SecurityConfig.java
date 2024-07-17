@@ -64,7 +64,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 				.antMatchers("/", "/member/regist", "/member/findIdPw", "/login/check", "/board/list", "/board/detail", "/board/search", "/util/**","/reply/{boardId}","/rereply/{boardId}","/category/list","/category/detail","/board/recommendlist", "/ws/**" ).permitAll()  // 루트 URL에 대한 모든 사용자 접근
 				// TODO 웹소켓 엔드포인트도 추가해야하면 할것
 				.antMatchers("/member/**", "/friend/**", "/reply/**", "/rereply/**", "/attach/**", "/board/**","/request/**","/receive/**").hasAnyRole("MEMBER", "MANAGER", "HEAD_MANAGER")  // 루트 URL에 대한 MEMBER 역할을 가진 사용자만 접근 가능
-				.antMatchers("/ROLE/**").hasRole("HEAD_MANAGER")
+				.antMatchers("/role/**").hasRole("HEAD_MANAGER")
 				
 				.anyRequest().authenticated() // 이외에 URL은 사용자 인증을 수행해야 함
 					.and()
