@@ -34,9 +34,13 @@ public class RootConfig {
    
 	// 오라클 설정
 	private static final String JDBC_DRIVER = "oracle.jdbc.OracleDriver";
-	private static final String JDBC_URL =  "jdbc:oracle:thin:@192.168.0.161:1521:xe";
-	private static final String JDBC_USER = "sdp";
-	private static final String JDBC_PW = "asdf";
+//	private static final String JDBC_URL =  "jdbc:oracle:thin:@192.168.0.161:1521:xe"; // 기존
+//	private static final String JDBC_USER = "sdp"; // 기존
+//	private static final String JDBC_PW = "asdf"; // 기존
+	// 아마존 aws
+	private static final String JDBC_URL = "jdbc:oracle:thin:@awsdb.ch4u24ks029o.ap-southeast-2.rds.amazonaws.com:1521:tpdb";
+	private static final String JDBC_USER = "awsAdmin"; // 아마존 aws
+	private static final String JDBC_PW = "=q'?H6V2W#-3RJw"; // 아마존 aws
 	// 메일 설정
 	private static final String MAIL_HOST = "smtp.gmail.com";
 	private static final int MAIL_PORT = 587;

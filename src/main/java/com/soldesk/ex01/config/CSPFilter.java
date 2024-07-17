@@ -10,6 +10,7 @@ import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletResponse;
 
+// 시큐리티에서 iframe으로 jsp 소스 받아와서 여는거 허용시켜주는 필터
 public class CSPFilter implements Filter {
 
 	@Override
