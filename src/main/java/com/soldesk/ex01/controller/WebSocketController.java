@@ -3,10 +3,6 @@ package com.soldesk.ex01.controller;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.messaging.handler.annotation.MessageMapping;
-import org.springframework.messaging.handler.annotation.Payload;
-import org.springframework.messaging.handler.annotation.SendTo;
-import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 
@@ -15,7 +11,7 @@ import com.soldesk.ex01.service.FriendService;
 
 import lombok.extern.log4j.Log4j;
 
-@Controller
+//@Controller
 @Log4j
 public class WebSocketController {
 
@@ -33,11 +29,11 @@ public class WebSocketController {
 //    }
 
     // 채팅 메시지 전송 메서드
-    @MessageMapping("/private/{memberId}/{friendMemberid}")
-    @SendTo("/topic/private/{memberId}")
-    public String privateChat(@Payload String msg, @PathVariable String memberId) {
-        return msg;
-    }
+//    @MessageMapping("/private/{memberId}/{friendMemberid}")
+//    @SendTo("/topic/private/{memberId}")
+//    public String privateChat(@Payload String msg, @PathVariable String memberId) {
+//        return msg;
+//    }
     
 //    // 그룹 채팅 전송 메서드
 //    @MessageMapping("/group/{groupId}/{memberId}")
