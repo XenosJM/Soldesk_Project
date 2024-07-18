@@ -23,5 +23,8 @@ public interface BoardMapper {
 	
 	int increaseRecommend(int boardId);
 	List<BoardVO> selectListByRecommend(Pagination pagination);
+	List<BoardVO> selectListByRecommendAll(Pagination pagintaion);
 	int selectTotalCountByRecommend(Pagination pagination);
+	int selectTotalCountByRecommendAll(Pagination pagination);
+	int decreaseReplyCountByRereply(@Param("countRereply")int countRereply, @Param("boardId")int boardId);
 }

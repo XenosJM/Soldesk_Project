@@ -8,7 +8,7 @@ import com.soldesk.ex01.domain.RoleVO;
 
 @Mapper
 public interface RoleMapper {
-	int insert(RoleVO managerVO);
+	int insert();
 //	List<ManagerVO> selectAllManager();
 	int delete(int managerId);
 }

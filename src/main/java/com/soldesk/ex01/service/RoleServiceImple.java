@@ -18,9 +18,9 @@ public class RoleServiceImple implements RoleService {
 	private RoleMapper roleMapper;
 	
 	@Override
-	public int createManager(RoleVO managerVO) {
+	public int createManager() {
 		log.info("createManager()");
-		int result = roleMapper.insert(managerVO);
+		int result = roleMapper.insert();
 		return result;
 	}
 

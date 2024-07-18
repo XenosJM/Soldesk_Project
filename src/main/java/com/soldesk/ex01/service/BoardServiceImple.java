@@ -84,17 +84,17 @@ public class BoardServiceImple implements BoardService {
 	@Transactional
 	@PreAuthorize("isAuthenticated() and ((#vo.memberId == principal.username) or hasRole('ROLE_MANAGER'))")
 	@Override
-	public int deleteBoard(int boardId) {
+	public int deleteBoard(BoardVO vo) {
 		log.info("service : board deleteBoard()");
 		int result;
-		List<ReplyVO> list = replyMapper.selectReplyBoard(boardId);
+		List<ReplyVO> list = replyMapper.selectReplyBoard(vo.getBoardId());
 		for (int i = 0; i < list.size(); i++) {
 			result = rereplyMapper.deleteRereplyToReply(list.get(i).getReplyId());
 		}
-		result = replyMapper.deleteReplyByBoard(boardId);
-		result = attachMapper.delete(boardId);
-		result = recommendMapper.deleteRecommend(boardId);
-		result = boardMapper.deleteBoard(boardId);
+		result = replyMapper.deleteReplyByBoard(vo.getBoardId());
+		result = attachMapper.delete(vo.getBoardId());
+		result = recommendMapper.deleteRecommend(vo.getBoardId());
+		result = boardMapper.deleteBoard(vo.getBoardId());
 		return result;
 	}
 
@@ -136,7 +136,15 @@ public class BoardServiceImple implements BoardService {
 		return boardMapper.selectListByRecommend(pagination);
 	}
 	
+	public List<BoardVO> selectListByRecommendAll(Pagination pagintaion){
+		return boardMapper.selectListByRecommendAll(pagintaion);
+	}
+	
 	public int selectTotalCountByRecommend(Pagination pagination) {
 		return boardMapper.selectTotalCountByRecommend(pagination);
+	}
+	
+	public int selectTotalCountByRecommendAll(Pagination pagination) {
+		return boardMapper.selectTotalCountByRecommendAll(pagination);
 	}
 }

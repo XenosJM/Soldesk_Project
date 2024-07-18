@@ -196,6 +196,21 @@ public class HomeController {
 
 		return new ResponseEntity<>(response, HttpStatus.OK);
 	}
+	
+	@GetMapping("board/recommendlistAll")
+	public ResponseEntity<Map<String, Object>>recommendListAll(Pagination pagination) {
+		List<BoardVO> boardList = boardService.selectListByRecommendAll(pagination);
+		PageMaker pageMaker = new PageMaker();
+		pageMaker.setPagination(pagination);
+		pageMaker.setTotalCount(boardService.selectTotalCountByRecommendAll(pagination));
+		Map<String, Object> response = new HashMap<>();
+		response.put("pageMaker", pageMaker);
+		response.put("boardList", boardList);
+
+		return new ResponseEntity<>(response, HttpStatus.OK);
+	}
+	
+	
 
 	@GetMapping("board/update")
 	public void boardUpdate(Model model, Integer boardId) {

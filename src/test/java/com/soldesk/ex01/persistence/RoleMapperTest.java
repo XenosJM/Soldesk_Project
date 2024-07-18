@@ -32,7 +32,7 @@ public class RoleMapperTest {
 	private void testDelete() {
 		log.info("testDelete()");
 		int result = managerMapper.delete(2);
-		log.info(result + "Çà »èÁ¦");
+		log.info(result + "ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½");
 		
 	}
 
@@ -47,8 +47,8 @@ public class RoleMapperTest {
 	private void testManagerInsert() {
 		log.info("testManagerInsert()");
 		RoleVO managerVO = new RoleVO(0, 1, "dsa");
-		int result = managerMapper.insert(managerVO);
-		log.info(result + "Çà »ðÀÔ");
+//		int result = managerMapper.insert(managerVO);
+//		log.info(result + "ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½");
 		
 		
 	}

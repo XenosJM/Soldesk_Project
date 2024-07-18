@@ -47,15 +47,9 @@ public class RereplyServiceImple implements RereplyService {
 	@Transactional
 	@PreAuthorize("isAuthenticated() and (#vo.memberId == principal.username)")
 	@Override
-	public int updateRereply(int rereplyId, String rereplyContent) {
+	public int updateRereply(RereplyVO vo) {
 		log.info("rereply service : updateRereply()");
-		RereplyVO vo = new RereplyVO();
-		log.info("1");
-		vo.setRereplyId(rereplyId);
-		log.info("1");
-		vo.setRereplyContent(rereplyContent);
-		log.info("1");
-		System.out.println(vo);
+		log.info(vo);
 		int result = rereplyMapper.updateRereply(vo);
 		log.info("service result : "+result);
 		return result;
@@ -66,8 +60,8 @@ public class RereplyServiceImple implements RereplyService {
 	@Override
 	public int deleteRereply(int rereplyId) {
 		log.info("rereply service : deleteRereply()");
-		int result = rereplyMapper.deleteRereply(rereplyId);
 		boardMapper.decreaseReplyCount(replyMapper.findReply(rereplyMapper.findRereply(rereplyId).getReplyId()).getBoardId());
+		int result = rereplyMapper.deleteRereply(rereplyId);
 		return result;
 	}
 
@@ -76,6 +70,7 @@ public class RereplyServiceImple implements RereplyService {
 	@Override
 	public int deleteRereplyToReply(int replyId) {
 		log.info("rereply service : deleteRereplyToReply()");
+		int updateResult = boardMapper.decreaseReplyCountByRereply(rereplyMapper.countRereply(replyId), replyMapper.findReply(replyId).getBoardId());
 		int result = rereplyMapper.deleteRereplyToReply(replyId);
 		return result;
 	}
@@ -83,6 +78,11 @@ public class RereplyServiceImple implements RereplyService {
 	@Override
 	public RereplyVO findRereply(int rereplyId) {
 		return rereplyMapper.findRereply(rereplyId);
+	}
+	
+	@Override
+	public int countRereply(int replyId) {
+		return rereplyMapper.countRereply(replyId);
 	}
 
 }

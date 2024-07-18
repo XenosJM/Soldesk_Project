@@ -56,6 +56,10 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		board_reply_count - 1 where board_id = #{boardId}
 	</update>
 	
+	<update id = "decreaseReplyCountByRereply">
+		update board set board_reply_count = board_reply_count - #{countRereply} where board_id = #{boardId}
+	</update>
+	
 	<update id = "increaseRecommend">
 		UPDATE BOARD SET RECOMMEND = RECOMMEND + 1 WHERE BOARD_ID = #{boardId}
 	</update>
@@ -87,6 +91,17 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		)
 		WHERE RN BETWEEN #{start} AND #{end}
 	</select>
+	
+	<select id= "selectListByRecommendAll" resultMap="boardResultMap">
+		SELECT * FROM (
+			SELECT ROW_NUMBER() OVER (ORDER BY BOARD_ID DESC) AS RN, BOARD.*
+			FROM BOARD
+			WHERE RECOMMEND >= #{recommendCut}
+		)
+		WHERE RN BETWEEN #{start} AND #{end}
+	</select>
+	
+	
 
 	
 
@@ -111,6 +126,12 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		TOTAL_COUNT FROM BOARD
 		WHERE CATEGORY_ID = #{categoryId} and RECOMMEND >= #{recommendCut}
             
+	</select>
+	
+	<select id="selectTotalCountByRecommendAll" resultType="Integer">
+		SELECT COUNT(*)
+		TOTAL_COUNT FROM BOARD
+		WHERE RECOMMEND >= #{recommendCut}            
 	</select>
 
 	

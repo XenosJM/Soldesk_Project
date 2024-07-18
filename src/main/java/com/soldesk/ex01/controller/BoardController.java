@@ -124,14 +124,20 @@ public class BoardController {
 	
 	
 
+//	@PostMapping("/delete")
+//	public String delete(Integer boardId, RedirectAttributes reAttr) {
+//		log.info("board controller : deletePost()");
+//		int categoryId = boardService.selectDetail(boardId).getCategoryId();
+//		int result = boardService.deleteBoard(boardId);
+//		return "redirect:/board/list?categoryId="+categoryId;
+//	}
+//
+
 	@PostMapping("/delete")
-	public String delete(Integer boardId, RedirectAttributes reAttr) {
-		log.info("board controller : deletePost()");
-		int categoryId = boardService.selectDetail(boardId).getCategoryId();
-		int result = boardService.deleteBoard(boardId);
-		return "redirect:/board/list?categoryId="+categoryId;
+	public ResponseEntity<Integer> delete(@RequestBody BoardVO vo){
+		int result = boardService.deleteBoard(vo);
+		return new ResponseEntity<>(result,HttpStatus.OK);
 	}
-	
 	
 
 	@GetMapping("/registAttach")

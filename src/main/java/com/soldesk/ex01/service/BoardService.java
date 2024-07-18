@@ -11,10 +11,12 @@ public interface BoardService {
 	int insertBoard(BoardVO vo);
 	BoardVO selectDetail(int boardId);
 	int updateBoard(BoardVO vo);
-	int deleteBoard(int boardId);	
+	int deleteBoard(BoardVO vo);	
 	List<BoardVO> getPagingBoards(Pagination pagination/*@Param("categoryId")int categoryId, @Param("start")int start,@Param("end")int end*/);
 	int getTotalCount(Pagination pagination);
 	int increaseRecommend(int boardId);
 	List<BoardVO> selectListByRecommend(Pagination pagination);
+	List<BoardVO> selectListByRecommendAll(Pagination pagintaion);
 	int selectTotalCountByRecommend(Pagination pagination);
+	int selectTotalCountByRecommendAll(Pagination pagination);
 }

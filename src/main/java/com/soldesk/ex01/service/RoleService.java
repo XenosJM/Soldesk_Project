@@ -6,7 +6,7 @@ import com.soldesk.ex01.domain.RoleVO;
 
 public interface RoleService {
 	
-	int createManager(RoleVO managerVO);
+	int createManager();
 //	List<ManagerVO> getAllManager();
 	int deleteManager(int managerId);
 }
