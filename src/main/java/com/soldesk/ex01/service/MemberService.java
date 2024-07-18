@@ -31,6 +31,7 @@ public interface MemberService {
 	int checkPassword(MemberVO memberVO);
 	// 회원 관리자 변경
 	int memberRoleUpdate(MemberVO memberVO);
+	List<MemberVO> findMemberId(String memberId);
 	
 	// ģ�� ��û(���)
 	

@@ -38,9 +38,20 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	    JOIN ROLE r ON m.ROLE_ID = r.ROLE_ID
 	    WHERE m.MEMBER_ID = #{memberId}
 	</select>
-
-	<!-- 이메일을 이용해 아이디 찾기 -->
-	<!-- <select id="findId" resultMap="memberResultMap"> SELECT MEMBER_ID FROM MEMBER WHERE MEMBER_EMAIL = #{memberEmail} </select> -->
+	
+	<select id="memberCategory" resultType="Integer"> 
+       SELECT c.CATEGORY_ID
+       FROM MEMBER m
+       JOIN CATEGORY c ON m.CATEGORY_ID = c.CATEGORY_ID
+       WHERE m.MEMBER_ID = #{memberId}
+   </select>
+	
+	<!-- 회원 검색 -->
+   <select id="findMemberId" resultMap="memberResultMap">
+       SELECT * 
+       FROM MEMBER
+       WHERE MEMBER_ID LIKE '%' || #{memberId} || '%'
+   </select>
 	
 	<!-- 리프레시 토큰 저장(업데이트) -->
 	<update id="updateRefreshToken" >

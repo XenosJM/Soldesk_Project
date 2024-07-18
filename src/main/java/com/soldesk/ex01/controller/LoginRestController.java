@@ -52,15 +52,6 @@ public class LoginRestController {
 				header.add("Refresh-Token", refreshToken);
 			}
 			
-//		// 멤버 아이디 선언
-//		String memberId = map.get("memberId");
-//		// 로그인 상태를 알릴 친구목록
-//		List<FriendVO> friendList = friend.friendList(memberId);
-//		// 친구목록에 존재하는 친구들에게 메시지 전송
-//		for(FriendVO friendVO : friendList) {
-//			msgTemp.convertAndSendToUser(friendVO.getFriendMemberId(), "/friend/sendState", memberId + "님이 로그인 하셨습니다.");
-//		}
-			
 		} else {
 			
 		}

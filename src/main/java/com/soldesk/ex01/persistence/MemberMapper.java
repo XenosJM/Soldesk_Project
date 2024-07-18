@@ -25,5 +25,9 @@ public interface MemberMapper {
 	String checkToken(String memberId);
 	int updateRefreshToken(MemberVO memberVO);
 	int updateRole(MemberVO memberVO);
+	// 멤버 롤 정보에서 카테고리id 가져오는 매퍼
+	int memberCategory(String memberId);
+	// 멤버 검색
+	List<MemberVO> findMemberId(String memberId);
 	
 }

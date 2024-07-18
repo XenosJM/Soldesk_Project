@@ -162,4 +162,10 @@ public class MemberServiceImple implements MemberService{
 		return result;
 	}
 
+   @Override
+   public List<MemberVO> findMemberId(String memberId) {
+      List<MemberVO> list = memberMapper.findMemberId(memberId);
+      return list;
+   }
+
 }

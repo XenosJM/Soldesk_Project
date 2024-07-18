@@ -39,7 +39,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	<select id="selectRequestByReceiverId" resultType="Integer">
 	    SELECT COUNT(RECEIVER_ID)
 	    FROM REQUEST
-	    WHERE RECEIVER_ID = #{receiverId}
+	    WHERE RECEIVER_ID = #{receiverId} AND MEMBER_ID = #{memberId}
 	</select>
     
     <!-- 스케쥴링으로 기준 시간이 지난 요청 삭제 -->
