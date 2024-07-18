@@ -15,7 +15,7 @@ import org.springframework.web.socket.server.HandshakeInterceptor;
 
 import lombok.extern.log4j.Log4j;
 
-@Component
+//@Component
 @Log4j
 public class Test implements HandshakeInterceptor {
    

@@ -1,5 +1,6 @@
 package com.soldesk.ex01.config;
 
+import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -37,11 +38,9 @@ public class WebSocketConfig implements WebSocketConfigurer {
         registry.addHandler(privateChatHandler, "/private")
         		.addHandler(friendLoginCheckHandler, "/loginAlarm")
                 .addInterceptors(jwtHandshakeInterceptor) // HandshakeInterceptor 추가
-                .setAllowedOrigins("*") // 필요한 도메인만 허용하도록 수정 가능
-                .withSockJS(); // SockJS 지원 추가
+                .setAllowedOrigins("*"); // 필요한 도메인만 허용하도록 수정 가능
+//                .withSockJS(); // SockJS 지원 추가
     }
-	
-
 	@Bean
 	public ServletServerContainerFactoryBean createWebSocketContainer() {
 		// 메세지의 크기 제한 설정

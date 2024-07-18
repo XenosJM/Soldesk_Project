@@ -1,6 +1,7 @@
 package com.soldesk.ex01.handler;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import org.springframework.web.socket.CloseStatus;
 import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
@@ -16,6 +17,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+@Component
 @Log4j
 public class FriendLoginCheckHandler extends TextWebSocketHandler {
 

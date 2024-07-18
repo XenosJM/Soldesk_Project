@@ -11,6 +11,9 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import com.soldesk.ex01.domain.MemberCustomDTO;
+import com.soldesk.ex01.domain.MemberVO;
+import com.soldesk.ex01.persistence.MemberMapper;
+import com.soldesk.ex01.service.MemberService;
 
 import lombok.extern.log4j.Log4j;
 
@@ -29,6 +32,9 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     @Autowired
     private JwtTokenProvider tokenProvider;
+    
+    @Autowired
+    private MemberMapper member;
 
     // HTTP 요청을 필터링하여 JWT를 인증하는 메서드
     @Override	
@@ -43,6 +49,15 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         	String accessToken = getAccessTokenFromRequest(request);
         	// 리프레시 토큰 가져오기
         	String refreshToken = getRefreshTokenFromRequest(request);
+        	
+//        	String memberId = (String) request.getAttribute("memberId");
+//        	if(!accessToken.isBlank() && !refreshToken.isBlank()) {
+//        		String memberPassword = (String) request.getAttribute("memberPassword");
+//        		MemberVO memberVO = member.memberCheck(memberId);
+//        		if(memberVO.getMemberPassword().equals(memberPassword)) {
+//        			// TODO
+//        		}
+//        	}
         	
             // 액세스 토큰이 존재하며 검증 통과시 true
             Boolean accessCheck = (accessToken != null && tokenProvider.validateToken(accessToken));

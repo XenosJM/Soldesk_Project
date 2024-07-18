@@ -40,9 +40,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	</select>
 	
 	<select id="memberCategory" resultType="Integer"> 
-       SELECT c.CATEGORY_ID
+       SELECT r.ROLE_ID
        FROM MEMBER m
-       JOIN CATEGORY c ON m.CATEGORY_ID = c.CATEGORY_ID
+       JOIN ROLE r ON m.ROLE_ID = r.ROLE_ID
        WHERE m.MEMBER_ID = #{memberId}
    </select>
 	

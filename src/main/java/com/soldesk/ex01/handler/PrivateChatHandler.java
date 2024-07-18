@@ -3,6 +3,7 @@ package com.soldesk.ex01.handler;
 import java.io.IOException;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import org.springframework.web.socket.CloseStatus;
 import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
@@ -12,6 +13,7 @@ import com.soldesk.ex01.service.FriendService;
 
 import lombok.extern.log4j.Log4j;
 
+@Component
 @Log4j
 public class PrivateChatHandler extends TextWebSocketHandler {
 	

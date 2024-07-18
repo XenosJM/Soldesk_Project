@@ -61,7 +61,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 		// 권한 설정 및 로그인 로그아웃 관련
 		httpSecurity
 			.authorizeRequests()  // 요청에 권한 부여
-				.antMatchers("/", "/member/regist", "/member/findIdPw", "/login/check", "/board/list", "/board/detail", "/board/search", "/util/**","/reply/{boardId}","/rereply/{boardId}","/category/list","/category/detail","/board/recommendlist", "/ws/**" ).permitAll()  // 루트 URL에 대한 모든 사용자 접근
+				.antMatchers("/", "/member/regist", "/member/findIdPw", "/login/check", "/board/list", "/board/detail", "/board/search", "/util/**","/reply/{boardId}","/rereply/{boardId}","/category/list","/category/detail","/board/recommendlist", "/private" ).permitAll()  // 루트 URL에 대한 모든 사용자 접근
 				// TODO 웹소켓 엔드포인트도 추가해야하면 할것
 				.antMatchers("/member/**", "/friend/**", "/reply/**", "/rereply/**", "/attach/**", "/board/**","/request/**","/receive/**").hasAnyRole("MEMBER", "MANAGER", "HEAD_MANAGER")  // 루트 URL에 대한 MEMBER 역할을 가진 사용자만 접근 가능
 				.antMatchers("/role/**").hasRole("HEAD_MANAGER")
@@ -180,8 +180,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         CorsConfiguration corsConfig = new CorsConfiguration();
 
         // 오리진 패턴을 설정. 여기서는 특정 IP와 포트를 가진 도메인을 허용.
-        corsConfig.setAllowedOrigins(List.of("http://192.168.0.147:3000"));
-//        corsConfig.setAllowedOrigins(List.of("*"));
+//        corsConfig.setAllowedOrigins(List.of("http://192.168.0.147:3000"));
+        corsConfig.setAllowedOrigins(List.of("*"));
         // 허용할 HTTP 메서드를 설정
         corsConfig.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "HEAD", "OPTIONS"));
         // 허용할 HTTP 헤더를 설정합니다.
