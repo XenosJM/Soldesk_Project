@@ -1,18 +1,12 @@
 package com.soldesk.ex01.jwt;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
-import java.util.regex.Pattern;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.server.ServerHttpRequest;
 import org.springframework.http.server.ServerHttpResponse;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.socket.WebSocketHandler;
@@ -30,17 +24,6 @@ public class JwtHandshakeInterceptor implements HandshakeInterceptor {
     @Override
     public boolean beforeHandshake(ServerHttpRequest request, ServerHttpResponse response, WebSocketHandler wsHandler,
             Map<String, Object> attributes) throws Exception {
-        // WebSocket의 경로에서 memberId 추출
-        String path = request.getURI().getPath();
-        String[] parts = path.split("/");
-        
-        if (parts.length < 3) {
-            log.warn("올바른 WebSocket 경로가 아닙니다.");
-            response.setStatusCode(HttpStatus.BAD_REQUEST);
-            return false;
-        }
-        
-        String memberId = parts[2];
         
         String bearerToken = request.getHeaders().getFirst("Authorization");
         
@@ -59,6 +42,8 @@ public class JwtHandshakeInterceptor implements HandshakeInterceptor {
         if (checkAccess) {
             Authentication auth = tokenProvider.getAuthentication(accessToken);
             
+            String memberId = tokenProvider.getUsernameFromToken(accessToken);
+            
             // SecurityContext에 인증 객체 설정
             SecurityContextHolder.getContext().setAuthentication(auth);
             log.info("현재 사용자: {}" + auth.getName());
@@ -69,9 +54,9 @@ public class JwtHandshakeInterceptor implements HandshakeInterceptor {
             
             return true;
         } else if (checkRefresh) {
-            String refreshedMemberId = tokenProvider.getUsernameFromToken(refreshToken);
+            String memberId = tokenProvider.getUsernameFromToken(refreshToken);
             
-            accessToken = tokenProvider.generateAccessTokenFromRefreshToken(refreshedMemberId, refreshToken);
+            accessToken = tokenProvider.generateAccessTokenFromRefreshToken(memberId, refreshToken);
             Authentication auth = tokenProvider.getAuthentication(accessToken);
             SecurityContextHolder.getContext().setAuthentication(auth);
             

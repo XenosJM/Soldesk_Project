@@ -1,12 +1,11 @@
 package com.soldesk.ex01.config;
 
-import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.web.socket.WebSocketHandler;
 import org.springframework.web.socket.WebSocketSession;
 import org.springframework.web.socket.config.annotation.EnableWebSocket;
 import org.springframework.web.socket.config.annotation.WebSocketConfigurer;
@@ -55,14 +54,11 @@ public class WebSocketConfig implements WebSocketConfigurer {
 	
 	@Bean
 	public Map<String, WebSocketSession> loginAlarmMap(){
-		// alarm 웹소켓에 연결된 유저를 관리하기 위한 맵
-		return new HashMap<>();
-	} // end alarmConnMap
+		// 웹소켓에 연결된 사용자 맵
+		// HashMap을 그냥 쓰면 비동기 상황에서 문제
+		return new ConcurrentHashMap<>();
+	} // end loginAlarmMap
 	
-//	@Bean
-//	public Map<String, ChatRoom> consultRoomList(){
-//		return new HashMap<>();
-//	} // end consultRoomList
 		
 }
 

@@ -9,7 +9,7 @@ import lombok.extern.log4j.Log4j;
 
 //@Component
 @Log4j
-public class JwtChannelInterceptor /* implements ChannelInterceptor */ {
+public class JwtChannelInterceptor{
 	
 //	@Autowired
 //	private JwtTokenProvider tokenProvider;

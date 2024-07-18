@@ -171,7 +171,7 @@ public class SchedulerCollection {
 		// 이를 비교해서 한쪽이라도 친구삭제를 통해 
 		for(FriendVO item : allFriendList) {
 			if(item.getFriendState() == "delete") {
-				friend.deleteFriend(item.getFriendshipId());
+				friend.deleteFriend(item);
 			}
 		}
 

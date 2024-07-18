@@ -54,10 +54,10 @@ public class FriendController {
 		return new ResponseEntity<Integer>(result, HttpStatus.OK);
 	}
 	
-	@PostMapping("/delete/{friendshipId}")
-	public ResponseEntity<Integer> deleteFriend(@PathVariable("friendshipId") int friendshipId){
+	@PostMapping("/delete")
+	public ResponseEntity<Integer> deleteFriend(@RequestBody FriendVO friendVO){
 		log.info("deleteFriend()");
-		int result = friend.deleteFriend(friendshipId);
+		int result = friend.deleteFriend(friendVO);
 		return new ResponseEntity<Integer>(result, HttpStatus.OK);
 	}
 }
