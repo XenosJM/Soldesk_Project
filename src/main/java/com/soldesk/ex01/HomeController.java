@@ -2,16 +2,11 @@ package com.soldesk.ex01;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.FileSystemResource;
@@ -20,33 +15,19 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.soldesk.ex01.domain.AttachVO;
 import com.soldesk.ex01.domain.BoardVO;
 
-import com.soldesk.ex01.domain.FriendVO;
-import com.soldesk.ex01.domain.MemberVO;
-import com.soldesk.ex01.domain.RecommendVO;
 import com.soldesk.ex01.service.AttachService;
 import com.soldesk.ex01.service.BoardService;
-import com.soldesk.ex01.service.FriendService;
-import com.soldesk.ex01.service.MemberService;
 import com.soldesk.ex01.service.RecommendService;
 import com.soldesk.ex01.util.PageMaker;
 import com.soldesk.ex01.util.Pagination;
@@ -63,16 +44,11 @@ public class HomeController {
 //	private static final Logger logger = LoggerFactory.getLogger(HomeController.class); // 
 
 	@Autowired
-	private MemberService memberService;
-
-	@Autowired
 	private String uploadPath;
 
 	@Autowired
 	private BoardService boardService;
 
-	@Autowired
-	private FriendService friendService;
 
 	@Autowired
 	private AttachService attachService;

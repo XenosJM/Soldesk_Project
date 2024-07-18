@@ -16,6 +16,6 @@ public interface FriendMapper {
 	List<FriendVO> friendList(String memberId);
 	int friendStateChange(@Param("memberId") String memberId,@Param("friendState") String friendState);
 	List<FriendVO> allFriend();
-	int deleteFriend(int friendshipId);
+	int deleteFriend(FriendVO friendVO);
 	
 }

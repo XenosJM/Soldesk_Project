@@ -58,9 +58,10 @@ public class LoginServiceImple implements LoginService {
 	        	friend.friendStateChange(map.get("memberId"), "online");
 	        	
 	        }
+	        String memberRole = member.memberRole(memberVO.getMemberId());
 	        
 
-	        return "success";
+	        return memberRole;
 	    } else {
 	        return "fail";
 	    }
@@ -68,9 +69,9 @@ public class LoginServiceImple implements LoginService {
 	
 	// TODO 자동 로그인시 리프레시 토큰을 검증하고 로그인 되었다고 알려주는 로직 짤것
 
-//	@Override
-//	public String memberCheckout(String memberId) {
-//		
-//		return null;
-//	}
+	@Override
+	public String memberCheckout(String memberId) {
+		
+		return null;
+	}
 }

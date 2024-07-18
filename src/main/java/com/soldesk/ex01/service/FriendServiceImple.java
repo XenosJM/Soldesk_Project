@@ -49,9 +49,9 @@ public class FriendServiceImple implements FriendService {
 	
 	@PreAuthorize("isAuthenticated()")
 	@Override
-	public int deleteFriend(int friendshipId) {
+	public int deleteFriend(FriendVO friendVO) {
 		log.info("deleteFriend()");
-		int result = friendMapper.deleteFriend(friendshipId);
+		int result = friendMapper.deleteFriend(friendVO);
 		return result;
 	}
 

@@ -13,7 +13,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.EnableAspectJAutoProxy;
-
 import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -30,24 +29,20 @@ import com.zaxxer.hikari.HikariDataSource;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 
-// root-context.xml과 동일
+// root-context.xml怨� �룞�씪
 @Configuration
 @ComponentScan(basePackages = {"com.soldesk.ex01.service", "com.soldesk.ex01.aspect", "com.soldesk.ex01.jwt"})
 @EnableAspectJAutoProxy
 @MapperScan(basePackages = {"com.soldesk.ex01.persistence"})
-@EnableTransactionManagement // 트랜잭션 관리 활성화
+@EnableTransactionManagement  // 트랜잭션 관리 활성화
 public class RootConfig {
 
 	
    @Bean // 스프링 bean으로 설정
    public DataSource dataSource() { // DataSource 객체 리턴 메서드
-      HikariConfig config = new HikariConfig(); // 설정 객체
+      HikariConfig config = new HikariConfig(); // 설정 객체 
       config.setDriverClassName("oracle.jdbc.OracleDriver"); // jdbc 드라이버 정보
-      // 기존 오라클 연결 설정
-//		config.setJdbcUrl("jdbc:oracle:thin:@192.168.0.161:1521:xe");
-//		config.setUsername("sdp");
-//		config.setPassword("asdf");	
-      // aws 오라클 연결 설정
+      
       config.setJdbcUrl("jdbc:oracle:thin:@sdp.c1asumy42bvk.ap-northeast-2.rds.amazonaws.com:1521:DATABASE"); // DB 연결 url
       config.setUsername("admin"); // DB 사용자 아이디
       config.setPassword("soldeskProject!"); // DB 사용자 비밀번호
@@ -55,33 +50,10 @@ public class RootConfig {
       config.setMaximumPoolSize(10); // 최대 풀(Pool) 크기 설정
       config.setConnectionTimeout(30000); // Connection 타임 아웃 설정(30초)
       HikariDataSource ds = new HikariDataSource(config); // config 객체를 참조하여 DataSource 객체 생성
-      return ds; // ds 객체 리턴
+      return ds;  // ds 객체 리턴
    }
    
-   
-   //TODO 추후 채팅방 기록 내역을 redis 통해서 하도록 바꿔볼것
-//   @Bean
-//   public RedisConnectionFactory redisConnectionFactory() {
-//       // LettuceConnectionFactory를 사용하여 Redis 서버에 연결
-//	   // localhost 부분은 추후 aws나 그쪽으로 변경 가능
-//       return new LettuceConnectionFactory("localhost", 6379);
-//   }
-//   
-//   @Bean
-//   public RedisTemplate<String, Object> redisTemplate() {
-//       // RedisTemplate 객체 생성
-//       RedisTemplate<String, Object> template = new RedisTemplate<>();
-//       // 위에서 정의한 RedisConnectionFactory 빈 설정 적용
-//       template.setConnectionFactory(redisConnectionFactory());
-//       // Key Serializer로 StringRedisSerializer 사용 (String을 Redis의 Key로 변환)
-//       template.setKeySerializer(new StringRedisSerializer());
-//       // Value Serializer로 GenericJackson2JsonRedisSerializer 사용
-//       // (Java 객체를 JSON 형식으로 직렬화하여 Redis의 Value로 저장)
-//       template.setValueSerializer(new GenericJackson2JsonRedisSerializer());
-//       // 설정이 적용된 RedisTemplate 객체 반환
-//       return template;
-//   }
-
+   //TODO 異뷀썑 梨꾪똿諛� 湲곕줉 �궡�뿭�쓣 redis �넻�빐�꽌 �븯�룄濡� 諛붽퓭蹂쇨쾬
    
    // 이메일 인증, 아이디 및 비밀번호 변경용 인증 번호 생성기
    @Bean
@@ -90,12 +62,12 @@ public class RootConfig {
    }
    
    @Bean
-   public JavaMailSender mailSender() { // 이메일 확인 또는 아이디 비밀번호 찾기시 이용할 객체 리턴 메서드
-	   JavaMailSenderImpl mailSender = new JavaMailSenderImpl(); // 객체 생성
-	   mailSender.setHost("smtp.gmail.com"); // 이메일 전송에 사용될 smtp 호스트 설정
-	   mailSender.setPort(587); // 포트 설정
-	   mailSender.setUsername("wjdalsqaaz123@gmail.com"); // 사용될 이메일
-	   mailSender.setPassword("lmob akef narj lhcu"); // 생성한 앱 비밀번호 입력.
+   public JavaMailSender mailSender() { // �씠硫붿씪 �솗�씤 �삉�뒗 �븘�씠�뵒 鍮꾨�踰덊샇 李얘린�떆 �씠�슜�븷 媛앹껜 由ы꽩 硫붿꽌�뱶
+	   JavaMailSenderImpl mailSender = new JavaMailSenderImpl(); // 媛앹껜 �깮�꽦
+	   mailSender.setHost("smtp.gmail.com"); // �씠硫붿씪 �쟾�넚�뿉 �궗�슜�맆 smtp �샇�뒪�듃 �꽕�젙
+	   mailSender.setPort(587); // �룷�듃 �꽕�젙
+	   mailSender.setUsername("wjdalsqaaz123@gmail.com"); // �궗�슜�맆 �씠硫붿씪
+	   mailSender.setPassword("lmob akef narj lhcu"); // �깮�꽦�븳 �빋 鍮꾨�踰덊샇 �엯�젰.
 	   
 	   Properties javaMailProperties = new Properties(); // JavaMail 속성 설정을 위한 객체 생성
 	   javaMailProperties.put("mail.tranport.protocl", "smtp"); // smtp를 프로토콜로 사용
@@ -106,7 +78,7 @@ public class RootConfig {
 	   javaMailProperties.put("mail.smtp.ssl.trust", "smtp.naver.com"); //smtp 서버의 ssl 인증서를 신뢰
 	   javaMailProperties.put("mail.smtp.ssl.protocols", "TLSv1.2"); //사용할 ssl 프로토콜 버전
 	   
-	   mailSender.setJavaMailProperties(javaMailProperties); // 이메일을 보낼 객체에 properties 세팅	   
+	   mailSender.setJavaMailProperties(javaMailProperties); // 이메일을 보낼 객체에 properties 세팅   
 	   return mailSender;
    }
    
@@ -131,22 +103,22 @@ public class RootConfig {
        return builder;
    }
    
-   // JWT 시크릿키 설정
+   // JWT 생성키 비밀번호
    @Bean
    public SecretKey secretKey() {
-       String secret = "7IKs7Jqp7J6QIOyduOymneydtCDrkJjslrQg7J6I64qUIO2MgO2UhOuhnOygne2KuCDsoJHqt7wg7Yag7YGw7J6F64uI64ukLg=="; // base64 인코딩된 문자열
-       byte[] keyByte = Decoders.BASE64.decode(secret); // Base64 문자열을 디코딩하여 바이트 배열로 변환
-       return Keys.hmacShaKeyFor(keyByte); // 디코딩된 바이트 배열을 사용하여 HMAC-SHA 키 생성
+       String secret = "7IKs7Jqp7J6QIOyduOymneydtCDrkJjslrQg7J6I64qUIO2MgO2UhOuhnOygne2KuCDsoJHqt7wg7Yag7YGw7J6F64uI64ukLg=="; // base64 인코딩된 비밀번호
+       byte[] keyByte = Decoders.BASE64.decode(secret); // Base64 臾몄옄�뿴�쓣 �뵒肄붾뵫�븯�뿬 諛붿씠�듃 諛곗뿴濡� 蹂��솚
+       return Keys.hmacShaKeyFor(keyByte); // �뵒肄붾뵫�맂 諛붿씠�듃 諛곗뿴�쓣 �궗�슜�븯�뿬 HMAC-SHA �궎 �깮�꽦
    }
 
-   // JWT 액세스 토큰 만료 기간 설정
+   // JWT 액세스 토큰 만료시간
    @Bean
    public Duration accessTokenExpiration() {
        return Duration.ofMinutes(30); // 30분
    }
    
 
-   // JWT 리프레시 토큰 만료 기간 설정
+   // JWT 리프레시 토큰 만료시간
    @Bean
    public Duration refreshTokenExpiration() {
        return Duration.ofDays(7); // 1주일

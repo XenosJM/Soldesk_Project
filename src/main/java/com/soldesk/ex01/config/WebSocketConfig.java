@@ -1,48 +1,68 @@
 package com.soldesk.ex01.config;
 
-import org.springframework.context.annotation.Configuration;
-import org.springframework.messaging.simp.config.ChannelRegistration;
-import org.springframework.messaging.simp.config.MessageBrokerRegistry;
-import org.springframework.web.socket.config.annotation.EnableWebSocketMessageBroker;
-import org.springframework.web.socket.config.annotation.StompEndpointRegistry;
-import org.springframework.web.socket.config.annotation.WebSocketMessageBrokerConfigurer;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
-import com.soldesk.ex01.jwt.JwtWebSocketInterceptor;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.web.socket.WebSocketSession;
+import org.springframework.web.socket.config.annotation.EnableWebSocket;
+import org.springframework.web.socket.config.annotation.WebSocketConfigurer;
+import org.springframework.web.socket.config.annotation.WebSocketHandlerRegistry;
+import org.springframework.web.socket.server.HandshakeInterceptor;
+import org.springframework.web.socket.server.standard.ServletServerContainerFactoryBean;
+
+import com.soldesk.ex01.handler.FriendLoginCheckHandler;
+import com.soldesk.ex01.handler.PrivateChatHandler;
+
+import lombok.extern.log4j.Log4j;
 
 @Configuration
-@EnableWebSocketMessageBroker
-public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
+@EnableWebSocket
+@Log4j
+public class WebSocketConfig implements WebSocketConfigurer {
 	
+	@Autowired
+	private PrivateChatHandler privateChatHandler;
 	
-	@Override
-	public void configureMessageBroker(MessageBrokerRegistry registry) {
-	    // 클라이언트가 구독할 메시지 대상(prefix)을 설정.
-	    // 설정한 엔드포인트로 시작하는 경로들은 메시지 브로커가 처리함
-	    registry.enableSimpleBroker("/topic", "/friend");
+	@Autowired
+	private FriendLoginCheckHandler friendLoginCheckHandler;
+	
+    @Autowired
+    private HandshakeInterceptor jwtHandshakeInterceptor; // 추가한 HandshakeInterceptor
 
-	    // 클라이언트에서 메시지를 전송할 목적지(prefix)를 설정합니다.
-	    // 클라이언트는 "/app"으로 시작하는 경로를 통해 서버에 메시지를 보낼 수 있습니다.
-	    registry.setApplicationDestinationPrefixes("/app");
-	    
-	    // 특정 사용자에게 메시지 전송할때 사용할 설정
-	    registry.setUserDestinationPrefix("/private");
-	}
-
-	
-	@Override
-	public void registerStompEndpoints(StompEndpointRegistry registry) {
-	    // 클라이언트는 "/ws" 엔드포인트를 통해 WebSocket 연결을 시도
-	    registry.addEndpoint("/ws/init")
-//	    		.setAllowedOrigins("http://192.168.0.144:3000")
-	    		.setAllowedOrigins("*");
-//	            브라우저가 WebSocket을 지원하지 않을 때 대체 가능한 방법을 제공할 SockJs 사용
-//	    		왜인지는 모르겠으나 withSockJs()를 사용하면 확인이 안됨
-//	    		.withSockJS();
-	}
-	
-	@Override
-    public void configureClientInboundChannel(ChannelRegistration registration) {
-        registration.interceptors(new JwtWebSocketInterceptor());
+    @Override
+    public void registerWebSocketHandlers(WebSocketHandlerRegistry registry) {
+        registry.addHandler(privateChatHandler, "/private")
+        		.addHandler(friendLoginCheckHandler, "/loginAlarm")
+                .addInterceptors(jwtHandshakeInterceptor) // HandshakeInterceptor 추가
+                .setAllowedOrigins("*") // 필요한 도메인만 허용하도록 수정 가능
+                .withSockJS(); // SockJS 지원 추가
     }
+	
 
+	@Bean
+	public ServletServerContainerFactoryBean createWebSocketContainer() {
+		// 메세지의 크기 제한 설정
+		ServletServerContainerFactoryBean container = new ServletServerContainerFactoryBean();
+		container.setMaxTextMessageBufferSize(8192);
+		container.setMaxBinaryMessageBufferSize(8192);
+		return container;
+	} // end createWebSocketContainer
+	
+	
+	@Bean
+	public Map<String, WebSocketSession> loginAlarmMap(){
+		// 웹소켓에 연결된 사용자 맵
+		// HashMap을 그냥 쓰면 비동기 상황에서 문제
+		return new ConcurrentHashMap<>();
+	} // end loginAlarmMap
+	
+		
 }
+
+	
+
+
+
