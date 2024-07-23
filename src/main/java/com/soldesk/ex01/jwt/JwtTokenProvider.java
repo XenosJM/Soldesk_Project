@@ -40,7 +40,7 @@ public class JwtTokenProvider {
     private SecretKey key;
     
     @Autowired
-    @Qualifier("accessTokenExpiration")
+    @Qualifier("accessTokenExpiration") // 리프레시 토큰과 액세스 토큰 둘다 동일한 타입인 Duration을 사용하기 때문에 빈을 명시하여 주입하기 위해 사용.
     private Duration accessTokenLife;
     
     @Autowired
@@ -53,11 +53,7 @@ public class JwtTokenProvider {
 //    @Autowired
 //    private Duration refreshTokenLife;
     
-    /**
-     * 주어진 Authentication 객체를 기반으로 액세스 토큰을 생성합니다.
-     * @param auth 인증 객체
-     * @return 생성된 액세스 토큰
-     */
+    // memberId로 액세스토큰 생성
     public String createAccessToken(String memberId) {
     	log.info("액세스 토큰 발급");
         Date now = new Date();
@@ -77,27 +73,25 @@ public class JwtTokenProvider {
       
         		
     }
+    
     // 토큰권한 체크
     public Authentication getAuthentication(String token) {
     	log.info("토큰 권한 정보 확인");
-    	// 토큰의 복호화
+    	// 토큰 복호화후 claim 가져오기
     	Claims claims = parseClaims(token);
-    	
+    	// 발급이 아닌 만들어진 토큰일경우 권한 정보가 없음을 확인
     	if(claims.get(AUTHORITIES_KEY) == null) {
     		throw new RuntimeException("권한 정보가 없는 토큰입니다.");
     	}
-    	
     	MemberVO memberVO = member.selectByMemberId(claims.getSubject());
-    	// UserDetails 객체를 만들어서 Authentication 리턴
+    	
     	MemberCustomDTO principal = new MemberCustomDTO(memberVO, getAuth(claims.getSubject()));
 
         return new UsernamePasswordAuthenticationToken(principal, "", getAuth(claims.getSubject()));
-    	
-    	
     }
 
 
-	// 토큰에서 사용자 이름 추출 메서드
+	// 토큰에서 사용자 이름 추출
     public String getUsernameFromToken(String token) {
         return parseClaims(token).getSubject(); // 토큰에서 추출한 클레임 중 사용자 이름 반환
     }
@@ -135,26 +129,19 @@ public class JwtTokenProvider {
 		if(memberRole != null) {
 			auth.add(new SimpleGrantedAuthority("ROLE_" + memberRole));
 		} else {
-//			// 가져온 역할이 멤버가 아닌 관리자 쪽인 경우
-//			auth.add(new SimpleGrantedAuthority("ROLE_" + memberRole));
-//			auth.add(new SimpleGrantedAuthority("ROLE_" + "MEMBER"));
 			throw new AuthenticationCredentialsNotFoundException("권한이 없는 사용자 입니다.");
-			
 		}
 		log.info(auth);
 		return auth;
 	}
     
-    /**
-     * 주어진 Authentication 객체를 기반으로 리프레시 토큰을 생성합니다.
-     * @param auth 인증 객체
-     * @return 생성된 리프레시 토큰
-     */
+    // 주어진 memberId로 리프레시 토큰 생성.
     public String createRefreshToken(String memberId) {
     	log.info("리프레시 토큰 발급");
+    	// 만들어지는 시점의 시간
         Date now = new Date();
-        Date expiryDate = new Date(now.getTime() + refreshTokenLife.toMillis()); // 현재 시간으로부터 유효기간 후의 시간 설정
-        
+        // 현재 시간으로부터 유효기간 후의 시간 설정
+        Date expiryDate = new Date(now.getTime() + refreshTokenLife.toMillis());
         // JWT 생성
         String refreshToken =  Jwts.builder()
             .subject(memberId) // 토큰의 주제 설정 (여기서는 사용자 ID)
@@ -165,12 +152,7 @@ public class JwtTokenProvider {
         
         return refreshToken;
     }
-    
-    /**
-     * 리프레시 토큰을 사용하여 새로운 액세스 토큰을 생성합니다.
-     * @param refreshToken 리프레시 토큰
-     * @return 새로 생성된 액세스 토큰
-     */
+    // 리프레시 토큰과 memberId로 액세스 토큰 재발급
     public String generateAccessTokenFromRefreshToken(String memberId, String refreshToken) {
     	log.info("리프레시 토큰을 이용한 액세스토큰 재 발급 시작");
     	// 리프레시 토큰에 권한 정보를 저장시켜놓으면 재발급 시키기 매우 쉬워지지만 두개로 나눈 의미가 없어진다.
@@ -184,7 +166,6 @@ public class JwtTokenProvider {
 			log.info("토큰 재 검증 및 같은 토큰인지 확인");
 			return createAccessToken(memberId); // 통과시 액세스 토큰 재 발급
 		}
-		
 		return null;
     }
 }

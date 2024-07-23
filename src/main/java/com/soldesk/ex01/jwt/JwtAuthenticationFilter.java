@@ -115,9 +115,9 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     private String getAccessTokenFromRequest(HttpServletRequest request) {
     	log.info("액세스 토큰 가져오기");
         String bearerToken = request.getHeader("Authorization");
-        if (StringUtils.hasText(bearerToken) && bearerToken.startsWith("Bearer ")) {
+        if (bearerToken != null) {
         	log.info("토큰 확인 완료");
-            return bearerToken.split(" ")[1].trim(); // "Bearer " 이후의 JWT 문자열 반환
+            return bearerToken.substring(7).trim(); // "Bearer " 이후의 JWT 문자열 반환
         }
         log.info("토큰 없음");
         return null; // JWT가 없으면 null 반환
