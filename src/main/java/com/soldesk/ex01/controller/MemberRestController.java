@@ -29,7 +29,7 @@ import lombok.extern.log4j.Log4j;
 @RequestMapping(value="/member")
 // @CrossOrigin(origins = "http://localhost:3000")
 @Log4j
-public class MemberController {
+public class MemberRestController {
 	
 	@Autowired
 	private MemberService member;
@@ -56,32 +56,7 @@ public class MemberController {
 //		log.info(memberVO);
 		return new ResponseEntity<MemberVO>(memberVO, HttpStatus.OK);
 	}
-//	@PostMapping("/modify")
-//	public ResponseEntity<Integer> memberUpdate(@RequestBody Map<String, String> res) {
-//		log.info("memberUpdate()");
-//		int result = 0;
-//		MemberVO compareVO = member.getMemberById(res.get("memberId"));
-//		if(compareVO != null) {
-//			MemberVO memberVO = new MemberVO();
-//			memberVO.setMemberId(res.get("memberId"));
-//			memberVO.setMemberPassword(res.get("memberPassword"));
-//			memberVO.setMemberEmail(res.get("memberEmail"));
-//			if(memberVO.getMemberPassword() == null) {
-//				// ��й�ȣ�� ������ߴٸ�
-//				memberVO.setMemberPassword(compareVO.getMemberPassword());
-//			}
-//			if(memberVO.getMemberEmail() == null) {
-//				// �̸����� ������ߴٸ�
-//				memberVO.setMemberEmail(compareVO.getMemberEmail());
-//			}
-//			log.info("memberVO = " + memberVO.toString());
-//			result = member.updateMember(memberVO);
-//			log.info(result + "�� ����");
-//		} else {
-//			result = 0;
-//		}
-//		return new ResponseEntity<Integer>(result, HttpStatus.OK);
-//	}
+
 	
 	@PostMapping("/delete")
 	public ResponseEntity<Integer> deletePost(@RequestBody Map<String, String> map) {
@@ -143,6 +118,19 @@ public class MemberController {
 		int result = member.checkPassword(memberVO);
 		return new ResponseEntity<>(result, HttpStatus.OK);
 	}
+	
+	   @PostMapping("/updateRole")
+	      public ResponseEntity<Integer> updateRole(@RequestBody MemberVO memberVO){
+	         int result = member.memberRoleUpdate(memberVO);
+	         return new ResponseEntity<Integer>(result, HttpStatus.OK);
+	      }
+	   
+	   
+	   @GetMapping("/find/{memberId}")
+	   public ResponseEntity<List<MemberVO>> findMember(@PathVariable String memberId){
+	      List<MemberVO> list = member.findMemberId(memberId);
+	      return new ResponseEntity<List<MemberVO>>(list, HttpStatus.OK);
+	   }
 	
 	
 	

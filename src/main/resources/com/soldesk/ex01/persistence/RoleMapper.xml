@@ -11,8 +11,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	<!-- 관리자 등록 -->
 	<insert id="insert">
 		INSERT INTO ROLE (ROLE_ID, CATEGORY_ID, ROLE_NAME)
-		VALUES (ROLE_SEQ.NEXTVAL, #{categoryId}, #{roleName}) 
+		VALUES (ROLE_SEQ.NEXTVAL, CATEGORY_SEQ.CURRVAL, "MANAGER") 
 	</insert>
+	
 	<!-- 관리자 상세 검색 조인 써서 확인 해야함. -->
 	<!-- <select id="selectByManagerId" resultMap="managerResultMap">
 		SELECT MEMBER_ID FROM MANAGER WHERE MANAGER_ID = #{managerId}

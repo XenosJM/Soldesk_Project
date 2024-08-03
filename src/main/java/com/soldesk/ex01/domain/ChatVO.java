@@ -20,6 +20,6 @@ public class ChatVO {
 	private String chatContent;
 	private Date chatDate;
 	private int chatGroupId;
-	
+	private String chatMemberId;
 	
 }

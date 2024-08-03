@@ -18,7 +18,7 @@ public class ReceiveServiceImple implements ReceiveService {
 	@Autowired
 	private ReceiveMapper receive;
 
-	@PreAuthorize("isAuthenticated() and (#receiveVO.memberId == principal.username)")
+	@PreAuthorize("isAuthenticated() and (#receiveVO.requesterId == principal.username)")
 	@Override
 	public int insertReceive(ReceiveVO receiveVO) {
 		log.info("insertReceive()");
@@ -44,6 +44,16 @@ public class ReceiveServiceImple implements ReceiveService {
 		log.info("rejectRequest()");
 		int result = receive.rejectRequest(receiveId);
 		return result;
+	}
+	@Override
+	public ReceiveVO getByRequesterId(String requesterid) {
+		ReceiveVO receiveVO = receive.selectByRequesterId(requesterid);
+		return receiveVO;
+	}
+	@Override
+	public ReceiveVO getByReceiveId(int receiveId) {
+		ReceiveVO receiveVO = receive.selectByReceiveId(receiveId);
+		return receiveVO;
 	}
 
 }

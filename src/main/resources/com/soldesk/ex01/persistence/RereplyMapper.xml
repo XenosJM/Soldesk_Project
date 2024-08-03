@@ -14,6 +14,10 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	<insert id="insertRereply"> INSERT INTO REREPLY VALUES (REREPLY_SEQ.NEXTVAL,#{replyId}, #{memberId},
 		#{rereplyContent},SYSDATE)
 	</insert>
+	
+	<select id="findRereply" resultMap = "RereplyResultMap">
+		select * from rereply where rereply_id = #{rereplyId}
+	</select>
 
 	<select id="selectRereply" resultMap="RereplyResultMap"> 
 		SELECT * FROM REREPLY WHERE REPLY_ID = #{replyId} ORDER BY REREPLY_ID ASC
@@ -31,4 +35,10 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	 <delete id = "deleteRereplyToReply">
 		DELETE FROM REREPLY WHERE REPLY_ID = #{replyId}
 	</delete> 
+	
+	<select id= "countRereply" resultType = "Integer">
+		select count(*)
+		from rereply
+		where reply_id = #{replyId}
+	</select>
 </mapper>	

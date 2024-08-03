@@ -53,21 +53,21 @@ public class SchedulerCollection {
 //			return;
 //		}
 //
-//		// ���� �������� ���� �̸��� �����Ͽ� List<String>���� ����
-//		List<String> savedList = attachList.stream() // ������ ó�� ��� ����� ���� stream ����
-//				.map(this::toChgName) // attach�� attach.getAttachChgName()���� ����
-//				.collect(Collectors.toList()); // stream�� list�� ����
+//	
+//		List<String> savedList = attachList.stream() 
+//				.map(this::toChgName) 
+//				.collect(Collectors.toList()); 
 //		log.info(savedList);
-//		// ���� ��¥���� 1�� �� ���ε� ���� ��� ����
+//		
 //		File targetDir = Paths.get(uploadPath, attachList.get(0).getAttachPath()).toFile();
 //
-//		// ���ε� ������ ����� ���� ��� ��
-//		// savedList�� ���� �̸��� ���� ��츸 ��ȸ
+//		
+//		
 //		File[] removeFiles = targetDir.listFiles(file -> savedList.contains(file.getName()) == false);
 //		log.info(removeFiles);
 //		for (File file : removeFiles) {
 //			log.warn(file.getAbsolutePath());
-//			file.delete(); // ���� ����
+//			file.delete(); 
 //		}
 //
 //	}
@@ -171,7 +171,7 @@ public class SchedulerCollection {
 		// 이를 비교해서 한쪽이라도 친구삭제를 통해 
 		for(FriendVO item : allFriendList) {
 			if(item.getFriendState() == "delete") {
-				friend.deleteFriend(item.getFriendshipId());
+				friend.deleteFriend(item);
 			}
 		}
 

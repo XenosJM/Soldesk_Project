@@ -41,13 +41,14 @@ public class BoardServiceImple implements BoardService {
 	RecommendMapper recommendMapper;
 
 	@Transactional
-	@PreAuthorize("isAuthenticated() and ((#vo.memberId == principal.username)")
+	@PreAuthorize("isAuthenticated() and (#vo.memberId == principal.username)")
 	@Override
 	public int insertBoard(BoardVO vo) {
 		log.info("service : insertBoard()");
 		int result = boardMapper.insertBoard(vo);
 		log.info("board2Mapper.insert 결과 : " + result);
 		result = recommendMapper.insertRecommend(new RecommendVO());
+		
 		// result = attachMapper.insert(vo.getAttachVO());
 		AttachVO[] attach = vo.getAttachVO();
 		if (attach != null) {
@@ -59,7 +60,7 @@ public class BoardServiceImple implements BoardService {
 	}
 	
 	@Transactional
-	@PreAuthorize("isAuthenticated() and ((#vo.memberId == principal.username)")
+	@PreAuthorize("isAuthenticated() and (#vo.memberId == principal.username)")
 	@Override
 	public int updateBoard(BoardVO vo) {
 		log.info("service : board updateBoard()");
@@ -78,36 +79,22 @@ public class BoardServiceImple implements BoardService {
 		return result;
 	}
 
-	@Override
-	public List<BoardVO> selectList() {
-		log.info("service : board selectList()");
-		List<BoardVO> list = boardMapper.selectList();
-		return list;
-	}
 
-
-
-	@Override
-	public List<BoardVO> selectByMember(int member_id) {
-		log.info("service : board selectByMember()");
-		List<BoardVO> list = boardMapper.selectByMember(member_id);
-		return list;
-	}
 
 	@Transactional
-	@PreAuthorize("isAuthenticated() or hasRole('ROLE_MANAGER') or hasRole('ROLE_HEAD_MANAGER'))")
+	@PreAuthorize("isAuthenticated() and ((#vo.memberId == principal.username) or hasRole('ROLE_MANAGER') or hasRole('ROLE_HEAD_MANAGER'))")
 	@Override
-	public int deleteBoard(int boardId) {
+	public int deleteBoard(BoardVO vo) {
 		log.info("service : board deleteBoard()");
 		int result;
-		List<ReplyVO> list = replyMapper.selectReplyBoard(boardId);
+		List<ReplyVO> list = replyMapper.selectReplyBoard(vo.getBoardId());
 		for (int i = 0; i < list.size(); i++) {
 			result = rereplyMapper.deleteRereplyToReply(list.get(i).getReplyId());
 		}
-		result = replyMapper.deleteReplyByBoard(boardId);
-		result = attachMapper.delete(boardId);
-		result = recommendMapper.deleteRecommend(boardId);
-		result = boardMapper.deleteBoard(boardId);
+		result = replyMapper.deleteReplyByBoard(vo.getBoardId());
+		result = attachMapper.delete(vo.getBoardId());
+		result = recommendMapper.deleteRecommend(vo.getBoardId());
+		result = boardMapper.deleteBoard(vo.getBoardId());
 		return result;
 	}
 
@@ -115,7 +102,10 @@ public class BoardServiceImple implements BoardService {
 	@Override
 	public BoardVO selectDetail(int boardId) {
 		BoardVO vo = boardMapper.selectDetail(boardId);
-		vo.setRecomenndVO(recommendMapper.selectRecommend(boardId));
+		RecommendVO revo = recommendMapper.selectRecommend(boardId);
+		log.info(revo);
+		vo.setRecommendVO(revo);
+		log.info(vo);
 		if (attachMapper.selectByBoardId(boardId) != null) {
 			vo.setAttachVO(attachMapper.selectByBoardId(boardId));
 		}
@@ -129,33 +119,32 @@ public class BoardServiceImple implements BoardService {
 		return list;
 	}
 	
-	@Override
-	public List<BoardVO> selectByTitle(String title,int categoryId, Pagination pagination) {
-		log.info("service : board selectByTitle()");
-		List<BoardVO> list = boardMapper.selectByTitle(title,categoryId,pagination);
-		return list;
-	}
+
 
 	@Override
-	public List<BoardVO> selectByContent(String content,int categoryId, Pagination pagination) {
-		log.info("service : board selectByContent()");
-		List<BoardVO> list = boardMapper.selectByContent(content,categoryId,pagination);
-		return list;
-	}
-
-	@Override
-	public int getTotalCount(int categoryId) {
+	public int getTotalCount(Pagination pagination) {
 		log.info("getTotalCount()");
-		return boardMapper.selectTotalCount(categoryId);
+		return boardMapper.selectTotalCount(pagination);
 	}
-
-
 	
-	public int searchTotalCountByTitle(int categoryId, String title) {
-		return boardMapper.searchTotalCountByTitle(categoryId, title);
-	}
-	public int searchTotalCountByContent(int categoryId,String content) {
-		return boardMapper.searchTotalCountByContent(categoryId, content);				
+	@Override
+	public int increaseRecommend(int boardId) {
+		return boardMapper.increaseRecommend(boardId);
 	}
 
+	public List<BoardVO> selectListByRecommend(Pagination pagination){
+		return boardMapper.selectListByRecommend(pagination);
+	}
+	
+	public List<BoardVO> selectListByRecommendAll(Pagination pagintaion){
+		return boardMapper.selectListByRecommendAll(pagintaion);
+	}
+	
+	public int selectTotalCountByRecommend(Pagination pagination) {
+		return boardMapper.selectTotalCountByRecommend(pagination);
+	}
+	
+	public int selectTotalCountByRecommendAll(Pagination pagination) {
+		return boardMapper.selectTotalCountByRecommendAll(pagination);
+	}
 }

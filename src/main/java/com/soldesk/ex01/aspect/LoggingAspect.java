@@ -17,7 +17,7 @@ public class LoggingAspect {
    // @Before, @afterReturning, @afterThrowing, @after 
    
     @Before("execution(* com.soldesk.ex01.controller.*.*(..))")
-    // com.mokcoding.ex03 패키지에 포함된 모든 클래스의 모든 메서드
+    // execution에 설정한 패키지에 포함된 모든 클래스의 모든 메서드
     public void beforeAdvice(JoinPoint joinPoint) {
        // JoinPoint : Advice가 적용된 메서드에 대한 정보
         String methodName = joinPoint.getSignature().getName(); // 메서드 이름

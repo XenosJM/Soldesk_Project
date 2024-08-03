@@ -32,6 +32,7 @@ public class RereplyRESTController {
 	public ResponseEntity<Integer> createRereply(@RequestBody RereplyVO rereplyvo){
 		log.info("reply controller : createRereply()");
 		int result = rereplyService.insertRereply(rereplyvo);
+		log.info(rereplyvo);
 		return new ResponseEntity<Integer>(result,HttpStatus.OK);
 	}
 	
@@ -44,11 +45,11 @@ public class RereplyRESTController {
 	}
 	
 	@PutMapping("/{rereplyId}")
-	public ResponseEntity<Integer> updateRereply(@PathVariable("rereplyId")int rereplyId,@RequestBody String rereplyContent){
+	public ResponseEntity<Integer> updateRereply(@RequestBody RereplyVO rereplyVO){
 		log.info("rereply controller : updateRereply()");
-		log.info("rereplyId = "+rereplyId);
-		log.info("rereplyContent = "+rereplyContent);
-		int result = rereplyService.updateRereply(rereplyId, rereplyContent);
+		log.info("rereplyVO = "+rereplyVO);
+		
+		int result = rereplyService.updateRereply(rereplyVO);
 		return new ResponseEntity<Integer>(result,HttpStatus.OK);
 	}
 	

@@ -22,13 +22,14 @@ public class FriendServiceImple implements FriendService {
 	private FriendMapper friendMapper;
 	
 	
-	@PreAuthorize("isAuthenticated() and (#friendVO.memberId == principal.username)")
+	@PreAuthorize("isAuthenticated() and (#friendVO.memberId == principal.username) or (#friendVO.friendMemberId == principal.username)")
 	@Override
 	public int insertFriend(FriendVO friendVO) {
 		log.info("insertFriend()");
 		int result = friendMapper.insertFriend(friendVO);
 		return result;
 	}
+	
 	@PreAuthorize("isAuthenticated() and (#memberId == principal.username)")
 	@Override
 	public List<FriendVO> friendList(String memberId) {
@@ -37,6 +38,7 @@ public class FriendServiceImple implements FriendService {
 		log.info(list);
 		return list;
 	}
+	
 	@PreAuthorize("isAuthenticated() and (#memberId == principal.username)")
 	@Override
 	public int friendStateChange(String memberId, String friendState) {
@@ -44,11 +46,12 @@ public class FriendServiceImple implements FriendService {
 		int result = friendMapper.friendStateChange(memberId, friendState);
 		return result;
 	}
+	
 	@PreAuthorize("isAuthenticated()")
 	@Override
-	public int deleteFriend(int friendshipId) {
+	public int deleteFriend(FriendVO friendVO) {
 		log.info("deleteFriend()");
-		int result = friendMapper.deleteFriend(friendshipId);
+		int result = friendMapper.deleteFriend(friendVO);
 		return result;
 	}
 

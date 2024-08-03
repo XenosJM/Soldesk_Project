@@ -26,13 +26,12 @@ public interface MemberService {
 	// ȸ�� ���� ������ ����
 	int updateMemberProperty(MemberVO memberVO);
 	// ȸ�� ���� ����(Ż��)
-	int deleteMember(String memberId);
-	// �α���
-	String memberCheck(Map<String, String> map, HttpServletResponse res);
-	
+	int deleteMember(String memberId);	
 	// 회원 비밀번호 체크
 	int checkPassword(MemberVO memberVO);
-	// TODO ȸ�� ģ�� ���� -> ģ�� ���񽺿���
+	// 회원 관리자 변경
+	int memberRoleUpdate(MemberVO memberVO);
+	List<MemberVO> findMemberId(String memberId);
 	
 	// ģ�� ��û(���)
 	

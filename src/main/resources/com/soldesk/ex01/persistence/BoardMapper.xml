@@ -13,40 +13,22 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		<result property="boardContent" column="BOARD_CONTENT" />
 		<result property="boardRegistDate" column="BOARD_REGISTDATE" />
 		<result property="boardReplyCount" column="BOARD_REPLY_COUNT" />
-		<result property="attachId" column="ATTACH_ID" />
-		
+		<result property="recommend" column="RECOMMEND" />
+
 	</resultMap>
+	
+	<select id="selectDetail" resultMap="boardResultMap">
+		<!-- 게시글 상세보기 -->
+		SELECT * FROM BOARD WHERE BOARD_ID = #{boardId}
+	</select>
 
 	<insert id="insertBoard">
 		<!-- 게시글 등록 -->
 		INSERT INTO BOARD VALUES
 		(BOARD_SEQ.NEXTVAL, #{categoryId},
 		#{memberId}, #{boardTitle}, #{boardContent}, SYSDATE,
-		0, BOARD_SEQ.CURRVAL)
+		0, 0)
 	</insert>
-
-
-
-	<select id="selectList" resultMap="boardResultMap">
-		<!-- 전체 게시글 조회 -->
-		SELECT * FROM BOARD ORDER BY BOARD_ID DESC
-		<!-- SELECT BOARD_ID, BOARD_TITLE, BOARD_CONTENT, MEMBER_ID, BOARD_DATE_CREATED 
-			FROM BOARD와 동일 -->
-	</select>
-
-
-
-	<select id="selectByMember" resultMap="boardResultMap">
-		<!-- 게시글 작성자로 검색 -->
-		SELECT * FROM BOARD WHERE MEMBER_ID = #{memberId}
-	</select>
-
-	<select id="selectDetail" resultMap="boardResultMap">
-		<!-- 게시글 상세보기 -->
-		SELECT * FROM BOARD WHERE BOARD_ID = #{boardId}
-	</select>
-
-
 
 	<update id="updateBoard">
 		<!-- 특정 게시글 수정 -->
@@ -73,69 +55,86 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		update board set board_reply_count =
 		board_reply_count - 1 where board_id = #{boardId}
 	</update>
+	
+	<update id = "decreaseReplyCountByRereply">
+		update board set board_reply_count = board_reply_count - #{countRereply} where board_id = #{boardId}
+	</update>
+	
+	<update id = "increaseRecommend">
+		UPDATE BOARD SET RECOMMEND = RECOMMEND + 1 WHERE BOARD_ID = #{boardId}
+	</update>
 
 	<select id="selectListByPagination" resultMap="boardResultMap">
 		SELECT * FROM (
-		SELECT ROW_NUMBER() OVER (ORDER BY BOARD_ID DESC) AS RN,
-		BOARD.*
-		FROM
-		BOARD
-		where CATEGORY_ID = #{categoryId}
+		SELECT ROW_NUMBER() OVER (ORDER BY BOARD_ID DESC) AS RN, BOARD.*
+		FROM BOARD
+		 <where>
+            CATEGORY_ID = #{categoryId}
+            <choose>
+            <when test="type == 'title'">
+				and BOARD_TITLE LIKE '%${keyword}%'
+			</when>
+			<when test="type == 'content'">
+				and BOARD_CONTENT LIKE '%${keyword}%'
+			</when>
+			</choose>
+         </where>
 		)
-		WHERE RN BETWEEN #{start} AND
-		#{end}
+		WHERE RN BETWEEN #{start} AND #{end}
 	</select>
-
-	<select id="selectByTitle" resultMap="boardResultMap">
+	
+	<select id= "selectListByRecommend" resultMap="boardResultMap">
 		SELECT * FROM (
-		SELECT
-		ROW_NUMBER() OVER (ORDER BY BOARD_ID DESC) AS RN,
-		BOARD.*
-		FROM
-		BOARD
-		where CATEGORY_ID = #{categoryId} and BOARD_TITLE LIKE
-		'%${boardTitle}%'
-		order by
-		BOARD_ID desc
+			SELECT ROW_NUMBER() OVER (ORDER BY BOARD_ID DESC) AS RN, BOARD.*
+			FROM BOARD
+			WHERE CATEGORY_ID = #{categoryId} and RECOMMEND >= #{recommendCut}
 		)
-		WHERE RN BETWEEN
-		#{pagination.start} AND #{pagination.end}
+		WHERE RN BETWEEN #{start} AND #{end}
 	</select>
-
-	<select id="selectByContent" resultMap="boardResultMap">
-
+	
+	<select id= "selectListByRecommendAll" resultMap="boardResultMap">
 		SELECT * FROM (
-		SELECT
-		ROW_NUMBER() OVER (ORDER BY BOARD_ID DESC) AS RN,
-		BOARD.*
-		FROM
-		BOARD
-		where CATEGORY_ID = #{categoryId} and BOARD_CONTENT LIKE
-		'%${boardContent}%'
-		order by
-		BOARD_ID desc
+			SELECT ROW_NUMBER() OVER (ORDER BY BOARD_ID DESC) AS RN, BOARD.*
+			FROM BOARD
+			WHERE RECOMMEND >= #{recommendCut}
 		)
-		WHERE RN BETWEEN #{pagination.start} AND
-		#{pagination.end}
+		WHERE RN BETWEEN #{start} AND #{end}
 	</select>
+	
+	
+
+	
 
 	<select id="selectTotalCount" resultType="Integer">
 		SELECT COUNT(*)
 		TOTAL_COUNT FROM BOARD
-		where category_id = #{categoryId}
-	</select>
-
-	<select id="searchTotalCountByTitle" resultType="Integer">
-		SELECT COUNT(*)
-		TOTAL_COUNT FROM BOARD
-		where category_id = #{categoryId} and BOARD_TITLE LIKE '%${boardTitle}%'
+		 <where>
+            CATEGORY_ID = #{categoryId}
+            <choose>
+            <when test="type == 'title'">
+				and BOARD_TITLE LIKE '%${keyword}%'
+			</when>
+			<when test="type == 'content'">
+				and BOARD_CONTENT LIKE '%${keyword}%'
+			</when>
+			</choose>
+         </where>
 	</select>
 	
-	<select id="searchTotalCountByContent" resultType="Integer">
+	<select id="selectTotalCountByRecommend" resultType="Integer">
 		SELECT COUNT(*)
 		TOTAL_COUNT FROM BOARD
-		where category_id = #{categoryId} and BOARD_Content LIKE '%${boardContent}%'
+		WHERE CATEGORY_ID = #{categoryId} and RECOMMEND >= #{recommendCut}
+            
 	</select>
+	
+	<select id="selectTotalCountByRecommendAll" resultType="Integer">
+		SELECT COUNT(*)
+		TOTAL_COUNT FROM BOARD
+		WHERE RECOMMEND >= #{recommendCut}            
+	</select>
+
+	
 
 
 

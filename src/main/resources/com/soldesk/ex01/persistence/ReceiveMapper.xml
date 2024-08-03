@@ -19,7 +19,17 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         INSERT INTO RECEIVE (RECEIVE_ID, MEMBER_ID, REQUESTER_ID, RECEIVE_STATE, RECEIVE_DATE)
         VALUES (RECEIVE_SEQ.NEXTVAL, #{memberId}, #{requesterId}, null, SYSDATE)
     </insert>
-
+	
+	<!-- 친구요청 받은 사용자가 receiveId값을 알게 하기위한 쿼리 -->
+	<select id="selectByRequesterId" resultMap="receiveResultMap">
+		SELECT * FROM RECEIVE WHERE REQUESTER_ID = #{requesterId}
+	</select>
+	
+	<!-- 친구요청 받은 사용자가 receiverId값을 알게 하기위한 쿼리 -->
+	<select id="selectByReceiveId" resultMap="receiveResultMap">
+		SELECT * FROM RECEIVE WHERE RECEIVE_ID = #{receiveId}
+	</select>
+	
     <!-- 특정 회원이 받은 친구 요청 목록 조회 -->
     <select id="receiveListRequest" resultMap="receiveResultMap">
         SELECT * FROM RECEIVE WHERE MEMBER_ID = #{memberId}

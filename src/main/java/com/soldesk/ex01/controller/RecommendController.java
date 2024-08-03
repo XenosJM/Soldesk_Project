@@ -27,19 +27,9 @@ public class RecommendController {
 		return recommendService.insertRecommend(vo);
 	}
 	
-	@PostMapping("/recommend")
-	@ResponseBody
-	public ResponseEntity<Integer> increaseRecommend(@RequestParam("boardId") int boardId){
-		int result = recommendService.increaseRecommend(boardId);
-		return new ResponseEntity<>(result,HttpStatus.OK);
-	}
 	
-	@PostMapping("/decommend")
-	@ResponseBody
-	public ResponseEntity<Integer> increaseDecommend(@RequestParam("boardId")int boardId){
-		int result = recommendService.increaseDecommend(boardId);
-		return new ResponseEntity<>(result,HttpStatus.OK);
-	}
+	
+	
 	
 	public int deleteRecommend(int boardId) {
 		return recommendService.deleteRecommend(boardId);

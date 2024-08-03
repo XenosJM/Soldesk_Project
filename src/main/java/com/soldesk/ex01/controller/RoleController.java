@@ -26,13 +26,13 @@ public class RoleController {
 	@Autowired
 	private RoleService roleService;
 	
-	@PostMapping("/regist")
-	public ResponseEntity<Integer> createManager(@RequestBody RoleVO managerVO) {
-		log.info("registManager()");
-		int result = roleService.createManager(managerVO);
-		log.info(result + "행 삽입");
-		return new ResponseEntity<Integer>(result, HttpStatus.OK);
-	}	
+//	@PostMapping("/regist")
+//	public ResponseEntity<Integer> createManager(@RequestBody RoleVO managerVO) {
+//		log.info("registManager()");
+//		int result = roleService.createManager(managerVO);
+//		log.info(result + "행 삽입");
+//		return new ResponseEntity<Integer>(result, HttpStatus.OK);
+//	}	
 	
 	// TODO 비동기로 select를 누르면 div를 추가해 모든 멤버 리스트를 가져오고 input 검색 창을 추가하여
 	// 검색창에 검색어를 입력할때마다 그에 맞는 이용자가 뜨고 선택된 멤버에게 관리자 권한을 주거나 취소시킬수있다.

@@ -16,7 +16,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
 	<!-- 회원 가입 -->
 	<insert id="insert">
-		INSERT INTO MEMBER (MEMBER_ID, MEMBER_PASSWORD, ROLE_ID, MEMBER_EMAIL, MEMBER_PROPERTY, MEMBER_REGISTDATE)
+		INSERT INTO MEMBER (MEMBER_ID, MEMBER_PASSWORD, ROLE_ID, MEMBER_EMAIL, MEMBER_PROPERTY, MEMBER_REGISTDATE, REFRESH_TOKEN)
 		VALUES (#{memberId}, #{memberPassword}, 0, #{memberEmail}, null, SYSDATE, null)
 	</insert>
 	<!-- 회원 자기정보 보기 -->
@@ -38,9 +38,20 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	    JOIN ROLE r ON m.ROLE_ID = r.ROLE_ID
 	    WHERE m.MEMBER_ID = #{memberId}
 	</select>
-
-	<!-- 이메일을 이용해 아이디 찾기 -->
-	<!-- <select id="findId" resultMap="memberResultMap"> SELECT MEMBER_ID FROM MEMBER WHERE MEMBER_EMAIL = #{memberEmail} </select> -->
+	
+	<select id="memberCategory" resultType="Integer"> 
+       SELECT r.ROLE_ID
+       FROM MEMBER m
+       JOIN ROLE r ON m.ROLE_ID = r.ROLE_ID
+       WHERE m.MEMBER_ID = #{memberId}
+   </select>
+	
+	<!-- 회원 검색 -->
+   <select id="findMemberId" resultMap="memberResultMap">
+       SELECT * 
+       FROM MEMBER
+       WHERE MEMBER_ID LIKE '%' || #{memberId} || '%'
+   </select>
 	
 	<!-- 리프레시 토큰 저장(업데이트) -->
 	<update id="updateRefreshToken" >

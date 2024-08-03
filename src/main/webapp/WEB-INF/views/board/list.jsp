@@ -7,7 +7,7 @@
 <html>
 <head>
 <meta charset="UTF-8">
-
+<script src="https://code.jquery.com/jquery-3.7.1.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>게시판 메인 페이지</title>
 <style>
@@ -136,13 +136,16 @@ ul li a {
 			<input type="submit" value = "등록">
 		</form>
 
-		<form class="search-container" method="get" action="search" id="searchForm">
-            <select name="searchOption" id="searchOption">
+		<form class="search-container" method="get" action="list" id="searchForm">
+			<input type="hidden" name = "categoryId" value='${param.categoryId}'>
+			<input type="hidden" name="pageNum">
+	    	<input type="hidden" name="pageSize">
+            <select name="type">
                 <option value="title">제목</option>
                 <option value="content">내용</option>
             </select>
-            <input type="text" name="search" id="searchKey" placeholder="검색어를 입력하세요">
-            <input type="submit" value="검색">
+            <input type="text" name="keyword" placeholder="검색어를 입력하세요">
+            <button>검색</button>
         </form>
 
 		<table>
@@ -183,16 +186,25 @@ ul li a {
 		</ul>
 	</div>
 	 <script>
-        document.getElementById("searchForm").addEventListener("submit", function(event) {
-            var urlParams = new URLSearchParams(window.location.search);
-            var categoryId = urlParams.get('categoryId');
-            if (categoryId) {
-                var hiddenInput = document.createElement("input");
-                hiddenInput.type = "hidden";
-                hiddenInput.name = "categoryId";
-                hiddenInput.value = categoryId;
-                this.appendChild(hiddenInput);
-            }
+        $(document).ready(function(){
+        	$("#searchForm button").on("click",function(e){
+        		let searchForm = $('#searchForm');
+        		e.preventDefault();
+        		
+        		let keywordVal = searchForm.find("input[name = 'keyword']").val();
+        		console.log(keywordVal);
+        		if(keywordVal==''){
+        			alert("검색내용을 입력하세요")
+        			return;
+        		}
+        		
+        		let pageNum=1;
+        		let pageSize ="<c:out value='${pageMaker.pagination.pageSize }' />";
+        		
+        		searchForm.find("input[name='pageNum']").val(pageNum);
+        		searchForm.find("input[name='pageSize']").val(pageSize);
+				searchForm.submit(); // form 전송
+        	});
         });
     </script>
 </body>

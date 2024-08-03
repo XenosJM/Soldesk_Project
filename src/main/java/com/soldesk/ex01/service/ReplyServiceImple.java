@@ -78,9 +78,11 @@ public class ReplyServiceImple implements ReplyService {
 		log.info("service : deleteReply()");
 		ReplyVO vo = replyMapper.findReply(replyId);
 		log.info(vo);
+		int boardId = replyMapper.findReply(replyId).getBoardId();
 		int result = replyMapper.deleteReply(replyId);
-		
 		result = boardMapper.decreaseReplyCount(vo.getBoardId());
+		result= boardMapper.decreaseReplyCountByRereply(rereplyMapper.countRereply(replyId), boardId);
+		result = rereplyMapper.deleteRereplyToReply(replyId);
 		
 		log.info("replycount-1 ��� : "+result);
 		return result;

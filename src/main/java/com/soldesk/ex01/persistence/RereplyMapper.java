@@ -13,4 +13,6 @@ public interface RereplyMapper {
 	int updateRereply(RereplyVO vo);
 	int deleteRereply(int rereplyId);
 	int deleteRereplyToReply(int replyId);
+	RereplyVO findRereply(int rereplyId);
+	int countRereply(int replyId);
 }

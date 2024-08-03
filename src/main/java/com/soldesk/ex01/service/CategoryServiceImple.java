@@ -8,6 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.soldesk.ex01.domain.CategoryVO;
 import com.soldesk.ex01.persistence.CategoryMapper;
+import com.soldesk.ex01.persistence.RoleMapper;
 
 import lombok.extern.log4j.Log4j;
 
@@ -18,11 +19,15 @@ public class CategoryServiceImple implements CategoryService {
 	@Autowired
 	CategoryMapper categoryMapper;
 	
+	@Autowired
+	RoleMapper roleMapper;
+	
 	@Transactional
 	@Override
 	public int insertCategory(CategoryVO vo) {
 		log.info("service : insertCategory()");
 		int result = categoryMapper.insertCategory(vo);
+		result = roleMapper.insert();
 		return result;
 	}
 

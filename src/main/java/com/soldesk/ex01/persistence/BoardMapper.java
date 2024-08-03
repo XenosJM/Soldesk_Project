@@ -12,17 +12,19 @@ import com.soldesk.ex01.util.Pagination;
 @Mapper
 public interface BoardMapper {
 	int insertBoard(BoardVO vo);
-	List<BoardVO> selectList();
-	List<BoardVO> selectByTitle(@Param("boardTitle")String title,@Param("categoryId")int categoryId,@Param("pagination")Pagination pagination);
-	List<BoardVO> selectByContent(@Param("boardContent")String content,@Param("categoryId")int categoryId,@Param("pagination")Pagination pagination);
 	List<BoardVO> selectByMember(int memberId);
 	BoardVO selectDetail(int boardId);
 	int updateBoard(BoardVO vo);
 	int deleteBoard(int boardId);	
 	List<BoardVO> selectListByPagination(Pagination pagination/*@Param("categoryId") int categoryId,@Param("start")int start,@Param("end")int end*/);
-	int selectTotalCount(int categoryId);
+	int selectTotalCount(Pagination pagination);
 	int increaseReplyCount(int boardId);
 	int decreaseReplyCount(int boardId);
-	int searchTotalCountByTitle(@Param("categoryId")int categoryId, @Param("boardTitle")String title);
-	int searchTotalCountByContent(@Param("categoryId")int categoryId, @Param("boardContent")String content);
+	
+	int increaseRecommend(int boardId);
+	List<BoardVO> selectListByRecommend(Pagination pagination);
+	List<BoardVO> selectListByRecommendAll(Pagination pagintaion);
+	int selectTotalCountByRecommend(Pagination pagination);
+	int selectTotalCountByRecommendAll(Pagination pagination);
+	int decreaseReplyCountByRereply(@Param("countRereply")int countRereply, @Param("boardId")int boardId);
 }

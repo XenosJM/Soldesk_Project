@@ -44,7 +44,7 @@ import lombok.extern.slf4j.Slf4j;
 
 @Configuration
 @EnableWebSecurity
-//@EnableGlobalMethodSecurity(prePostEnabled = true) // 메소드 수준 보안 설정을 활성화
+@EnableGlobalMethodSecurity(prePostEnabled = true) // 메소드 수준 보안 설정을 활성화
 @Slf4j
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	
@@ -55,21 +55,16 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	@Autowired
 	private UserDetailServiceImple userDetail;
 	
-//	private final JwtTokenProvider jwtTokenProvider;
-//	
-//	public  SerurityConfig(JwtTokenProvider jwtTokenProvider) {
-//		this.jwtTokenProvider = jwtTokenProvider;
-//	}
-	
 	@Override
 	protected void configure(HttpSecurity httpSecurity) throws Exception {
 		log.info("http 시큐리티 설정");
 		// 권한 설정 및 로그인 로그아웃 관련
 		httpSecurity
 			.authorizeRequests()  // 요청에 권한 부여
-				.antMatchers("/", "/member/regist", "/member/findIdPw", "/login/check", "/board/list", "/board/detail", "/board/search", "/util/**").permitAll()  // 루트 URL에 대한 모든 사용자 접근
-				.antMatchers("/member/**", "/friend/**", "/reply/**", "/rereply/**", "/attach/**", "/board/**").hasAnyRole("MEMBER", "MANAGER", "HEAD_MANAGER")  // 루트 URL에 대한 MEMBER 역할을 가진 사용자만 접근 가능
-				.antMatchers("/ROLE/**").hasRole("HEAD_MANAGER")
+				.antMatchers("/", "/member/regist", "/member/findIdPw", "/login/check", "/board/list", "/board/detail", "/board/search", "/util/**","/reply/{boardId}","/rereply/{boardId}","/category/list","/category/detail","/board/recommendlist", "/private" ).permitAll()  // 루트 URL에 대한 모든 사용자 접근
+				// TODO 웹소켓 엔드포인트도 추가해야하면 할것
+				.antMatchers("/member/**", "/friend/**", "/reply/**", "/rereply/**", "/attach/**", "/board/**","/request/**","/receive/**").hasAnyRole("MEMBER", "MANAGER", "HEAD_MANAGER")  // 루트 URL에 대한 MEMBER 역할을 가진 사용자만 접근 가능
+				.antMatchers("/role/**").hasRole("HEAD_MANAGER")
 				
 				.anyRequest().authenticated() // 이외에 URL은 사용자 인증을 수행해야 함
 					.and()
@@ -110,7 +105,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 					.block(true)
 					.and();
 		
-//		httpSecurity.cors().configurationSource(corsConfigSource());
+		httpSecurity.cors().configurationSource(corsConfigSource());
 		// 필터 관련 설정
 		httpSecurity
 		  	.addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class)  // JwtAuthenticationFilter 추가
@@ -185,14 +180,23 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         CorsConfiguration corsConfig = new CorsConfiguration();
 
         // 오리진 패턴을 설정. 여기서는 특정 IP와 포트를 가진 도메인을 허용.
-        corsConfig.setAllowedOrigins(List.of("http://192.168.0.144:3000"));
+//        corsConfig.setAllowedOrigins(List.of("http://192.168.0.147:3000"));
+        corsConfig.setAllowedOrigins(List.of("*"));
         // 허용할 HTTP 메서드를 설정
         corsConfig.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "HEAD", "OPTIONS"));
         // 허용할 HTTP 헤더를 설정합니다.
-        corsConfig.setAllowedHeaders(List.of("Authorization", "Cache-Control", "Content-Type"));
+        corsConfig.setAllowedHeaders(List.of("Authorization", "Cache-Control", "Content-Type", "Refresh-Token"));
+//        corsConfig.setAllowedHeaders(List.of("*"));
         // 자격 증명을 포함한 요청을 허용.
         corsConfig.setAllowCredentials(true);
-
+        // 리액트쪽에서 토큰을 받아 로컬스토리지에 저장 할수 있도록 명시
+        // 다만 헤더를 노출시켜 토큰을 사용할수있게 접근하는것은 문제가 있을수 밖에 없을것 같아
+        // 찾아보니 HttpOnly 쿠키를 쓰면 된다고 하지만 그럴 경우 리액트에서 가져다 사용할수가 없다.
+        // 다른 방법을 찾아본 결과 https 얘기가 나와 찾아보니 인증서를 발급 받는 형태라 발급 받은 인증서를
+        // 서버에 어떻게 세팅하는지 세팅법 정도만 배우고 적용은 못함.
+        // 실제 서비스 환경에서는 다른 방법을 쓰도록 알아봐야함.
+        corsConfig.addExposedHeader("Authorization");
+        corsConfig.addExposedHeader("Refresh-Token");
         // 새로운 URL 기반 CORS 설정 소스를 생성.
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         // 모든 경로에 대해 CORS 설정을 적용합니다.
